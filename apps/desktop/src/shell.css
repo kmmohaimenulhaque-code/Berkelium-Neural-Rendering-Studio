@@ -386,3 +386,207 @@
 .statusbar__spacer {
     flex: 1;
 }
+
+/* AI Copilot chat */
+.chat-panel {
+    background: var(--bg-app);
+}
+
+.chat__messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--sp-3);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+}
+
+.chat__empty {
+    margin: auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--sp-2);
+    padding: var(--sp-6);
+    color: var(--text-tertiary);
+}
+
+.chat__empty-title {
+    color: var(--text-secondary);
+    font-size: var(--fs-md);
+    font-weight: var(--fw-medium);
+}
+
+.chat__empty-hint {
+    color: var(--text-tertiary);
+    font-size: var(--fs-sm);
+    line-height: 1.5;
+    max-width: 240px;
+}
+
+.chat__msg {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+}
+
+.chat__msg--user {
+    align-items: flex-end;
+}
+
+.chat__msg-label {
+    font-size: var(--fs-xs);
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: var(--fw-medium);
+}
+
+.chat__msg-body {
+    padding: var(--sp-2) var(--sp-3);
+    border-radius: var(--r-md);
+    font-size: var(--fs-sm);
+    line-height: 1.5;
+    color: var(--text-primary);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    max-width: 100%;
+    word-wrap: break-word;
+}
+
+.chat__msg--user .chat__msg-body {
+    background: var(--accent-bg);
+    border-color: var(--accent-dim);
+}
+
+.chat__paragraph {
+    white-space: pre-wrap;
+}
+
+.chat__paragraph+.chat__paragraph,
+.chat__paragraph+.chat__code,
+.chat__code+.chat__paragraph {
+    margin-top: var(--sp-2);
+}
+
+.chat__code {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    padding: var(--sp-2);
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
+    overflow-x: auto;
+}
+
+.chat__typing {
+    display: inline-flex;
+    gap: 4px;
+    padding: var(--sp-2) var(--sp-3);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    align-self: flex-start;
+}
+
+.chat__typing-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--text-tertiary);
+    animation: chat-pulse 1.4s ease-in-out infinite;
+}
+
+.chat__typing-dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.chat__typing-dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes chat-pulse {
+
+    0%,
+    60%,
+    100% {
+        opacity: 0.3;
+    }
+
+    30% {
+        opacity: 1;
+    }
+}
+
+.chat__error {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sp-2);
+    padding: var(--sp-2) var(--sp-3);
+    background: rgba(247, 98, 107, 0.08);
+    border: 1px solid var(--error);
+    border-radius: var(--r-md);
+    color: var(--error);
+    font-size: var(--fs-sm);
+    line-height: 1.4;
+}
+
+.chat__composer {
+    display: flex;
+    gap: var(--sp-2);
+    padding: var(--sp-2) var(--sp-3);
+    background: var(--bg-surface);
+    border-top: 1px solid var(--border);
+}
+
+.chat__input {
+    flex: 1;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    padding: var(--sp-2);
+    font-family: var(--font-sans);
+    font-size: var(--fs-sm);
+    color: var(--text-primary);
+    resize: none;
+    outline: none;
+    transition: border-color var(--dur-fast) var(--ease);
+    min-height: 32px;
+    max-height: 140px;
+}
+
+.chat__input:focus {
+    border-color: var(--accent-dim);
+}
+
+.chat__input::placeholder {
+    color: var(--text-tertiary);
+}
+
+.chat__input:disabled {
+    opacity: 0.6;
+}
+
+.chat__send {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent);
+    color: var(--bg-app);
+    border-radius: var(--r-md);
+    align-self: flex-end;
+    transition: background var(--dur-fast) var(--ease), opacity var(--dur-fast) var(--ease);
+}
+
+.chat__send:hover:not(:disabled) {
+    background: var(--accent-dim);
+}
+
+.chat__send:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}

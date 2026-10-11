@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 
 import "./shell.css";
+import ChatPanel from "./ChatPanel.jsx";
 
 // Workspace definitions. Switching mode swaps the content of the center region.
 // Scene = 3D viewport, Code = Monaco, Combined = both split vertically.
@@ -342,23 +343,7 @@ function WorkspacePlaceholder({ icon: Icon, title, subtitle }) {
 }
 
 function RightPanel() {
-  return (
-    <div className="panel">
-      <div className="panel__header">
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <Sparkles size={12} color="var(--accent)" />
-          <span className="panel__title">AI COPILOT</span>
-        </div>
-      </div>
-      <div className="ai-placeholder">
-        <span className="ai-placeholder__badge">Not connected</span>
-        <div>Chat interface arrives in Chunk B.</div>
-        <div style={{ color: "var(--text-disabled)" }}>
-          Powered by BerkeliumGPT via Fireworks AI.
-        </div>
-      </div>
-    </div>
-  );
+  return <ChatPanel />;
 }
 
 function BottomPanel() {
