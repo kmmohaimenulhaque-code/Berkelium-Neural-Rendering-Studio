@@ -1,0 +1,75 @@
+/* Base styles for Berkelium Studio */
+:root {
+  /* Color palette from specification */
+  --background-color: #08090A;
+  --primary-text-color: #F7F8F8;
+  --secondary-text-color: #8A8F98;
+  --border-color: #1F2023;
+  --primary-accent-color: #00D4D4;
+  --control-radius: 6px;
+  --panel-radius: 8px;
+  --base-spacing-unit: 8px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: var(--background-color);
+  color: var(--primary-text-color);
+  overflow: hidden;
+  height: 100vh;
+}
+
+.app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  padding: calc(var(--base-spacing-unit) * 2);
+  border-bottom: 1px solid var(--border-color);
+  background-color: rgba(15, 16, 17, 0.9);
+  backdrop-filter: blur(10px);
+}
+
+.app-main {
+  flex: 1;
+  overflow: auto;
+  padding: calc(var(--base-spacing-unit) * 2);
+}
+
+.status-panel {
+  background-color: rgba(30, 32, 34, 0.6);
+  border-radius: var(--panel-radius);
+  padding: calc(var(--base-spacing-unit) * 2);
+  border: 1px solid var(--border-color);
+}
+
+.status-panel h2 {
+  margin-top: 0;
+  color: var(--primary-accent-color);
+}
+
+.status-panel ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.status-panel li {
+  padding: calc(var(--base-spacing-unit) * 0.5) 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.status-panel li:last-child {
+  border-bottom: none;
+}
+
+.app-footer {
+  padding: calc(var(--base-spacing-unit) * 2);
+  border-top: 1px solid var(--border-color);
+  text-align: center;
+  font-size: 0.9em;
+  color: var(--secondary-text-color);
+}
