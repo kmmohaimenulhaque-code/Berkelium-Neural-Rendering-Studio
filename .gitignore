@@ -45,4 +45,4 @@ Thumbs.db
 *.db
 /cache/
 *.sqlite
-*.json
+config.json

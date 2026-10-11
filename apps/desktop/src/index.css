@@ -1,0 +1,161 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap");
+
+/* Berkelium Studio design tokens
+   Values derived from devil_360's master spec. Treat as source of truth.
+   Changes propagate everywhere via var(--...). Don't hardcode colors in components. */
+
+:root {
+  /* Surfaces: layered darks for depth without shadows */
+  --bg-app: #08090A;
+  --bg-surface: #0C0D0F;
+  --bg-elevated: #121316;
+  --bg-hover: #1A1B1F;
+  --bg-selected: #1F2529;
+
+  /* Text */
+  --text-primary: #F7F8F8;
+  --text-secondary: #8A8F98;
+  --text-tertiary: #5E6269;
+  --text-disabled: #3A3D43;
+
+  /* Borders: single hairline color, differentiation comes from opacity in components */
+  --border: #1F2023;
+  --border-strong: #2B2D32;
+
+  /* Accent: Berkelium cyan. Use sparingly: focus, selection, primary CTAs. */
+  --accent: #00D4D4;
+  --accent-dim: #008B8B;
+  --accent-bg: rgba(0, 212, 212, 0.08);
+
+  /* Semantic: separate hues so a running render error cannot look like a success */
+  --error: #F7626B;
+  --warning: #F7CF4C;
+  --success: #4AC26B;
+  --info: #4C9EF7;
+
+  /* Typography */
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+
+  /* Type scale: denser than marketing scales, built for sustained desktop use */
+  --fs-xs: 11px;
+  --fs-sm: 12px;
+  --fs-base: 13px;
+  --fs-md: 14px;
+  --fs-lg: 16px;
+  --fs-xl: 20px;
+  --fs-2xl: 24px;
+  --fs-3xl: 32px;
+
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+
+  /* Spacing: 4px half-steps allowed for dense desktop controls */
+  --sp-0: 0;
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+
+  /* Radii: small on controls, slightly larger on panels */
+  --r-sm: 4px;
+  --r-md: 6px;
+  --r-lg: 8px;
+  --r-pill: 999px;
+
+  /* Fixed layout dimensions */
+  --h-topbar: 36px;
+  --h-statusbar: 24px;
+  --w-sidebar-left: 240px;
+  --w-sidebar-right: 320px;
+  --h-bottom-panel: 180px;
+
+  /* Motion: short, respectful of reduced-motion */
+  --dur-fast: 120ms;
+  --dur-base: 180ms;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Reset and base */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-regular);
+  color: var(--text-primary);
+  background: var(--bg-app);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  user-select: none;
+}
+
+.selectable,
+.selectable * {
+  user-select: text;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-radius: var(--r-sm);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: var(--r-pill);
+  border: 2px solid var(--bg-app);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

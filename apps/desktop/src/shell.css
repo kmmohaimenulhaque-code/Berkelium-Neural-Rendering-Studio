@@ -1,0 +1,388 @@
+/* Berkelium Studio shell styles.
+   The shell is layout + chrome only. Workspace content lives inside <Workspace />. */
+
+.app {
+    display: grid;
+    grid-template-rows: var(--h-topbar) 1fr var(--h-statusbar);
+    height: 100vh;
+    width: 100vw;
+    background: var(--bg-app);
+    color: var(--text-primary);
+}
+
+/* Top bar */
+.topbar {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    padding: 0 var(--sp-3);
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-surface);
+    -webkit-app-region: drag;
+    /* Allows dragging the window from the top bar area */
+}
+
+.topbar>* {
+    -webkit-app-region: no-drag;
+    /* Interactive children must opt out of drag */
+}
+
+.topbar__brand {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    padding: 0 var(--sp-3);
+    margin-left: 68px;
+    /* Leave room for macOS traffic lights */
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-semibold);
+    letter-spacing: 0.02em;
+    color: var(--text-primary);
+}
+
+.topbar__brand-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent-dim);
+}
+
+.topbar__workspaces {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 2px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+}
+
+.workspace-tab {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-1);
+    padding: 4px var(--sp-2);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-medium);
+    color: var(--text-secondary);
+    border-radius: var(--r-sm);
+    transition: color var(--dur-fast) var(--ease),
+        background var(--dur-fast) var(--ease);
+}
+
+.workspace-tab:hover {
+    color: var(--text-primary);
+    background: var(--bg-hover);
+}
+
+.workspace-tab--active {
+    color: var(--text-primary);
+    background: var(--bg-selected);
+}
+
+.topbar__spacer {
+    flex: 1;
+}
+
+.topbar__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-1);
+}
+
+.topbar__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    color: var(--text-secondary);
+    border-radius: var(--r-sm);
+    transition: color var(--dur-fast) var(--ease),
+        background var(--dur-fast) var(--ease);
+}
+
+.topbar__btn:hover {
+    color: var(--text-primary);
+    background: var(--bg-hover);
+}
+
+.topbar__btn--active {
+    color: var(--accent);
+    background: var(--accent-bg);
+}
+
+/* Status chip */
+.status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-1);
+    padding: 2px var(--sp-2);
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-medium);
+    color: var(--text-secondary);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+}
+
+.status-chip__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--text-tertiary);
+}
+
+.status-chip__dot--ok {
+    background: var(--success);
+    box-shadow: 0 0 6px rgba(74, 194, 107, 0.5);
+}
+
+.status-chip__dot--err {
+    background: var(--error);
+}
+
+.status-chip__dot--warn {
+    background: var(--warning);
+}
+
+/* Panels (shared) */
+.panel {
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-app);
+    overflow: hidden;
+}
+
+.panel__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--sp-3);
+    height: 32px;
+    flex-shrink: 0;
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border);
+}
+
+.panel__title {
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+}
+
+.panel__header-actions {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.panel__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    color: var(--text-tertiary);
+    border-radius: var(--r-sm);
+    transition: color var(--dur-fast) var(--ease),
+        background var(--dur-fast) var(--ease);
+}
+
+.panel__btn:hover {
+    color: var(--text-primary);
+    background: var(--bg-hover);
+}
+
+.panel__body {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--sp-2);
+}
+
+/* Project tree (placeholder content for left panel) */
+.tree-item {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    padding: 4px var(--sp-2);
+    font-size: var(--fs-sm);
+    color: var(--text-secondary);
+    border-radius: var(--r-sm);
+    cursor: default;
+}
+
+.tree-item:hover {
+    color: var(--text-primary);
+    background: var(--bg-hover);
+}
+
+.tree-item--selected {
+    color: var(--text-primary);
+    background: var(--bg-selected);
+}
+
+.tree-item--child {
+    padding-left: var(--sp-6);
+}
+
+.tree-section {
+    margin-top: var(--sp-3);
+}
+
+.tree-section:first-child {
+    margin-top: 0;
+}
+
+/* Workspace area */
+.workspace {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-app);
+    min-width: 0;
+    min-height: 0;
+}
+
+.workspace__placeholder {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: var(--sp-3);
+    color: var(--text-tertiary);
+    font-size: var(--fs-sm);
+    text-align: center;
+    padding: var(--sp-6);
+}
+
+.workspace__placeholder-icon {
+    color: var(--text-disabled);
+}
+
+.workspace__placeholder-title {
+    font-size: var(--fs-md);
+    font-weight: var(--fw-medium);
+    color: var(--text-secondary);
+}
+
+/* Resize handles from react-resizable-panels */
+.resize-handle {
+    flex-shrink: 0;
+    background: var(--border);
+    position: relative;
+    transition: background var(--dur-fast) var(--ease);
+}
+
+.resize-handle[data-panel-group-direction="horizontal"] {
+    width: 1px;
+}
+
+.resize-handle[data-panel-group-direction="vertical"] {
+    height: 1px;
+}
+
+.resize-handle:hover,
+.resize-handle[data-resize-handle-state="hover"],
+.resize-handle[data-resize-handle-state="drag"] {
+    background: var(--accent);
+}
+
+/* Bottom panel content */
+.console {
+    flex: 1;
+    padding: var(--sp-3);
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
+    color: var(--text-secondary);
+    overflow-y: auto;
+}
+
+.console__line {
+    display: flex;
+    gap: var(--sp-2);
+    padding: 2px 0;
+}
+
+.console__time {
+    color: var(--text-tertiary);
+    flex-shrink: 0;
+}
+
+.console__level {
+    flex-shrink: 0;
+    min-width: 44px;
+    text-transform: uppercase;
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-medium);
+}
+
+.console__level--info {
+    color: var(--info);
+}
+
+.console__level--ok {
+    color: var(--success);
+}
+
+.console__level--warn {
+    color: var(--warning);
+}
+
+.console__level--err {
+    color: var(--error);
+}
+
+.console__msg {
+    color: var(--text-secondary);
+}
+
+/* Right AI panel placeholder */
+.ai-placeholder {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: var(--sp-6);
+    gap: var(--sp-3);
+    color: var(--text-tertiary);
+    font-size: var(--fs-sm);
+}
+
+.ai-placeholder__badge {
+    padding: 2px var(--sp-2);
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-medium);
+    color: var(--accent);
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-dim);
+    border-radius: var(--r-pill);
+}
+
+/* Status bar at the bottom */
+.statusbar {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    padding: 0 var(--sp-3);
+    background: var(--bg-surface);
+    border-top: 1px solid var(--border);
+    font-size: var(--fs-xs);
+    color: var(--text-tertiary);
+}
+
+.statusbar__item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-1);
+}
+
+.statusbar__spacer {
+    flex: 1;
+}
