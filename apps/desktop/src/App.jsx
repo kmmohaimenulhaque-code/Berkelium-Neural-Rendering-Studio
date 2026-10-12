@@ -22,6 +22,7 @@ import {
 
 import "./shell.css";
 import ChatPanel from "./ChatPanel.jsx";
+import CodePanel from "./CodePanel.jsx";
 
 // Workspace definitions. Switching mode swaps the content of the center region.
 // Scene = 3D viewport, Code = Monaco, Combined = both split vertically.
@@ -312,14 +313,14 @@ function Workspace({ mode }) {
     return <WorkspacePlaceholder icon={Box} title="3D Scene" subtitle="Three.js viewport (Day 2)" />;
   }
   if (mode === "code") {
-    return <WorkspacePlaceholder icon={Code2} title="Code Editor" subtitle="Monaco editor (Chunk C)" />;
+    return <CodePanel />;
   }
   // Combined mode: code | scene split
   return (
     <div className="workspace">
       <PanelGroup direction="horizontal" autoSaveId="berkelium-workspace">
         <Panel defaultSize={55} minSize={25}>
-          <WorkspacePlaceholder icon={Code2} title="Code Editor" subtitle="Monaco editor (Chunk C)" />
+          <CodePanel />
         </Panel>
         <PanelResizeHandle className="resize-handle" />
         <Panel defaultSize={45} minSize={25}>
