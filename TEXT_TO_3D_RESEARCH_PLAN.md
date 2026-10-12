@@ -1,6 +1,8 @@
 # Berkelium Text-to-3D Research Plan
 
-**Status:** proposed research program, revision `berkelium-text3d-v0.1` (2026-10-11). This is a source-backed design and experiment plan, not an executed pipeline. No models were loaded, weights downloaded, inference run, MI300X inspected, training performed, or benchmark results produced for this documentation task.
+**Status:** proposed research program, revision `berkelium-text3d-v0.2` (2026-10-12). This is a source-backed design and experiment plan, not an executed pipeline. No models were loaded, weights downloaded, inference run, MI300X inspected, training performed, or benchmark results produced for this documentation task.
+
+Evidence labels used below: `[O]` inspected implementation observation, `[F]` external source fact, `[D]` Berkelium design decision, `[H]` hypothesis requiring an experiment.
 
 ## 1. Decision and existing target state
 
@@ -104,7 +106,7 @@ The first text-to-3D chain is sequential: unload the diffusion stage before reco
 - One authorized Linux MI300X device, real capability probe reports `gfx942`; choose one validated ROCm/toolchain tuple and record versions/container digest. ROCm 6.3.3 docs establish target architecture, not the installed tuple [R10].
 - CPU analytic/finite-difference gates G1 already pass. HIP basic fixtures G2 are part of E0 preflight.
 - No network access, pretrained weights, distributed jobs, model compilation, or densification.
-- **Wall-clock cap 30 minutes from first GPU operation; 16 GiB renderer context cap; 2 GiB replay checkpoint cap; 8 GiB host data/scratch cap.** A watchdog stops the attempt, synchronizes/terminates the worker, and retains a failed receipt. Do not automatically retry an uncertain attempt.
+- **Wall-clock cap 30 minutes from first GPU operation; 16 GiB renderer context cap; 2 GiB replay checkpoint cap; 8 GiB host data/scratch cap.** A watchdog stops the attempt, synchronizes/terminates the worker, and retains a failed receipt. Do not automatically retry an uncertain attempt. This is the renderer E0 cap; the provider allocation cap is the separate 1.5 billed GPU-hour tranche in `COMPUTE_BUDGET_AND_EXPERIMENTS.md`.
 - Baseline microbenchmark: `N=10,000`, 256², one camera, <=500k Gaussian/tile pairs. Timing stress case: `N=100,000`, 512², <=2m pairs. Quotas are checked from actual projection/count; a cap hit is a failure receipt, not Gaussian dropping.
 
 ### Fixture and fit
@@ -215,7 +217,7 @@ Promotion review requires: pinned code/weights/dependencies, permitted use and n
 
 ## 10. Exact source register
 
-Read-only source review date: **2026-10-11**. Revisions were resolved from upstream Git/Hugging Face metadata where stated. A model-family version such as `v1.2` is not a content hash; unresolved hashes must be pinned before execution. Sources supply upstream claims, not Berkelium execution evidence.
+Read-only source review date: **2026-10-12**. Revisions were resolved from upstream Git/Hugging Face metadata where stated. A model-family version such as `v1.2` is not a content hash; unresolved hashes must be pinned before execution. Sources supply upstream claims, not Berkelium execution evidence.
 
 ### [R1] Z-Image
 
@@ -285,7 +287,7 @@ Read-only source review date: **2026-10-11**. Revisions were resolved from upstr
 
 - Algorithm/paper: https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/ and https://arxiv.org/abs/2308.04079 (paper version unresolved).
 - Original implementation and restrictive license: https://github.com/graphdeco-inria/gaussian-splatting/blob/main/LICENSE.md (`main` reviewed, exact commit unresolved).
-- gsplat revision **`512d366b67073d77ca099ede742683c165dfc23b`**: https://github.com/nerfstudio-project/gsplat/tree/512d366b67073d77ca099ede742683c165dfc23b and https://github.com/nerfstudio-project/gsplat/blob/512d366b67073d77ca099ede742683c165dfc23b/LICENSE (Apache-2.0).
+- AMD GSplat release **`1.5.3b2`**, source revision **`ff8bc5489545bcc1b5a2b997d975834429a0d7af`**: https://github.com/AMD-Ecosystem/gsplat/tree/ff8bc5489545bcc1b5a2b997d975834429a0d7af and https://rocm.docs.amd.com/projects/gsplat/en/latest/reference/benchmark-evaluation.html. NOTICE describes Apache-2.0 upstream portions and MIT AMD modifications; treat it as a comparison/reference implementation, not Berkelium-owned renderer code. The older nerfstudio gsplat revision is not the selected AMD reference.
 
 ### [R10] AMD/framework references
 

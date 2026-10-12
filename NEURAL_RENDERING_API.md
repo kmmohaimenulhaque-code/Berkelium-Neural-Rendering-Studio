@@ -1,5 +1,7 @@
 # Berkelium Neural Rendering API
 
+**Revision:** `NR-0.2` (2026-10-12). `[O]` existing implementation, `[F]` external source fact, `[D]` proposed contract, `[H]` untested hypothesis. Existing-route sections are [O]; all versioned contracts below are [D].
+
 ## Scope and implementation status
 
 This document defines a proposed, versioned API for project-scoped neural-rendering jobs and artifacts while documenting the FastAPI routes that actually exist today.
@@ -231,7 +233,7 @@ The `options.parameters` object must be validated per job type, bounded in size,
   "id": "artifact-output-1",
   "projectId": "project-123",
   "jobId": "job-123",
-  "kind": "neural-rendering-model",
+  "kind": "gaussian-scene",
   "mediaType": "application/octet-stream",
   "byteSize": 524288,
   "sha256": "hex-encoded-sha256",
@@ -240,6 +242,10 @@ The `options.parameters` object must be validated per job type, bounded in size,
 ```
 
 Artifact metadata contains no client-chosen absolute path. The service maps the opaque ID to a controlled project-scoped store, verifies the checksum, and streams the bytes only after project authorization.
+
+[D] Artifact kinds are distinct: `image`, `camera-set`, `gaussian-scene`, `triangle-mesh`, `cad-model`, `validation-report`, `checkpoint`, and `experiment-receipt`. `kind` alone never implies geometric accuracy. Each artifact also requires `schemaVersion`, `parentArtifactIds`, `provenanceRef`, and `validationRef`; geometry adds `units`, `worldBasis`, and its normalization transform. A checkpoint is not a portable scene export. See [NEURAL_DATA_PROVENANCE.md](NEURAL_DATA_PROVENANCE.md) for the manifest contract.
+
+[D] GaussianScene v1 uses the FP32, degree-zero color-logit representation in [GAUSSIAN_RENDERER_SPEC.md](GAUSSIAN_RENDERER_SPEC.md). Camera manifests declare OpenCV +Z-forward `T_cw`, row-major storage with column-vector mathematics, pixel intrinsics and pixel-center convention. Binary payload metadata includes dtype, shape, byte order, stride, count and checksum; unsupported variants fail explicitly.
 
 ## Proposed endpoints
 
@@ -310,7 +316,7 @@ Expected later response: `202 Accepted` with the `Job` resource in `pending`. A 
 
 ## Job state machine
 
-The existing orchestrator names these statuses: `pending`, `running`, `completed`, `failed`, `cancelled`, `checkpointed`, and `resumed`. The following is the proposed externally visible transition model, retaining those names for compatibility:
+The existing orchestrator names these statuses: `pending`, `running`, `completed`, `failed`, `cancelled`, `checkpointed`, and `resumed`. [D] These are the canonical NR-0.2 external job states; `queued` and `succeeded` are not additional aliases. Research outcomes such as `pass`, `blocked`, and `correctness_pass/performance_stop` belong in experiment receipts, not this status enum. The proposed transition model retains the prototype names, but not its timer-based completion behavior:
 
 ```mermaid
 stateDiagram-v2
@@ -322,7 +328,11 @@ stateDiagram-v2
     running --> cancelled: cancellation acknowledged
     running --> checkpointed: checkpoint committed
     checkpointed --> resumed: resume accepted
+    checkpointed --> cancelled: cancellation accepted
+    checkpointed --> failed: checkpoint invalid
     resumed --> running: worker lease acquired
+    resumed --> cancelled: cancellation accepted
+    resumed --> failed: restore invalid
     completed --> [*]
     failed --> [*]
     cancelled --> [*]
@@ -334,7 +344,8 @@ Rules:
 - `completed` is written only after output files are atomically placed, checksummed, and recorded in the artifact table.
 - `failed` includes a stable error code and safe message; retry policy belongs to the service/worker, not the renderer.
 - `cancelled` is terminal for the job attempt. A later retry creates a new attempt or job according to idempotency policy.
-- `checkpointed` and `resumed` are only legal for checkpoint-capable types. The current orchestrator advertises `neural_rendering_training` and `photogrammetry` as checkpointable.
+- `checkpointed` and `resumed` are only legal for checkpoint-capable types. The current orchestrator advertises `neural_rendering_training` and `photogrammetry` as checkpointable. In the proposed contract, periodic checkpoint writes do not pause a running job: `checkpointed` means paused with a committed restorable checkpoint, and `resumed` means a restore is queued.
+- Cancellation first records `cancelRequestedAt`; it does not imply the device has stopped. Mark `cancelled` only after worker acknowledgement/resource cleanup, or confirmed worker termination. Lease expiry requires reconciliation and an attempt failure receipt; it must never silently publish completion or retry paid work.
 - Clients should poll `GET /jobs/{id}` initially. Server-sent events or WebSockets may be added later without changing the resource schema.
 
 ## Errors and status mapping
@@ -391,6 +402,8 @@ This differs from the current code in three material ways:
 - `job-orchestrator` immediately simulates jobs in process and is not called by `services/backend/main.py`.
 
 The read-only migration should first place repository interfaces in front of the current managers, then add SQLite/artifact adapters, then enable writes only after authorization and worker isolation are verified.
+
+[D] Persist attempts, lease owner/expiry, heartbeat, cancellation request, checkpoints, and an append-only transition journal. Publication spans filesystem and database: stage/validate/checksum bytes, atomically place them, then commit artifact rows and terminal job state in one database transaction. On restart reconcile orphaned files and interrupted attempts; a rename alone is not proof of a completed job. Idempotency is project-scoped with a canonical request hash; if header and body keys are both supplied they must agree, and a reused key with a different payload returns 409.
 
 ## Client integration
 

@@ -1,5 +1,7 @@
 # Berkelium Studio Repository Integration Map
 
+**Revision:** `NR-0.2` (2026-10-12). Labels: **Existing/[O]**, **Proposed/[D]**, **Gap/[H]**, and **External/[F]**.
+
 ## Purpose and status
 
 This document maps the extracted repository as it exists today and defines the smallest secure integration shape for the neural-rendering architecture. Every statement is labelled implicitly by its section:
@@ -8,7 +10,7 @@ This document maps the extracted repository as it exists today and defines the s
 - **Proposed** means a target interface or design that is not implemented by the referenced files.
 - **Gap** means the README or package intent is ahead of the current code.
 
-The repository is a pnpm workspace containing `apps/desktop`, `packages/*`, and `services/*` (`pnpm-workspace.yaml`). The README describes Phase 1 as a desktop foundation and **read-only intelligence** phase and explicitly excludes file editing, CAD mutation, neural-rendering training, arbitrary command execution, and privileged renderer operations (`README.md`, lines 83–106).
+The archive is a pnpm workspace containing `apps/desktop`, `packages/*`, and `services/*` (`pnpm-workspace.yaml`). The README describes Phase 1 as a desktop foundation and **read-only intelligence** phase and explicitly excludes file editing, CAD mutation, neural-rendering training, arbitrary command execution, and privileged renderer operations (`README.md`, lines 83–106). The archive has no `.git` metadata; SHA-256 is `f1a6a8e52abbbbb2c93a24a85d80b40cead9c536a458bc5630f3bbed1d7958f4`.
 
 ## Current component map
 
@@ -52,7 +54,7 @@ flowchart LR
 
 ## Proposed target integration
 
-The target keeps Phase 1 read-only while establishing interfaces that can later support long-running neural-rendering work. The target is intentionally an architecture proposal; it is not a claim that these files already exist.
+The target keeps Phase 1 read-only while establishing interfaces that can later support long-running neural-rendering work. The target is intentionally an architecture proposal; it is not a claim that these files already exist. The first research implementation is CPU-only contract/gradient validation; the first AMD allocation is the separately bounded E-A0 envelope in `COMPUTE_BUDGET_AND_EXPERIMENTS.md`.
 
 ```mermaid
 flowchart LR
@@ -144,4 +146,4 @@ The presence of a proposed `POST /api/v1/jobs` or cancellation endpoint in the A
 
 ## Source basis and assumptions
 
-This map is based only on `README.md`, `apps/desktop/src/App.jsx`, `apps/desktop/src/ChatPanel.jsx`, `apps/desktop/electron/main.cjs`, `packages/contracts/index.js`, `packages/project-core/index.js`, `packages/scene-core/index.js`, `packages/job-orchestrator/index.js`, `packages/provider-core/index.js`, `services/backend/main.py`, `services/project-service/index.js`, `apps/desktop/package.json`, and `pnpm-workspace.yaml`. Files or services not listed there were not assumed to exist. The proposed persistence, preload, worker, and versioned endpoints are design targets, not current implementation claims.
+This map is based only on `README.md`, `apps/desktop/src/App.jsx`, `apps/desktop/src/ChatPanel.jsx`, `apps/desktop/electron/main.cjs`, `packages/contracts/index.js`, `packages/project-core/index.js`, `packages/scene-core/index.js`, `packages/job-orchestrator/index.js`, `packages/provider-core/index.js`, `services/backend/main.py`, `services/project-service/index.js`, `apps/desktop/package.json`, and `pnpm-workspace.yaml`. Files or services not listed there were not assumed to exist. The proposed persistence, preload, worker, and versioned endpoints are design targets, not current implementation claims. The engineering reference is a separate checkout at revision `737dc35c42aaf97f52a6ac984a806adef9518525` on `origin/physics/p1-numerical`; its license remains unresolved, so no source files are treated as imported implementation.

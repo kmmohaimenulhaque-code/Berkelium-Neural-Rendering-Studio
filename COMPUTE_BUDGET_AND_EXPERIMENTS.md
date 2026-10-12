@@ -1,21 +1,23 @@
 # Compute Budget and Experiments
 
-**Status:** architecture and experiment-control plan; no GPU work authorized by this document.
+**Status:** architecture and experiment-control plan, revision `NR-0.2` (2026-10-12); no GPU work authorized by this document.
 
 ## Executive rule
 
-The reported MI300X balance is approximately **27 GPU-hours**, but it is not yet a verified balance. No MI300X execution is permitted until the provider confirms the billing unit, allocated GPU count, visible device count, quota, and remaining balance. A one-hour run on a four-GPU allocation may consume four GPU-hours or more depending on the provider's accounting. The default first tranche is **1–2 billed GPU-hours**, one GPU only, followed by a go/no-go review.
+The reported MI300X balance is approximately **27 GPU-hours**, but it is not yet a verified balance. No MI300X execution is permitted until the provider confirms the billing unit, allocated GPU count, visible device count, quota, and remaining balance. A one-hour run on a four-GPU allocation may consume four GPU-hours or more depending on the provider's accounting. [D] The proposed first tranche is **at most 1.5 billed GPU-hours**, one GPU only, followed by a go/no-go review; protect **at least 8 billed GPU-hours**. These ceilings are not execution authorization.
+
+Evidence convention: `[O]` inspected implementation; `[F]` external source fact; `[D]` proposed decision; `[H]` untested hypothesis. Resource reports below are historical/unverified, not a live inventory.
 
 ## Confirmed, reported, and unknown resources
 
 | Resource | Current evidence | Planning meaning |
 |---|---|---|
-| AMD MI300X | User reports about 27 remaining free hours; earlier diagnostics reported Ubuntu 24.04, ROCm 7.0, PyTorch `2.10.0+rocm7.0`, HIP `7.0.51831`, `gfx942`, and about 196 GB visible memory. | Treat all values as historical until a read-only inventory confirms them. Use one GPU by default. |
+| AMD MI300X | User reports about 27 remaining free hours; earlier diagnostics reported Ubuntu 24.04, ROCm 7.0, PyTorch `2.10.0+rocm7.0`, HIP `7.0.51831`, `gfx942`, and about 196 GB visible memory. | Treat all values as historical until a read-only inventory confirms them. Use one GPU by default; do not treat nominal memory as a scaling target. |
 | Kaggle T4 | User reports access to T4-class notebooks. | CUDA/PyTorch reference work, preprocessing, small inference, and evaluation only; verify actual allocation and session limits each run. |
 | Colab T4 | User reports access to T4 notebooks. | Independent compatibility and inference checks; never assume availability or durable runtime. |
 | Hugging Face | Hub/model/dataset access is available or intended. | Distribution, pinned revisions, metadata, and artifacts; hosted GPU is optional and must be cost/quota-verified. |
 | Target repository | Local extracted Studio source is present, but this workspace has no `.git` metadata; GitHub target returned 404 to unauthenticated inspection. | Do not claim branch/working-tree state for the remote target. Preserve local files and request authenticated access before remote changes. |
-| Engineering source | Public GitHub repository is reachable; API metadata reports default branch `main`, public visibility, and no declared repository license. | Reference/integration source only. No code transfer until file-level licensing and ownership are cleared. |
+| Engineering source | Inspected checkout is revision `737dc35c42aaf97f52a6ac984a806adef9518525` on `origin/physics/p1-numerical`; remote `main` is `70cc43ee41b8dec2de515be35d27e98b952337b`; README licensing remains unresolved. | Reference/integration source only. No code transfer until file-level licensing and ownership are cleared. |
 
 ## Required inventory before any GPU allocation
 
@@ -46,16 +48,16 @@ The inventory is a gate, not a benchmark. It must not install packages, download
 
 ## First high-information experiment
 
-**Experiment E0 — single-scene, low-resolution renderer and ROCm feasibility gate.**
+**Experiment E-A0 — single-scene, low-resolution renderer and ROCm feasibility gate.** The CPU contract/gradient fixture must pass before this allocation.
 
-Before MI300X use, run the CPU reference and a T4-compatible baseline on a small crop/subset of one licensed Mip-NeRF 360 scene. Do not train a text-to-3D model, fine-tune Z-Image, or process a full scene collection.
+Before MI300X use, pass CPU analytic and finite-difference fixtures on owned synthetic Gaussians. No dataset or weights are needed. E-A0 is the allocation envelope for renderer experiment **E0** in [TEXT_TO_3D_RESEARCH_PLAN.md](TEXT_TO_3D_RESEARCH_PLAN.md), not a competing experiment definition. Mip-NeRF 360 is a later independently licensed real-scene evaluation, not a prerequisite.
 
 | Item | Budget and method |
 |---|---|
 | MI300X allocation | 1 GPU, maximum 1.5 billed GPU-hours; hard timeout at 90 minutes wall time unless provider billing is not GPU-hour based, in which case stop and recalculate. |
-| Workload | HIP build/smoke test, 256–512 px forward render, 1–4k Gaussians, finite-value checks, and one short optimization loop against CPU/reference output. |
+| Workload | Research E0: 64-Gaussian synthetic recovery, 128²/12 cameras/200 iterations maximum; 10k/256² and 100k/512² timing fixtures. Maximum 30 minutes from first GPU operation, within the allocation ceiling including setup/teardown. |
 | Expected outputs | Environment manifest, kernel build log, rendered PNG/NPZ, loss curve, forward/backward timings, peak VRAM, Gaussian count, checksum, and failure classification. |
-| Acceptance | Compiles without source patching in the runtime; deterministic output for fixed seed; no NaN/Inf; forward mixed error no worse than the predeclared tolerance; backward finite-difference sign agreement on a small fixture; no unexplained device reset. |
+| Acceptance | Pinned build; renderer G1/G2 tolerances for every parameter, not just gradient signs; 10-repeat determinism; finite outputs; E0 train loss reduction >=50% and holdout RGB MSE reduction >=20%; G4 timing/memory gates. Preserve correctness-pass/performance-stop as a partial result. |
 | Stop condition | Stop immediately if the HIP extension cannot compile, the reference comparison diverges beyond tolerance, memory exceeds the measured envelope, or the provider reports unexpected multi-GPU billing. A failed hypothesis is useful; do not extend the run to obtain a better-looking image. |
 | Go condition | Proceed only if all acceptance checks pass and the actual billed cost is within the approved tranche. Reassess with observed timings rather than authorizing a full run automatically. |
 
@@ -65,16 +67,17 @@ The first experiment answers the highest-risk question: whether the custom HIP p
 
 | Experiment | Resource | Max billed GPU-hours | Actual GPU-hours | Gate |
 |---|---|---:|---:|---|
-| E0 HIP feasibility and gradient smoke test | 1× MI300X | 1.5 | `TBD` | Architecture approval + provider inventory |
-| E1 T4 reference reconstruction and metrics | Kaggle or Colab T4 | 0 MI300X | `TBD` | E0 or CPU reference available; use notebook quota only |
-| E2 HIP renderer scale test | 1× MI300X | 2.0 | `TBD` | E0 pass; target one bottleneck only |
-| E3 small end-to-end scene optimization | 1× MI300X | 3.0 | `TBD` | E2 pass and quality baseline recorded |
-| E4 integration/debug reserve | 1× MI300X | 4.0 | `TBD` | Only for a named blocker with reproducible failure |
-| E5 final validation reserve | 1× MI300X | 4.0 | `TBD` | Only after API/artifact/renderer integration is testable |
+| E-A0 HIP feasibility (research E0) | 1× MI300X | 1.5 | Not run | CPU G1 + explicit authorization + provider inventory |
+| E-T0 optional CUDA control/metrics | Kaggle or Colab T4 | 0 MI300X | Not run | CPU fixtures available; verify notebook quota |
+| E-A1 learned image smoke (research E1) | 1× MI300X | 1.0 | Not run | E0 pass; separate download/run permission and license/operator inventory |
+| E-A2 HIP renderer scale test | 1× MI300X | 2.0 | Not run | E0 pass; target one bottleneck only |
+| E-A3 small end-to-end scene optimization | 1× MI300X | 3.0 | Not run | E-A2 pass and quality baseline recorded |
+| E-A4 integration/debug reserve | 1× MI300X | 4.0 | Not run | Only for a named blocker with reproducible failure |
+| E-A5 final validation reserve | 1× MI300X | 4.0 | Not run | Only after API/artifact/renderer integration is testable |
 | **Protected reserve** | 1× MI300X | **8.0 minimum** | `TBD` | Must not be allocated in advance |
-| **Uncommitted remainder** | Provider-dependent | **4.5+** | `TBD` | Recalculate after billing verification |
+| **Uncommitted remainder** | Provider-dependent | **3.5** | Not allocated | Conditional on exactly 27 GPU-hours verified |
 
-The ledger must be updated after every allocation from the provider receipt, not from wall-clock guesses. If the provider bills per instance rather than GPU, record both wall time and billed credit units.
+The illustrative arithmetic is `1.5 + 1 + 2 + 3 + 4 + 4 + 8 + 3.5 = 27`. The ledger must be updated after every allocation from the provider receipt, not from wall-clock guesses. Setup, idle time, billing rounding and teardown count; release early enough to remain below the ceiling. If instance billing or minimum allocation changes the cost, stop and recalculate before starting. Protected reserve is not preapproved spending.
 
 ## Resource placement matrix
 
@@ -86,7 +89,7 @@ The ledger must be updated after every allocation from the provider receipt, not
 | CUDA reference renderer | No | Primary | No | No |
 | HIP kernel correctness | No | Cannot validate | Required | No |
 | MI300X performance tuning | No | Cannot validate | Required, late | No |
-| Z-Image smoke test | Optional | First choice | Only if T4 fails and budget is approved | Model revision source |
+| Z-Image smoke test | Operator/metadata audit | Optional compatibility check; 16 GB feasibility unverified | Research E1 only after E0 and separate approval | Model revision source |
 | Full-resolution/multi-scene work | No by default | Not authorized by default | Not authorized by default | Artifact distribution only |
 
 CUDA execution cannot validate HIP device correctness, and CPU agreement cannot establish AMD performance.
@@ -99,7 +102,8 @@ These are planning estimates, not measurements. Measure them on the exact revisi
 |---|---|
 | Gaussian parameters | Position 12 B + scale 12 B + rotation 16 B + opacity 4 B + SH/color (4–192 B) before alignment; use 64–256 B/Gaussian for planning. |
 | Optimizer state | Approximately 2–4× parameter bytes for Adam moments and gradients; measure for the chosen representation. |
-| 1M Gaussians | Roughly 64–256 MB parameters, commonly 3–5× higher with gradients, moments, sorting keys, and tile buffers. |
+| 1M Gaussians | Renderer base example with 8M pairs and 1024² pixels: `236 MB + 80 MB + 896 MB + 41.94 MB = 1.254 GB decimal` (about 1.17 GiB), excluding tile metadata, alignment, checkpoints, library scratch and copies. Pair overlap dominates; use the renderer spec formula, not a parameter-only multiplier. |
+| Z-Image-Turbo snapshot | Selected files approximately 32.83 GB on disk; not measured runtime VRAM. Allow separate disk space for caches/staging and do not infer T4 fit from a model headline. |
 | Render buffers | `width × height × (channels + auxiliary buffers) × bytes`; backward may require transmittance, IDs, depths, and gradients. |
 | T4 constraint | 16 GB class; start at low resolution and low Gaussian count, use fp16/bf16 only after fp32 correctness. |
 | MI300X constraint | Reported ~196 GB/device historically; do not treat capacity as permission to scale. |
@@ -133,10 +137,10 @@ Before approving the next tranche, answer:
 
 ## Highest-information next action
 
-The single next action is **read-only provider inventory plus a CPU/T4 renderer fixture**, followed—only after the inventory verifies one-GPU billing—by E0 capped at 1.5 billed GPU-hours. Additional MI300X use is justified only when E0 passes compile, numerical, gradient, determinism, and cost gates and a subsequent experiment names one measured bottleneck that cannot be resolved on CPU or T4.
+The next implementation action is the **CPU-only contract/gradient fixture**. A separately authorized read-only provider inventory precedes E-A0 (research E0), capped at 1.5 billed GPU-hours. Additional MI300X use requires a new bounded hypothesis, passing prerequisite gates, and cost review; no allocation is authorized by writing this plan.
 
 ## Sources
 
-- AMD ROCm GSplat documentation: <https://rocm.docs.amd.com/projects/gsplat/en/latest/> (accessed 2026-10-11; compatibility and license must be rechecked at implementation time).
-- Mip-NeRF 360 dataset page: <https://jonbarron.info/mipnerf360/> (accessed 2026-10-11; use restrictions and download details must be recorded in the dataset manifest).
-- Engineering source repository metadata: <https://api.github.com/repos/kmmohaimenulhaque-code/BERKELIUM-NEURAL-RENDERING-AND-SCIENCES> (accessed 2026-10-11; public, default branch `main`, no declared GitHub license).
+- AMD ROCm GSplat documentation: <https://rocm.docs.amd.com/projects/gsplat/en/latest/> (reviewed 2026-10-12; compatibility and license must be rechecked at implementation time).
+- Mip-NeRF 360 dataset page: <https://jonbarron.info/mipnerf360/> (reviewed 2026-10-12; use restrictions and download details must be recorded in the dataset manifest).
+- Engineering source branch/ownership evidence: [REPOSITORY_INTEGRATION_MAP.md](REPOSITORY_INTEGRATION_MAP.md); default-branch metadata is not evidence of the inspected feature branch's contents.

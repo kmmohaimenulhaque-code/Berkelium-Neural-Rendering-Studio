@@ -1,6 +1,6 @@
 # Berkelium-Owned Differentiable Gaussian Renderer Specification
 
-**Status:** proposed architecture, revision `berkelium-gaussian-v0.1` (2026-10-11). This document specifies future behavior; it does not implement a renderer. No HIP kernels, C++ library, training loop, native build, or renderer binding are present in the inspected target repository. All APIs, binary layouts, thresholds, tests, and gates below are **proposed** unless explicitly labelled **existing**.
+**Status:** proposed architecture, revision `berkelium-gaussian-v0.2` (2026-10-12). This document specifies future behavior; it does not implement a renderer. No HIP kernels, C++ library, training loop, native build, or renderer binding are present in the inspected target repository. All APIs, binary layouts, thresholds, tests, and gates below are **proposed** unless explicitly labelled **existing**.
 
 ## 1. Target evidence and ownership
 
@@ -13,7 +13,7 @@
 | Product phase | `README.md` explicitly excludes neural training in Phase 1. | Native research is a separate, later opt-in worker capability; documenting it does not enable desktop mutation. |
 | Local license | Root `LICENSE` is MIT, copyright 2026 enigmahacker. | Independently authored Berkelium code can follow the repository license; imported code retains its own obligations. |
 
-The extracted directory has no `.git` metadata; its upstream commit is unknown. Local file paths above identify the inspected snapshot, not an invented target revision. See also [REPOSITORY_INTEGRATION_MAP.md](REPOSITORY_INTEGRATION_MAP.md) and [NEURAL_RENDERING_API.md](NEURAL_RENDERING_API.md).
+The extracted directory has no `.git` metadata; its upstream commit and worktree state are unknown. The archive SHA-256 is `f1a6a8e52abbbbb2c93a24a85d80b40cead9c536a458bc5630f3bbed1d7958f4`. Local file paths identify the inspected snapshot, not an invented target revision. See also [REPOSITORY_INTEGRATION_MAP.md](REPOSITORY_INTEGRATION_MAP.md) and [NEURAL_RENDERING_API.md](NEURAL_RENDERING_API.md).
 
 **Decision:** Berkelium owns the mathematical contract, portable C++17 CPU reference, HIP implementation, scene format, tests, and worker adapter. The 3DGS paper is an algorithm reference, not a requirement to copy Graphdeco's CUDA implementation. That implementation has research/non-commercial terms [S2]. Apache-licensed gsplat is a comparison/reference candidate [S3], not evidence of a working AMD backend. Record provenance and notices for every incorporated dependency; HIP translation does not change a source license.
 
@@ -26,7 +26,7 @@ The extracted directory has no `.git` metadata; its upstream commit is unknown. 
 - Forward RGB, accumulated alpha, and optional expected camera-space depth.
 - Analytic backward for centers, log-scales, raw quaternions, opacity logits, and color logits; optional background RGB gradient.
 - Standalone CPU executable/library usable without ROCm, Python, Electron, or model weights.
-- Linux HIP worker targeting **MI300X / CDNA3 / `gfx942`**, with 64-lane wavefronts and 192 GiB nominal HBM [S4]. Available memory must be queried, not inferred from that capacity.
+- Linux HIP worker targeting **MI300X / CDNA3 / `gfx942`** only when the actual provider inventory verifies it. Historical nominal-memory observations are not runtime evidence; available memory must be queried.
 - CMake targets proposed as `berkelium_gaussian_cpu`, `berkelium_gaussian_hip`, and `berkelium_gaussian_tests`; suggested future home `packages/gaussian-renderer/`. These paths/targets do not exist today.
 
 ### Deferred capabilities
@@ -69,7 +69,7 @@ flowchart LR
 | Camera | OpenCV-style right-handed axes: +X right, +Y down, +Z forward. |
 | Pose | `T_cw` maps world **to camera**: `p_c = R_cw p_w + t_cw`. Camera center `C_w = -R_cw^T t_cw`. |
 | Matrices | Row-major storage, column-vector mathematics; `T_cw` is 4×4, last row `[0,0,0,1]`. No implicit transpose. |
-| Intrinsics | `fx, fy > 0`, `cx, cy` in pixel units, zero skew, no distortion in v0.1. |
+| Intrinsics | `fx, fy > 0`, `cx, cy` in pixel units, zero skew, no distortion in v0.2. |
 | Image | Origin top-left; sample center `(x+0.5, y+0.5)`. Principal point `(W/2,H/2)` gives a centered symmetric camera. |
 | Projection | `u = fx X/Z + cx`, `v = fy Y/Z + cy`, with `near < Z < far`. Depth is **Z**, not Euclidean range. |
 | Color | Linear RGB float output. Input sRGB images are explicitly decoded; sRGB encoding/tone mapping happens only for display/export, outside backward. |
@@ -98,7 +98,7 @@ For `N` active entries and padded capacity `Nc = ceil(N/64)*64`, each plane is c
 | `opacity_logit` | FP32 × 1 | Base opacity `o = sigmoid(logit)`. Not volumetric density or premultiplied alpha. |
 | `color_logit_r, color_logit_g, color_logit_b` | FP32 × 3 | `c = sigmoid(color_logit)` in linear RGB, degree zero. |
 | `gaussian_id` | uint64 × 1 | Unique immutable tie-break ID, independent of array order. Never differentiated or reused after deletion. |
-| `flags` | uint32 × 1 | Enabled bit; all unknown bits rejected in v0.1. Disabled entries have zero gradients. |
+| `flags` | uint32 × 1 | Enabled bit; all unknown bits rejected in v0.2. Disabled entries have zero gradients. |
 
 There are **14 trainable floats = 56 bytes/Gaussian**, plus 12 bytes of identity/flags = 68 bytes before plane alignment/padding. Gradients mirror the 14 planes (56 bytes). Adam moments, if used by a separate optimizer, add 112 bytes. Native parameters + gradients + two moments therefore cost approximately **236 `Nc` bytes**, not including scratch, copies, or checkpoints.
 
@@ -119,7 +119,7 @@ Use the normalized quaternion in forward; backward includes normalization. `q` a
 - Pair record: `tile_id:uint32`, positive-depth FP32 bits `depth_key:uint32`, `gaussian_id:uint64`, `scene_index:uint32`; reserve a **32-byte record**. Two sorting buffers cost 64 `M` bytes for `M` Gaussian/tile overlaps. No 16-bit scene index or 32-bit byte-size arithmetic.
 - Image views are planar `[channel][y][x]` FP32 with explicit `row_stride_bytes` and `plane_stride_bytes`; default dense CHW. RGB, alpha, depth numerator, and transmittance plus last-visited index are budgeted at 40 `P` bytes (`P=W*H`) including optional validity output. Upstream gradients and exported copies are additional allocations.
 - A proposed `berkelium-gaussian-soa/1` artifact consists of a little-endian binary payload and JSON manifest: offsets, sizes, checksums, counts, types, basis, units, color model, parameterization, normalization, and provenance. It stores active entries, not pointers or native structs; validate overflow, truncation, overlap, and duplicate IDs before allocation.
-- Generic point-cloud PLY lacks Gaussian semantics. An explicit Gaussian-PLY adapter must declare scale/log-scale, opacity/logit, quaternion ordering, color-space, and SH convention. Graphdeco-style DC conversion is `c=0.5+0.28209479177387814*f_dc`; converting it to our color logits uses `[1e-6,1-1e-6]` clipping and a loss report. Higher SH terms are rejected in v0.1 unless an explicitly lossy DC-only import is requested and recorded. An arbitrary PLY is never called a trained Gaussian scene.
+- Generic point-cloud PLY lacks Gaussian semantics. An explicit Gaussian-PLY adapter must declare scale/log-scale, opacity/logit, quaternion ordering, color-space, and SH convention. Graphdeco-style DC conversion is `c=0.5+0.28209479177387814*f_dc`; converting it to our color logits uses `[1e-6,1-1e-6]` clipping and a loss report. Higher SH terms are rejected in v0.2 unless an explicitly lossy DC-only import is requested and recorded. An arbitrary PLY is never called a trained Gaussian scene.
 - Future SH must have its own versioned basis/order and appearance model. Do not append unnamed planes or pretend RGB logits are SH coefficients.
 
 ## 6. Forward contract and mathematics
@@ -128,7 +128,7 @@ Use the normalized quaternion in forward; backward includes normalization. `q` a
 
 For each enabled Gaussian:
 
-1. Compute `p_c=(X,Y,Z)`, normalize quaternion, form covariance, and cull centers at `Z<=near` or `Z>=far`. This is center clipping, not exact clipping of a Gaussian against a plane; near-plane-crossing artifacts are a known v0.1 limitation.
+1. Compute `p_c=(X,Y,Z)`, normalize quaternion, form covariance, and cull centers at `Z<=near` or `Z>=far`. This is center clipping, not exact clipping of a Gaussian against a plane; near-plane-crossing artifacts are a known v0.2 limitation.
 2. With `R_cw` from the camera, calculate:
 
 ```text
@@ -136,14 +136,14 @@ J = [fx/Z, 0,    -fx*X/Z²
      0,    fy/Z, -fy*Y/Z²]
 Sigma_c = R_cw Sigma_w R_cw^T
 S = J Sigma_c J^T + lambda_px I_2
-lambda_px = 0.3 pixel² (fixed v0.1 default)
+lambda_px = 0.3 pixel² (fixed v0.2 default)
 Q = inverse(S) = [q00 q01; q01 q11]
 ```
 
 The screen-space low-pass term is not Mip-Splatting opacity compensation. It changes footprint without preserving integrated mass; document it in artifacts and comparisons. Do not clamp `X/Z` or `Y/Z` behind the caller's back. A non-finite result or non-SPD `S` is `NUMERIC_FAILURE`, with index diagnostics, rather than silent covariance repair.
 
 3. `r = ceil(3*sqrt(lambda_max(S)))`; use an integer square AABB conservatively containing `(u±r,v±r)`, clip to `[0,W)×[0,H)`, and emit all overlapped 16×16 tiles. Empty AABBs emit zero pairs. The AABB bounds candidate work only; pixel support uses the ellipse below. Giant footprints are bounded by the image and pair quota, not silently shrunk.
-4. At sample `p=(x+0.5,y+0.5)`, `d=p-(u,v)`, `h=d^T Q d`. If `h>9`, contribution is zero. Otherwise `G=exp(-h/2)` and `a=min(0.99,o*G)`. There is **no additional alpha cutoff** in v0.1. This finite 3-sigma support is a documented approximation.
+4. At sample `p=(x+0.5,y+0.5)`, `d=p-(u,v)`, `h=d^T Q d`. If `h>9`, contribution is zero. Otherwise `G=exp(-h/2)` and `a=min(0.99,o*G)`. There is **no additional alpha cutoff** in v0.2. This finite 3-sigma support is a documented approximation.
 
 ### Sorting and compositing
 
@@ -200,7 +200,7 @@ void release_tape(ForwardTape&);
 | Tape | Owns or pins projected arrays, sorted pairs/ranges, replay data, scene generation, config/camera snapshot, device/stream event. Caller pins source parameters until tape release; mutation invalidates backward. Tape may be reused for different upstream gradients only while intact. |
 | Upstream | Optional CHW `dL/drgb`, `dL/dalpha`, `dL/ddepth`; absent planes mean zero. All must be finite. Depth gradient only acts where the forward validity flag is true. |
 | Gradients | Match the raw 14 parameter planes. `overwrite` zeroes all entries first; `accumulate` adds to initialized caller-owned buffers. Frozen/disabled/culled entries contribute zero. No optimizer inside backward. |
-| Camera gradients | v0.1 returns `UNSUPPORTED_FEATURE` if requested; no apparent zero gradient presented as support. |
+| Camera gradients | v0.2 returns `UNSUPPORTED_FEATURE` if requested; no apparent zero gradient presented as support. |
 | Asynchrony | Enqueue on the supplied stream; receipts contain a completion event and status. Host metadata validity does not imply kernel success. Inputs/workspace cannot be released until the event completes. CPU completes synchronously. |
 | Errors | `INVALID_ARGUMENT`, `INVALID_SCENE`, `INVALID_QUATERNION`, `UNSUPPORTED_FEATURE`, `RESOURCE_LIMIT`, `OUT_OF_MEMORY`, `DEVICE_UNAVAILABLE`, `STALE_TAPE`, `NUMERIC_FAILURE`, `CANCELLED`, `DEVICE_ERROR`. Failed outputs/tapes are invalid. Native debug diagnostics stay in worker logs, not raw UI responses. |
 
@@ -271,19 +271,19 @@ flowchart TD
     G --> W[Projection and parameter backward]
 ```
 
-- Start projection/count kernels at 256 threads/block; raster blocks are 16×16 threads (four MI300X waves), one thread/pixel. Use runtime wave size or backend-specific verified 64-lane operations, never CUDA's 32-lane mask assumptions.
+- Start projection/count kernels at 256 threads/block; raster blocks are 16×16 threads. On a verified wave64 target this is four waves, but the implementation must query/compile for the actual runtime and never assume CUDA's 32-lane mask semantics.
 - Stage 64 Gaussian projected records at a time in LDS (roughly 3 KiB for values and indices). Every thread, including out-of-image or terminated pixels, reaches barriers; inactive lanes simply contribute zero. Fixed gradient reduction scratch is planned separately and stays below a proposed 32 KiB/block budget. Profile registers/spills before changing batch size.
-- Host reads one count/limit receipt after count/scan; this explicit synchronization is acceptable in v0.1. Then allocate/reuse scratch from a bounded context pool and enqueue sort/render. No per-frame unbounded allocator growth.
+- Host reads one count/limit receipt after count/scan; this explicit synchronization is acceptable in v0.2. Then allocate/reuse scratch from a bounded context pool and enqueue sort/render. No per-frame unbounded allocator growth.
 - One active research job/GPU first. Default hard caps: `N<=1,000,000`, `M<=8,000,000`, `W,H<=8192`, total context allocation <=16 GiB for renderer-only research, checkpoint allocation <=2 GiB. These caps are not a guarantee every combination fits; calculate the actual plan first.
 - Approximate deterministic training bytes, including external Adam state, are `236Nc + 80Nc + 112M + 40P + 16Ttiles + 4H + S_library + alignment + upstream/copy bytes`. `112M` covers pair ping-pong (64), gradient partials (40), and reduction permutations (8). Query and include library scan/sort scratch; do not treat it as zero.
-- Example: `N=1,000,000`, `M=8,000,000`, `P=1024²` costs about **1.25 GB decimal before replay checkpoints, library scratch, and copies**; it is not 192 GiB-safe by definition. Multiple tapes/batches multiply retained memory. Diffusion model weights are outside this budget and should run in a different stage/process.
+- Example: `N=1,000,000`, `M=8,000,000`, `P=1024²`, before checkpoints/library scratch/copies: `236 MB + 80 MB + 896 MB + 41.94 MB = 1.254 GB decimal` (about 1.17 GiB). This is only the listed base terms, not a peak-memory guarantee or permission to consume all HBM. Diffusion model weights are outside this budget and must run in a separate stage/process.
 - Return measured peak bytes, pair count, maximum pairs/tile, checkpoint bytes, visible count, clamp/cull counts, stage timings, backend, and deterministic flag. Huge splats and dense overlap must be visible in diagnostics.
 - Cancellation is checked at stage/iteration boundaries; synchronize owned streams, invalidate pending receipts, and release resources before worker acknowledgment. A reset/invalid HIP context terminates that worker attempt rather than claiming successful CPU completion.
 - CPU reference is suitable for small validation scenes. Memory limits and errors use the same contract; CPU fallback for inspection is an explicit caller choice, not an OOM recovery that silently runs a large training job.
 
 ## 10. Numerical policy
 
-1. Authoritative storage and HIP computation are FP32 for parameters, covariance, conics, compositing, and gradients. No FP16/BF16 conics, opacity, or T in v0.1. CPU semantic reference has FP32 mode plus FP64 oracle mode using the same formulas.
+1. Authoritative storage and HIP computation are FP32 for parameters, covariance, conics, compositing, and gradients. No FP16/BF16 conics, opacity, or T in v0.2. CPU semantic reference has FP32 mode plus FP64 oracle mode using the same formulas.
 2. Disable unsafe fast-math/reassociation for the deterministic baseline; record compiler, flags, ROCm and math-library versions. Specify contraction consistently within each build. No promise of bitwise CPU/HIP identity.
 3. Stable sigmoid uses separate positive/negative branches; finite logits are allowed without arbitrarily clipping their inputs. Non-finite parameters/upstream gradients fail validation. Underflowing positive sigmoid/exp values may become zero; diagnose saturation and retain the defined derivative.
 4. Scale clamps, support radius, low-pass variance, alpha cap, clipping planes, T threshold, and depth epsilon are serialized render config. Changing any invalidates a tape and comparison baseline.
@@ -326,12 +326,12 @@ Densification and SH come only after these gates. Fixed-topology reconstruction 
 
 ## 12. Source register and assumptions
 
-Source review date: **2026-10-11**. A versioned documentation URL is a documentation reference, not the environment installed on a future machine. Branch URLs are mutable when no commit was resolved.
+Source review date: **2026-10-12**. A versioned documentation URL is a documentation reference, not the environment installed on a future machine. Branch URLs are mutable when no commit was resolved.
 
 - **[S1] Algorithm:** Kerbl et al., *3D Gaussian Splatting for Real-Time Radiance Field Rendering*, https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/ and https://arxiv.org/abs/2308.04079. Paper version not pinned here; algorithm inspiration, not source reuse.
 - **[S2] Original implementation/license:** https://github.com/graphdeco-inria/gaussian-splatting and https://github.com/graphdeco-inria/gaussian-splatting/blob/main/LICENSE.md. `main` reviewed; exact commit unresolved. License restricts commercial use without explicit consent; the associated rasterizer's own license must also be checked before any use.
-- **[S3] Permissive comparison:** gsplat revision `512d366b67073d77ca099ede742683c165dfc23b`, https://github.com/nerfstudio-project/gsplat/tree/512d366b67073d77ca099ede742683c165dfc23b and https://github.com/nerfstudio-project/gsplat/blob/512d366b67073d77ca099ede742683c165dfc23b/LICENSE (Apache-2.0). Resolve native dependencies separately; do not assume a CUDA wheel supports HIP.
-- **[S4] Hardware target:** ROCm **6.3.3 documentation**, https://rocm.docs.amd.com/en/docs-6.3.3/reference/gpu-arch-specs.html. MI300X: `gfx942`, wavefront 64, LDS 64 KiB, nominal memory 192 GiB. Future runtime/toolchain version remains to be measured and pinned.
+- **[S3] AMD comparison:** AMD GSplat release `1.5.3b2`, source revision `ff8bc5489545bcc1b5a2b997d975834429a0d7af`, https://github.com/AMD-Ecosystem/gsplat/tree/ff8bc5489545bcc1b5a2b997d975834429a0d7af, https://rocm.docs.amd.com/projects/gsplat/en/latest/install/gsplat-install.html, and https://rocm.docs.amd.com/projects/gsplat/en/latest/reference/benchmark-evaluation.html. Its NOTICE describes Apache-2.0 upstream portions and MIT AMD modifications. Its cutoff/compositing semantics differ from this specification; compare aligned profiles, not unqualified whole-image equality.
+- **[S4] Hardware target:** AMD/ROCm architecture documentation, https://rocm.docs.amd.com/en/docs-6.3.3/reference/gpu-arch-specs.html. `gfx942` and nominal hardware properties are targets, not the current runtime inventory.
 - **[S5] Integer scan/scratch:** rocPRIM **3.3.0 / ROCm 6.3.3 documentation**, https://rocm.docs.amd.com/projects/rocPRIM/en/docs-6.3.3/device_ops/scan.html. Float scans are not automatically deterministic; integer counts and explicit overflow checks are this design's use case.
 - **[S6] PyTorch HIP semantics:** https://docs.pytorch.org/docs/stable/notes/hip.html (mutable stable URL; installed PyTorch version unknown).
 - **[S7] Camera adapter background:** MultiNeRF revision `5b4d4f64608ec8077222c52fdf814d40acc10bc1`, https://github.com/google-research/multinerf/blob/5b4d4f64608ec8077222c52fdf814d40acc10bc1/README.md, especially its OpenGL camera-to-world versus COLMAP/OpenCV conventions.

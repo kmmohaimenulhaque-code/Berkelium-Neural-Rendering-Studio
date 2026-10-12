@@ -1,6 +1,8 @@
 # Neural Rendering and Generative 3D Architecture
 
-**Decision status:** proposed target architecture, grounded in the inspected Studio source and the public engineering-source README. No neural-rendering implementation is claimed.
+**Decision status:** proposed target architecture, revision `NR-0.2-reconciled` (2026-10-12). No neural-rendering implementation is claimed.
+
+**Evidence labels:** `[O]` implementation observation, `[F]` external fact, `[D]` design decision, `[H]` open hypothesis. Proposed interfaces are not implemented unless explicitly marked `[O]`.
 
 ## Executive design
 
@@ -45,7 +47,7 @@ flowchart LR
 
 The target workspace is a pnpm JavaScript/Electron/FastAPI prototype. Existing evidence includes `apps/desktop/src/App.jsx`, `ChatPanel.jsx`, `apps/desktop/electron/main.cjs`, `packages/*`, and `services/backend/main.py`. The current renderer calls FastAPI directly and the Electron window is not yet secure despite README claims; this is an integration gap, not a reason to bypass the boundary.
 
-The public engineering source repository is an early-stage modular skeleton organized into numbered research areas, including `09-3D-NEURAL-RENDERING`, AMD/ROCm, data, and experimentation areas. GitHub reports default branch `main`, public visibility, and no repository license. Its README is useful as a capability map, not evidence that algorithms or APIs are complete.
+The engineering reference is inspected at revision `737dc35c42aaf97f52a6ac984a806adef9518525` on `origin/physics/p1-numerical`; its remote `main` is `70cc43ee41b8dec2de515be35d27e98b952337b`. It contains implemented schemas, geometry, validation, physics, API, artifact, and model-gateway code on that branch. Its README still records the project license as undecided. Reuse therefore proceeds through a versioned API/contract boundary until ownership and file-level licensing are cleared.
 
 ## Runtime topology
 
@@ -81,7 +83,7 @@ Versioned JSON metadata points to binary arrays rather than embedding million-el
 
 ```text
 GaussianScene v1
-  coordinateSystem: right-handed, metres, +Y up, camera looks -Z
+  coordinateSystem: right-handed, +Y up; camera uses OpenCV +Z forward
   means:      float32[N,3]
   logScales:  float32[N,3]
   rotations:  float32[N,4] normalized quaternions
@@ -136,7 +138,7 @@ Mip-NeRF 360 is used as a captured-scene reconstruction/evaluation source, not a
 
 ### Text-to-3D
 
-The first approach is **multi-view generation followed by reconstruction**: produce camera-conditioned views only when the model exposes a consistency mechanism, then reconstruct a shared Gaussian scene and report inconsistency. Direct 3D generation is a research alternative, not the first dependency. If views disagree, request more views, ask the user for constraints, or stop with a quality warning; never silently invent geometry.
+The first product-facing hypothesis is **Z-Image-Turbo → reviewed reference image → TripoSR explicit 3D prior → optional Gaussian fitting**. This avoids making independently prompted views look calibrated and avoids making the non-commercial Zero123++/InstantMesh chain a default dependency. MVDream/CoSER-style consistent multiview generation remains a later comparator. If views or inferred geometry disagree, request more evidence, ask for constraints, or stop with a quality warning; never silently invent geometry.
 
 ## Security and ownership
 
@@ -150,10 +152,10 @@ Engineering-core code is not copied until a file-level license and ownership rev
 |---|---|---|
 | Renderer | CPU reference, then Berkelium HIP/C++ forward/backward path; AMD GSplat is a parity/reference aid. | Custom parity fails after bounded debugging or upstream license makes a permissible adapter preferable. |
 | Representation | GaussianScene v1 with binary arrays and JSON metadata. | Mesh/CAD requirements prove Gaussian storage insufficient. |
-| Text-to-3D | Consistent multiview prior + reconstruction first. | A licensed direct-3D checkpoint fits T4/MI300X and wins consistency/geometry tests. |
+| Text-to-3D | Z-Image-Turbo image prior + TripoSR explicit 3D prior first; multiview is a later comparator. | A licensed direct/multiview checkpoint wins the same consistency/geometry tests at an acceptable cost. |
 | API | Async FastAPI jobs, SQLite metadata, project-scoped artifact store. | Measured concurrency justifies external queue/database. |
 | Viewport | Extend existing React/Three.js path with a Gaussian loader; do not add a second engine without a benchmark. | Existing stack cannot meet progressive loading/memory requirements. |
-| Compute | CPU/T4 for breadth; single MI300X for HIP correctness and late profiling. | Provider billing or hardware availability changes. |
+| Compute | CPU/T4 for breadth; one MI300X only for verified HIP execution and late profiling. First AMD tranche is capped at 1.5 billed GPU-hours; protect 8 hours. | Provider billing, allocation, or hardware evidence changes. |
 
 ## Definition of done for the architecture
 
@@ -162,6 +164,6 @@ Engineering-core code is not copied until a file-level license and ownership rev
 - HIP execution has a bounded, measurable gate and cannot consume credits implicitly.
 - The Studio boundary prevents renderer privilege escalation.
 - Existing engineering source and target Studio ownership are explicit and not conflated.
-- The first implementation action is E0 in `COMPUTE_BUDGET_AND_EXPERIMENTS.md`, not full training.
+- The first implementation action is the CPU-only contract/gradient fixture; the first AMD action is E-A0 in `COMPUTE_BUDGET_AND_EXPERIMENTS.md`, not full training.
 
 See `REPOSITORY_INTEGRATION_MAP.md`, `NEURAL_RENDERING_API.md`, `GAUSSIAN_RENDERER_SPEC.md`, `TEXT_TO_3D_RESEARCH_PLAN.md`, `NEURAL_DATA_PROVENANCE.md`, `NEURAL_RENDERING_DECISIONS.md`, and `NEURAL_RENDERING_ROADMAP.md` for the detailed contracts and gates.
