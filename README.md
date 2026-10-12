@@ -104,3 +104,15 @@ Phase 1 explicitly excludes mutating operations:
 The application enforces strict boundary between:
 - Trusted main process / service layer
 - Restricted renderer / UI layer
+
+## Phase 2
+
+We are currently at Phase 2. 
+Main goal is 
+```
+* Natural language → 3D: Train a text-conditioned 3D generation model to produce meshes or 3D representations.
+* Neural rendering: Develop your own differentiable Gaussian Splatting renderer using HIP/C++ for AMD GPUs.
+* Training data: Combine licensed 3D assets, multiview images, camera poses and text descriptions.
+* Architecture: Text encoder → 3D representation generator → differentiable renderer → optimized 3D scene.
+* Integration: Expose inference through FastAPI and display results in Berkelium Studio’s viewport.
+```
