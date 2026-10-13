@@ -1,0 +1,4 @@
+{"id": "E-R1", "title": "AMD gsplat vs Berkelium deterministic backward on one MI300X", "benchmark": "renderer",
+ "protocol": "benchmarks/configs/renderer_mi300x_v1.json", "requires": ["rocm", "gsplat"], "approved": false,
+ "approval_note": "Consumes MI300X credit. Set approved=true only after the owner approves the cost estimate.",
+ "output": "results/renderer/E-R1_mi300x.json"}

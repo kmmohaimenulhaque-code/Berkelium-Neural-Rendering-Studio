@@ -1,0 +1,19 @@
+{
+  "viewport": {
+    "ready": true,
+    "artifactId": "244d07fcb72da84c65e98069f247dfbe4802db4c9a58f21ebb17b6c411fbf9e1",
+    "kind": "triangle_mesh",
+    "faces": 6920,
+    "points": 0
+  },
+  "gaussian_viewport": {
+    "ready": true,
+    "artifactId": "25b0d4efe45847df94c6723a30374cc5d068e40d285ab4f65ff9c0d5feb3298a",
+    "kind": "gaussian_scene",
+    "faces": 0,
+    "points": 4000
+  },
+  "mesh_artifact": "244d07fcb72da84c65e98069f247dfbe4802db4c9a58f21ebb17b6c411fbf9e1",
+  "card": "Triangle mesh\nunits: normalized_object \u00b7 model_output_unverified\n6920 faces \u00b7 1 component(s) \u00b7 watertight\nartifact 244d07fcb72d \u00b7 berkelium-textshape\nmesh\ngaussians",
+  "console_errors": []
+}

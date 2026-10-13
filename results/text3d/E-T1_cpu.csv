@@ -1,0 +1,73 @@
+comparison,metric,group,baseline,candidate,abs_diff,rel_change,status,reason
+base_vs_retrieval,success_rate,quality,1.0,1.0,0.0,0.0,equal,
+base_vs_retrieval,part_count_accuracy,quality,0.6875,0.46875,-0.21875,-0.3181818181818182,regressed,
+base_vs_retrieval,color_accuracy,quality,0.46875,0.9375,0.46875,1.0,improved,
+base_vs_retrieval,chamfer_l1,quality,0.12444369087070978,0.08985860806588059,-0.03458508280482919,-0.27791752689785787,improved,
+base_vs_retrieval,chamfer_l2,quality,0.026094683653761355,0.014115875744909183,-0.011978807908852172,-0.4590516623153435,improved,
+base_vs_retrieval,normal_consistency,quality,0.7371282577514648,0.7234612200409174,-0.013667037710547447,-0.01854092224362333,regressed,
+base_vs_retrieval,fscore@0.02,quality,0.12390690955044102,0.16516282108915997,0.04125591153871895,0.3329589260873637,improved,
+base_vs_retrieval,fscore@0.05,quality,0.30232764053271566,0.39583401393630613,0.09350637340359047,0.30928820546751135,improved,
+base_vs_retrieval,view_psnr,quality,11.880058943305539,13.686748313490245,1.8066893701847064,0.15207747527235824,improved,
+base_vs_retrieval,view_ssim,quality,0.5895021662581712,0.6355230920016766,0.04602092574350536,0.07806744127103105,improved,
+base_vs_retrieval,color_mae,quality,0.19694721159946915,0.04220479918799053,-0.15474241241147862,-0.7857050178815312,improved,
+base_vs_retrieval,seconds,performance,0.07634375000000002,0.7915937500000001,0.71525,9.36880884158821,regressed,
+base_vs_retrieval,lpips,quality,,,,,not_comparable,requires pretrained LPIPS network weights (download not approved)
+base_vs_retrieval,peak_rss,performance,651.08984375,1001.75390625,350.6640625,0.5385801450692649,info,
+base_vs_retrieval,paired_delta_chamfer_l1,quality,,-0.034585082804829206,-0.034585082804829206,,CI excludes 0,"95% CI [-0.05164, -0.01755], n=32"
+base_vs_retrieval,paired_delta_fscore@0.05,quality,,0.09350637340359047,0.09350637340359047,,CI excludes 0,"95% CI [0.01197, 0.1732], n=32"
+base_vs_retrieval,paired_delta_view_psnr,quality,,1.8066893701847058,1.8066893701847058,,CI excludes 0,"95% CI [0.9888, 2.622], n=32"
+base_vs_retrieval,paired_delta_normal_consistency,quality,,-0.013667037710547447,-0.013667037710547447,,CI includes 0,"95% CI [-0.06204, 0.03376], n=32"
+lora_vs_base,success_rate,quality,1.0,1.0,0.0,0.0,equal,
+lora_vs_base,part_count_accuracy,quality,0.5333333333333333,0.26666666666666666,-0.26666666666666666,-0.5,regressed,
+lora_vs_base,color_accuracy,quality,0.95,0.9333333333333333,-0.016666666666666607,-0.017543859649122747,regressed,
+lora_vs_base,chamfer_l1,quality,0.13422424857502085,0.08110599779126286,-0.053118250783757995,-0.3957425826382559,improved,
+lora_vs_base,chamfer_l2,quality,0.029268344435544887,0.012500241296378738,-0.01676810313916615,-0.5729091775618903,improved,
+lora_vs_base,normal_consistency,quality,0.6673272411028545,0.7853894094626109,0.11806216835975647,0.17691795132571198,improved,
+lora_vs_base,fscore@0.02,quality,0.0943100956814035,0.16813020004134677,0.07382010435994327,0.78273809210544,improved,
+lora_vs_base,fscore@0.05,quality,0.24842681750069728,0.4278618451263538,0.1794350276256565,0.7222852566033974,improved,
+lora_vs_base,view_psnr,quality,11.834687168597215,14.071093197805173,2.2364060292079575,0.18897043896032634,improved,
+lora_vs_base,view_ssim,quality,0.6059896779557069,0.7001351237297058,0.09414544577399886,0.15535816730673777,improved,
+lora_vs_base,color_mae,quality,0.04942740668687556,0.04803817965090274,-0.0013892270359728148,-0.028106411586058304,improved,
+lora_vs_base,seconds,performance,0.7505000000000003,1.2387000000000001,0.48819999999999986,0.6504996668887404,regressed,
+lora_vs_base,lpips,quality,,,,,not_comparable,requires pretrained LPIPS network weights (download not approved)
+lora_vs_base,peak_rss,performance,1015.4140625,1144.13671875,128.72265625,0.12676863656297846,info,
+lora_vs_base,paired_delta_chamfer_l1,quality,,-0.05311825078375801,-0.05311825078375801,,CI excludes 0,"95% CI [-0.07115, -0.03571], n=30"
+lora_vs_base,paired_delta_fscore@0.05,quality,,0.17943502762565647,0.17943502762565647,,CI excludes 0,"95% CI [0.1058, 0.2599], n=30"
+lora_vs_base,paired_delta_view_psnr,quality,,2.2364060292079557,2.2364060292079557,,CI excludes 0,"95% CI [1.462, 3.02], n=30"
+lora_vs_base,paired_delta_normal_consistency,quality,,0.11806216835975647,0.11806216835975647,,CI excludes 0,"95% CI [0.09235, 0.1458], n=30"
+lora_vs_retrieval_with_adapter_data,success_rate,quality,1.0,1.0,0.0,0.0,equal,
+lora_vs_retrieval_with_adapter_data,part_count_accuracy,quality,0.7666666666666667,0.26666666666666666,-0.5,-0.6521739130434783,regressed,
+lora_vs_retrieval_with_adapter_data,color_accuracy,quality,0.5666666666666667,0.9333333333333333,0.3666666666666667,0.6470588235294118,improved,
+lora_vs_retrieval_with_adapter_data,chamfer_l1,quality,0.11116478847959496,0.08110599779126286,-0.0300587906883321,-0.27039848768164204,improved,
+lora_vs_retrieval_with_adapter_data,chamfer_l2,quality,0.024633624618977966,0.012500241296378738,-0.012133383322599228,-0.4925537151057973,improved,
+lora_vs_retrieval_with_adapter_data,normal_consistency,quality,0.7485966821511586,0.7853894094626109,0.03679272731145233,0.049148931846351746,improved,
+lora_vs_retrieval_with_adapter_data,fscore@0.02,quality,0.14268672375207195,0.16813020004134677,0.02544347628927482,0.1783170544547972,improved,
+lora_vs_retrieval_with_adapter_data,fscore@0.05,quality,0.33904035978886726,0.4278618451263538,0.08882148533748652,0.2619790911996403,improved,
+lora_vs_retrieval_with_adapter_data,view_psnr,quality,12.56866822116732,14.071093197805173,1.5024249766378528,0.11953732489394286,improved,
+lora_vs_retrieval_with_adapter_data,view_ssim,quality,0.660046477864186,0.7001351237297058,0.040088645865519745,0.06073609542655352,improved,
+lora_vs_retrieval_with_adapter_data,color_mae,quality,0.18844001486560819,0.04803817965090274,-0.14040183521470545,-0.7450744223027013,improved,
+lora_vs_retrieval_with_adapter_data,seconds,performance,0.04343333333333334,1.2461333333333333,1.2026999999999999,27.690713737528775,regressed,
+lora_vs_retrieval_with_adapter_data,lpips,quality,,,,,not_comparable,requires pretrained LPIPS network weights (download not approved)
+lora_vs_retrieval_with_adapter_data,peak_rss,performance,1144.13671875,1144.13671875,0.0,0.0,info,
+lora_vs_retrieval_with_adapter_data,paired_delta_chamfer_l1,quality,,-0.030058790688332098,-0.030058790688332098,,CI excludes 0,"95% CI [-0.04564, -0.01543], n=30"
+lora_vs_retrieval_with_adapter_data,paired_delta_fscore@0.05,quality,,0.08882148533748642,0.08882148533748642,,CI excludes 0,"95% CI [0.02361, 0.1481], n=30"
+lora_vs_retrieval_with_adapter_data,paired_delta_view_psnr,quality,,1.5024249766378535,1.5024249766378535,,CI excludes 0,"95% CI [0.7448, 2.248], n=30"
+lora_vs_retrieval_with_adapter_data,paired_delta_normal_consistency,quality,,0.03679272731145223,0.03679272731145223,,CI includes 0,"95% CI [-0.0107, 0.08545], n=30"
+base_retention_after_adapter,success_rate,quality,1.0,1.0,0.0,0.0,equal,
+base_retention_after_adapter,part_count_accuracy,quality,0.46875,0.28125,-0.1875,-0.4,regressed,
+base_retention_after_adapter,color_accuracy,quality,0.9375,0.9375,0.0,0.0,equal,
+base_retention_after_adapter,chamfer_l1,quality,0.08985860806588059,0.13163432359164698,0.041775715525766394,0.4649049926873804,regressed,
+base_retention_after_adapter,chamfer_l2,quality,0.014115875744909183,0.029759837281148657,0.015643961536239474,1.108252992513156,regressed,
+base_retention_after_adapter,normal_consistency,quality,0.7234612200409174,0.703691216185689,-0.019770003855228424,-0.027326971104422535,regressed,
+base_retention_after_adapter,fscore@0.02,quality,0.16516282108915997,0.1019383218614185,-0.06322449922774147,-0.3828010372480314,regressed,
+base_retention_after_adapter,fscore@0.05,quality,0.39583401393630613,0.2516755992851245,-0.14415841465118162,-0.3641890529255483,regressed,
+base_retention_after_adapter,view_psnr,quality,13.686748313490245,12.065640777035124,-1.6211075364551206,-0.11844358494247224,regressed,
+base_retention_after_adapter,view_ssim,quality,0.6355230920016766,0.587867452763021,-0.04765563923865557,-0.07498647938748676,regressed,
+base_retention_after_adapter,color_mae,quality,0.04220479918799053,0.04044625777751208,-0.0017585414104784453,-0.04166685884810091,improved,
+base_retention_after_adapter,seconds,performance,0.7496875000000001,1.25509375,0.5054062499999998,0.6741558982909542,regressed,
+base_retention_after_adapter,lpips,quality,,,,,not_comparable,requires pretrained LPIPS network weights (download not approved)
+base_retention_after_adapter,peak_rss,performance,1144.13671875,1150.47265625,6.3359375,0.005537745093018413,info,
+base_retention_after_adapter,paired_delta_chamfer_l1,quality,,0.04177571552576639,0.04177571552576639,,CI excludes 0,"95% CI [0.02947, 0.05452], n=32"
+base_retention_after_adapter,paired_delta_fscore@0.05,quality,,-0.14415841465118165,-0.14415841465118165,,CI excludes 0,"95% CI [-0.2075, -0.08456], n=32"
+base_retention_after_adapter,paired_delta_view_psnr,quality,,-1.6211075364551184,-1.6211075364551184,,CI excludes 0,"95% CI [-2.192, -1.057], n=32"
+base_retention_after_adapter,paired_delta_normal_consistency,quality,,-0.019770003855228424,-0.019770003855228424,,CI includes 0,"95% CI [-0.04438, 0.004925], n=32"

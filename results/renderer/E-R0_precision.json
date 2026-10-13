@@ -1,0 +1,98 @@
+{
+  "diagnosis": "division-based transmittance recovery (gsplat algorithm) precision",
+  "config_hash": "1a35cb1e35d2acdd6d1de5dcc043323fecc3cb5bf76e7af41fd64daff16758f5",
+  "config": {
+    "n": 3000,
+    "res": 128,
+    "seed": 3,
+    "out": "results/renderer/E-R0_precision.json"
+  },
+  "method": "benchmarks/renderer/precision_diagnosis.py",
+  "started_at": "2026-10-13T16:21:20Z",
+  "environment": {
+    "git_commit": "d525d20dc33935f60663769d9599b9ed6c4d975d+dirty",
+    "python": "3.13.16",
+    "platform": "Linux-6.18.44-fc-v114-x86_64-with-glibc2.39",
+    "numpy": "2.5.3",
+    "torch": "2.14.1+cu130",
+    "torch_hip": null,
+    "torch_cuda": "13.0",
+    "gpu_visible": false
+  },
+  "result": {
+    "n": 3000,
+    "res": 128,
+    "seed": 3,
+    "workload": {
+      "n_pairs": 6984,
+      "max_pairs_per_tile": 470,
+      "tiles": [
+        8,
+        8
+      ]
+    },
+    "min_T_final": 0.00010002400428121838,
+    "errors_vs_fp64_autograd": {
+      "v_means2d": {
+        "ref_max_abs": 5.503418012630666,
+        "kernel_fp32_division": {
+          "max_abs_err": 0.0001595998021403089,
+          "rel_to_ref_max": 2.9000123518514857e-05
+        },
+        "autograd_fp32_cumprod": {
+          "max_abs_err": 2.5111809801359186e-05,
+          "rel_to_ref_max": 4.562947925039696e-06
+        },
+        "kernel_fp64_division": {
+          "max_abs_err": 2.7278179715040096e-13,
+          "rel_to_ref_max": 4.956588733117324e-14
+        }
+      },
+      "v_conics": {
+        "ref_max_abs": 20.5178517433358,
+        "kernel_fp32_division": {
+          "max_abs_err": 0.0003463787008009256,
+          "rel_to_ref_max": 1.6881821017808524e-05
+        },
+        "autograd_fp32_cumprod": {
+          "max_abs_err": 6.362355514433204e-05,
+          "rel_to_ref_max": 3.100887750833709e-06
+        },
+        "kernel_fp64_division": {
+          "max_abs_err": 4.3365311341858614e-13,
+          "rel_to_ref_max": 2.113540534571007e-14
+        }
+      },
+      "v_colors": {
+        "ref_max_abs": 6.501119036044558,
+        "kernel_fp32_division": {
+          "max_abs_err": 0.0005047144388140579,
+          "rel_to_ref_max": 7.763500960615215e-05
+        },
+        "autograd_fp32_cumprod": {
+          "max_abs_err": 1.655405498046658e-05,
+          "rel_to_ref_max": 2.5463393130759347e-06
+        },
+        "kernel_fp64_division": {
+          "max_abs_err": 9.35695965154082e-13,
+          "rel_to_ref_max": 1.4392844677450832e-13
+        }
+      },
+      "v_opacities": {
+        "ref_max_abs": 17.432590296073915,
+        "kernel_fp32_division": {
+          "max_abs_err": 0.00024291875221164883,
+          "rel_to_ref_max": 1.3934747968370358e-05
+        },
+        "autograd_fp32_cumprod": {
+          "max_abs_err": 4.149707116063439e-05,
+          "rel_to_ref_max": 2.380430587528932e-06
+        },
+        "kernel_fp64_division": {
+          "max_abs_err": 4.1877612488860905e-13,
+          "rel_to_ref_max": 2.4022598923977683e-14
+        }
+      }
+    }
+  }
+}

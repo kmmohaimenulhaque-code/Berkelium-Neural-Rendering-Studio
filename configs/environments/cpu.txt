@@ -1,0 +1,18 @@
+# CPU reference environment (tested in this commit with Python 3.13.16).
+# torch: install the CPU wheel explicitly:  pip install --index-url https://download.pytorch.org/whl/cpu torch==2.14.1
+numpy==2.5.3
+scipy==1.18.1
+scikit-image==0.26.0
+trimesh==5.1.1
+pillow==12.3.0
+pydantic==2.13.5
+fastapi==0.143.0
+uvicorn==0.53.0
+httpx==0.28.1
+pytest==9.1.1
+playwright==1.56.0
+# existing backend (services/backend/requirements.txt)
+slowapi==0.1.10
+pypdf==5.9.0
+pytesseract==0.3.13
+python-multipart==0.0.20

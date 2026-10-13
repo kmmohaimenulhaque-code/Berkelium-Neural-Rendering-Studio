@@ -1,0 +1,20 @@
+{
+  "protocol_id": "text3d-cpu-v1",
+  "description": "Text-to-3D on berkelium-procedural-shapes-v1 with the fixed protocol berkelium-text3d-eval/1. Base comparison on held-out structure families (test); adapter comparison (pretrained base vs base+LoRA) on held-out capsule families (adapter_test).",
+  "dataset": "data/procedural_shapes_v1",
+  "resolution": 48,
+  "comparisons": [
+    {"id": "base_vs_retrieval", "split": "test",
+     "baseline": {"kind": "retrieval", "train_splits": ["train"]},
+     "candidate": {"kind": "model", "checkpoint": "runs/textshape_base_v1/model.pt"}},
+    {"id": "lora_vs_base", "split": "adapter_test",
+     "baseline": {"kind": "model", "checkpoint": "runs/textshape_base_v1/model.pt"},
+     "candidate": {"kind": "model", "checkpoint": "runs/textshape_base_v1/model.pt", "adapter": "runs/textshape_lora_capsule_v1/adapter.pt"}},
+    {"id": "lora_vs_retrieval_with_adapter_data", "split": "adapter_test",
+     "baseline": {"kind": "retrieval", "train_splits": ["train", "adapter_train"]},
+     "candidate": {"kind": "model", "checkpoint": "runs/textshape_base_v1/model.pt", "adapter": "runs/textshape_lora_capsule_v1/adapter.pt"}},
+    {"id": "base_retention_after_adapter", "split": "test",
+     "baseline": {"kind": "model", "checkpoint": "runs/textshape_base_v1/model.pt"},
+     "candidate": {"kind": "model", "checkpoint": "runs/textshape_base_v1/model.pt", "adapter": "runs/textshape_lora_capsule_v1/adapter.pt"}}
+  ]
+}
