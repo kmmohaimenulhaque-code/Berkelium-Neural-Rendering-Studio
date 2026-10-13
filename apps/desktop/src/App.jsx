@@ -25,6 +25,7 @@ import "./berkelium-logo.css";
 import ChatPanel from "./ChatPanel.jsx";
 import CodePanel from "./CodePanel.jsx";
 import SettingsModal from "./SettingsModal.jsx";
+import { OPEN_SETTINGS } from "./api.js";
 // Workspace definitions. Switching mode swaps the content of the center region.
 // Scene = 3D viewport, Code = Monaco, Combined = both split vertically.
 const WORKSPACES = [
@@ -40,6 +41,13 @@ export default function App() {
   const [bottomOpen, setBottomOpen] = useState(false);
   const [backendStatus, setBackendStatus] = useState("checking");
   const [settingsOpen, setSettingsOpen] = useState(false);
+
+  // The chat panel fires this when it needs the user to set up a provider.
+  useEffect(() => {
+    const open = () => setSettingsOpen(true);
+    window.addEventListener(OPEN_SETTINGS, open);
+    return () => window.removeEventListener(OPEN_SETTINGS, open);
+  }, []);
 
   // Keyboard shortcuts: Cmd/Ctrl + B/J/. for the three toggles.
   // These match VS Code and Cursor conventions so devs feel at home.

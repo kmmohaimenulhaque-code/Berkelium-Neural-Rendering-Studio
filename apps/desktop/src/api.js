@@ -43,3 +43,7 @@ export async function apiFetch(path, { method = "GET", body } = {}) {
 // Other components (the chat model picker) listen for this to refresh
 // their provider list after the user saves something in Settings.
 export const PROVIDERS_CHANGED = "berkelium:providers-changed";
+
+// Any component can ask the app to open the Settings window, for example
+// the chat when the chosen provider is not set up yet.
+export const OPEN_SETTINGS = "berkelium:open-settings";

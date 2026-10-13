@@ -1014,3 +1014,174 @@
         transform: rotate(360deg);
     }
 }
+
+/* Chat model picker. Sits between the messages and the input so the user
+   always sees which AI will answer before they hit Enter. */
+.chat__picker {
+    position: relative;
+    padding: var(--sp-2) var(--sp-3) 0;
+    background: var(--bg-surface);
+    border-top: 1px solid var(--border);
+}
+
+.chat__picker + .chat__composer {
+    border-top: none;
+}
+
+.chat__picker-btn {
+    max-width: 100%;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 8px;
+    font-size: var(--fs-sm);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    transition: color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+}
+
+.chat__picker-btn:hover:not(:disabled) {
+    color: var(--text-primary);
+    background: var(--bg-hover);
+}
+
+.chat__picker-label {
+    font-weight: var(--fw-medium);
+    white-space: nowrap;
+}
+
+.chat__picker-model {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    color: var(--text-tertiary);
+}
+
+.chat__picker-dot {
+    width: 6px;
+    height: 6px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--text-disabled);
+}
+
+.chat__picker-dot--on {
+    background: var(--accent);
+    box-shadow: 0 0 6px var(--accent-dim);
+}
+
+/* Opens upward because the picker sits at the bottom of the panel. */
+.chat__menu {
+    position: absolute;
+    left: var(--sp-3);
+    right: var(--sp-3);
+    bottom: calc(100% + 4px);
+    z-index: 20;
+    max-height: 320px;
+    overflow-y: auto;
+    padding: 4px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-md);
+    box-shadow: var(--shadow-md);
+}
+
+.chat__menu-group {
+    padding: 6px 8px 2px;
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-tertiary);
+}
+
+.chat__menu-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 8px;
+    font-size: 12px;
+    text-align: left;
+    color: var(--text-secondary);
+    border-radius: var(--r-sm);
+}
+
+.chat__menu-item:hover {
+    color: var(--text-primary);
+    background: var(--bg-hover);
+}
+
+.chat__menu-check {
+    width: 14px;
+    display: inline-flex;
+    color: var(--accent);
+}
+
+.chat__menu-name {
+    white-space: nowrap;
+}
+
+.chat__menu-model {
+    flex: 1;
+    overflow: hidden;
+    text-align: right;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    color: var(--text-tertiary);
+}
+
+.chat__menu-manage {
+    margin-top: 4px;
+    border-top: 1px solid var(--border);
+    border-radius: 0 0 var(--r-sm) var(--r-sm);
+}
+
+.chat__msg-via {
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: var(--fw-regular);
+}
+
+.chat__error-body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.chat__error-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.chat__error-actions:empty {
+    display: none;
+}
+
+.chat__error-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    font-size: var(--fs-sm);
+    color: var(--text-primary);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-sm);
+}
+
+.chat__error-btn:hover {
+    background: var(--bg-hover);
+}
+
+/* Panels and workspaces must fill the resizable Panel they live in.
+   Without an explicit height they shrink to their content, which left the
+   chat input floating mid-panel and the Combined-mode editor 6 lines tall. */
+.panel,
+.workspace {
+    height: 100%;
+}
