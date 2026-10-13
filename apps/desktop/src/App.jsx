@@ -24,6 +24,7 @@ import "./shell.css";
 import "./berkelium-logo.css";
 import ChatPanel from "./ChatPanel.jsx";
 import CodePanel from "./CodePanel.jsx";
+import SettingsModal from "./SettingsModal.jsx";
 // Workspace definitions. Switching mode swaps the content of the center region.
 // Scene = 3D viewport, Code = Monaco, Combined = both split vertically.
 const WORKSPACES = [
@@ -38,6 +39,7 @@ export default function App() {
   const [rightOpen, setRightOpen] = useState(true);
   const [bottomOpen, setBottomOpen] = useState(false);
   const [backendStatus, setBackendStatus] = useState("checking");
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   // Keyboard shortcuts: Cmd/Ctrl + B/J/. for the three toggles.
   // These match VS Code and Cursor conventions so devs feel at home.
@@ -45,6 +47,11 @@ export default function App() {
     const onKey = (e) => {
       const mod = e.metaKey || e.ctrlKey;
       if (!mod) return;
+      if (e.key === ",") {
+        e.preventDefault();
+        setSettingsOpen(true);
+        return;
+      }
       if (e.key === "b") {
         e.preventDefault();
         setLeftOpen((v) => !v);
@@ -93,6 +100,7 @@ export default function App() {
         onToggleRight={() => setRightOpen((v) => !v)}
         onToggleBottom={() => setBottomOpen((v) => !v)}
         backendStatus={backendStatus}
+        onOpenSettings={() => setSettingsOpen(true)}
       />
 
       <PanelGroup direction="vertical" autoSaveId="berkelium-vertical">
@@ -133,6 +141,8 @@ export default function App() {
       </PanelGroup>
 
       <StatusBar backendStatus={backendStatus} workspace={workspace} />
+
+      {settingsOpen && <SettingsModal onClose={() => setSettingsOpen(false)} />}
     </div>
   );
 }
@@ -147,6 +157,7 @@ function TopBar({
   onToggleRight,
   onToggleBottom,
   backendStatus,
+  onOpenSettings,
 }) {
   return (
     <header className="topbar" role="banner">
@@ -191,7 +202,7 @@ function TopBar({
         <IconButton label="Search" onClick={() => { }} disabled>
           <Search size={14} />
         </IconButton>
-        <IconButton label="Settings" onClick={() => { }} disabled>
+        <IconButton label="Settings (Cmd+,)" onClick={onOpenSettings}>
           <Settings size={14} />
         </IconButton>
 

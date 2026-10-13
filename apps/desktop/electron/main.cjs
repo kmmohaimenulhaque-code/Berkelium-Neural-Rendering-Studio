@@ -3,7 +3,7 @@
 // and the file system. The renderer talks to us through IPC channels
 // exposed by preload.cjs.
 
-const { app, BrowserWindow, ipcMain, dialog } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog, shell } = require("electron");
 const fs = require("fs/promises");
 const path = require("path");
 
@@ -27,6 +27,14 @@ function createWindow() {
             nodeIntegration: false,
             preload: path.join(__dirname, "preload.cjs"),
         },
+    });
+
+    // Links like "Get a key" in Settings should open in the user's real
+    // browser, not a bare Electron window. Only https links are allowed out,
+    // so a crafted link cannot launch file:// or custom URL schemes.
+    mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+        if (url.startsWith("https://")) shell.openExternal(url);
+        return { action: "deny" };
     });
 
     if (isDev) {
