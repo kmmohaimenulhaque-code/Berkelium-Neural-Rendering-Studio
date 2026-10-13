@@ -46,3 +46,11 @@ Thumbs.db
 /cache/
 *.sqlite
 config.json
+
+# Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+config.json.tmp
