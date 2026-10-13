@@ -21,9 +21,9 @@ import {
 } from "lucide-react";
 
 import "./shell.css";
+import "./berkelium-logo.css";
 import ChatPanel from "./ChatPanel.jsx";
 import CodePanel from "./CodePanel.jsx";
-
 // Workspace definitions. Switching mode swaps the content of the center region.
 // Scene = 3D viewport, Code = Monaco, Combined = both split vertically.
 const WORKSPACES = [
@@ -151,8 +151,10 @@ function TopBar({
   return (
     <header className="topbar" role="banner">
       <div className="topbar__brand">
-        <span className="topbar__brand-dot" aria-hidden="true" />
-        <span>BERKELIUM STUDIO</span>
+        <div className="logo-lockup logo-lockup--horizontal">
+          <div className="logo-icon logo-icon--white" role="img" aria-label="Berkelium" />
+          <span className="logo-wordmark logo-wordmark--white">BERKELIUM</span>
+        </div>
       </div>
 
       <nav className="topbar__workspaces" role="tablist" aria-label="Workspaces">

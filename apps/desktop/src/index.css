@@ -1,134 +1,116 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap");
+/* index.css
+   Global design tokens and base styles for Berkelium Studio.
+   Dark near-black theme with cyan accent, matching Chunk C. */
 
-/* Berkelium Studio design tokens
-   Values derived from devil_360's master spec. Treat as source of truth.
-   Changes propagate everywhere via var(--...). Don't hardcode colors in components. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Helvetica:wght@400;700&display=swap');
 
 :root {
-  /* Surfaces: layered darks for depth without shadows */
+  /* Brand colors from the Berkelium logo file */
+  --berkelium-navy: #0c153a;
+  --berkelium-white: #ffffff;
+
+  /* Backgrounds. The ladder is: app (deepest), surface (chrome), elevated (chips/inputs), selected (active) */
   --bg-app: #08090A;
-  --bg-surface: #0C0D0F;
-  --bg-elevated: #121316;
-  --bg-hover: #1A1B1F;
-  --bg-selected: #1F2529;
+  --bg-surface: #0E0F11;
+  --bg-elevated: #1A1B1E;
+  --bg-selected: #2A2B2E;
+  --bg-hover: rgba(255, 255, 255, 0.06);
+
+  /* Aliases so files using the newer names still work */
+  --bg-primary: var(--bg-app);
+  --bg-secondary: var(--bg-surface);
+  --bg-tertiary: var(--bg-elevated);
 
   /* Text */
   --text-primary: #F7F8F8;
-  --text-secondary: #8A8F98;
-  --text-tertiary: #5E6269;
-  --text-disabled: #3A3D43;
+  --text-secondary: rgba(247, 248, 248, 0.70);
+  --text-tertiary: rgba(247, 248, 248, 0.45);
+  --text-disabled: rgba(247, 248, 248, 0.25);
 
-  /* Borders: single hairline color, differentiation comes from opacity in components */
-  --border: #1F2023;
-  --border-strong: #2B2D32;
+  /* Borders */
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
 
-  /* Accent: Berkelium cyan. Use sparingly: focus, selection, primary CTAs. */
+  /* Accent: cyan (Chunk C look) */
   --accent: #00D4D4;
-  --accent-dim: #008B8B;
-  --accent-bg: rgba(0, 212, 212, 0.08);
+  --accent-dim: rgba(0, 212, 212, 0.6);
+  --accent-bg: rgba(0, 212, 212, 0.1);
 
-  /* Semantic: separate hues so a running render error cannot look like a success */
-  --error: #F7626B;
-  --warning: #F7CF4C;
-  --success: #4AC26B;
-  --info: #4C9EF7;
+  /* Status colors */
+  --success: #4ade80;
+  --error: #f87171;
+  --warning: #fbbf24;
+  --info: #60a5fa;
 
-  /* Typography */
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+  /* Fonts */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+  --font-brand: 'Helvetica', 'Helvetica Neue', Arial, sans-serif;
 
-  /* Type scale: denser than marketing scales, built for sustained desktop use */
-  --fs-xs: 11px;
-  --fs-sm: 12px;
+  /* Type scale */
+  --fs-xs: 10px;
+  --fs-sm: 11px;
   --fs-base: 13px;
-  --fs-md: 14px;
+  --fs-md: 13px;
   --fs-lg: 16px;
-  --fs-xl: 20px;
-  --fs-2xl: 24px;
-  --fs-3xl: 32px;
 
+  /* Font weights */
   --fw-regular: 400;
   --fw-medium: 500;
   --fw-semibold: 600;
+  --fw-bold: 700;
 
-  /* Spacing: 4px half-steps allowed for dense desktop controls */
-  --sp-0: 0;
+  /* Spacing scale */
   --sp-1: 4px;
   --sp-2: 8px;
   --sp-3: 12px;
   --sp-4: 16px;
   --sp-5: 20px;
   --sp-6: 24px;
-  --sp-8: 32px;
-  --sp-10: 40px;
-  --sp-12: 48px;
 
-  /* Radii: small on controls, slightly larger on panels */
-  --r-sm: 4px;
-  --r-md: 6px;
-  --r-lg: 8px;
+  /* Radii */
+  --r-sm: 3px;
+  --r-md: 4px;
+  --r-lg: 6px;
   --r-pill: 999px;
+  --radius-sm: 3px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
 
-  /* Fixed layout dimensions */
+  /* Layout dimensions used by the .app grid */
   --h-topbar: 36px;
   --h-statusbar: 24px;
-  --w-sidebar-left: 240px;
-  --w-sidebar-right: 320px;
-  --h-bottom-panel: 180px;
 
-  /* Motion: short, respectful of reduced-motion */
+  /* Motion */
   --dur-fast: 120ms;
-  --dur-base: 180ms;
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Elevation */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.35);
 }
 
-/* Reset and base */
-*,
-*::before,
-*::after {
+* {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
 html,
 body,
 #root {
+  margin: 0;
+  padding: 0;
   height: 100%;
-  width: 100%;
   overflow: hidden;
 }
 
 body {
   font-family: var(--font-sans);
   font-size: var(--fs-base);
-  font-weight: var(--fw-regular);
   color: var(--text-primary);
   background: var(--bg-app);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  user-select: none;
-}
-
-.selectable,
-.selectable * {
-  user-select: text;
-}
-
-button {
-  font: inherit;
-  color: inherit;
-  background: none;
-  border: none;
-  cursor: pointer;
-  outline: none;
-}
-
-:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
-  border-radius: var(--r-sm);
 }
 
 ::-webkit-scrollbar {
@@ -137,25 +119,37 @@ button {
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--bg-app);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-strong);
-  border-radius: var(--r-pill);
+  background: var(--bg-elevated);
+  border-radius: 5px;
   border: 2px solid var(--bg-app);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--text-tertiary);
+  background: var(--border-strong);
 }
 
-@media (prefers-reduced-motion: reduce) {
+::selection {
+  background: rgba(0, 212, 212, 0.25);
+  color: var(--text-primary);
+}
 
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+button {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  background: transparent;
+  border: none;
+  cursor: pointer;
 }

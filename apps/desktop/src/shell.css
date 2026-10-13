@@ -32,8 +32,6 @@
     align-items: center;
     gap: var(--sp-2);
     padding: 0 var(--sp-3);
-    margin-left: 68px;
-    /* Leave room for macOS traffic lights */
     font-size: var(--fs-sm);
     font-weight: var(--fw-semibold);
     letter-spacing: 0.02em;

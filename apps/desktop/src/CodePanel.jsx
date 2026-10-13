@@ -152,6 +152,24 @@ export default function CodePanel() {
         setError("");
         setStatus(`Saved ${result.name}`);
     }, [content, fileName]);
+    // Define a custom Monaco theme that matches our near-black app background,
+    // so the editor does not look like a lighter grey slab in the middle.
+    const handleBeforeMount = (monaco) => {
+        monaco.editor.defineTheme("berkelium-dark", {
+            base: "vs-dark",
+            inherit: true,
+            rules: [],
+            colors: {
+                "editor.background": "#08090A",
+                "editor.lineHighlightBackground": "#0E0F11",
+                "editorGutter.background": "#08090A",
+                "editorLineNumber.foreground": "#4a4a4a",
+                "editorLineNumber.activeForeground": "#F7F8F8",
+                "editor.selectionBackground": "#1A1B1E",
+                "editorCursor.foreground": "#00D4D4",
+            },
+        });
+    };
 
     // Wire Monaco's keyboard shortcuts after the editor mounts.
     // Doing this through Monaco (not the window) means they only fire
@@ -201,8 +219,9 @@ export default function CodePanel() {
                     language={language}
                     value={content}
                     onChange={(v) => setContent(v ?? "")}
+                    beforeMount={handleBeforeMount}
                     onMount={handleMount}
-                    theme="vs-dark"
+                    theme="berkelium-dark"
                     options={{
                         fontSize: 13,
                         fontFamily: "'JetBrains Mono', 'SF Mono', Menlo, monospace",

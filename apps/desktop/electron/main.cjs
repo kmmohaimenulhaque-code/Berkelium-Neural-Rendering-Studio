@@ -8,11 +8,13 @@ const fs = require("fs/promises");
 const path = require("path");
 
 const isDev = process.env.NODE_ENV === "development";
+app.setName("Berkelium");
 
 let mainWindow = null;
 
 function createWindow() {
     mainWindow = new BrowserWindow({
+        title: "Berkelium",
         width: 1400,
         height: 900,
         minWidth: 900,
