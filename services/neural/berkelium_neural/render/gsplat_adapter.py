@@ -88,7 +88,7 @@ class GsplatRenderer:
         W, H, ts = cam.width, cam.height, cfg.tile_size
         radii, means2d, depths, conics, _ = fully_fused_projection(
             means, None, quats, scales, V, Kt, W, H, eps2d=cfg.eps2d, near_plane=cam.near, far_plane=cam.far,
-            opacities=opac[None])
+            opacities=opac)
         tw, th = math.ceil(W / ts), math.ceil(H / ts)
         _, isect_ids, flatten_ids = isect_tiles(means2d, radii, depths, ts, tw, th)
         n_pairs = int(flatten_ids.numel())
