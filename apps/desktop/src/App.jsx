@@ -24,6 +24,7 @@ import "./shell.css";
 import "./berkelium-logo.css";
 import ChatPanel from "./ChatPanel.jsx";
 import CodePanel from "./CodePanel.jsx";
+import ScenePanel from "./ScenePanel.jsx";
 import SettingsModal from "./SettingsModal.jsx";
 import { OPEN_SETTINGS } from "./api.js";
 // Workspace definitions. Switching mode swaps the content of the center region.
@@ -331,7 +332,7 @@ function SceneHierarchy() {
 
 function Workspace({ mode }) {
   if (mode === "scene") {
-    return <WorkspacePlaceholder icon={Box} title="3D Scene" subtitle="Three.js viewport (Day 2)" />;
+    return <ScenePanel />;
   }
   if (mode === "code") {
     return <CodePanel />;
@@ -345,21 +346,9 @@ function Workspace({ mode }) {
         </Panel>
         <PanelResizeHandle className="resize-handle" />
         <Panel defaultSize={45} minSize={25}>
-          <WorkspacePlaceholder icon={Box} title="3D Scene" subtitle="Three.js viewport (Day 2)" />
+          <ScenePanel />
         </Panel>
       </PanelGroup>
-    </div>
-  );
-}
-
-function WorkspacePlaceholder({ icon: Icon, title, subtitle }) {
-  return (
-    <div className="workspace">
-      <div className="workspace__placeholder">
-        <Icon size={32} className="workspace__placeholder-icon" strokeWidth={1.5} />
-        <div className="workspace__placeholder-title">{title}</div>
-        <div>{subtitle}</div>
-      </div>
     </div>
   );
 }
