@@ -7,3 +7,5 @@ pypdf==6.19.0
 python-multipart==0.0.20
 slowapi==0.1.10
 pydantic==2.13.5
+litellm==1.105.0
+pytest==9.1.1

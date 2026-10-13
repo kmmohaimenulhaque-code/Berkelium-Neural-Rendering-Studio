@@ -27,6 +27,8 @@ from fastapi.responses import JSONResponse
 from PIL import Image
 from pydantic import BaseModel, Field, field_validator
 from pypdf import PdfReader
+
+import providers as prov
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.util import get_remote_address
@@ -55,7 +57,11 @@ for h in (_file_handler, _stream_handler):
 logging.basicConfig(level=logging.INFO, handlers=[_file_handler, _stream_handler])
 log = logging.getLogger("berkelium")
 
-CONFIG_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "config.json")
+# BERKELIUM_CONFIG lets tests point at a throwaway config instead of the real one.
+CONFIG_PATH = os.environ.get(
+    "BERKELIUM_CONFIG",
+    os.path.join(os.path.dirname(__file__), "..", "..", "config.json"),
+)
 try:
     with open(CONFIG_PATH, "r") as f:
         config = json.load(f)
@@ -72,6 +78,7 @@ _SHAPES = {
     "base_url": str,
     "backend_api_key": str,
     "allowed_origins": list,
+    "providers": dict,
 }
 for _key, _expected in _SHAPES.items():
     if _key in config and not isinstance(config[_key], _expected):
@@ -141,7 +148,7 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
-    allow_methods=["GET", "POST"],
+    allow_methods=["GET", "POST", "PUT"],
     allow_headers=["*"],
 )
 
@@ -174,8 +181,36 @@ def require_api_key(x_api_key: Optional[str] = Header(default=None)) -> None:
         raise HTTPException(status_code=401, detail="invalid or missing api key")
 
 
+MAX_HISTORY_MESSAGES = 20
+MAX_HISTORY_CHARS = 24000
+
+
+class HistoryItem(BaseModel):
+    role: str = Field(..., pattern="^(user|assistant)$")
+    content: str = Field(..., max_length=MAX_PROMPT_CHARS * 4)
+
+
 class ChatRequest(BaseModel):
     message: str = Field(..., min_length=1, max_length=MAX_PROMPT_CHARS)
+    # All three are optional so the old frontend keeps working unchanged.
+    # No provider means the original Fireworks path.
+    provider: Optional[str] = Field(default=None, max_length=32)
+    model: Optional[str] = Field(default=None, max_length=200)
+    history: list[HistoryItem] = Field(default_factory=list)
+
+    @field_validator("history")
+    @classmethod
+    def trim_history(cls, v: list) -> list:
+        # Keep the most recent turns that fit the budget. Older turns drop
+        # first, so a long session never blows past the model's context.
+        v = v[-MAX_HISTORY_MESSAGES:]
+        total, kept = 0, []
+        for item in reversed(v):
+            total += len(item.content)
+            if total > MAX_HISTORY_CHARS:
+                break
+            kept.append(item)
+        return list(reversed(kept))
 
     @field_validator("message")
     @classmethod
@@ -232,6 +267,8 @@ async def health(deep: int = 0):
 @app.post("/chat", dependencies=[Depends(require_api_key)])
 @limiter.limit("30/minute")
 async def chat(request: Request, payload: ChatRequest):
+    if payload.provider:
+        return await _chat_via_provider(payload)
     headers = {
         "Authorization": f"Bearer {FIREWORKS_API_KEY}",
         "Content-Type": "application/json",
@@ -329,3 +366,86 @@ def _run_image_ocr(contents: bytes) -> str:
 def _extract_pdf_text(contents: bytes) -> str:
     reader = PdfReader(io.BytesIO(contents))
     return "".join((page.extract_text() or "") for page in reader.pages)
+
+# ---------------------------------------------------------------------------
+# Multi-provider AI: LM Studio and cloud providers via LiteLLM, Ollama direct.
+# ---------------------------------------------------------------------------
+
+provider_store = prov.ProviderStore(CONFIG_PATH, config)
+
+
+@app.exception_handler(prov.ProviderError)
+async def provider_error_handler(request: Request, exc: prov.ProviderError):
+    log.warning("Provider error %s: %s", exc.code, exc.message)
+    return JSONResponse(status_code=exc.status, content={"detail": exc.message, "code": exc.code})
+
+
+def _get_provider(provider_id: str) -> prov.Provider:
+    p = prov.PROVIDERS.get(provider_id)
+    if p is None:
+        raise HTTPException(status_code=404, detail=f"unknown provider '{provider_id}'")
+    return p
+
+
+async def _chat_via_provider(payload: ChatRequest) -> dict:
+    p = _get_provider(payload.provider)
+    data = provider_store.get(p.id)
+    model = (payload.model or data.get("model") or p.default_model).strip()
+    messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+    messages += [{"role": h.role, "content": h.content} for h in payload.history]
+    messages.append({"role": "user", "content": payload.message})
+    log.info("chat via %s model=%s history=%s", p.id, model, len(payload.history))
+    text = await prov.chat(p, data, model, messages, timeout=FIREWORKS_TIMEOUT_SECONDS)
+    return {"response": text, "provider": p.id, "model": model}
+
+
+@app.get("/providers", dependencies=[Depends(require_api_key)])
+async def list_providers():
+    return {"providers": [prov.public_view(p, provider_store.get(p.id))
+                          for p in prov.PROVIDERS.values()]}
+
+
+class ProviderUpdate(BaseModel):
+    # None means "leave unchanged", "" means "clear". The Settings window
+    # sends only the fields the user actually edited, so a masked key it
+    # displayed is never written back over the real one.
+    api_key: Optional[str] = Field(default=None, max_length=prov.MAX_FIELD_LEN)
+    base_url: Optional[str] = Field(default=None, max_length=prov.MAX_FIELD_LEN)
+    model: Optional[str] = Field(default=None, max_length=200)
+    label: Optional[str] = Field(default=None, max_length=64)
+    aws_access_key_id: Optional[str] = Field(default=None, max_length=prov.MAX_FIELD_LEN)
+    aws_secret_access_key: Optional[str] = Field(default=None, max_length=prov.MAX_FIELD_LEN)
+    aws_region_name: Optional[str] = Field(default=None, max_length=64)
+
+    @field_validator("base_url")
+    @classmethod
+    def http_only(cls, v: Optional[str]) -> Optional[str]:
+        if v and not (v.startswith("http://") or v.startswith("https://")):
+            raise ValueError("base_url must start with http:// or https://")
+        return v.strip() if v else v
+
+
+@app.put("/providers/{provider_id}", dependencies=[Depends(require_api_key)])
+@limiter.limit("30/minute")
+async def update_provider(request: Request, provider_id: str, body: ProviderUpdate):
+    p = _get_provider(provider_id)
+    changes = {k: (v.strip() if isinstance(v, str) else v)
+               for k, v in body.model_dump().items()
+               if k in p.fields or k == "model"}
+    provider_store.update(p.id, changes)
+    log.info("provider %s updated fields=%s", p.id,
+             sorted(k for k, v in changes.items() if v is not None))
+    return prov.public_view(p, provider_store.get(p.id))
+
+
+@app.post("/providers/{provider_id}/test", dependencies=[Depends(require_api_key)])
+@limiter.limit("20/minute")
+async def test_provider(request: Request, provider_id: str):
+    # Free check only: a GET to a models or account endpoint. No tokens are
+    # spent. Providers without such an endpoint report "no_free_check" and
+    # get verified on their first real chat message instead.
+    p = _get_provider(provider_id)
+    result = await prov.check_provider(p, provider_store.get(p.id))
+    log.info("provider %s test ok=%s detail=%s models=%s",
+             p.id, result["ok"], result["detail"], len(result["models"]))
+    return result
