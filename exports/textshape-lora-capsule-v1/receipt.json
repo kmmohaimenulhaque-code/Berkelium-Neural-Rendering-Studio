@@ -1,0 +1,33 @@
+{
+  "config_hash": "02fa2cf164dbaa2586db56231e7426868162c41c0d618b57710b3702d9547bff",
+  "step": 1500,
+  "complete": true,
+  "params": {
+    "total": 391060,
+    "trainable": 28688
+  },
+  "artifact": "runs/textshape_lora_capsule_v1/adapter.pt",
+  "artifact_sha256": "fa5b2eae453c7821d9b52f37a4447c2daa9b72a631be821a662139b22b617c75",
+  "artifact_bytes": 122532,
+  "receipt": {
+    "wall_s": 1311.75,
+    "cpu_s_this_run": 2428.09,
+    "peak_rss_mb": 1064.9,
+    "device": "cpu",
+    "threads": 2,
+    "torch": "2.14.1+cu130",
+    "python": "3.13.16",
+    "platform": "Linux-6.18.44-fc-v114-x86_64-with-glibc2.39",
+    "gpu_hours": 0.0,
+    "dataset_manifest_sha256": "5d35e50e630d861b666871c7608c1d74bcce2cb34c7fb2cdbc5fe093a1b3377b",
+    "dataset_split_hashes": {
+      "adapter_test": "1bd7cd22fc73c99c6bc9a5689b5955959e9eaa507c3435ee7cc416bffa7abc64",
+      "adapter_train": "a0b1640d71efe320a6c20c48885dcfa52a3a6607226ebcd4004975274b5be2d2",
+      "test": "5c35fa4df28ba00561cc8166f2bfffe71d40d634cf19a1c3ad18f62d38f97fbe",
+      "train": "cc046bcb45ba7c87ebd6711a6e52c62eac13cfb1b804a58e271c16b51d9d6ea3",
+      "val": "cee3fc8fff11c6a28e9a724698d6a57a46fe15d545801cb609c7a4b80b70360d"
+    },
+    "n_train_assets": 312,
+    "seed": 2
+  }
+}
