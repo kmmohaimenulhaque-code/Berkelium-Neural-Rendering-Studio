@@ -1,7 +1,7 @@
 # Neural Rendering Decisions
 
-**Revision:** `NR-0.2` (2026-10-12)  
-**Status:** proposed architecture decisions; no implementation or execution is claimed.
+**Revision:** `NR-0.3` (2026-10-13)  
+**Status:** D-001..D-010 proposed (NR-0.2); D-011..D-016 adopted and implemented in this revision (see `docs/ENGINEERING_LOG.md`).
 
 Evidence labels: `[O]` inspected implementation observation, `[F]` external source fact, `[D]` Berkelium decision, `[H]` hypothesis requiring an experiment.
 
@@ -19,6 +19,17 @@ Evidence labels: `[O]` inspected implementation observation, `[F]` external sour
 | D-008 | `[D]` CPU analytic/finite-difference fixtures precede any MI300X allocation; first allocation is one GPU and at most 1.5 billed GPU-hours. | Reduces paid debugging and catches camera/math errors without hardware. | Provider billing or allocation inventory changes the approved envelope. |
 | D-009 | `[D]` Protect at least 8 GPU-hours and never infer cost from wall time alone. | Provider billing unit, GPU count, rounding, and balance are not verified. | A provider receipt establishes a different accounting model. |
 | D-010 | `[D]` Use canonical job states `pending`, `running`, `completed`, `failed`, `cancelled`, `checkpointed`, and `resumed`; keep experiment outcomes in receipts. | Separates lifecycle state from research results such as `blocked` or `correctness_pass/performance_stop`. | A versioned API migration defines a replacement state machine. |
+
+## NR-0.3 decisions (implemented)
+
+| ID | Decision | Rationale | Revisit trigger |
+| --- | --- | --- | --- |
+| D-011 | `[D]` AMD gsplat (AMD-Ecosystem/gsplat tag `v1.5.3b2`, `ff8bc548`) is the differentiable-rendering foundation. **Revises D-003**: Berkelium no longer re-implements the full forward on HIP; it keeps an independent CPU reference (oracle) and contributes original HIP extensions on top of gsplat. | Owner directive; gsplat is Apache-2.0 + MIT (AMD), ROCm-supported on MI300X. Only `release/1.5.3b2` contains the ROCm port (`main`/`amd-main` = upstream). | AMD publishes a newer ROCm release or the pin fails on the provider image. |
+| D-012 | `[D]` First Berkelium HIP extension: an atomic-free, deterministic rasterization backward (per-intersection gradient slots + fixed-order reductions) replacing gsplat's float `atomicAdd` accumulation for the same forward. | Measurable, falsifiable contribution: bitwise-repeatable gradients with gsplat-equal values; spec §8 asks for deterministic accumulation. | GPU measurements show the overhead is unacceptable for training; then add a wave-shuffle fast path with the same fixed order. |
+| D-013 | `[D]` HIP source is validated on CPU by compiling the unmodified `.hip` file against AMD's HIP-CPU runtime (pinned `e112c93`). Labelled `cpu_emulated_hip`; never reported as GPU evidence. | Catches logic, barrier and indexing errors before spending MI300X credit. | n/a |
+| D-014 | `[D]` First text-to-3D slice = Berkelium-owned procedural dataset with exact analytic SDF ground truth + a small Berkelium text-conditioned SDF generator trained from scratch, with a LoRA(+token-embedding-delta) adapter as the fine-tuning mechanism. D-006 (Z-Image → TripoSR) stays a candidate requiring download approval. | Real 3D output, real training, owned licence, independent geometric ground truth, CPU-feasible; avoids claiming fine-tuning support for models whose stacks are not set up. | A licensed pretrained text-to-3D model is approved and wins on the same protocol. |
+| D-015 | `[D]` Rendering profiles are explicit (`gsplat_v1`, `berkelium_v02`); comparisons only within one profile. | gsplat (exclusive 1e-4 stop, 1/255 cutoff, cap 0.999) and spec v0.2 (inclusive stop, 3-sigma support, cap 0.99) are different functions; mixing them would mislabel semantic differences as kernel errors. | n/a |
+| D-016 | `[D]` The Studio renderer talks to the backend over HTTP at a configurable base URL (existing pattern), fetching only typed JSON and immutable artifacts by id. | Keeps the existing Phase-1 transport; D-001's main-process bridge for neural calls remains open work. | Security review requires moving neural calls behind preload IPC. |
 
 ## Rejected or deferred choices
 
