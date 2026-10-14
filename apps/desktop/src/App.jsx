@@ -25,6 +25,8 @@ import "./berkelium-logo.css";
 import ChatPanel from "./ChatPanel.jsx";
 import CodePanel from "./CodePanel.jsx";
 import ScenePanel from "./ScenePanel.jsx";
+import SceneHierarchy from "./scene/SceneHierarchy.jsx";
+import { useSceneState } from "./scene/store.js";
 import SettingsModal from "./SettingsModal.jsx";
 import { OPEN_SETTINGS } from "./api.js";
 // Workspace definitions. Switching mode swaps the content of the center region.
@@ -276,21 +278,37 @@ function BackendChip({ status }) {
 }
 
 function LeftSidebar({ workspace }) {
-  // Content depends on workspace: Scene shows hierarchy, Code shows files, Combined shows both.
-  const title = workspace === "scene" ? "SCENE HIERARCHY" : "PROJECT";
-  const Icon = workspace === "scene" ? Layers : FolderTree;
-
+  // Scene shows the hierarchy, Code shows the project files, and Combined
+  // shows both, because the viewport is visible there too and clicking an
+  // object should always have a row to highlight.
+  const showProject = workspace !== "scene";
+  const showScene = workspace !== "code";
   return (
     <div className="panel">
+      {showProject && (
+        <SidebarSection icon={FolderTree} title="PROJECT" grow={!showScene}>
+          <ProjectTree />
+        </SidebarSection>
+      )}
+      {showScene && (
+        <SidebarSection icon={Layers} title="SCENE HIERARCHY" grow>
+          <SceneHierarchy />
+        </SidebarSection>
+      )}
+    </div>
+  );
+}
+
+function SidebarSection({ icon: Icon, title, grow, children }) {
+  return (
+    <div className={`sidebar-section ${grow ? "sidebar-section--grow" : ""}`}>
       <div className="panel__header">
         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
           <Icon size={12} color="var(--text-secondary)" />
           <span className="panel__title">{title}</span>
         </div>
       </div>
-      <div className="panel__body">
-        {workspace === "scene" ? <SceneHierarchy /> : <ProjectTree />}
-      </div>
+      <div className="panel__body">{children}</div>
     </div>
   );
 }
@@ -307,24 +325,6 @@ function ProjectTree() {
         <div className="tree-item tree-item--child">electron/</div>
         <div className="tree-item tree-item--child">backend/</div>
         <div className="tree-item tree-item--child">README.md</div>
-      </div>
-    </>
-  );
-}
-
-function SceneHierarchy() {
-  // Placeholder scene nodes. These sync with the viewport once Three.js is wired in Chunk D.
-  return (
-    <>
-      <div className="tree-section">
-        <div className="tree-item">
-          <Layers size={13} />
-          Scene
-        </div>
-        <div className="tree-item tree-item--child">Camera</div>
-        <div className="tree-item tree-item--child tree-item--selected">Cube</div>
-        <div className="tree-item tree-item--child">Grid</div>
-        <div className="tree-item tree-item--child">Directional Light</div>
       </div>
     </>
   );
@@ -386,6 +386,8 @@ function ConsoleLine({ time, level, msg }) {
 }
 
 function StatusBar({ backendStatus, workspace }) {
+  const scene = useSceneState();
+  const selected = scene.selectedId ? scene.nodes[scene.selectedId] : null;
   return (
     <footer className="statusbar" role="contentinfo">
       <div className="statusbar__item">
@@ -398,6 +400,7 @@ function StatusBar({ backendStatus, workspace }) {
       <div className="statusbar__item">
         Workspace: {WORKSPACES.find((w) => w.id === workspace)?.label}
       </div>
+      {selected && <div className="statusbar__item">Selected: {selected.name}</div>}
       <div className="statusbar__spacer" />
       <div className="statusbar__item">Berkelium Studio v0.1</div>
     </footer>

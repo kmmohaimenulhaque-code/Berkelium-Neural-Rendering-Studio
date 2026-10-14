@@ -33,9 +33,21 @@ export const SHORTCUTS = [
   {
     group: "3D viewport",
     items: [
+      { keys: ["Click"], action: "Select an object" },
+      { keys: ["Esc"], action: "Clear selection" },
+      { keys: ["F"], action: "Frame the selected object" },
       { keys: ["Drag"], action: "Orbit the camera" },
       { keys: ["Right drag"], action: "Pan" },
       { keys: ["Scroll"], action: "Zoom" },
+    ],
+  },
+  {
+    group: "Scene hierarchy",
+    items: [
+      { keys: ["↑"], action: "Select the row above" },
+      { keys: ["↓"], action: "Select the row below" },
+      { keys: ["H"], action: "Hide or show the selected object" },
+      { keys: ["Esc"], action: "Clear selection" },
     ],
   },
 ];

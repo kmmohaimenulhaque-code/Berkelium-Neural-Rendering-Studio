@@ -1493,3 +1493,128 @@
     color: var(--text-primary);
     font-family: var(--font-mono);
 }
+
+/* Left sidebar sections. Combined mode stacks Project above the scene
+   hierarchy; the hierarchy takes the remaining height and scrolls. */
+.sidebar-section {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    flex-shrink: 0;
+}
+
+.sidebar-section--grow {
+    flex: 1;
+}
+
+.sidebar-section + .sidebar-section {
+    border-top: 1px solid var(--border);
+}
+
+/* Scene hierarchy rows. */
+.scene-tree {
+    outline: none;
+}
+
+.scene-tree__row {
+    cursor: pointer;
+}
+
+.scene-tree__row--static {
+    cursor: default;
+}
+
+.scene-tree__name {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.scene-tree__row--hidden .scene-tree__name,
+.scene-tree__row--hidden > svg {
+    opacity: 0.4;
+}
+
+.scene-tree__eye {
+    display: inline-flex;
+    padding: 2px;
+    color: var(--text-tertiary);
+    border-radius: var(--r-sm);
+    opacity: 0;
+    transition: opacity var(--dur-fast) var(--ease);
+}
+
+.scene-tree__row:hover .scene-tree__eye,
+.scene-tree__row--hidden .scene-tree__eye,
+.scene-tree__eye:focus-visible {
+    opacity: 1;
+}
+
+.scene-tree__eye:hover {
+    color: var(--text-primary);
+    background: var(--bg-hover);
+}
+
+.scene-tree:focus-visible .tree-item--selected {
+    box-shadow: inset 0 0 0 1px var(--accent-dim);
+}
+
+/* Viewport focus and the selected-object label. */
+.scene__viewport:focus {
+    outline: none;
+}
+
+.scene__viewport:focus-visible {
+    box-shadow: inset 0 0 0 1px var(--accent-dim);
+}
+
+.scene__selection {
+    position: absolute;
+    top: 10px;
+    z-index: 1;
+    left: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 8px;
+    font-size: var(--fs-sm);
+    color: var(--text-primary);
+    background: rgba(8, 9, 10, 0.7);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    pointer-events: none;
+}
+
+.scene__selection-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+}
+
+.code__btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Narrow viewport (Combined mode): icon-only toolbar buttons, no wrapping. */
+.scene {
+    container-type: inline-size;
+}
+
+.scene__toolbar .code__btn,
+.scene__stats {
+    white-space: nowrap;
+}
+
+@container (max-width: 520px) {
+    .scene__actions .code__btn span {
+        display: none;
+    }
+
+    .scene__hint {
+        display: none;
+    }
+}
