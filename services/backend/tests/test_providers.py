@@ -268,3 +268,15 @@ def test_old_frontend_payload_still_uses_fireworks_path(app_ctx, monkeypatch):
                               (200, {"choices": [{"message": {"content": "legacy ok"}}]})})
     r = client.post("/chat", json={"message": "hi"})
     assert r.status_code == 200 and r.json()["response"] == "legacy ok"
+
+
+# ---------------------------------------------------------------- health
+
+def test_health_reports_versions_without_secrets(app_ctx):
+    _, client, _ = app_ctx
+    r = client.get("/health")
+    assert r.status_code == 200
+    v = r.json()["versions"]
+    assert set(v) == {"python", "fastapi", "litellm", "pydantic"}
+    assert all(isinstance(x, str) and x for x in v.values())
+    assert "fw-legacy-key-123456" not in r.text

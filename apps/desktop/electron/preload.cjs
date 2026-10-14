@@ -18,4 +18,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
     // Save-as dialog, write content to chosen path, return { path, name } or null.
     saveFileAs: (content, suggestedName) =>
         ipcRenderer.invoke("file:saveAs", { content, suggestedName }),
+
+    // Version and platform info for Settings > About.
+    appInfo: () => ipcRenderer.invoke("app:info"),
 });

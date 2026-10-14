@@ -124,3 +124,14 @@ ipcMain.handle("file:saveAs", async (_event, { content, suggestedName }) => {
         return { error: err.message };
     }
 });
+// App info for Settings > About. Read-only facts about this build, so it
+// is safe to expose. Nothing here touches the file system or config.json.
+ipcMain.handle("app:info", () => ({
+    name: app.getName(),
+    version: app.getVersion(),
+    electron: process.versions.electron,
+    chrome: process.versions.chrome,
+    node: process.versions.node,
+    platform: process.platform,
+    arch: process.arch,
+}));

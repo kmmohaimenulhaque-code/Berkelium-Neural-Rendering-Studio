@@ -10,6 +10,7 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { Box, Grid3x3, RotateCcw, AlertTriangle } from "lucide-react";
+import { usePrefs } from "./prefs.js";
 
 const BG = 0x08090a;
 const ACCENT = 0x00d4d4;
@@ -95,7 +96,11 @@ export default function ScenePanel() {
   const mountRef = useRef(null);
   const apiRef = useRef(null); // handles the toolbar needs into the live scene
   const [wireframe, setWireframe] = useState(false);
-  const [showGrid, setShowGrid] = useState(true);
+  const { viewport: prefs } = usePrefs();
+  // The Grid button is a quick per-view toggle. The Settings value is the
+  // default, and changing it in Settings updates the open view too.
+  const [showGrid, setShowGrid] = useState(prefs.showGrid);
+  useEffect(() => { setShowGrid(prefs.showGrid); }, [prefs.showGrid]);
   const [stats, setStats] = useState({ fps: 0, tris: 0 });
   const [failure, setFailure] = useState(null);
 
@@ -225,10 +230,12 @@ export default function ScenePanel() {
             <span>Grid</span>
           </button>
         </div>
-        <div className="scene__stats" aria-label="Viewport stats">
-          <span>{stats.fps} fps</span>
-          <span>{stats.tris.toLocaleString()} tris</span>
-        </div>
+        {prefs.showStats && (
+          <div className="scene__stats" aria-label="Viewport stats">
+            <span>{stats.fps} fps</span>
+            <span>{stats.tris.toLocaleString()} tris</span>
+          </div>
+        )}
       </div>
 
       <div className="scene__viewport" ref={mountRef}>

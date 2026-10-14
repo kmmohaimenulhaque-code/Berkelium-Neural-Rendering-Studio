@@ -1,5 +1,9 @@
 // SettingsModal.jsx
-// AI provider settings. Left: every provider with a status dot. Right: the
+// The Settings window. Tabs across the top: AI Providers, Editor, Viewport,
+// Shortcuts, About. The provider tab lives here because it owns unsaved
+// edits; the other tabs are in SettingsSections.jsx and save instantly.
+//
+// AI Providers. Left: every provider with a status dot. Right: the
 // fields for the selected one, plus Save and a free Test connection.
 //
 // Secrets never come back from the backend. A saved key shows as a masked
@@ -9,6 +13,15 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { X, Eye, EyeOff, ExternalLink, Check, AlertCircle, Loader2 } from "lucide-react";
 import { apiFetch, PROVIDERS_CHANGED } from "./api.js";
+import { EditorSection, ViewportSection, ShortcutsSection, AboutSection } from "./SettingsSections.jsx";
+
+const TABS = [
+  { id: "providers", label: "AI Providers" },
+  { id: "editor", label: "Editor" },
+  { id: "viewport", label: "Viewport" },
+  { id: "shortcuts", label: "Shortcuts" },
+  { id: "about", label: "About" },
+];
 
 const GROUPS = [
   { kind: "local", title: "Local (free)" },
@@ -59,6 +72,7 @@ function dotClass(provider, lastTest) {
 }
 
 export default function SettingsModal({ onClose }) {
+  const [tab, setTab] = useState("providers");
   const [providers, setProviders] = useState([]);
   const [loadError, setLoadError] = useState(null);
   const [selectedId, setSelectedId] = useState("ollama");
@@ -180,15 +194,32 @@ export default function SettingsModal({ onClose }) {
     <div className="settings__overlay" onMouseDown={(e) => { if (e.target === e.currentTarget) close(); }}>
       <div className="settings" role="dialog" aria-modal="true" aria-label="Settings">
         <div className="settings__head">
-          <div className="settings__title">
-            Settings <span className="settings__subtitle">AI providers</span>
-          </div>
+          <div className="settings__title">Settings</div>
+          <nav className="settings__tabs" role="tablist" aria-label="Settings sections">
+            {TABS.map((t) => (
+              <button
+                key={t.id}
+                role="tab"
+                aria-selected={tab === t.id}
+                className={`settings__tab ${tab === t.id ? "settings__tab--active" : ""}`}
+                onClick={() => setTab(t.id)}
+              >
+                {t.label}
+                {t.id === "providers" && dirty && <span className="settings__tab-dot" title="Unsaved changes" />}
+              </button>
+            ))}
+          </nav>
           <button className="panel__btn" onClick={close} aria-label="Close settings" title="Close (Esc)">
             <X size={14} />
           </button>
         </div>
 
-        {loadError ? (
+        {tab === "editor" && <div className="settings__body"><EditorSection /></div>}
+        {tab === "viewport" && <div className="settings__body"><ViewportSection /></div>}
+        {tab === "shortcuts" && <div className="settings__body"><ShortcutsSection /></div>}
+        {tab === "about" && <div className="settings__body"><AboutSection /></div>}
+
+        {tab !== "providers" ? null : loadError ? (
           <div className="settings__load-error">
             <AlertCircle size={16} />
             <div>

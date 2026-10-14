@@ -16,6 +16,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Editor from "@monaco-editor/react";
 import { FilePlus, FolderOpen, Save, SaveAll } from "lucide-react";
+import { usePrefs } from "./prefs.js";
 
 // Map common extensions to Monaco language ids. Anything missing falls
 // back to plain text, which is better than crashing on an unknown lang.
@@ -60,6 +61,7 @@ export default function CodePanel() {
     const [status, setStatus] = useState(""); // transient status line
     const [error, setError] = useState("");
     const editorRef = useRef(null);
+    const { editor: prefs } = usePrefs();
 
     const dirty = content !== savedContent;
     const language = languageForFile(fileName);
@@ -71,6 +73,13 @@ export default function CodePanel() {
         const t = setTimeout(() => setStatus(""), 2500);
         return () => clearTimeout(t);
     }, [status]);
+
+    // Tab size belongs to the file model in Monaco, not the editor, so the
+    // options prop below cannot change it. Re-apply it whenever the
+    // preference changes or a different file is loaded into the model.
+    useEffect(() => {
+        editorRef.current?.getModel()?.updateOptions({ tabSize: prefs.tabSize, indentSize: prefs.tabSize });
+    }, [prefs.tabSize, filePath, fileName]);
 
     const handleNew = useCallback(() => {
         // Confirm if there are unsaved changes. A real IDE would offer
@@ -176,6 +185,7 @@ export default function CodePanel() {
     // when the editor is focused, which is the right behavior.
     const handleMount = (editor, monaco) => {
         editorRef.current = editor;
+        editor.getModel()?.updateOptions({ tabSize: prefs.tabSize, indentSize: prefs.tabSize });
         editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => handleSave());
         editor.addCommand(
             monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyS,
@@ -223,15 +233,18 @@ export default function CodePanel() {
                     onMount={handleMount}
                     theme="berkelium-dark"
                     options={{
-                        fontSize: 13,
+                        fontSize: prefs.fontSize,
                         fontFamily: "'JetBrains Mono', 'SF Mono', Menlo, monospace",
-                        minimap: { enabled: false },
+                        minimap: { enabled: prefs.minimap },
+                        lineNumbers: prefs.lineNumbers ? "on" : "off",
                         scrollBeyondLastLine: false,
                         smoothScrolling: true,
                         cursorBlinking: "smooth",
                         renderLineHighlight: "line",
-                        tabSize: 4,
-                        wordWrap: "on",
+                        tabSize: prefs.tabSize,
+                        // Keep the user's tab size instead of guessing from the file.
+                        detectIndentation: false,
+                        wordWrap: prefs.wordWrap ? "on" : "off",
                     }}
                 />
             </div>

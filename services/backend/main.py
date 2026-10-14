@@ -261,7 +261,22 @@ async def health(deep: int = 0):
             components["fireworks"] = {"status": "skipped", "detail": "key or model empty"}
 
     overall = "ok" if all(c["status"] == "ok" for c in components.values()) else "degraded"
-    return {"status": overall, "components": components}
+    return {"status": overall, "components": components, "versions": _versions()}
+
+
+def _versions() -> dict:
+    """Versions shown in Settings > About. A package that is missing reports
+    "not installed" instead of failing the whole health check."""
+    import platform
+    from importlib import metadata
+
+    out = {"python": platform.python_version()}
+    for name in ("fastapi", "litellm", "pydantic"):
+        try:
+            out[name] = metadata.version(name)
+        except metadata.PackageNotFoundError:
+            out[name] = "not installed"
+    return out
 
 
 @app.post("/chat", dependencies=[Depends(require_api_key)])
