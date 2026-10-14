@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "node --test \"src/**/*.test.js\"",
-    "electron": "NODE_ENV=development electron electron/main.cjs",
+    "electron": "electron electron/main.cjs",
     "studio": "concurrently -k \"npm run dev\" \"wait-on tcp:5173 && npm run electron\""
   },
   "dependencies": {

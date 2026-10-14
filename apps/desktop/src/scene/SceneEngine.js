@@ -1,14 +1,21 @@
 // SceneEngine.js
-// Owns everything three.js: renderer, scene, camera, controls, picking and
-// selection visuals. It reads the scene store and writes back only one thing:
-// the selection, when the user clicks in the viewport.
+// Owns everything three.js: renderer, scene, camera, controls, picking,
+// selection visuals, the move and rotate tools, and placing imported models.
+//
+// It reads the scene store and writes back only user edits: the selection
+// when you click, and transforms when you drag a tool. Everything else flows
+// one way, store to viewport.
 //
 // Kept out of React on purpose. The render loop runs 60 times a second and
 // must never trigger React renders. React only gets stats twice a second.
 
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { isEffectivelyVisible } from "./sceneStore.js";
+import { TransformControls } from "three/addons/controls/TransformControls.js";
+import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+import { isEffectivelyVisible, topLevelOf } from "./sceneStore.js";
+import { assets } from "./assets.js";
+import { Turntable } from "./Turntable.js";
 
 const BG = 0x08090a;
 const ACCENT = 0x00d4d4;
@@ -40,12 +47,26 @@ function buildGrid(half, step, centerColor, lineColor) {
   return new THREE.LineSegments(geo, new THREE.LineBasicMaterial({ vertexColors: true }));
 }
 
+const applyTransform = (obj, t) => {
+  obj.position.fromArray(t.p);
+  obj.rotation.set(t.r[0], t.r[1], t.r[2]);
+  obj.scale.fromArray(t.s);
+};
+
+const readTransform = (obj) => ({
+  p: obj.position.toArray(),
+  r: [obj.rotation.x, obj.rotation.y, obj.rotation.z],
+  s: obj.scale.toArray(),
+});
+
 export class SceneEngine {
-  constructor({ container, store, onStats, onContextLost }) {
+  constructor({ container, store, onStats, onContextLost, labelEl }) {
     this.container = container;
     this.store = store;
     this.onStats = onStats;
     this.onContextLost = onContextLost;
+    this.labelEl = labelEl; // angle readout while rotating, positioned by the engine
+    this.tool = "move";
 
     // Throws if WebGL is unavailable. The caller shows a friendly message.
     this.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
@@ -59,6 +80,7 @@ export class SceneEngine {
 
     this.#buildScene();
     this.#buildCamera();
+    this.#buildTools();
     this.#bindEvents();
 
     this.lastState = null;
@@ -79,6 +101,10 @@ export class SceneEngine {
     scene.fog = new THREE.Fog(BG, 18, 40); // grid fades out instead of ending in a hard edge
     this.scene = scene;
 
+    // The studio environment for imported models is built on demand (see
+    // #ensureEnvironment), so opening the viewport stays instant.
+    this.envTexture = null;
+
     const sky = new THREE.HemisphereLight(0xdfe8ff, 0x0b0c10, 0.9);
     sky.position.set(0, 6, 0);
     scene.add(sky);
@@ -94,7 +120,7 @@ export class SceneEngine {
     grid.position.y = 0.002; // a hair above the shadow floor so the floor never hides it
     scene.add(grid);
 
-    // Invisible floor that only shows the cube's shadow.
+    // Invisible floor that only shows shadows.
     const floor = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), new THREE.ShadowMaterial({ opacity: 0.35 }));
     floor.rotation.x = -Math.PI / 2;
     floor.receiveShadow = true;
@@ -102,32 +128,29 @@ export class SceneEngine {
 
     const cube = new THREE.Mesh(
       new THREE.BoxGeometry(1.2, 1.2, 1.2),
-      new THREE.MeshStandardMaterial({ color: ACCENT, roughness: 0.35, metalness: 0.25 })
+      new THREE.MeshStandardMaterial({ color: ACCENT, roughness: 0.35, metalness: 0.25, envMapIntensity: 0 })
     );
-    cube.position.y = 0.6;
     cube.castShadow = true;
-    scene.add(cube);
+    cube.userData.pickable = true;
     // Thin edge outline so the cube reads clearly at any angle.
     cube.add(new THREE.LineSegments(
       new THREE.EdgesGeometry(cube.geometry),
       new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.25 })
     ));
 
-    // Store id -> three.js object. Everything else finds objects through here.
-    this.objects = { cube, grid, sun, sky };
-    for (const [id, obj] of Object.entries(this.objects)) obj.userData.nodeId = id;
-
-    // Only real geometry is clickable. Raycasting the 3,200-segment grid or
-    // the helpers on every click would be wasted work and wrong UX.
-    this.pickables = [cube];
+    // Built-in objects. Imported models live in the assets registry instead,
+    // so they survive this engine being destroyed on a workspace switch.
+    this.builtins = { cube, grid, sun, sky };
+    for (const [id, obj] of Object.entries(this.builtins)) obj.userData.nodeId = id;
 
     // Selection visuals. Created once and shown or hidden, never rebuilt.
-    this.helpers = {
-      cube: this.#outlineFor(cube),
+    this.cubeOutline = this.#outlineFor(cube);
+    this.lightHelpers = {
       sun: new THREE.DirectionalLightHelper(sun, 1, ACCENT),
       sky: new THREE.HemisphereLightHelper(sky, 0.6, ACCENT),
     };
-    for (const h of Object.values(this.helpers)) {
+    this.selectionBox = new THREE.Box3Helper(new THREE.Box3(), 0xffffff);
+    for (const h of [this.cubeOutline, ...Object.values(this.lightHelpers), this.selectionBox]) {
       h.visible = false;
       h.raycast = () => {};
       if (!h.parent) scene.add(h); // mesh outlines are already parented to their mesh
@@ -138,10 +161,24 @@ export class SceneEngine {
     };
   }
 
-  // Selection outline for a mesh: crisp white edges drawn as a child of the
-  // mesh, so it follows any move, rotate or scale for free. White, not the
-  // cyan accent, because the default cube is itself cyan and an accent
-  // outline disappeared against it.
+  // A soft studio environment so imported PBR models (metal, glass) look
+  // right instead of flat black. Built only once a model is in the scene:
+  // it costs milliseconds on a GPU but seconds on software rendering
+  // (machines without a proper graphics driver), and the cube does not use it.
+  #ensureEnvironment() {
+    if (this.envTexture) return;
+    const pmrem = new THREE.PMREMGenerator(this.renderer);
+    const room = new RoomEnvironment();
+    this.envTexture = pmrem.fromScene(room, 0.04).texture;
+    room.dispose();
+    pmrem.dispose();
+    this.scene.environment = this.envTexture;
+    this.scene.environmentIntensity = 0.85;
+  }
+
+  // Selection outline for the cube: crisp white edges drawn as a child of
+  // the mesh, so it follows any move, rotate or scale for free. White, not
+  // the cyan accent, because the cube itself is cyan.
   #outlineFor(mesh) {
     const outline = new THREE.LineSegments(
       new THREE.EdgesGeometry(mesh.geometry),
@@ -153,19 +190,54 @@ export class SceneEngine {
   }
 
   #buildCamera() {
-    this.camera = new THREE.PerspectiveCamera(50, 1, 0.1, 200);
+    this.camera = new THREE.PerspectiveCamera(50, 1, 0.05, 400);
     this.camera.position.copy(HOME_POSITION);
-    this.objects.camera = this.camera;
-
     const c = new OrbitControls(this.camera, this.renderer.domElement);
     c.target.copy(HOME_TARGET);
     c.enableDamping = true;
     c.dampingFactor = 0.08;
-    c.minDistance = 2;
-    c.maxDistance = 30;
+    c.minDistance = 0.5;
+    c.maxDistance = 60;
     c.maxPolarAngle = Math.PI * 0.495; // never orbit below the floor
     c.update();
     this.controls = c;
+  }
+
+  #buildTools() {
+    // Move: the standard three-axis arrows (approved in the preview).
+    const tc = new TransformControls(this.camera, this.renderer.domElement);
+    tc.setMode("translate");
+    tc.setSize(0.9);
+    tc.addEventListener("dragging-changed", (e) => {
+      this.controls.enabled = !e.value;
+      if (e.value) this.store.beginGesture();
+      else this.store.endGesture(); // the whole drag becomes one undo step
+    });
+    tc.addEventListener("objectChange", () => {
+      const id = tc.object?.userData.nodeId;
+      if (id) this.store.setTransform(id, readTransform(tc.object), { record: false });
+    });
+    this.transformControls = tc;
+    this.scene.add(tc.getHelper());
+
+    // Rotate: the turntable ring (approved over the three-ring gizmo).
+    this.turntable = new Turntable({
+      scene: this.scene,
+      camera: this.camera,
+      onStart: () => {
+        this.controls.enabled = false;
+        this.store.beginGesture();
+      },
+      onChange: () => {
+        const obj = this.turntable.target;
+        const id = obj?.userData.nodeId;
+        if (id) this.store.setTransform(id, readTransform(obj), { record: false });
+      },
+      onEnd: () => {
+        this.controls.enabled = true;
+        this.store.endGesture();
+      },
+    });
   }
 
   // ------------------------------------------------------------ events
@@ -180,20 +252,41 @@ export class SceneEngine {
     this.#resize();
 
     this.raycaster = new THREE.Raycaster();
-    this.pointer = new THREE.Vector2();
     this.down = null;
+    this.ndc = (e) => {
+      const rect = el.getBoundingClientRect();
+      return new THREE.Vector2(((e.clientX - rect.left) / rect.width) * 2 - 1, -((e.clientY - rect.top) / rect.height) * 2 + 1);
+    };
+
+    // Capture phase, so the turntable claims the press before the orbit
+    // controls start rotating the camera.
     this.onPointerDown = (e) => {
       if (e.button !== 0) return;
-      this.down = { x: e.clientX, y: e.clientY };
+      const onGizmo = this.transformControls.enabled && this.transformControls.axis !== null;
+      const onTurntable = this.tool === "rotate" && this.turntable.pointerDown(this.ndc(e));
+      if (onTurntable) {
+        el.setPointerCapture?.(e.pointerId);
+        e.stopImmediatePropagation();
+      }
+      this.down = { x: e.clientX, y: e.clientY, onTool: onGizmo || onTurntable };
+    };
+    this.onPointerMove = (e) => {
+      if (this.turntable.dragging) this.turntable.pointerMove(this.ndc(e), e.shiftKey);
     };
     this.onPointerUp = (e) => {
+      if (this.turntable.pointerUp()) {
+        this.down = null;
+        return;
+      }
       if (e.button !== 0 || !this.down) return;
-      const moved = Math.hypot(e.clientX - this.down.x, e.clientY - this.down.y);
+      const { x, y, onTool } = this.down;
       this.down = null;
-      if (moved > CLICK_TOLERANCE_PX) return; // that was an orbit, not a click
+      if (onTool) return; // that press was on a move arrow, not a click on the scene
+      if (Math.hypot(e.clientX - x, e.clientY - y) > CLICK_TOLERANCE_PX) return; // an orbit, not a click
       this.store.select(this.pick(e.clientX, e.clientY));
     };
-    el.addEventListener("pointerdown", this.onPointerDown);
+    el.addEventListener("pointerdown", this.onPointerDown, { capture: true });
+    el.addEventListener("pointermove", this.onPointerMove);
     el.addEventListener("pointerup", this.onPointerUp);
 
     this.onLost = (e) => {
@@ -213,17 +306,23 @@ export class SceneEngine {
   }
 
   // Returns the node id under a screen point, or null for empty space.
+  // A click on any part of an imported model selects the whole model.
   pick(clientX, clientY) {
-    const rect = this.renderer.domElement.getBoundingClientRect();
-    this.pointer.set(((clientX - rect.left) / rect.width) * 2 - 1, -((clientY - rect.top) / rect.height) * 2 + 1);
-    this.raycaster.setFromCamera(this.pointer, this.camera);
-    const visible = this.pickables.filter((o) => o.visible);
-    for (const hit of this.raycaster.intersectObjects(visible, true)) {
+    this.raycaster.setFromCamera(this.ndc({ clientX, clientY }), this.camera);
+    const candidates = [];
+    this.scene.traverseVisible((o) => { if (o.isMesh && o.userData.pickable) candidates.push(o); });
+    const state = this.store.get();
+    for (const hit of this.raycaster.intersectObjects(candidates, false)) {
       for (let o = hit.object; o; o = o.parent) {
-        if (o.userData.nodeId) return o.userData.nodeId;
+        const id = o.userData.nodeId;
+        if (id && state.nodes[id]) return topLevelOf(state, id);
       }
     }
     return null;
+  }
+
+  objectFor(id) {
+    return this.builtins[id] || assets.get(id) || null;
   }
 
   // ------------------------------------------------------------ store sync
@@ -234,23 +333,82 @@ export class SceneEngine {
     if (state === this.lastState) return;
     this.lastState = state;
 
-    for (const [id, obj] of Object.entries(this.objects)) {
-      if (id === "camera" || !state.nodes[id]) continue;
-      obj.visible = isEffectivelyVisible(state, id);
+    // Imported objects: put each where the store says it belongs, or take it
+    // out of the scene if it was deleted. Nothing is destroyed here; the
+    // assets registry frees memory once undo can no longer need it.
+    for (const id of assets.ids()) {
+      const obj = assets.get(id);
+      const node = state.nodes[id];
+      if (!node) {
+        if (obj.parent) obj.removeFromParent();
+        continue;
+      }
+      this.#ensureEnvironment();
+      const home = node.parentId === "scene" ? this.scene : obj.userData.homeParent;
+      if (home && obj.parent !== home) home.add(obj);
     }
 
-    const sel = state.selectedId;
-    for (const [id, helper] of Object.entries(this.helpers)) {
-      helper.visible = id === sel && this.objects[id].visible;
-      if (helper.visible) helper.update?.();
+    for (const [id, node] of Object.entries(state.nodes)) {
+      const obj = this.objectFor(id);
+      if (!obj) continue;
+      if (node.transformable) applyTransform(obj, node.transform);
+      if (id !== "camera") obj.visible = node.visible;
     }
-    this.objects.grid.material = sel === "grid" ? this.gridMaterials.selected : this.gridMaterials.normal;
+    // The cube is built in, so add or remove it like an imported object.
+    const cube = this.builtins.cube;
+    if (state.nodes.cube && !cube.parent) this.scene.add(cube);
+    if (!state.nodes.cube && cube.parent) cube.removeFromParent();
+
+    this.#syncSelection(state);
+  }
+
+  #syncSelection(state) {
+    const sel = state.selectedId;
+    const node = sel ? state.nodes[sel] : null;
+    const obj = node ? this.objectFor(sel) : null;
+    const shown = Boolean(obj && isEffectivelyVisible(state, sel));
+
+    this.cubeOutline.visible = sel === "cube" && shown;
+    for (const [id, helper] of Object.entries(this.lightHelpers)) {
+      helper.visible = id === sel && shown;
+      if (helper.visible) helper.update();
+    }
+    this.builtins.grid.material = sel === "grid" ? this.gridMaterials.selected : this.gridMaterials.normal;
+
+    const boxed = shown && node.transformable && sel !== "cube";
+    this.selectionBox.visible = boxed;
+    if (boxed) this.selectionBox.box.setFromObject(obj).expandByScalar(0.02);
+
+    // Tools attach only to things you are allowed to move.
+    const editable = shown && node.transformable ? obj : null;
+    const tc = this.transformControls;
+    const wantMove = this.tool === "move" && editable;
+    if (wantMove && tc.object !== editable) tc.attach(editable);
+    if (!wantMove && tc.object) tc.detach();
+    tc.enabled = Boolean(wantMove);
+
+    if (!this.turntable.dragging) this.turntable.attach(this.tool === "rotate" ? editable : null);
+    else this.turntable.update();
   }
 
   // ------------------------------------------------------------ actions
 
+  setTool(tool) {
+    if (tool !== "move" && tool !== "rotate") return;
+    this.tool = tool;
+    this.lastState = null; // force a re-sync so the right tool appears
+    this.#sync();
+    this.#placeAngleLabel(); // show or hide the readout now, not on the next frame
+  }
+
   setWireframe(on) {
-    this.objects.cube.material.wireframe = on;
+    this.builtins.cube.material.wireframe = on;
+    for (const id of assets.ids()) {
+      assets.get(id).traverse((o) => {
+        if (!o.isMesh) return;
+        for (const m of Array.isArray(o.material) ? o.material : [o.material]) if (m && "wireframe" in m) m.wireframe = on;
+      });
+    }
   }
 
   resetView() {
@@ -260,14 +418,19 @@ export class SceneEngine {
   // Move the camera so the selected object fills the view, keeping the
   // current viewing angle. Like F in Blender or Unity.
   frameSelection() {
-    const id = this.store.get().selectedId;
-    const obj = id && this.objects[id];
+    const state = this.store.get();
+    const id = state.selectedId;
+    const obj = id && this.objectFor(id);
     if (!obj || id === "camera") return this.resetView();
 
     const sphere = new THREE.Sphere();
     if (id === "grid") sphere.set(new THREE.Vector3(0, 0, 0), 8);
     else if (obj.isLight) sphere.set(obj.getWorldPosition(new THREE.Vector3()), 1.5);
-    else new THREE.Box3().setFromObject(obj).getBoundingSphere(sphere);
+    else {
+      const box = new THREE.Box3().setFromObject(obj);
+      if (box.isEmpty()) return;
+      box.getBoundingSphere(sphere);
+    }
 
     const fov = THREE.MathUtils.degToRad(this.camera.fov);
     const distance = THREE.MathUtils.clamp(
@@ -301,7 +464,11 @@ export class SceneEngine {
       if (t === 1) this.tween = null;
     }
     this.controls.update();
+    if (this.selectionBox.visible && this.transformControls.dragging) {
+      this.selectionBox.box.setFromObject(this.transformControls.object).expandByScalar(0.02);
+    }
     this.renderer.render(this.scene, this.camera);
+    this.#placeAngleLabel();
 
     this.frames += 1;
     const now = performance.now();
@@ -315,27 +482,57 @@ export class SceneEngine {
     }
   }
 
-  // Free everything. Without this, every workspace switch would leak a full
-  // scene worth of GPU buffers and eventually a WebGL context.
+  // The angle readout next to the turntable dot. Written straight to the DOM:
+  // going through React 60 times a second would be wasteful.
+  #placeAngleLabel() {
+    const el = this.labelEl;
+    if (!el) return;
+    const tt = this.turntable;
+    if (!tt.group.visible) {
+      if (el.style.display !== "none") el.style.display = "none";
+      return;
+    }
+    const v = tt.knob.getWorldPosition(new THREE.Vector3()).project(this.camera);
+    const x = ((v.x + 1) / 2) * this.container.clientWidth + 14;
+    const y = ((1 - v.y) / 2) * this.container.clientHeight - 12;
+    el.style.display = "block";
+    el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
+    const text = `${tt.degrees.toFixed(1)}°`;
+    if (el.textContent !== text) el.textContent = text;
+  }
+
+  // Free everything this engine created. Imported models are detached, not
+  // destroyed: they belong to the assets registry and the next engine (after
+  // a workspace switch) re-attaches them.
   dispose() {
     this.renderer.setAnimationLoop(null);
     this.unsubscribe();
     this.resizeObserver.disconnect();
     const el = this.renderer.domElement;
-    el.removeEventListener("pointerdown", this.onPointerDown);
+    el.removeEventListener("pointerdown", this.onPointerDown, { capture: true });
+    el.removeEventListener("pointermove", this.onPointerMove);
     el.removeEventListener("pointerup", this.onPointerUp);
     // Remove before forceContextLoss below, or our own cleanup would show
     // the "graphics driver reset" message.
     el.removeEventListener("webglcontextlost", this.onLost);
+    this.transformControls.detach();
+    this.transformControls.dispose();
+    this.turntable.dispose();
     this.controls.dispose();
+    for (const id of assets.ids()) {
+      const obj = assets.get(id);
+      if (obj.parent === this.scene) this.scene.remove(obj);
+    }
     this.gridMaterials.selected.dispose();
     this.gridMaterials.normal.dispose();
+    if (!this.builtins.cube.parent) this.scene.add(this.builtins.cube); // a deleted cube must be freed too
     this.scene.traverse((obj) => {
       obj.geometry?.dispose();
       const mats = Array.isArray(obj.material) ? obj.material : obj.material ? [obj.material] : [];
       mats.forEach((m) => m.dispose());
     });
-    Object.values(this.helpers).forEach((h) => h.dispose?.());
+    Object.values(this.lightHelpers).forEach((h) => h.dispose?.());
+    this.envTexture?.dispose();
     this.renderer.dispose();
     this.renderer.forceContextLoss(); // release the WebGL context now, not at garbage collection
     el.remove();

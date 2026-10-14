@@ -3,12 +3,14 @@
 // so clicking a row selects the object in the viewport and clicking the
 // object in the viewport highlights its row. Eye buttons hide and show.
 //
-// Keyboard: Up and Down move the selection, Esc clears it, H hides or shows.
+// Keyboard: Up and Down move the selection, Esc clears it, H hides or shows,
+// Delete removes, and undo/redo work the same as in the viewport.
 
 import { useEffect, useMemo, useRef } from "react";
-import { Box, Eye, EyeOff, Grid3x3, Layers, Sun, Video, Folder, CloudSun } from "lucide-react";
+import { Box, Eye, EyeOff, Grid3x3, Layers, Sun, Video, Folder, CloudSun, Package } from "lucide-react";
 import { flatten } from "./sceneStore.js";
 import { sceneStore, useSceneState } from "./store.js";
+import { handleSceneKey } from "./actions.js";
 
 function iconFor(node) {
   if (node.type === "scene") return Layers;
@@ -16,6 +18,7 @@ function iconFor(node) {
   if (node.type === "mesh") return Box;
   if (node.type === "helper") return Grid3x3;
   if (node.type === "group") return Folder;
+  if (node.type === "model") return Package;
   if (node.type === "light") return node.id === "sky" ? CloudSun : Sun;
   return Box;
 }
@@ -31,6 +34,10 @@ export default function SceneHierarchy() {
   }, [state.selectedId]);
 
   const onKeyDown = (e) => {
+    if (handleSceneKey(e)) {
+      e.preventDefault();
+      return;
+    }
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     if (e.key === "ArrowDown" || e.key === "ArrowUp") {
       sceneStore.selectRelative(e.key === "ArrowDown" ? 1 : -1);

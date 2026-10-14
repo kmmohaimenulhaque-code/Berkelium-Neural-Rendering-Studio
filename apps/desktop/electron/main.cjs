@@ -7,7 +7,10 @@ const { app, BrowserWindow, ipcMain, dialog, shell } = require("electron");
 const fs = require("fs/promises");
 const path = require("path");
 
-const isDev = process.env.NODE_ENV === "development";
+// Dev mode = running from source (npm run studio), not an installed app.
+// app.isPackaged works the same on macOS, Windows and Linux. The old
+// NODE_ENV=development prefix in package.json only worked on macOS and Linux.
+const isDev = !app.isPackaged;
 app.setName("Berkelium");
 
 let mainWindow = null;

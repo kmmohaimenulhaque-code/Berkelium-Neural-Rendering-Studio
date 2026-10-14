@@ -1618,3 +1618,229 @@
         display: none;
     }
 }
+
+/* ---------- Move, rotate and import ---------- */
+.scene__sep {
+    width: 1px;
+    height: 16px;
+    margin: 0 4px;
+    background: var(--border);
+    flex-shrink: 0;
+}
+
+.scene__btn--primary {
+    color: var(--accent);
+}
+
+/* Floating Transform / Model panel in the viewport. */
+.props {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    z-index: 2;
+    width: 236px;
+    padding: 10px 12px;
+    background: rgba(14, 15, 17, 0.92);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-lg);
+    backdrop-filter: blur(6px);
+}
+
+.props__title {
+    margin-bottom: 8px;
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-semibold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+}
+
+.props__title--gap {
+    margin-top: 12px;
+}
+
+.props__row {
+    display: grid;
+    grid-template-columns: 58px repeat(3, 1fr);
+    gap: 4px;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.props__label {
+    font-size: var(--fs-sm);
+    color: var(--text-secondary);
+}
+
+.props__field {
+    width: 100%;
+    min-width: 0;
+    padding: 3px 5px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-primary);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-left-width: 2px;
+    border-radius: var(--r-sm);
+    outline: none;
+}
+
+.props__field:focus {
+    border-color: var(--accent-dim);
+}
+
+.props__field--x { border-left-color: #ef4444; }
+.props__field--y { border-left-color: #22c55e; }
+.props__field--z { border-left-color: #3b82f6; }
+
+.props__meta {
+    display: grid;
+    grid-template-columns: 70px 1fr;
+    gap: 4px 8px;
+    margin: 0;
+    font-size: var(--fs-sm);
+}
+
+.props__meta dt {
+    color: var(--text-tertiary);
+}
+
+.props__meta dd {
+    margin: 0;
+    overflow: hidden;
+    font-family: var(--font-mono);
+    color: var(--text-primary);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Angle readout that follows the turntable dot. Positioned by the engine. */
+.scene__angle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    padding: 2px 7px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: var(--fw-semibold);
+    color: var(--bg-app);
+    background: var(--accent);
+    border-radius: var(--r-sm);
+    pointer-events: none;
+    will-change: transform;
+}
+
+.scene__drop {
+    position: absolute;
+    inset: 12px;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 15px;
+    color: var(--text-primary);
+    background: rgba(6, 14, 16, 0.84);
+    border: 2px dashed var(--accent);
+    border-radius: 12px;
+    backdrop-filter: blur(3px);
+    pointer-events: none;
+}
+
+.scene__drop small {
+    font-size: var(--fs-sm);
+    color: var(--text-secondary);
+}
+
+.scene__importing {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    font-size: 13px;
+    color: var(--text-primary);
+    background: rgba(14, 15, 17, 0.94);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-lg);
+    transform: translate(-50%, -50%);
+}
+
+/* The panel would cover a narrow viewport; the hierarchy still works there. */
+@container (max-width: 560px) {
+    .props {
+        display: none;
+    }
+}
+
+/* ---------- Notifications ---------- */
+.toaster {
+    position: fixed;
+    left: 50%;
+    bottom: calc(var(--h-statusbar) + 14px);
+    z-index: 90;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    transform: translateX(-50%);
+    pointer-events: none;
+}
+
+.toast {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: min(640px, 90vw);
+    padding: 8px 10px 8px 12px;
+    font-size: 12.5px;
+    color: var(--text-primary);
+    background: var(--bg-surface);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-lg);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    pointer-events: auto;
+    animation: toast-in var(--dur-fast) var(--ease);
+}
+
+.toast--ok .toast__icon { color: var(--success); }
+.toast--info .toast__icon { color: var(--info); }
+.toast--warn .toast__icon { color: var(--warning); }
+.toast--error { border-color: rgba(248, 113, 113, 0.45); }
+.toast--error .toast__icon { color: var(--error); }
+
+.toast__icon {
+    flex-shrink: 0;
+}
+
+.toast__detail {
+    color: var(--text-tertiary);
+}
+
+.toast__action {
+    font-weight: var(--fw-semibold);
+    color: var(--accent);
+}
+
+.toast__close {
+    display: inline-flex;
+    padding: 2px;
+    color: var(--text-tertiary);
+    border-radius: var(--r-sm);
+}
+
+.toast__close:hover {
+    color: var(--text-primary);
+    background: var(--bg-hover);
+}
+
+@keyframes toast-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}

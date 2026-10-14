@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
   Panel,
   PanelGroup,
@@ -27,6 +27,8 @@ import CodePanel from "./CodePanel.jsx";
 import ScenePanel from "./ScenePanel.jsx";
 import SceneHierarchy from "./scene/SceneHierarchy.jsx";
 import { useSceneState } from "./scene/store.js";
+import Toaster from "./scene/Toaster.jsx";
+import { IMPORT_EVENT } from "./ScenePanel.jsx";
 import SettingsModal from "./SettingsModal.jsx";
 import { OPEN_SETTINGS } from "./api.js";
 // Workspace definitions. Switching mode swaps the content of the center region.
@@ -44,6 +46,10 @@ export default function App() {
   const [bottomOpen, setBottomOpen] = useState(false);
   const [backendStatus, setBackendStatus] = useState("checking");
   const [settingsOpen, setSettingsOpen] = useState(false);
+  // The key handler below is registered once, so it reads the workspace
+  // through a ref instead of a stale closure.
+  const workspaceRef = useRef(workspace);
+  workspaceRef.current = workspace;
 
   // The chat panel fires this when it needs the user to set up a provider.
   useEffect(() => {
@@ -61,6 +67,13 @@ export default function App() {
       if (e.key === ",") {
         e.preventDefault();
         setSettingsOpen(true);
+        return;
+      }
+      // Import model. Skipped inside the code editor, where Ctrl+I means
+      // "trigger suggestions" on Windows and Linux.
+      if (e.key.toLowerCase() === "i" && !e.shiftKey && !e.target.closest?.(".monaco-editor")) {
+        e.preventDefault();
+        if (workspaceRef.current !== "code") window.dispatchEvent(new Event(IMPORT_EVENT));
         return;
       }
       if (e.key === "b") {
@@ -154,6 +167,7 @@ export default function App() {
       <StatusBar backendStatus={backendStatus} workspace={workspace} />
 
       {settingsOpen && <SettingsModal onClose={() => setSettingsOpen(false)} />}
+      <Toaster />
     </div>
   );
 }
