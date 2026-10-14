@@ -85,3 +85,20 @@ is scheduling-dependent. The historical MI300X environment (ROCm 7.0, PyTorch 2.
   replay/checkpoint transmittance recovery (spec §8), measured against gsplat.
 - Fixed-budget fit: held-out PSNR 21.65 (reference) vs 21.64 dB (Berkelium kernel).
 - Performance of the HIP kernel is not measurable here (HIP-CPU emulation) → `not_applicable`; gsplat → `not_run`.
+
+## 2026-10-14 — MI300X E-R1 recorded; repair pass (CPU only, no GPU job)
+
+- E-R1 ran on one MI300X VF (ROCm 7.0, PyTorch 2.8.0+rocm7.0.2): the Berkelium HIP extension built with hipcc and ran;
+  the small-case acceptance gate passed 16/16 for both backends; Berkelium gradients bitwise repeatable in all cases
+  (gsplat 3–10 unique hashes / 10 runs); Berkelium backward 1.43–2.29× gsplat's. Details: `results/renderer/E-R1_analysis.md`.
+- Correction: forward oracle rows on non-gate cases were reported as acceptance failures (100k RGB 1.0456e-3 > 2e-4).
+  The protocol makes the FP64 oracle a gate on small cases only, so these rows are now diagnostic (`passed: null`,
+  raw value + tolerance + `within_tolerance` kept). Applied by `benchmarks/renderer/classify.py` to new runs and, without
+  modifying them, to recorded results.
+- CPU diagnosis: an independent FP32 implementation reproduces the 100k error (RGB 1.0450e-3, alpha identical to the
+  GPU value). The cause is FP32 projection pushing one Gaussian across the 1/255 alpha threshold at the worst pixel,
+  not compositing arithmetic or depth order.
+- Added: direct backend-vs-baseline forward/gradient comparison per case (E-R1: `not_run`, needs a GPU rerun); runtime
+  authorization record (static `approved` unchanged; CLI flag recorded separately); detach before scalar conversion.
+- Tests fixed for GPU machines: hipify shims (PyTorch 2.8 ROCm stream spelling), simulated no-HIP-device, simulated
+  gsplat unavailability split from a real gsplat success test (hip-marked).

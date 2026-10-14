@@ -46,6 +46,11 @@ def run_metadata(cfg: dict, method: str) -> dict:
             "%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "environment": provenance()}
 
 
+def load_protocol(path) -> dict:
+    p = Path(path)
+    return json.loads((p if p.is_absolute() else ROOT / p).read_text())
+
+
 def write(result: dict, out: Path) -> Path:
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(result, indent=2, default=str))

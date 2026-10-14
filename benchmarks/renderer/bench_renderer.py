@@ -26,6 +26,7 @@ from berkelium_neural.render.interface import GaussianTensors, RendererError
 from berkelium_neural.scene import GaussianScene
 
 from benchmarks.common import m, run_metadata, timing_stats
+from benchmarks.renderer.classify import classify_measurement, oracle_role
 
 FAMILIES = ("means", "log_scales", "quats", "opacity_logits", "color_logits")
 SEMANTICS_NOTE = (
@@ -43,6 +44,11 @@ def synthetic_scene(n: int, seed: int, spread: float = 0.9, z0: float = 3.0) -> 
     s = (spread / max(1.0, (n / 200) ** (1 / 3)))
     return GaussianScene(means, np.log(rng.uniform(0.2, 1.0, (n, 3)) * 0.12 * s / 0.9), rng.normal(size=(n, 4)),
                          rng.uniform(-1.5, 3.0, n), rng.normal(size=(n, 3)), meta={"seed": seed, "synthetic": True})
+
+
+def case_camera(case: dict):
+    """The fixed benchmark camera for a case (same for every backend and for the oracle)."""
+    return cam_mod.make_camera((0.2, -0.15, -0.6), (0, 0, 3), case["res"], case["res"], fov_y_deg=55)
 
 
 def scene_hash(s: GaussianScene) -> str:
@@ -87,14 +93,61 @@ def _forward_backward(r, scene, cam, cfg, dev, dt, W):
     return o, {f: p.grad.detach().double().cpu() for f, p in zip(FAMILIES, g.params(), strict=True)}
 
 
-def _depth_row(o, o_ref, valid):
+def _detached(o) -> tuple:
+    """Forward outputs for metric reporting only: detached FP64 CPU copies (no effect on the measured graph)."""
+    return tuple(t.detach().double().cpu() for t in (o.rgb, o.alpha, o.depth))
+
+
+def _forward_rows(o, o_ref, case: dict) -> list[dict]:
+    """Forward error vs the FP64 oracle. The raw comparison with the tolerance is kept as within_tolerance;
+    ``passed`` is set only where the oracle is an acceptance gate (classify.oracle_role)."""
+    rgb, alpha, depth = _detached(o)
+    rgb_r, alpha_r, depth_r = _detached(o_ref)
+    rows = []
+    for name, e in (("forward_rgb_max_abs_err", (rgb - rgb_r).abs()), ("forward_alpha_max_abs_err",
+                                                                         (alpha - alpha_r).abs())):
+        err = float(e.max())
+        rows.append(m(name, err, group="correctness", tolerance=2e-4, within_tolerance=err <= 2e-4))
+    valid = alpha_r > 0.5
     if not valid.any():
-        return m("forward_depth_max_abs_err_alpha>0.5", status="not_applicable", reason="no pixel with alpha>0.5",
-                 group="correctness")
-    e = (o.depth.double().cpu() - o_ref.depth)[valid].abs()
-    tol = 1e-4 + 2e-4 * o_ref.depth[valid].abs()
-    return m("forward_depth_max_abs_err_alpha>0.5", float(e.max()), group="correctness",
-             tolerance="1e-4+2e-4|ref| (spec valid-depth)", passed=bool((e <= tol).all()))
+        rows.append(m("forward_depth_max_abs_err_alpha>0.5", status="not_applicable", reason="no pixel with alpha>0.5",
+                      group="correctness"))
+    else:
+        e = (depth - depth_r)[valid].abs()
+        tol = 1e-4 + 2e-4 * depth_r[valid].abs()
+        rows.append(m("forward_depth_max_abs_err_alpha>0.5", float(e.max()), group="correctness",
+                      tolerance="1e-4+2e-4|ref| (spec valid-depth)", within_tolerance=bool((e <= tol).all())))
+    return [classify_measurement(r, case) for r in rows]
+
+
+def cross_backend_rows(outputs: dict, grads: dict, baseline: str) -> dict:
+    """Direct backend-vs-baseline comparison on the same scene/camera (no oracle involved): forward RGB/alpha/depth
+    and per-family gradients. Distinguishes a shared forward/oracle discrepancy (forward identical across backends)
+    from a change introduced by a custom backward (gradients differ). Gradients of an atomic-accumulation baseline
+    also vary run to run, so a nonzero gradient difference is not by itself a defect."""
+    out = {}
+    if baseline not in outputs:
+        return out
+    bo, bg = outputs[baseline], grads[baseline]
+    for name, outs in outputs.items():
+        if name == baseline:
+            continue
+        rows = []
+        for label, a, b in zip(("rgb", "alpha", "depth"), outs, bo, strict=True):
+            d = (a.double() - b.double()).abs()
+            finite = torch.isfinite(d)
+            rows.append(m(f"forward_{label}_max_abs_diff_vs_{baseline}", float(d[finite].max()) if finite.any()
+                          else None, group="correctness", bitwise_equal=bool(torch.equal(a, b)),
+                          n_differing=int((a != b).sum()), entries=int(a.numel()), passed=None,
+                          gate="cross_backend_diagnostic"))
+        for f in FAMILIES:
+            d = (grads[name][f] - bg[f]).abs()
+            rows.append(m(f"grad_{f}_max_abs_diff_vs_{baseline}", float(d.max()), group="correctness",
+                          bitwise_equal=bool(torch.equal(grads[name][f], bg[f])), n_differing=int((d != 0).sum()),
+                          entries=int(d.numel()), max_rel_to_baseline_max=float(d.max()) /
+                          (float(bg[f].abs().max()) + 1e-30), passed=None, gate="cross_backend_diagnostic"))
+        out[name] = {"baseline": baseline, "measurements": rows}
+    return out
 
 
 def grad_errors(got: dict, ref: dict, gate: bool, atol=2e-5, rtol=2e-3) -> list[dict]:
@@ -114,14 +167,15 @@ def grad_errors(got: dict, ref: dict, gate: bool, atol=2e-5, rtol=2e-3) -> list[
     return out
 
 
-def run_case(case: dict, backends: list[str], proto: dict) -> dict:
+def run_case(case: dict, backends: list[str], proto: dict, baseline: str | None = None) -> dict:
     scene = synthetic_scene(case["n"], case["seed"])
-    cam = cam_mod.make_camera((0.2, -0.15, -0.6), (0, 0, 3), case["res"], case["res"], fov_y_deg=55)
+    cam = case_camera(case)
     cfg = RenderConfig()
     W = _loss_weights(case["res"], case["res"], case["seed"])
     oracle_r, *_ = make_backend("reference_fp64")
     o_ref, g_ref = _forward_backward(oracle_r, scene, cam, cfg, "cpu", torch.float64, W)
-    res = {"case": case, "scene_sha256": scene_hash(scene), "backends": {}}
+    res = {"case": case, "oracle_role": oracle_role(case), "scene_sha256": scene_hash(scene), "backends": {}}
+    fwd_out, first_grads = {}, {}
     for b in backends:
         meas = []
         try:
@@ -139,14 +193,10 @@ def run_case(case: dict, backends: list[str], proto: dict) -> dict:
             if dev == "cuda":
                 torch.cuda.reset_peak_memory_stats()
             o, g = _forward_backward(r, scene, cam, cfg, dev, dt, W)
-            valid = o_ref.alpha > 0.5
-            meas += [m("forward_rgb_max_abs_err", float((o.rgb.double().cpu() - o_ref.rgb).abs().max()), group="correctness",
-                       tolerance=2e-4, passed=float((o.rgb.double().cpu() - o_ref.rgb).abs().max()) <= 2e-4),
-                     m("forward_alpha_max_abs_err", float((o.alpha.double().cpu() - o_ref.alpha).abs().max()),
-                       group="correctness", tolerance=2e-4,
-                       passed=float((o.alpha.double().cpu() - o_ref.alpha).abs().max()) <= 2e-4),
-                     _depth_row(o, o_ref, valid)]
-            meas += grad_errors(g, g_ref, case.get("gate", False))
+            fwd_out[b] = tuple(t.detach().cpu() for t in (o.rgb, o.alpha, o.depth))   # native dtype, for bitwise
+            first_grads[b] = g
+            meas += _forward_rows(o, o_ref, case)
+            meas += [classify_measurement(x, case) for x in grad_errors(g, g_ref, case.get("gate", False))]
             hashes = set()
             for _ in range(proto["repeat_determinism"]):
                 _, gg = _forward_backward(r, scene, cam, cfg, dev, dt, W)
@@ -173,6 +223,9 @@ def run_case(case: dict, backends: list[str], proto: dict) -> dict:
                                   "measurements": meas}
         except Exception as e:  # noqa: BLE001 - preserved failed run
             res["backends"][b] = {"status": "failed", "reason": f"{type(e).__name__}: {e}", "measurements": meas}
+    if baseline:
+        res["cross_backend"] = cross_backend_rows(fwd_out, first_grads, baseline) if baseline in fwd_out else {
+            "status": "not_run", "reason": f"baseline backend {baseline!r} produced no output in this run"}
     return res
 
 
@@ -260,7 +313,7 @@ def run(cfg: dict) -> dict:
     out = {"benchmark": "renderer", "semantics": SEMANTICS_NOTE, **run_metadata(cfg, "benchmarks/renderer/"
            "bench_renderer.py"), "correctness_global": [fd_gradcheck()], "cases": [], "quality": {}}
     for case in cfg["cases"]:
-        out["cases"].append(run_case(case, cfg["backends"], cfg["protocol"]))
+        out["cases"].append(run_case(case, cfg["backends"], cfg["protocol"], cfg.get("baseline_backend")))
     if cfg["protocol"].get("fit"):
         out["quality"] = {b: fit_quality(b, cfg["protocol"]) for b in cfg["backends"]}
     return out

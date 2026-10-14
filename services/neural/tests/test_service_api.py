@@ -55,19 +55,95 @@ def test_text_to_3d_job_produces_mesh_and_gaussian_artifacts(client):
     assert g["kind"] == "gaussian_scene" and g["parents"] == [mesh_id]
 
 
-def test_render_job_reference_and_honest_gsplat_failure(client):
+def _gaussian_artifact_and_camera(client):
     j = wait(client, client.post("/v1/neural/jobs", json={"kind": "text_to_3d", "prompt": "a blue box",
                                                            "resolution": 24}).json()["id"])
-    gauss_id = j["artifacts"][1]
     cam = json.loads(make_camera((0, 0.5, 3.2), width=32, height=32).model_dump_json())
-    ok = wait(client, client.post("/v1/neural/jobs", json={"kind": "render", "artifact_id": gauss_id, "camera": cam,
-                                                           "backend": "reference_cpu"}).json()["id"])
+    return j["artifacts"][1], cam
+
+
+def _render(client, gauss_id, cam, backend):
+    return wait(client, client.post("/v1/neural/jobs", json={"kind": "render", "artifact_id": gauss_id, "camera": cam,
+                                                             "backend": backend}).json()["id"])
+
+
+def test_render_job_reference_cpu(client):
+    gauss_id, cam = _gaussian_artifact_and_camera(client)
+    ok = _render(client, gauss_id, cam, "reference_cpu")
     assert ok["state"] == "completed"
     img = client.get(f"/v1/neural/artifacts/{ok['artifacts'][0]}").json()
     assert img["kind"] == "image" and img["producer"]["renderer"] == "reference_cpu"
-    bad = wait(client, client.post("/v1/neural/jobs", json={"kind": "render", "artifact_id": gauss_id, "camera": cam,
-                                                            "backend": "gsplat"}).json()["id"])
+    png = client.get(f"/v1/neural/artifacts/{ok['artifacts'][0]}/files/render.png")
+    from PIL import Image
+    assert len(set(Image.open(io.BytesIO(png.content)).convert("RGB").getdata())) > 1   # same scene/camera as GPU test
+
+
+@pytest.mark.parametrize("unavailable,expected_message", [
+    ("gsplat_not_importable", "gsplat not importable"),
+    ("not_rocm_build", "ROCm PyTorch required"),
+    ("no_device", "no GPU device visible"),
+])
+def test_render_job_gsplat_unavailable_fails_honestly(client, monkeypatch, unavailable, expected_message):
+    """Simulated unavailability, independent of the machine (CPU CI or a working MI300X): only the availability
+    report that GsplatRenderer checks before allocating is patched — starting from "everything available" and
+    knocking out exactly one condition, so the message proves which check fired. The renderer is not mocked."""
+    from berkelium_neural.render import gsplat_adapter
+    real_status = gsplat_adapter.gsplat_status
+
+    def simulated():
+        st = dict(real_status())
+        st.pop("gsplat_import_error", None)
+        st.update(gsplat_version=st.get("gsplat_version") or "simulated", torch_hip=st["torch_hip"] or "simulated",
+                  device_visible=True)
+        if unavailable == "no_device":
+            st["device_visible"] = False
+        elif unavailable == "not_rocm_build":
+            st["torch_hip"] = None
+        else:
+            st.pop("gsplat_version")
+            st["gsplat_import_error"] = "ModuleNotFoundError: simulated"
+        st["usable"] = False
+        return st
+    monkeypatch.setattr(gsplat_adapter, "gsplat_status", simulated)
+    gauss_id, cam = _gaussian_artifact_and_camera(client)
+    bad = _render(client, gauss_id, cam, "gsplat")
     assert bad["state"] == "failed" and bad["error"]["code"] == "DEVICE_UNAVAILABLE" and not bad["artifacts"]
+    assert expected_message in bad["error"]["message"], bad["error"]
+
+
+def test_render_job_gsplat_fails_honestly_when_actually_unavailable(client):
+    """Real (unpatched) availability: on a machine without ROCm gsplat the job must fail, never fake an image."""
+    from berkelium_neural.render.gsplat_adapter import gsplat_status
+    if gsplat_status()["usable"]:
+        pytest.skip("gsplat is usable here; covered by test_render_job_gsplat_real_render")
+    gauss_id, cam = _gaussian_artifact_and_camera(client)
+    bad = _render(client, gauss_id, cam, "gsplat")
+    assert bad["state"] == "failed" and bad["error"]["code"] == "DEVICE_UNAVAILABLE" and not bad["artifacts"]
+
+
+@pytest.mark.hip
+@pytest.mark.gpu
+def test_render_job_gsplat_real_render(client):
+    """Success path with the real AMD gsplat backend (no mocks). Runs only where gsplat is actually usable."""
+    from berkelium_neural.render.gsplat_adapter import gsplat_status
+    st = gsplat_status()
+    if not st["usable"]:
+        pytest.skip(f"requires ROCm PyTorch + visible HIP device + gsplat (status: usable=False, "
+                    f"hip={st['torch_hip']}, device={st['device_visible']}, "
+                    f"import_error={st.get('gsplat_import_error')})")
+    gauss_id, cam = _gaussian_artifact_and_camera(client)
+    ok = _render(client, gauss_id, cam, "gsplat")
+    assert ok["state"] == "completed", ok.get("error")
+    assert len(ok["artifacts"]) == 1
+    img = client.get(f"/v1/neural/artifacts/{ok['artifacts'][0]}").json()
+    assert img["kind"] == "image" and img["producer"]["renderer"] == "gsplat"
+    assert img["producer"]["backend"] == "gsplat" and img["producer"]["profile"] == "gsplat_v1"
+    png = client.get(f"/v1/neural/artifacts/{ok['artifacts'][0]}/files/render.png")
+    assert png.status_code == 200 and png.content[:8] == b"\x89PNG\r\n\x1a\n"
+    from PIL import Image
+    im = Image.open(io.BytesIO(png.content))
+    assert im.size == (32, 32)
+    assert len(set(im.convert("RGB").getdata())) > 1, "render is a constant image"
 
 
 @pytest.mark.parametrize("body,status", [

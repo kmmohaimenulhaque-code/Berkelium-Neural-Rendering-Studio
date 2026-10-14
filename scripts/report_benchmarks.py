@@ -34,6 +34,33 @@ def main(argv=None):
                   f"Baseline backend **{cmp['baseline']}** vs candidate **{cmp['candidate']}**.", ""]
         for g in cmp["global_correctness"]:
             lines.append(f"- global gate `{g['name']}`: {'pass' if g.get('passed') else 'fail'} ({g.get('method', '')})")
+        auth = cmp.get("authorization")
+        if auth:
+            lines += ["", "### Authorization", "",
+                      f"- static config `approved`: {auth.get('static_config_approved')}",
+                      f"- per-run CLI `--i-approve-gpu-cost`: {auth.get('cli_i_approve_gpu_cost')}",
+                      f"- authorized by: {auth.get('authorized_by')}"]
+            if auth.get("note"):
+                lines.append(f"- note: {auth['note']}")
+        if cmp.get("case_notes"):
+            gs = cmp.get("gate_summary", {})
+            ag = gs.get("acceptance_gates", {})
+            lines += ["", f"### FP64 oracle role per case ({cmp.get('classification')})", "",
+                      ("The FP64 CPU oracle is an acceptance gate only on cases marked `gate` (protocol). Elsewhere "
+                       "its errors are diagnostic: values and tolerances are kept, `passed` is null, and a value beyond "
+                       "the tolerance is not an acceptance failure (see `benchmarks/renderer/classify.py`)."), "",
+                      "| case | oracle role | forward oracle errors bitwise-identical across backends |", "|---|---|---|"]
+            for n in cmp["case_notes"]:
+                c = n["case"]
+                ident = ", ".join(f"{k}: {v}" for k, v in n["forward_oracle_errors_bitwise_identical"].items()) or "n/a"
+                lines.append(f"| N={c['n']} {c['res']}px | {n['oracle_role']} | {ident} |")
+            lines += ["", (f"- acceptance gates (both backends, all oracle metrics on gate cases): "
+                           f"{ag.get('pass', 0)} pass, {ag.get('fail', 0)} fail")]
+            for d in gs.get("diagnostic_beyond_tolerance", []):
+                lines.append(f"- diagnostic beyond tolerance (not a failure): N={d['case']['n']} {d['backend']} "
+                             f"`{d['metric']}` = {fmt(d['value'])} (tol {d['tolerance']})")
+            lines.append("- identical oracle errors are consistent with identical forward outputs but do not prove "
+                         "them; the direct `forward_*_diff` rows do (or are `not_run`).")
         for grp in ("correctness", "workload", "performance", "quality"):
             rs = [r for r in cmp["rows"] if r["group"] == grp]
             if not rs:

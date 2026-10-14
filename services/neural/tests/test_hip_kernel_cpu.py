@@ -93,8 +93,20 @@ def test_full_renderer_gradients_match_reference(hipcpu_lib):
         assert torch.allclose(a, b, atol=5e-4, rtol=5e-3), (a - b).abs().max()
 
 
-def test_rocm_path_refuses_without_hip_device():
+@pytest.mark.parametrize("torch_hip,device_visible", [
+    (None, False),          # CPU / CUDA PyTorch build: no HIP runtime at all
+    (None, True),           # CUDA build with a visible (NVIDIA) device: still not a HIP device
+    ("7.0.0-sim", False),   # ROCm PyTorch build, but no HIP device visible
+])
+def test_rocm_path_refuses_without_hip_device(monkeypatch, torch_hip, device_visible):
+    """Simulates the unavailable condition explicitly (this suite also runs on MI300X, where a device IS present).
+    Only the two facts that load_rocm_extension() actually checks are patched, and the extension cache is cleared so
+    a kernel already built earlier in the session cannot short-circuit the check."""
+    from berkelium_neural.render import berkelium_ext as ext
     from berkelium_neural.render.interface import RendererError
+    monkeypatch.setattr(ext, "_ROCM_EXT", None)
+    monkeypatch.setattr(ext.torch.version, "hip", torch_hip)
+    monkeypatch.setattr(ext.torch.cuda, "is_available", lambda: device_visible)
     with pytest.raises(RendererError) as e:
         BerkeliumRenderer("rocm").prepare(RenderConfig())
     assert e.value.code == "DEVICE_UNAVAILABLE"
