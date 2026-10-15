@@ -29,7 +29,8 @@ def test_select_adapter_is_deterministic_across_several_adapters():
 @pytest.fixture()
 def client(tiny_run, tmp_path, monkeypatch):
     monkeypatch.setenv("BERKELIUM_MODELS", json.dumps({"berkelium-textshape": {
-        "checkpoint": str(tiny_run["base"]["artifact"]), "adapters": {"capsule-v1": str(tiny_run["lora"]["artifact"])}}}))
+        "checkpoint": str(tiny_run["base"]["artifact"]),
+        "adapters": {"capsule-v1": str(tiny_run["lora"]["artifact"])}}}))
     with TestClient(create_app(NeuralService(tmp_path / "home"))) as c:
         yield c
 

@@ -87,3 +87,16 @@ def test_triposr_marching_cubes_shim_matches_torchmcubes_convention():
     assert f.dtype == torch.int64 and len(f) > 100
     with pytest.raises(RuntimeError):
         sys.modules["rembg"].remove(None)
+
+
+def test_depth_paths_agree_on_a_known_sphere():
+    """Scan depth and Gaussian rendered depth both measure camera Z; a radius-0.6 sphere seen from distance 3 has
+    its front surface at Z = 2.4 in the image centre."""
+    scan = _sphere_scan(32)
+    cam = orbit_cameras(1, 3.0, 0.0, 48, 48, 40.0)[0]
+    _, a, d = ro.render_scan(scan, cam, with_depth=True)
+    assert abs(float(d[24, 24]) - 2.4) < 0.01 and d[0, 0] == 0
+    m = ro.depth_metrics([d], [a], [d], [a])
+    assert m["mean_abs"] == 0 and m["within_0.02"] == 1.0 and m["coverage"] == 1.0
+    m2 = ro.depth_metrics([d + 0.03], [a], [d], [a])
+    assert abs(m2["mean_abs"] - 0.03) < 1e-5 and m2["within_0.02"] == 0.0 and m2["within_0.05"] == 1.0

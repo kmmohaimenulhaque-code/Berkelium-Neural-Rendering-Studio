@@ -67,10 +67,12 @@ def main(argv=None):
 
     ev = {}
     renders = {}
+    te_depth = [ro.render_scan(scan, c, with_depth=True)[2] for c in test]      # evaluation only
     for name, sc in (("init_space_carving", init), ("fitted", fitted)):
-        rr, ra = ro.render_scene(sc, test)
+        rr, ra, rd = ro.render_scene(sc, test, with_depth=True)
         renders[name] = rr
-        ev[name] = {"heldout": ro.image_metrics(rr, ra, te_rgb, te_a), "geometry": ro.geometry_metrics(sc, scan)}
+        ev[name] = {"heldout": ro.image_metrics(rr, ra, te_rgb, te_a), "geometry": ro.geometry_metrics(sc, scan),
+                    "heldout_depth": ro.depth_metrics(rd, ra, te_depth, te_a)}
         tr_r, tr_al = ro.render_scene(sc, train[::6])
         ev[name]["train_subset"] = {k: v for k, v in ro.image_metrics(tr_r, tr_al, tr_rgb[::6], tr_a[::6]).items()
                                     if k != "psnr_per_view"}
@@ -106,8 +108,16 @@ def main(argv=None):
             str((out / "train_observations.png").relative_to(ROOT))]},
         "environment": provenance(),
     }
+    import hashlib
+    report["outputs"]["scene_sha256"] = hashlib.sha256(payload).hexdigest()
+    old_p = out / "report.json"
     if a.publish:
         report["published"] = publish(fitted, report, out)
+    elif old_p.exists():               # re-evaluation of the same fitted scene keeps its published artifact ids
+        old = json.loads(old_p.read_text())
+        same = old.get("outputs", {}).get("scene_sha256") in (None, report["outputs"]["scene_sha256"])
+        if old.get("published") and same:
+            report["published"] = {**old["published"], "note": "published by an earlier run of this same fitted scene"}
     ro.write_json(out / "report.json", report)
     h, d = ev["fitted"]["heldout"], report["delta_fitted_minus_init"]
     print(f"[{a.object}] held-out PSNR {h['psnr']:.2f} dB (Δ vs init {d['psnr']:+.2f}), SSIM {h['ssim']:.3f}, "

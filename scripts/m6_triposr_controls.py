@@ -168,7 +168,8 @@ def main(argv=None):
     torch.set_num_threads(a.threads)
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
-    head = subprocess.run(["git", "-C", str(TRIPOSR), "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
+    head = subprocess.run(["git", "-C", str(TRIPOSR), "rev-parse", "HEAD"], capture_output=True,
+                          text=True).stdout.strip()
     if head != CODE_PIN:
         raise SystemExit(f"third_party/TripoSR is at {head}, not the pinned {CODE_PIN}")
     install_shims()
@@ -182,7 +183,7 @@ def main(argv=None):
     from berkelium_neural.render.reference import ReferenceRenderer
     from berkelium_neural.text3d.dataset import load_manifest
     from berkelium_neural.text3d.generate import generate_mesh, mesh_to_gaussians
-    from berkelium_neural.text3d.geometry import validate_mesh
+    from berkelium_neural.text3d.geometry import clean_mesh, validate_mesh
     from berkelium_neural.text3d.train import file_sha256, load_model
     root = Path(a.dataset)
     recs = {r.asset_id: r for r in load_manifest(root, {"test"})}
@@ -190,7 +191,13 @@ def main(argv=None):
     ckpt = hf_hub_download("stabilityai/TripoSR", "model.ckpt", revision=WEIGHTS_PIN, cache_dir=cache)
     cfgp = hf_hub_download("stabilityai/TripoSR", "config.yaml", revision=WEIGHTS_PIN, cache_dir=cache)
     t0 = time.time()
-    model = TSR.from_pretrained(str(Path(cfgp).parent), config_name="config.yaml", weight_name="model.ckpt")
+    # Same weights as TSR.from_pretrained, loaded memory-mapped and assigned in place: the upstream loader holds the
+    # model AND a full copy of the checkpoint (~3.4 GB anonymous memory), which a 7.8 GB host cannot always spare.
+    from omegaconf import OmegaConf
+    tcfg = OmegaConf.load(cfgp)
+    OmegaConf.resolve(tcfg)
+    model = TSR(tcfg)
+    model.load_state_dict(torch.load(ckpt, map_location="cpu", mmap=True, weights_only=True), assign=True)
     model.renderer.set_chunk_size(8192)
     model.eval()
     load_s = time.time() - t0
@@ -202,6 +209,7 @@ def main(argv=None):
                                  "rembg": "not used (exact alpha); stub raises if called",
                                  "orientation": "tsr.utils.to_gradio_3d_orientation (TripoSR z-up -> y-up)",
                                  "transformers": __import__("transformers").__version__},
+               "loader": "TSR(cfg) + torch.load(mmap=True) + load_state_dict(assign=True) (same tensors as upstream)",
                "device": "cpu", "threads": a.threads, "load_s": round(load_s, 1), "mc_resolution": a.mc_res,
                "controls": [], "environment": provenance()}
     sheets = []
@@ -219,11 +227,15 @@ def main(argv=None):
         to_gradio_3d_orientation(mesh)                   # TripoSR's own z-up -> glTF/Berkelium y-up
         mesh.fix_normals()
         raw = validate_mesh(np.asarray(mesh.vertices, np.float64), np.asarray(mesh.faces, np.int64))
-        # same clean-up as Berkelium's own marching cubes output: drop zero-area faces, then unreferenced vertices
-        mesh.update_faces(mesh.nondegenerate_faces())
-        mesh.remove_unreferenced_vertices()
-        v, f = np.asarray(mesh.vertices, np.float64), np.asarray(mesh.faces, np.int64)
-        col = np.asarray(mesh.visual.vertex_colors[:, :3], np.float32) / 255.0
+        # the clean-up Berkelium applies to its own marching-cubes output (geometry.clean_mesh, area < 1e-12)
+        v0, f0 = np.asarray(mesh.vertices, np.float64), np.asarray(mesh.faces, np.int64)
+        col0 = np.asarray(mesh.visual.vertex_colors[:, :3], np.float32) / 255.0
+        v, f, removed = clean_mesh(v0, f0)
+        area = 0.5 * np.linalg.norm(np.cross(v0[f0[:, 1]] - v0[f0[:, 0]], v0[f0[:, 2]] - v0[f0[:, 0]]), axis=1)
+        col = col0[np.unique(f0[area >= 1e-12])]
+        assert len(col) == len(v) and removed == raw.get("degenerate_faces", 0)
+        import trimesh
+        mesh = trimesh.Trimesh(v, f, vertex_colors=(np.clip(col, 0, 1) * 255).round().astype(np.uint8), process=False)
         rep = validate_mesh(v, f)
         mesh.export(out / f"triposr_{aid}.glb")
         sheet, tiles = orbit_sheet(v, f, col)
@@ -242,7 +254,7 @@ def main(argv=None):
         row = {"asset_id": aid, "caption": rec.caption, "family": rec.family,
                "control_image": f"results/m6/control_{aid}.png",
                "gates": {"finite": bool(np.isfinite(v).all()), "faces": int(len(f)), "valid": bool(rep["valid"]),
-                         "raw_valid": bool(raw["valid"]), "raw_degenerate_faces_removed": raw.get("degenerate_faces"),
+                         "raw_valid": bool(raw["valid"]), "degenerate_faces_removed": removed,
                          "part_count": {"reconstructed": rep.get("components"), "ground_truth": int(gt["components"]),
                                         "correct": rep.get("components") == int(gt["components"])},
                          "components": rep.get("components"), "watertight": rep.get("watertight"),

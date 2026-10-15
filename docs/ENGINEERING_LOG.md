@@ -166,3 +166,17 @@ Development host: GitHub Codespace, 2 vCPU, 7.8 GB RAM, no GPU, Python 3.14.2, t
   routing cannot change what the adapter generates. Needs adapter retraining (e.g. part-separation-aware loss or
   base-data replay); not attempted in this sprint (no evidence yet that a CPU retrain would fix it).
 - Base model on `test` reproduces E-T1 (Chamfer 0.0899 vs 0.090 recorded).
+
+**M6 TripoSR control assets — engineering findings**
+- Pinned code `107cefd` + weights `5b521936` (sha256 `429e2c6b…`) run on CPU after three compatibility fixes, none
+  touching model code or weights: (1) `torchmcubes` (CUDA extension) → scikit-image marching cubes behind a shim with
+  torchmcubes' axis convention (unit-tested against TripoSR's `[2, 1, 0]` reorder); (2) transformers 5 renamed the
+  ViT parameters stored in the checkpoint (`encoder.layer.N.attention.attention.query` → `layers.N.attention.q_proj`),
+  so loading failed with missing/unexpected keys → separate env pinned to transformers 4.57.6; (3) the upstream loader
+  holds the model and a full checkpoint copy (~3.4 GB anonymous memory); on this 7.8 GB host the process was sent
+  SIGTERM ~19 s after start (no kernel OOM event; host-level memory pressure) → weights are loaded memory-mapped and
+  assigned in place (same tensors); peak RSS 3.5 → 2.7 GiB and the run completes.
+- TripoSR's output is z-up; converted with its own `to_gradio_3d_orientation`. Reconstructions are tilted by the
+  control camera's 16° elevation (TripoSR assumes a level camera) — handled by the evaluation's similarity alignment.
+- Marching cubes emits zero-area faces (1 on two of the meshes), which Berkelium's validator rejects; the TripoSR
+  output now gets Berkelium's own `clean_mesh` (trimesh's `nondegenerate_faces` did not catch them).

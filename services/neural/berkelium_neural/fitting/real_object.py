@@ -100,9 +100,10 @@ def _sample_tex(tex, uv):
     return ((tex[y0, x0] * (1 - wx) + tex[y0, x1] * wx) * (1 - wy) + (tex[y1, x0] * (1 - wx) + tex[y1, x1] * wx) * wy)
 
 
-def render_scan(scan: ScanMesh, cam: CameraSpec, ss: int = 2) -> tuple[np.ndarray, np.ndarray]:
+def render_scan(scan: ScanMesh, cam: CameraSpec, ss: int = 2, with_depth: bool = False):
     """Unlit albedo render of the textured scan (z-buffer, perspective-correct UVs, ss x ss supersampling).
-    -> (rgb premultiplied on black [H,W,3], alpha [H,W]) at the camera's resolution."""
+    -> (rgb premultiplied on black [H,W,3], alpha [H,W]) at the camera's resolution; with_depth adds the mean
+    camera-Z of the covered subsamples [H,W] (0 where empty)."""
     H, W = cam.height * ss, cam.width * ss
     T = T_cw(cam)
     pc = scan.v @ T[:3, :3].T + T[:3, 3]
@@ -147,8 +148,13 @@ def render_scan(scan: ScanMesh, cam: CameraSpec, ss: int = 2) -> tuple[np.ndarra
     rgb[hit] = _sample_tex(scan.tex, ubuf[hit])
     a = hit.astype(np.float32)
     rgb = rgb.reshape(cam.height, ss, cam.width, ss, 3).mean((1, 3))
+    a_full = a
     a = a.reshape(cam.height, ss, cam.width, ss).mean((1, 3))
-    return rgb.astype(np.float32), a.astype(np.float32)
+    if not with_depth:
+        return rgb.astype(np.float32), a.astype(np.float32)
+    zsum = np.where(hit, zbuf, 0.0).reshape(cam.height, ss, cam.width, ss).sum((1, 3))
+    depth = zsum / np.maximum(a_full.reshape(cam.height, ss, cam.width, ss).sum((1, 3)), 1)
+    return rgb.astype(np.float32), a.astype(np.float32), depth.astype(np.float32)
 
 
 def view_split(res: int, n_train: int = 24, n_test: int = 8, radius: float = 3.0, fov: float = 40.0):
@@ -256,7 +262,7 @@ def fit(train_cams, train_rgb, train_a, n: int, steps: int, seed: int = 0, log=p
 
 
 # ------------------------------------------------------------------------------------------- evaluate
-def render_scene(scene, cams):
+def render_scene(scene, cams, with_depth: bool = False):
     import torch
 
     from ..contracts import RenderConfig
@@ -266,7 +272,26 @@ def render_scene(scene, cams):
     g = GaussianTensors.from_scene(scene)
     with torch.no_grad():
         outs = [R.render(g, c, cfg) for c in cams]
+    if with_depth:
+        return [o.rgb.numpy() for o in outs], [o.alpha.numpy() for o in outs], [o.depth.numpy() for o in outs]
     return [o.rgb.numpy() for o in outs], [o.alpha.numpy() for o in outs]
+
+
+def depth_metrics(pred_d, pred_a, gt_d, gt_a) -> dict:
+    """Rendered expected depth vs the scan's depth on held-out views, over pixels fully covered by the scan and
+    opaque (alpha > 0.5) in the prediction. Measures the surface the fit renders, which centre distances do not."""
+    errs, cov = [], []
+    for pd, pa, gd, ga in zip(pred_d, pred_a, gt_d, gt_a, strict=True):
+        full = ga >= 0.999
+        m = full & (pa > 0.5)
+        cov.append(float(m.sum() / max(full.sum(), 1)))
+        errs.append(np.abs(pd[m] - gd[m]))
+    e = np.concatenate(errs) if errs else np.zeros(0)
+    if e.size == 0:
+        return {"pixels": 0, "mean_abs": None}
+    return {"pixels": int(e.size), "coverage": float(np.mean(cov)), "mean_abs": float(e.mean()),
+            "median_abs": float(np.median(e)), "within_0.02": float((e < 0.02).mean()),
+            "within_0.05": float((e < 0.05).mean()), "units": "camera Z, normalised object units (extent 1.6)"}
 
 
 def image_metrics(pred_rgb, pred_a, gt_rgb, gt_a) -> dict:
@@ -299,7 +324,8 @@ def geometry_metrics(scene, scan: ScanMesh, opacity_min: float = 0.25, n_surface
     for t in (0.02, 0.05):
         p, r = float((d1 < t).mean()), float((d2 < t).mean())
         f[f"fscore@{t}"] = 2 * p * r / max(p + r, 1e-12)
-    return {"n_opaque": int(len(c)), "opacity_min": opacity_min, "chamfer_l1": float(0.5 * (d1.mean() + d2.mean())), **f}
+    return {"n_opaque": int(len(c)), "opacity_min": opacity_min, "chamfer_l1": float(0.5 * (d1.mean() + d2.mean())),
+            **f}
 
 
 def contact_sheet(rows: list[list[np.ndarray]]) -> np.ndarray:
