@@ -5,8 +5,9 @@ heavy generation never shares a heap with the API server and a memory-watchdog k
 Writes D/mesh.npz (exact float32 arrays) and D/report.json; prints one JSON object per line on stdout:
   {"event": "progress", "frac": f, "stage": s, "rss_mib": {...}}   per stage / denoiser call
   {"event": "done", "status": "ok" | "invalid_mesh", "report": {...}}
-The process aborts itself (exit 86, report.json status "aborted_memory") when VmRSS exceeds --rss-abort-mib: this
-host's watchdog SIGTERMs processes at ~3.2 GB RSS.
+The process aborts itself (exit 86, report.json status "aborted_memory") when VmRSS exceeds --rss-abort-mib, a
+recorded failure instead of an anonymous kill: this host's watchdog SIGTERMs the largest process when system-wide
+MemAvailable falls to ~0.8 GB (with ~4 GB used by other processes, that happened at ~3.2 GB RSS).
 """
 
 from __future__ import annotations
@@ -23,6 +24,19 @@ import numpy as np
 
 ABORT_EXIT = 86
 _KEYS = ("VmRSS", "RssAnon", "RssFile")
+
+
+def mem_available_mib() -> int | None:
+    """System-wide MemAvailable (/proc/meminfo). This host's watchdog SIGTERMs the largest process when it falls to
+    ~0.8 GB, so it decides whether a generation survives, together with the worker's own footprint."""
+    try:
+        with open("/proc/meminfo") as fh:
+            for line in fh:
+                if line.startswith("MemAvailable:"):
+                    return int(line.split()[1]) // 1024
+    except OSError:
+        pass
+    return None
 
 
 def rss_mib() -> dict:
@@ -82,6 +96,7 @@ def run(prompt: str, out: Path, seed: int = 0, steps: int = 16, guidance: float 
             last.update(stage=stage, t=now)
             emit(json.dumps({"event": "progress", "frac": round(float(frac), 4), "stage": stage, "rss_mib": rss_mib()}))
     t0 = time.time()
+    mem0 = mem_available_mib()
     o = gen.generate(prompt, seed, progress=progress)
     rep = o["report"]
     out.mkdir(parents=True, exist_ok=True)
@@ -90,7 +105,8 @@ def run(prompt: str, out: Path, seed: int = 0, steps: int = 16, guidance: float 
                             col=o["colors"] if o["colors"] is not None else np.zeros((0, 3), np.float32))
     rep.update({"status": "ok" if rep.get("valid") else "invalid_mesh", "identity": gen.identity, "threads": threads,
                 "wall_s": round(time.time() - t0, 1), "seconds_per_step": round(rep["sample_s"] / steps, 2),
-                "memory_mib": {"peak_" + k: v for k, v in mon.peak.items()}, "rss_abort_mib": rss_abort_mib})
+                "memory_mib": {"peak_" + k: v for k, v in mon.peak.items()}, "rss_abort_mib": rss_abort_mib,
+                "mem_available_mib_at_start": mem0})
     (out / "report.json").write_text(json.dumps(rep, indent=2, default=str))
     emit(json.dumps({"event": "done", "status": rep["status"], "report": rep}, default=str))
     return {**o, "report": rep}

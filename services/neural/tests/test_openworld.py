@@ -135,7 +135,7 @@ def test_finalize_mesh_keeps_colours_aligned_with_cleaned_vertices():
     v = np.array([[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1], [2, 2, 2], [5, 5, 5]], float)
     f = np.array([[0, 1, 2], [0, 1, 3], [4, 4, 1]])                     # last face is degenerate
     col = np.linspace(0, 1, 18).reshape(6, 3).astype(np.float32)          # unique colour per vertex
-    v2, f2, c2, removed = S.finalize_mesh(v, f, col)
+    v2, _f2, c2, removed = S.finalize_mesh(v, f, col)
     assert removed == 1 and len(v2) == 4 == len(c2)
     conv = S.to_berkelium_frame(v)
     for i, p in enumerate(v2):                                            # each kept vertex keeps its own colour
@@ -151,7 +151,7 @@ def test_finalize_mesh_cleans_faces_that_degenerate_only_after_float32_rounding(
                   [0.5, 0.5, 0.5 + 1.5e-4]])
     f = np.array([[0, 1, 2], [3, 4, 5]])
     assert 0.5 * np.linalg.norm(np.cross(v[4] - v[3], v[5] - v[3])) > 1e-12
-    v2, f2, c2, removed = S.finalize_mesh(v, f, None)
+    v2, f2, _c2, removed = S.finalize_mesh(v, f, None)
     assert removed == 1 and validate_mesh(v2, f2)["degenerate_faces"] == 0 and validate_mesh(v2, f2)["valid"]
 
 

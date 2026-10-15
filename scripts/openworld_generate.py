@@ -6,8 +6,8 @@
 Writes <out>/<slug>__s<seed>/{mesh.glb, mesh.npz (exact float32 arrays), preview.png, report.json}. The report has
 stage timings, the generator identity (commit, weight sha256, sampler), mesh validity, and memory sampled from /proc
 every 50 ms (VmRSS, RssAnon, RssFile). Generation itself is berkelium_neural.text3d.shap_e_worker.run, the same code
-the service runs; the process aborts itself (exit 86, reason recorded) above --rss-abort-mib so a run never reaches
-this host's memory watchdog, which SIGTERMs processes at ~3.2 GB RSS.
+the service runs; the process aborts itself (exit 86, reason recorded) above --rss-abort-mib instead of being
+SIGTERMed by this host's memory watchdog (which acts when system-wide MemAvailable falls to ~0.8 GB).
 """
 import argparse
 import json
@@ -43,7 +43,6 @@ def main(argv=None):
     d = out / (a.dir_name or f"{slug(a.prompt)}__s{a.seed}")
 
     import numpy as np
-
     from berkelium_neural.camera import orbit_cameras
     from berkelium_neural.fitting.real_object import contact_sheet, save_png
     from berkelium_neural.text3d.generate import mesh_to_glb

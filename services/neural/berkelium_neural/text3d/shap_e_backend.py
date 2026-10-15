@@ -6,13 +6,17 @@ Pins
            (URL_HASHES) on every load
   text     OpenAI CLIP ViT-L/14 @ d05afc436d78f1c48dc0dbf8e5980a9d471f35f6 (MIT), text tower only
 
-CPU budget on a small host (7.8 GB RAM; processes above ~3.4 GB anonymous memory have been SIGTERMed here):
+CPU budget on a small host (7.8 GB RAM, ~4 GB used by other processes; a watchdog SIGTERMs the largest process when
+system-wide MemAvailable falls to ~0.8 GB):
   * CLIP: the text tower's tensors are extracted ONCE (prepare_clip_text, its own process) bit-for-bit from the
     pinned ViT-L-14.pt into clip_vit_l14_text.pt next to the weights. At run time clip.model.CLIP's own text code is
     rebuilt from that file and the vision tower is replaced by a 1-parameter stub (CLIP.dtype reads
     visual.conv1.weight.dtype); text300M only encodes text. TorchScript is never used (torch.jit.load warns it may
     break on Python 3.14, and on this host it is SIGTERMed while loading ViT-L-14.pt).
-  * checkpoints are loaded memory-mapped; the diffusion model and the mesh decoder are never resident together.
+  * models are built with torch.nn.init disabled (the parameter allocations are never touched, so never resident)
+    and the memory-mapped checkpoint is assigned in their place; the diffusion model and the mesh decoder are never
+    resident together. This host's watchdog acts on system-wide free memory (SIGTERM at ~0.8 GB available), so the
+    worker's footprint, not only its own RSS limit, decides whether a run survives next to the API server.
   * Shap-E's default cache is $CWD/shap_e_model_cache: every load passes cache_dir explicitly.
   * shap_e.util.notebooks (imports ipywidgets) is never imported: pan cameras and mesh decoding are local.
 Output: Shap-E's STF mesh with vertex colours, converted from Shap-E's z-up frame to Berkelium's +Y-up frame and
@@ -127,7 +131,7 @@ _STORAGE_DTYPES = {"HalfStorage": "float16", "FloatStorage": "float32", "DoubleS
 
 def read_torchscript_tensors(path: Path, want) -> tuple[dict, dict]:
     """Named tensors of a TorchScript archive WITHOUT torch.jit.load (on this host jit.load of ViT-L-14.pt climbs past
-    3.2 GB RSS while holding the GIL and is SIGTERMed by the memory watchdog).
+    3.2 GB RSS while holding the GIL and is SIGTERMed by the host's memory watchdog).
 
     data.pkl is read by a restricted unpickler: only tensor-rebuild, storage-type, OrderedDict and __torch__ module
     classes resolve (anything else is refused), tensors become references, and only the storages of names for which
@@ -256,6 +260,27 @@ def _patched_loaders(cache: Path, clip_dtype):
         torch.load, clip.load = orig_load, orig_clip
 
 
+_INIT_FNS = ("uniform_", "normal_", "trunc_normal_", "constant_", "ones_", "zeros_", "eye_", "dirac_",
+             "xavier_uniform_", "xavier_normal_", "kaiming_uniform_", "kaiming_normal_", "orthogonal_", "sparse_")
+
+
+@contextlib.contextmanager
+def _skip_init():
+    """torch.nn.init.* become no-ops while a model whose every parameter will be replaced from a checkpoint is built:
+    the large parameter allocations are then never written, so they never become resident (RSS), and are released
+    when load_state_dict(assign=True) swaps in the memory-mapped checkpoint tensors. Strict loading guarantees no
+    parameter or persistent buffer keeps its uninitialised value; sampling is re-seeded after loading."""
+    import torch
+    saved = {n: getattr(torch.nn.init, n) for n in _INIT_FNS if hasattr(torch.nn.init, n)}
+    for n in saved:
+        setattr(torch.nn.init, n, lambda tensor, *a, **k: tensor)
+    try:
+        yield
+    finally:
+        for n, f in saved.items():
+            setattr(torch.nn.init, n, f)
+
+
 def load_shap_e_model(name: str, cache: Path, clip_dtype=None, device: str = "cpu"):
     """shap_e.models.download.load_model, but the checkpoint (hash-checked by Shap-E's fetch) is memory-mapped and,
     on CPU, assigned in place of the randomly initialised parameters (assign=True; strict) when every dtype and shape
@@ -264,12 +289,15 @@ def load_shap_e_model(name: str, cache: Path, clip_dtype=None, device: str = "cp
     import torch
     from shap_e.models.configs import model_from_config
     from shap_e.models.download import load_checkpoint, load_config
-    with _patched_loaders(cache, clip_dtype or torch.float32):
+    cpu = device == "cpu"
+    with _patched_loaders(cache, clip_dtype or torch.float32), (_skip_init() if cpu else contextlib.nullcontext()):
         model = model_from_config(load_config(name, cache_dir=str(cache)), device=torch.device(device))
         sd = load_checkpoint(name, device=torch.device("cpu"), cache_dir=str(cache), progress=False)
     target = model.state_dict()
-    assign = device == "cpu" and set(sd) == set(target) and all(
+    assign = cpu and set(sd) == set(target) and all(
         sd[k].dtype == target[k].dtype and sd[k].shape == target[k].shape for k in sd)
+    if cpu and not assign:
+        raise RuntimeError(f"{name}: checkpoint does not match the model exactly; refusing an uninitialised build")
     model.load_state_dict(sd, strict=True, assign=assign)
     del sd, target
     gc.collect()
@@ -289,7 +317,7 @@ def pan_cameras(size: int, device="cpu"):
         x = np.array([np.cos(theta), -np.sin(theta), 0.0])
         y = np.cross(z, x)
         origins.append(origin), xs.append(x), ys.append(y), zs.append(z)
-    t = lambda a: torch.from_numpy(np.stack(a, axis=0)).float().to(device)  # noqa: E731
+    t = lambda a: torch.from_numpy(np.stack(a, axis=0)).float().to(device)
     return DifferentiableCameraBatch(shape=(1, len(xs)), flat_camera=DifferentiableProjectiveCamera(
         origin=t(origins), x=t(xs), y=t(ys), z=t(zs), width=size, height=size, x_fov=0.7, y_fov=0.7))
 
@@ -398,7 +426,7 @@ class ShapEGenerator:
         finally:
             del dec
             gc.collect()
-        host = lambda a: a.detach().cpu().numpy() if hasattr(a, "detach") else np.asarray(a)  # noqa: E731
+        host = lambda a: a.detach().cpu().numpy() if hasattr(a, "detach") else np.asarray(a)
         v = host(tm.verts).astype(np.float64)
         f = host(tm.faces).astype(np.int64)
         ch = tm.vertex_channels or {}
@@ -428,7 +456,7 @@ class ShapEGenerator:
                "artifact_kind": "triangle_mesh", "units": "normalized_object",
                "frame": "shap-e z-up -> berkelium +Y-up (x, z, -y), centred, max extent 1.6",
                "labels": "model-generated, normalized units, not measured geometry",
-               "raw_vertices": int(len(v)), "raw_faces": int(len(f))}
+               "raw_vertices": len(v), "raw_faces": len(f)}
         if len(f) == 0:
             rep.update(validate_mesh(None, None))
             v2 = f2 = col2 = None

@@ -41,7 +41,8 @@ def _req(url, body=None):
 
 
 def _workers():
-    out = subprocess.run(["pgrep", "-f", "berkelium_neural.text3d.shap_e_worker"], capture_output=True, text=True)
+    out = subprocess.run(["pgrep", "-f", "berkelium_neural.text3d.shap_e_worker"], capture_output=True, text=True,
+                         check=False)
     return [p for p in out.stdout.split() if p and int(p) != os.getpid()]
 
 
@@ -57,23 +58,23 @@ def backend(tmp_path_factory):
     cfg = tmp / "config.json"
     cfg.write_text(json.dumps({"backend_api_key": "", "allowed_origins": ["http://127.0.0.1:5173"]}))
     env = {**os.environ, "BERKELIUM_CONFIG": str(cfg), "BERKELIUM_NEURAL_HOME": str(tmp / "neural")}
-    log = open(tmp / "backend.log", "w")
-    proc = subprocess.Popen([sys.executable, "-m", "uvicorn", "main:app", "--host", "127.0.0.1", "--port", str(port)],
-                            cwd=ROOT / "services" / "backend", env=env, stdout=log, stderr=subprocess.STDOUT)
-    url = f"http://127.0.0.1:{port}"
-    end = time.time() + 90
-    while time.time() < end:
+    with open(tmp / "backend.log", "w") as log:
+        proc = subprocess.Popen([sys.executable, "-m", "uvicorn", "main:app", "--host", "127.0.0.1", "--port",
+                                 str(port)], cwd=ROOT / "services" / "backend", env=env, stdout=log,
+                                stderr=subprocess.STDOUT)
+        url = f"http://127.0.0.1:{port}"
+        end = time.time() + 90
+        while time.time() < end:
+            try:
+                _req(f"{url}/health")
+                break
+            except Exception:  # noqa: BLE001
+                time.sleep(0.5)
         try:
-            _req(f"{url}/health")
-            break
-        except Exception:  # noqa: BLE001
-            time.sleep(0.5)
-    try:
-        yield url
-    finally:
-        proc.terminate()
-        proc.wait(30)
-        log.close()
+            yield url
+        finally:
+            proc.terminate()
+            proc.wait(30)
 
 
 def _wait(url, jid, timeout, stages):
@@ -115,7 +116,7 @@ def test_open_world_prompt_end_to_end_with_real_shap_e(backend):
     png = _req(f"{backend}/v1/neural/artifacts/{img['id']}/files/render.png")
     im = np.asarray(Image.open(io.BytesIO(png)).convert("RGB"), np.float32)
     assert im.std() > 5, "splat render is blank"
-    cam = json.loads(_req(f"{backend}/v1/neural/artifacts/{img['id']}/files/cameras.json"))[1]
+    cam = _req(f"{backend}/v1/neural/artifacts/{img['id']}/files/cameras.json")[1]     # served as application/json
     rj = _req(f"{backend}/v1/neural/jobs", {"kind": "render", "artifact_id": gauss["id"], "camera": cam,
                                             "backend": "reference_cpu", "config": {"background": [1, 1, 1]}})
     r = _wait(backend, rj["id"], 600, [])

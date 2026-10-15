@@ -13,5 +13,5 @@
 | Previous failed run | `shape_first.log`: CLIP download completed, then the process died right after `torch.jit.load` with no traceback (consistent with the memory watchdog below) |
 | `.gitignore` | `/data/` already ignored (covers `data/models/`); added `/shap_e_model_cache/`. Committed weights: only the native `exports/*.pt` (362k-param model, adapter). No pretrained weights are committed |
 | Host | 2 vCPU, 7.8 GB RAM (~3.9 GB available), no swap, no GPU; 8.5 GB free disk (not 12 GB) before downloads |
-| Memory watchdog | no cgroup limit (`memory.max` = max); an external watchdog SIGTERMs processes at ~3.2 GB RSS. Reproduced twice (exit 143 at 3.24 GB and 3.26 GB max RSS, `/usr/bin/time -v`). RSS includes file-backed pages of memory-mapped weights |
+| Memory watchdog | no cgroup limit (`memory.max` = max); an external watchdog SIGTERMs processes, observed at ~3.2 GB RSS (later shown to act on system-wide available memory, ~0.8 GB: see `P2_COST_MODEL.md`, update). Reproduced twice (exit 143 at 3.24 GB and 3.26 GB max RSS, `/usr/bin/time -v`). RSS includes file-backed pages of memory-mapped weights |
 | `/usr/bin/time` | absent; installed `time` 1.9 with apt for the P2 gate |

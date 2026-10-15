@@ -21,7 +21,6 @@ import time
 from pathlib import Path
 
 import numpy as np
-
 from _common import ROOT, provenance
 
 CFG = ROOT / "benchmarks" / "configs" / "text3d_openworld_cpu_v1.json"
@@ -227,11 +226,12 @@ class _Fixed:
 def clip_evaluator(cfg):
     """OpenAI CLIP ViT-B/32 (NOT the ViT-L/14 that conditions Shap-E), loaded from its sha256-pinned TorchScript
     archive with the restricted reader (no TorchScript execution)."""
-    import torch
+    from berkelium_neural.text3d.shap_e_backend import (
+        read_torchscript_tensors,
+        sha256_file,
+    )
     from clip.clip import _transform
     from clip.model import build_model
-
-    from berkelium_neural.text3d.shap_e_backend import read_torchscript_tensors, sha256_file
     p = ROOT / cfg["evaluator"]["path"]
     if sha256_file(p) != cfg["evaluator"]["sha256"]:
         raise RuntimeError(f"{p} does not match the pinned evaluator sha256")
@@ -267,15 +267,24 @@ def mean(xs):
 
 
 def cmd_score(cfg, prompts, out):
-    from berkelium_neural.fitting.real_object import contact_sheet, load_scan, render_scan, save_png
+    from berkelium_neural.fitting.real_object import (
+        contact_sheet,
+        load_scan,
+        render_scan,
+        save_png,
+    )
     from berkelium_neural.text3d import planner
     from berkelium_neural.text3d.evaluate import evaluate_record
-    from berkelium_neural.text3d.openworld_eval import (align_and_score, r_precision, touch_components,
-                                                        view_images)
+    from berkelium_neural.text3d.openworld_eval import (
+        align_and_score,
+        r_precision,
+        touch_components,
+        view_images,
+    )
     units_planned, routing = plan_units(cfg, prompts)
     done = read_units(out)
     seed = cfg["seed"]
-    U = lambda gen, p: done.get(unit_key(gen, p, seed))  # noqa: E731
+    U = lambda gen, p: done.get(unit_key(gen, p, seed))
     omitted = [unit_key(u["gen"], u["prompt"], u["seed"]) for u in units_planned
                if unit_key(u["gen"], u["prompt"], u["seed"]) not in done]
 
@@ -474,11 +483,11 @@ def cmd_report(cfg, prompts, out):
     R = json.loads((ROOT / cfg["result_json"]).read_text())
     L = [f"# E-T3 open-world text-to-3D on CPU — {R['completeness']} run", "",
          f"Config `{CFG.relative_to(ROOT)}`; frozen prompts `{R['prompts_file']}` (sha256 `{R['prompts_sha256'][:16]}…`).",
-         f"Device: CPU ({R['environment'].get('platform')}); torch {R['environment'].get('torch')}; "
-         f"git {R['environment'].get('git_commit')}. Training performed: **{R['training_performed']}**.",
-         f"Shap-E: text300M + vector decoder, {cfg['shap_e']['steps']} Karras steps, guidance "
+         (f"Device: CPU ({R['environment'].get('platform')}); torch {R['environment'].get('torch')}; "
+         f"git {R['environment'].get('git_commit')}. Training performed: **{R['training_performed']}**."),
+         (f"Shap-E: text300M + vector decoder, {cfg['shap_e']['steps']} Karras steps, guidance "
          f"{cfg['shap_e']['guidance']}, seed {cfg['seed']}. Native: BerkeliumTextShape, resolution "
-         f"{cfg['native']['resolution']}, adapter {cfg['native']['adapter']}.", ""]
+         f"{cfg['native']['resolution']}, adapter {cfg['native']['adapter']}."), ""]
     if R["omitted_units"]:
         L += [f"**Omitted ({len(R['omitted_units'])} generation units, budget):** " +
               ", ".join(f"`{u}`" for u in R["omitted_units"]), ""]
@@ -507,8 +516,8 @@ def cmd_report(cfg, prompts, out):
     L += ["", f"Shap-E closer to GT than native (Chamfer): {b1['aggregate']['shap_e_better_chamfer']}.", ""]
     b2 = R["B2"]
     L += ["## B2 — semantic relevance (CLIP R-precision)", "",
-          f"Evaluator: {b2['evaluator']['model']} (sha256 `{b2['evaluator']['sha256'][:16]}…`), 4 views per mesh, "
-          f"ranked against all {b2['candidates']} benchmark prompts.", "",
+          (f"Evaluator: {b2['evaluator']['model']} (sha256 `{b2['evaluator']['sha256'][:16]}…`), 4 views per mesh, "
+          f"ranked against all {b2['candidates']} benchmark prompts."), "",
           "| candidate | n | R@1 | R@5 |", "|---|---|---|---|"]
     for r in b2["rows"]:
         L.append(f"| {r['candidate']} | {r['n']} | {_f(r['r_at_1'], 2)} | {_f(r['r_at_5'], 2)} |")
@@ -537,9 +546,9 @@ def cmd_report(cfg, prompts, out):
     L += ["", "Routes: " + ", ".join(sorted({r["route"]["generator"] for r in b3["rows"]})) + ".", ""]
     b4 = R["B4"]
     L += ["## B4 — composition: {native, Shap-E} × {single-shot, planner}", "",
-          "CD = Chamfer-L1 in the shared normalized frame (existing protocol, no alignment); aligned CD = B1 "
+          ("CD = Chamfer-L1 in the shared normalized frame (existing protocol, no alignment); aligned CD = B1 "
           "alignment; part count = existing rule (connected components == GT); touch-merged = components after "
-          f"merging pieces within {b4['touch_tolerance']} (evaluate.py's 'touching parts merge'), same for GT.", "",
+          f"merging pieces within {b4['touch_tolerance']} (evaluate.py's 'touching parts merge'), same for GT."), "",
           "| candidate | n | success | part-count acc | touch-merged acc | CD-L1 | aligned CD-L1 | colour acc |",
           "|---|---|---|---|---|---|---|---|"]
     for k, a in b4["aggregate"].items():
@@ -556,9 +565,9 @@ def cmd_report(cfg, prompts, out):
                          f"{x.get('components', '—')}c / CD {_f(x.get('chamfer_l1'))}")
         L.append(f"| {r['asset_id']} | {r['caption']} | {r['gt_components']} | " + " | ".join(cells) + " |")
     ro = R["routing"]
-    L += ["", "## Router", "", f"Rule: {ro['rule']}. Domain accuracy (B1/B2 → Shap-E, B3/B4 → native): "
+    L += ["", "## Router", "", (f"Rule: {ro['rule']}. Domain accuracy (B1/B2 → Shap-E, B3/B4 → native): "
           f"{ro['domain_accuracy']}. Agreement with the better generator on B1 (Chamfer oracle): "
-          f"{ro['b1_oracle_agreement']}.", ""]
+          f"{ro['b1_oracle_agreement']}."), ""]
     (ROOT / cfg["result_json"]).with_suffix("").with_suffix(".report.md").write_text("\n".join(L) + "\n")
     print("wrote", (ROOT / cfg["result_json"]).with_suffix("").with_suffix(".report.md").relative_to(ROOT))
 

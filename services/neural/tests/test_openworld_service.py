@@ -104,3 +104,13 @@ def test_shap_e_branch_records_provenance_and_label(client, monkeypatch):
     assert p["routing"][0]["unknown_words"] == ["teapot"] and p["seed"] == 5 and p["peak_rss_mib"] == 2100
     assert mesh["labels"]["provenance"] == "model-generated, normalized units, not measured geometry"
     assert {r["kind"] for r in recs} == {"triangle_mesh", "gaussian_scene", "image"}
+
+
+def test_shap_e_worker_is_not_started_without_enough_free_memory(tmp_path, monkeypatch):
+    from berkelium_neural.text3d import shap_e_worker
+    monkeypatch.setattr(shap_e_worker, "mem_available_mib", lambda: 900)
+    started = []
+    monkeypatch.setattr(X.subprocess, "Popen", lambda *a, **k: started.append(a) or pytest.fail("worker started"))
+    with pytest.raises(RuntimeError, match="RESOURCE_LIMIT: 900 MiB"):
+        X.SubprocessShapE(16, tmp_path).generate("a teapot")
+    assert started == []

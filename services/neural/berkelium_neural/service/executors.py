@@ -24,6 +24,7 @@ from .jobs import Cancelled, JobContext
 REPO = Path(__file__).resolve().parents[4]
 PKG_ROOT = Path(__file__).resolve().parents[2]          # services/neural (holds the berkelium_neural package)
 OPEN_WORLD_LABEL = "model-generated, normalized units, not measured geometry"
+SHAP_E_MIN_FREE_MIB = 2000          # E-T3: worker peak ~1.5 GB RSS (1.1 GB anonymous) + ~0.8 GB watchdog margin
 
 
 class ModelUnavailable(RuntimeError):
@@ -138,6 +139,12 @@ class SubprocessShapE:
         if res is not None:
             res["report"]["resumed_from_workdir"] = True
             return res
+        from ..text3d.shap_e_worker import mem_available_mib
+        free = mem_available_mib()
+        need = int(os.environ.get("BERKELIUM_SHAP_E_MIN_FREE_MIB", SHAP_E_MIN_FREE_MIB))
+        if free is not None and free < need:
+            raise RuntimeError(f"RESOURCE_LIMIT: {free} MiB of host memory available, a Shap-E generation needs "
+                               f"~{need} MiB (worker peak ~1.5 GB + watchdog margin); try again when memory is free")
         out.mkdir(parents=True, exist_ok=True)
         env = {**os.environ, "PYTHONPATH": os.pathsep.join(p for p in (str(PKG_ROOT), os.environ.get("PYTHONPATH"))
                                                            if p)}
@@ -177,6 +184,9 @@ class SubprocessShapE:
         tail = (out / "worker.log").read_text(errors="replace")[-1500:]
         if rc == 86:
             raise RuntimeError(f"RESOURCE_LIMIT: Shap-E worker stopped by its memory guard: {tail[-400:]}")
+        if rc < 0:
+            raise RuntimeError(f"RESOURCE_LIMIT: Shap-E worker killed by signal {-rc} (host memory watchdog?); "
+                               f"{mem_available_mib()} MiB available now")
         raise RuntimeError(f"GENERATION_FAILED: Shap-E worker exited with {rc}: {tail}")
 
     @staticmethod

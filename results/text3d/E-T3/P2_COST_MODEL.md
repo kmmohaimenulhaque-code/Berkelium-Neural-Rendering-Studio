@@ -44,3 +44,17 @@ the generator it routes to; planner parts are generated once each; failed genera
 single-shot Shap-E (8), B2 Shap-E (8). **Omitted and labelled in the results:** the B4 Shap-E-planner arm (16 units)
 and the B1 seed-1/2 variance runs (24 units). The E2E generation runs outside this budget.
 The results will therefore be reported as a partial E-T3, never as the complete design.
+
+## Update after the first service E2E runs (same day)
+
+- The host's watchdog acts on **system-wide** available memory, not on one process's RSS. Every SIGTERM so far
+  happened when MemAvailable fell to ~0.7-0.8 GB: 7.8 GB total, ~4 GB used by the editor/agent processes, plus
+  the process that was killed. In the E2E, a second Shap-E worker started after the first job was SIGTERMed 12.5 s
+  into loading (exit -15). Hypothesis tested and rejected: the backend's splat render bloats the API process (it
+  peaks at 346 MB).
+- Fix: Shap-E models are now built with `torch.nn.init` disabled. Their parameter buffers are never written, so
+  never resident, and the memory-mapped checkpoint is assigned in their place (strict; the build is refused if
+  the checkpoint does not match exactly). Measured loading peak: text300M **1.49 GB RSS / 1.09 GB anonymous**
+  (P2: 2.29 GB anonymous peak), decoder 0.32 GB. Weights stay file-backed (reclaimable page cache).
+- The service now refuses to start a worker when MemAvailable < 2,000 MiB (`RESOURCE_LIMIT`, configurable via
+  `BERKELIUM_SHAP_E_MIN_FREE_MIB`). It reports a signal-killed worker as such instead of a generic failure.
