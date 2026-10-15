@@ -46,3 +46,8 @@ Thumbs.db
 /cache/
 *.sqlite
 config.json
+# Local Python environments and pinned third-party checkouts (fetched by scripts/setup_*.sh)
+.venv*/
+third_party/
+__pycache__/
+*.pyc

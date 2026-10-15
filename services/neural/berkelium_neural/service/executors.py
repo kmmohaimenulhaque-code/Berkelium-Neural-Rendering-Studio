@@ -29,8 +29,9 @@ def model_registry() -> dict:
     if os.environ.get("BERKELIUM_MODELS"):
         reg = json.loads(os.environ["BERKELIUM_MODELS"])
     else:
-        reg = {"berkelium-textshape": {"checkpoint": "runs/textshape_base_v1/model.pt",
-                                       "adapters": {"capsule-v1": "runs/textshape_lora_capsule_v1/adapter.pt"}}}
+        # The released checkpoints committed under exports/ (sha256 in each MODEL_CARD.json).
+        reg = {"berkelium-textshape": {"checkpoint": "exports/textshape-base-v1/model.pt",
+                                       "adapters": {"capsule-v1": "exports/textshape-lora-capsule-v1/adapter.pt"}}}
     for v in reg.values():
         v["checkpoint"] = str((REPO / v["checkpoint"]).resolve()) if not Path(v["checkpoint"]).is_absolute() \
             else v["checkpoint"]
@@ -109,7 +110,57 @@ def make_text_to_3d(store: ArtifactStore):
                              labels={"units": "normalized_object", "representation": "gaussian_scene",
                                      "not": "triangle mesh"})
         ctx.add_artifact(gauss.id)
+        ctx.progress(0.93, "render_gaussians")
+        img = render_scene_views(store, scene, gauss.id, producer)
+        ctx.add_artifact(img.id)
     return run
+
+
+def default_render_backend() -> str:
+    """The GPU path (AMD gsplat forward + Berkelium deterministic HIP backward) when it is actually usable,
+    otherwise the CPU reference renderer. Never inferred: gsplat_status() checks import, ROCm build and device."""
+    from ..render.gsplat_adapter import gsplat_status
+    return "berkelium_hip" if gsplat_status()["usable"] else "reference_cpu"
+
+
+def render_scene_views(store: ArtifactStore, scene, parent_id: str, producer: dict, n_views: int = 4,
+                       res: int = 256):
+    """Splat-render the Gaussian scene itself (not the mesh) from an orbit of cameras -> one IMAGE artifact with
+    a 2x2 contact sheet and the exact cameras used."""
+    import torch
+
+    from ..camera import orbit_cameras
+    from ..render.gsplat_adapter import get_renderer
+    from ..render.interface import GaussianTensors
+    backend = default_render_backend()
+    renderer = get_renderer(backend)
+    cfg = RenderConfig(background=(1.0, 1.0, 1.0))
+    dev = renderer.prepare(cfg)
+    cams = orbit_cameras(n_views, 3.2, 25.0, res, res)
+    g = GaussianTensors.from_scene(scene, device=dev)
+    tiles, metas = [], []
+    with torch.no_grad():
+        for c in cams:
+            o = renderer.render(g, c, cfg)
+            tiles.append(o.rgb.detach().cpu().numpy())
+            metas.append({k: v for k, v in o.meta.items() if isinstance(v, (int, float, str, bool))})
+    cols = 2
+    rows = [np.concatenate(tiles[i:i + cols], 1) for i in range(0, len(tiles), cols)]
+    sheet = np.concatenate(rows, 0)
+    files = {"render.png": (_png(sheet), "image/png"),
+             "cameras.json": (json.dumps([json.loads(c.model_dump_json()) for c in cams]).encode(),
+                              "application/json")}
+    for i, t in enumerate(tiles):
+        files[f"view_{i}.png"] = (_png(t), "image/png")
+    return store.create(ArtifactKind.IMAGE, files,
+                        {"renderer": renderer.name, "backend": backend, "service": __version__,
+                         "source_model": producer.get("model"), "pipeline": "gaussian_scene->splat_render"},
+                        parents=(parent_id,), config={"views": n_views, "res": res, "background": cfg.background,
+                                                      "profile": cfg.profile.value},
+                        validation={"finite": bool(np.isfinite(sheet).all()), "mean": float(sheet.mean()),
+                                    "std": float(sheet.std()), "meta": metas},
+                        labels={"representation": "image", "not": "3D geometry",
+                                "content": "splat render of the gaussian_scene parent"})
 
 
 def fit_gaussians(scene, v, f, col, steps: int, ctx: JobContext):

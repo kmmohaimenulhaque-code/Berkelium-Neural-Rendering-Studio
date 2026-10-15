@@ -42,7 +42,7 @@ def test_text_to_3d_job_produces_mesh_and_gaussian_artifacts(client):
     assert j["state"] == "completed", j.get("error")
     states = [t["to"] for t in j["transitions"]]
     assert states[0] == "pending" and states[-1] == "completed" and "running" in states
-    mesh_id, gauss_id = j["artifacts"]
+    mesh_id, gauss_id, render_id = j["artifacts"]
     mesh = client.get(f"/v1/neural/artifacts/{mesh_id}").json()
     assert mesh["kind"] == "triangle_mesh" and mesh["labels"]["not"].startswith("CAD")
     assert mesh["producer"]["base_checkpoint_sha256"]
@@ -53,6 +53,14 @@ def test_text_to_3d_job_produces_mesh_and_gaussian_artifacts(client):
     assert len(m.faces) == mesh["validation"]["n_faces"]
     g = client.get(f"/v1/neural/artifacts/{gauss_id}").json()
     assert g["kind"] == "gaussian_scene" and g["parents"] == [mesh_id]
+    # the Gaussian scene itself is splat-rendered by a real renderer (not the mesh, not a placeholder)
+    img = client.get(f"/v1/neural/artifacts/{render_id}").json()
+    assert img["kind"] == "image" and img["parents"] == [gauss_id]
+    assert img["producer"]["pipeline"] == "gaussian_scene->splat_render" and img["producer"]["renderer"]
+    assert img["validation"]["finite"] and img["validation"]["std"] > 0.01, img["validation"]
+    from PIL import Image
+    png = client.get(f"/v1/neural/artifacts/{render_id}/files/render.png")
+    assert png.status_code == 200 and Image.open(io.BytesIO(png.content)).size == (512, 512)
 
 
 def _gaussian_artifact_and_camera(client):
