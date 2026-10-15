@@ -1,4 +1,7 @@
-# GPU run plan (requires owner approval — nothing here has run)
+# GPU run plan (requires owner approval)
+
+Executed so far: R0–R3 on one MI300X VF (E-R1 recorded 2026-10-13 and rerun 2026-10-15; see
+`results/renderer/E-R1_analysis.md` §5–6). R4 (text-to-3D v2) and R5 (M5 image prior) have not run.
 
 Rate and billing unit are NOT verified. Estimates assume one MI300X billed per GPU-hour; check the provider's
 current rate before approving. All runs are resumable and write results/receipts even on failure.
@@ -18,6 +21,21 @@ Optional, after R0–R3:
 Recommended environment: the AMD image `rocm/pytorch:rocm7.0_ubuntu24.04_py3.12_pytorch_release_2.8.0`
 (PyTorch 2.8 is in AMD gsplat's support matrix; the historical MI300X environment with PyTorch 2.10 is not).
 Do not pip-install a second PyTorch into an existing ROCm environment.
+
+Optional M5 (image prior; downloads ~33 GB, separate environment `configs/environments/zimage-rocm.txt`):
+
+| R5 M5 / E-A1 | Z-Image-Turbo @ `f332072a` loads and produces finite, non-constant images on gfx942; time/memory/repeatability receipt; `geometry_generated: false` | `python scripts/m5_image_prior_smoke.py --check` then `--i-approve-gpu-cost` | ~20–40 min (mostly download) | ~0.5 |
+
+Lessons from the 2026-10-15 session (a fresh venv with the pip ROCm torch wheel + `pip install amd_gsplat
+--extra-index-url=https://pypi.amd.com/rocm-7.0.0/simple/`):
+- `pytest -m hip` reports **skipped** (not failed) when gsplat is missing: install gsplat first, then confirm
+  `4 passed` with `-rs` before R3.
+- Run R2 before R3: it JIT-builds the Berkelium extension into `~/.cache/berkelium`. On the first attempt the build
+  left no `.so` and R3 failed; after R2 built it, R3 completed. If a build fails: `export ROCM_HOME=/opt/rocm
+  PATH=/opt/rocm/bin:$PATH; rm -rf ~/.cache/berkelium ~/.cache/torch_extensions` and rerun R2.
+- Record the hipcc actually used (`which hipcc`); on that host it was `/opt/rocm/core-10.1/bin/hipcc` while torch
+  was built for ROCm 7.0.
+- Copy `results/` off the instance (commit + push) before deleting it.
 
 Stop conditions: any R2 failure stops R3 (investigate on CPU first; HIP-CPU reproduces kernel logic). Do not
 loosen tolerances to pass. Delete the instance when R3's result file is written.

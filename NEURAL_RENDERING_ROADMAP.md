@@ -1,7 +1,7 @@
 # Neural Rendering Roadmap
 
-**Revision:** `NR-0.2` (2026-10-12)  
-**Status:** dependency-aware plan; all work below is future work unless marked existing in the integration map.
+**Revision:** `NR-0.4` (2026-10-15)  
+**Status:** milestone outcomes below are backed by receipts in `results/`; see "Milestone status" (NR-0.4).
 
 ## Order of work
 
@@ -31,6 +31,18 @@ flowchart TD
 | M6 | Run TripoSR controls and explicit mesh-to-Gaussian initialization. | M5 or owned control images, CPU extraction path | 3 control objects, valid mesh/bounds/units, 24-view orbit, rejection/failure examples. | CPU/T4 first; AMD only after approval. |
 | M7 | Fit fixed-topology Gaussians and evaluate held-out views. | M2, M6 | G4 budgets, held-out metrics, provenance chain, no claim of independent geometry truth. | Bounded research run. |
 | M8 | Add durable SQLite/artifact repositories and worker mutation phase. | M4, M7, auth/authorization review | Restart/cancel/reconcile tests, atomic artifact publication, explicit policy transition out of Phase 1. | Not part of current Phase 1. |
+
+## Milestone status (NR-0.4, 2026-10-15)
+
+| ID | Outcome | Evidence |
+| --- | --- | --- |
+| M0–M2 | pass | provenance docs; strict contracts + tests; CPU reference renderer with FP64 FD gradcheck (E-R0) |
+| M3 | pass on one MI300X | E-R1 (10-13, rerun 10-15): 16/16 gates, bitwise-repeatable gradients, forward bitwise-equal to gsplat, backward 1.32–2.21× gsplat (`results/renderer/E-R1_analysis.md`) |
+| M4 | pass (superseded by integration) | text-to-3D is a feature of the Studio scene editor (D-017); E2E `tests/e2e/test_studio_text_to_3d.py` |
+| M5 | **blocked_environment** | script + pinned config ready (`scripts/m5_image_prior_smoke.py`); preflight receipt `results/m5/E-A1_preflight.json` lists the blockers on the development host (no GPU, 15 GB disk vs ~33 GB snapshot). Needs one approved MI300X session (R5 in `docs/GPU_RUN_PLAN.md`). |
+| M6 | see `results/m6/M6_receipt.json` | TripoSR on 3 owned control images on CPU with the D-020 compatibility branch; compared with exact GT and with Berkelium text-to-3D; consumed by the Gaussian pipeline |
+| M7 | see `results/m7/*/report.json` | Gaussians fitted to observations of Google Scanned Objects scans (D-021), held-out PSNR/SSIM/IoU and geometry vs scan |
+| M8 | pass | SQLite jobs + transition log, write-once artifacts, resumable stages (D-019); SIGKILL-mid-fit test on a real server (`test_durable_jobs.py`); Studio "Recent" survives a backend restart (E2E) |
 
 ## Immediate implementation queue
 

@@ -95,7 +95,7 @@ FIREWORKS_API_KEY = config.get("fireworks_api_key", "")
 MODEL_ID = config.get("model_id", "")
 BASE_URL = config.get("base_url", "https://api.fireworks.ai/inference/v1")
 BACKEND_API_KEY = config.get("backend_api_key", "")
-ALLOWED_ORIGINS = config.get("allowed_origins", ["http://localhost:5173"])
+ALLOWED_ORIGINS = config.get("allowed_origins", ["http://localhost:5173", "http://127.0.0.1:5173"])
 
 if not FIREWORKS_API_KEY or not MODEL_ID:
     log.warning("fireworks_api_key or model_id is empty; /chat will fail until you set them.")

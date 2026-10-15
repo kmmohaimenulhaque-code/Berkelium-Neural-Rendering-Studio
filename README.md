@@ -46,6 +46,35 @@ These capabilities represent the product direction, not a claim that every subsy
 
 ---
 
+## What works today (verified 2026-10-15)
+
+| Capability | Status | Evidence |
+|---|---|---|
+| Prompt → 3D in the Studio scene | **works** — Scene → *Generate*: the released BerkeliumTextShape model runs on the backend, the mesh is imported as a normal scene object (move, rotate, undo), its Gaussian scene is splat-rendered by the Berkelium renderer, and *Render this view* re-renders it from the live viewport camera | `tests/e2e/test_studio_text_to_3d.py` (real UI + real backend + released checkpoint), `results/e2e/` |
+| Durable jobs | **works** — jobs and artifacts persist (SQLite + content-addressed store), resume after a crash without duplicate results, and Studio's *Recent* list reopens them after a restart | `services/neural/tests/test_durable_jobs.py` (SIGKILL mid-job), E2E restart step |
+| Adapter routing | **works** — `auto` applies the capsule LoRA adapter only to prompts that name a capsule | `services/neural/tests/test_routing.py`, `results/text3d/E-T2_routing_cpu.*` |
+| Deterministic differentiable renderer (AMD) | **verified on one MI300X** — gsplat forward + Berkelium deterministic HIP backward: bit-identical gradients, forward bitwise-equal to gsplat, backward 1.32–2.21× gsplat | `results/renderer/E-R1_analysis.md` |
+| Gaussian fitting to real objects (M7) | **works on CPU** — fitted to observations of Google Scanned Objects scans, evaluated on held-out views | `results/m7/` |
+| TripoSR image → 3D prior (M6) | **runs on CPU** with a documented CUDA-extension replacement; compared with exact ground truth | `results/m6/M6_receipt.json` |
+| Z-Image-Turbo image prior (M5) | **not run** — needs a GPU and ~33 GB; script and preflight ready | `results/m5/E-A1_preflight.json`, `docs/GPU_RUN_PLAN.md` R5 |
+
+Generated geometry is labelled `normalized_object` / `model_output_unverified`: it is model output, not a CAD
+model or measured geometry. The text-to-3D model is small (362k parameters, trained on CPU) and its shapes are blobby.
+
+### Quick start (CPU, Linux/macOS)
+
+```bash
+bash scripts/setup_cpu.sh --install          # .venv-cpu with pinned deps + pinned gsplat/HIP-CPU sources
+bash scripts/start_backend.sh                # backend + neural service on http://127.0.0.1:8000
+cd apps/desktop && npm ci && npm run dev     # Studio in the browser at http://localhost:5173 (or: npm run studio)
+```
+
+In Studio: **Scene** workspace → **Generate** → type a prompt (e.g. *a red cone on top of a blue box*) → **Generate**.
+Headless, through the same API: `python scripts/demo_text_to_3d.py "a green capsule next to a white sphere"`.
+
+Tests: `python -m pytest services/neural/tests -q` (CPU), `python -m pytest tests/e2e -q` (needs
+`npm ci` and `python -m playwright install chromium`), `cd apps/desktop && npm test`. GPU runs: `docs/GPU_RUN_PLAN.md`.
+
 ## Development Status
 
 Berkelium Studio is currently in **Phase 2: Generative 3D & Neural Rendering**.
@@ -657,39 +686,17 @@ New directories should be introduced as the corresponding implementation begins,
 
 # Getting Started
 
-The following commands describe the expected workflow for a pnpm-based monorepo. Verify the available scripts in the root and desktop package manifests before relying on them.
+See **Quick start** above for the verified commands. Details:
 
-### Prerequisites
-
-- Node.js, using a version supported by the repository.
-- pnpm.
-- Git.
-- The dependencies required by the desktop application.
-
-For GPU development, the neural-rendering toolchain will additionally depend on the selected AMD GPU, supported operating system, and compatible ROCm/HIP configuration.
-
-### Installation
-
-```bash
-git clone https://github.com/enigmahacker/Berkelium-Neural-Rendering-Studio.git
-
-cd Berkelium-Neural-Rendering-Studio
-
-pnpm install
-```
-
-### Launch
-
-Inspect the root and desktop package scripts:
-
-```bash
-cat package.json
-cat apps/desktop/package.json
-```
-
-Then run the development command defined by the project.
-
-A specific launch command should be documented here once it has been verified against the actual package scripts.
+- Python environments are separate on purpose (`configs/environments/README.md`): `.venv-cpu` (CPU reference,
+  backend, tests), the AMD ROCm image for gsplat + the Berkelium HIP kernel, `.venv-triposr` for M6, and
+  `configs/environments/zimage-rocm.txt` for M5.
+- `config.json` in the project root is optional (chat providers, backend API key, allowed origins); the neural
+  service needs no credentials. Neural jobs/artifacts live in `$BERKELIUM_NEURAL_HOME` (default `~/.berkelium/neural`).
+- The desktop app: `cd apps/desktop && npm ci && npm run studio` (Electron + Vite), or `npm run dev` for the browser.
+- Reproducing results: `scripts/run_benchmarks.py --experiment configs/experiments/<id>.json` (renderer, text-to-3D),
+  `scripts/fit_real_object.py` (M7), `.venv-triposr/bin/python scripts/m6_triposr_controls.py` (M6),
+  `scripts/m5_image_prior_smoke.py --check` (M5). `docs/ENGINEERING_LOG.md` records what ran, where, and the outcome.
 
 ---
 

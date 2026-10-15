@@ -74,3 +74,39 @@ recorded, and it is not inferred from the oracle errors. Validating it needs a G
 Berkelium's backward is bitwise repeatable in every case; gsplat's is not. It costs 1.4–2.3× gsplat's backward time.
 Fixed-budget fit PSNR is 22.83 dB (gsplat) vs 22.91 dB (Berkelium); each backend's ground truth is rendered by that
 same backend, so this measures optimisation, not geometric accuracy.
+
+## 6. MI300X rerun, 2026-10-15 (`E-R1_mi300x.json`, history `E-R1_mi300x.20261015T160753Z.json`)
+
+Conditions: one AMD Instinct MI300X VF, PyTorch 2.8.0+rocm7.0.2 (HIP 7.0.51831), Python 3.12.3, AMD gsplat wheel
+`amd_gsplat 1.5.3+30c1e78` (pip, `pypi.amd.com/rocm-7.0.0`), Berkelium kernel JIT-built with hipcc from
+`/opt/rocm/core-10.1` (the doctor reports no `/opt/rocm/.info/version`; the hipcc that built the kernel is not the
+ROCm 7.0 toolchain torch was built against — recorded, not hidden). Source tree `5a17478…+dirty` (dirty = result files
+of the failed attempt below). Same protocol `renderer-mi300x-v1` (fp32, profile gsplat_v1, 10 warmup + 50 timed
+iterations, 10 determinism repeats). Authorization recorded at run time: `cli_flag` (config `approved` unchanged).
+
+A first attempt the same day (`E-R1_mi300x.20261015T150902Z.json`, `status: failed`) is kept: the Berkelium extension
+JIT build left no `berkelium_det_bwd.so` (ImportError) on a fresh venv; per-case failures were recorded but the
+unguarded fit-quality step then aborted the run and discarded the case data. The ROCm tests (`pytest -m hip`, 4 passed)
+built the extension into the same cache, after which this run completed. The benchmark now records fit failures per
+backend instead of aborting (`7935cd7`).
+
+| N (pairs) | backward ms gsplat → Berkelium | p95 | iteration ms | peak MiB | unique gradient hashes / 10 |
+|---|---|---|---|---|---|
+| 16 (31) | 0.476 → 0.629 (1.32×) | 0.675 → 0.738 | 1.462 → 1.561 | 0.2 → 0.2 | 2 → **1** |
+| 1k (2,900) | 0.576 → 1.017 (1.77×) | 0.599 → 1.101 | 1.580 → 2.032 | 2.5 → 2.7 | 10 → **1** |
+| 10k (27,907) | 0.780 → 1.517 (1.95×) | 0.809 → 1.552 | 1.877 → 2.621 | 13.7 → 14.6 | 10 → **1** |
+| 100k (265,653) | 1.258 → 2.781 (2.21×) | 1.283 → 2.824 | 2.641 → 4.177 | 99.7 → 110.8 | 10 → **1** |
+
+- Acceptance gates (N=16, both backends): 16/16 pass; FP64 finite-difference gradcheck of the oracle: pass.
+- **Direct comparison (was `not_run` in §4, now measured):** Berkelium's forward RGB/alpha/depth is **bitwise equal**
+  to gsplat's in every case (up to 786,432 RGB entries at 100k) — it calls gsplat's forward, and this confirms it.
+  Gradients differ from gsplat's by at most 2.1e-7 – 4.1e-7 relative to the largest gradient of each family: float32
+  rounding from a different (fixed vs atomic) accumulation order, not a different computation.
+- Determinism: Berkelium's gradients are bit-identical across 10 repeats in every case; gsplat's are not (2–10 hashes).
+- Cost: Berkelium's backward is 1.32–2.21× gsplat's (10-13 run: 1.43–2.29×); the forward is unchanged.
+- Fixed-budget fit PSNR (each backend renders its own GT): gsplat 22.91 dB, Berkelium 22.97 dB.
+- The 100k forward RGB error vs the FP64 oracle remains diagnostic (§1–2).
+
+Regression coverage for these conditions: `services/neural/tests/test_gpu_rocm.py` (`-m hip`: forward parity vs FP64,
+gradient agreement, 10-repeat bitwise determinism on the GPU) — 4 passed on the MI300X before this run; the HIP-CPU
+tests (`test_hip_kernel_cpu.py`) run the same kernel source on CPU in every CI-style run.

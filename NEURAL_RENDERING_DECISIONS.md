@@ -1,7 +1,7 @@
 # Neural Rendering Decisions
 
-**Revision:** `NR-0.3` (2026-10-13)  
-**Status:** D-001..D-010 proposed (NR-0.2); D-011..D-016 adopted and implemented in this revision (see `docs/ENGINEERING_LOG.md`).
+**Revision:** `NR-0.4` (2026-10-15)  
+**Status:** D-001..D-010 proposed (NR-0.2); D-011..D-016 adopted (NR-0.3); D-017..D-022 adopted and implemented in NR-0.4 (see `docs/ENGINEERING_LOG.md`).
 
 Evidence labels: `[O]` inspected implementation observation, `[F]` external source fact, `[D]` Berkelium decision, `[H]` hypothesis requiring an experiment.
 
@@ -30,6 +30,12 @@ Evidence labels: `[O]` inspected implementation observation, `[F]` external sour
 | D-014 | `[D]` First text-to-3D slice = Berkelium-owned procedural dataset with exact analytic SDF ground truth + a small Berkelium text-conditioned SDF generator trained from scratch, with a LoRA(+token-embedding-delta) adapter as the fine-tuning mechanism. D-006 (Z-Image → TripoSR) stays a candidate requiring download approval. | Real 3D output, real training, owned licence, independent geometric ground truth, CPU-feasible; avoids claiming fine-tuning support for models whose stacks are not set up. | A licensed pretrained text-to-3D model is approved and wins on the same protocol. |
 | D-015 | `[D]` Rendering profiles are explicit (`gsplat_v1`, `berkelium_v02`); comparisons only within one profile. | gsplat (exclusive 1e-4 stop, 1/255 cutoff, cap 0.999) and spec v0.2 (inclusive stop, 3-sigma support, cap 0.99) are different functions; mixing them would mislabel semantic differences as kernel errors. | n/a |
 | D-016 | `[D]` The Studio renderer talks to the backend over HTTP at a configurable base URL (existing pattern), fetching only typed JSON and immutable artifacts by id. | Keeps the existing Phase-1 transport; D-001's main-process bridge for neural calls remains open work. | Security review requires moving neural calls behind preload IPC. |
+| D-017 | `[D]` Text-to-3D is a feature of main's Studio scene editor, not a separate viewer: a generated mesh is imported through the same path as a user file (scene node, undo, transform), and the Gaussian scene is shown as the backend's splat render. "Render this view" sends the live viewport camera, converted to an OpenCV `CameraSpec` in the model's frame (`scene/neuralCamera.js`, unit-tested against three.js projection). | One product, one scene; the render the user sees is produced by the real renderer from the camera they chose, never a client-side imitation. | A WebGL splat viewer is validated pixel-for-pixel against the reference renderer. |
+| D-018 | `[D]` Adapter routing: `adapter="auto"` (Studio default) applies a concept adapter only when the prompt names its concept (`text3d/routing.py`, whole-word match on `adapter_config.new_tokens`). The same function drives the service and the benchmark (E-T2). | `[O]` E-T1: the capsule adapter improves capsule prompts but degrades base prompts (retention regression); routing keeps base behaviour elsewhere. | An adapter trained with base-data replay matches base quality on base prompts (E-T1 retention comparison). |
+| D-019 | `[D]` M8 policy transition out of Phase 1: the backend worker may create artifacts (write-once, content-addressed) and job records; it never mutates user projects, scenes or files. Every stage is resumable: the mesh stage and the Gaussian fit checkpoint in the job workdir, and a resumed job reuses what it already published. Job reads report missing artifact records instead of serving them. | Durable jobs without duplicate or orphaned results after a crash; the user's scene is changed only by the user's own import action in Studio. | Multi-worker execution or remote storage. |
+| D-020 | `[D]` M6 compatibility branch for TripoSR on non-CUDA hosts: `torchmcubes` is replaced by scikit-image marching cubes behind a shim with torchmcubes' axis convention; `rembg` is not used (control images carry exact alpha). TripoSR runs in its own environment (`.venv-triposr`, transformers < 5 because transformers 5 renamed the ViT parameters in the pinned checkpoint). | `[O]` Verified on CPU (M6 receipt); keeps the pinned weights and model code unmodified. | AMD-verified torchmcubes or an upstream fix. |
+| D-021 | `[D]` M7 real-object data = Google Scanned Objects (CC-BY 4.0), pinned per object by zip sha256. Observations are renders of the textured scan from known cameras, labelled as such (not photographs). The fit sees only training observations; initialisation is space carving from training silhouettes; the scan is used only to render observations and to evaluate geometry. | A real-object dataset with a clear licence and exact poses that runs on CPU; avoids confusing mesh-to-Gaussian conversion with fitting. | A licensed real capture with calibrated photographs (e.g. a CO3D/MVImgNet subset) is approved. |
+| D-022 | `[D]` M5 (Z-Image-Turbo, ~33 GB snapshot, 6B DiT) is a GPU-only smoke test with a preflight that records blockers instead of attempting CPU inference; it runs only with `--i-approve-gpu-cost`. | `[O]` This development host has no GPU, 7.8 GB RAM and 15 GB free disk; the snapshot cannot be loaded here. | An approved MI300X session. |
 
 ## Rejected or deferred choices
 
@@ -37,7 +43,7 @@ Evidence labels: `[O]` inspected implementation observation, `[F]` external sour
 - `[D]` Do not use Zero123++ v1.2/InstantMesh as the default production path; Zero123++ weights are CC-BY-NC-4.0 and every fine-tuned/base component requires separate review.
 - `[D]` Do not claim AMD support from a CUDA wheel, a successful import, or the presence of `cuda:0` in PyTorch HIP.
 - `[D]` Do not call a mesh, NeRF, or Gaussian preview a CAD model or measured geometry without a separate accuracy and units contract.
-- `[H]` Do not assume TripoSR's CUDA extraction extension works on ROCm; CPU extraction or a verified replacement is the first compatibility branch.
+- `[H]` Do not assume TripoSR's CUDA extraction extension works on ROCm; CPU extraction or a verified replacement is the first compatibility branch (CPU replacement verified: D-020; ROCm still unverified).
 
 ## Consequences
 

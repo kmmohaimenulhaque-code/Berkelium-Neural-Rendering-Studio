@@ -32,6 +32,7 @@ export default function GeneratePanel({ engineRef, onClose }) {
   const [capsError, setCapsError] = useState(null);
   const [prompt, setPrompt] = useState("a red cone on top of a blue box");
   const [adapter, setAdapter] = useState("auto");
+  const [fitSteps, setFitSteps] = useState(0); // differentiable Gaussian refinement on the backend
   const [job, setJob] = useState(null);
   const [result, setResult] = useState(null); // { job, mesh, gaussian, image }
   const [shown, setShown] = useState(null); // { url, label, artifactId }
@@ -103,7 +104,7 @@ export default function GeneratePanel({ engineRef, onClose }) {
     if (!prompt.trim() || running) return;
     setError(null);
     try {
-      const body = { prompt: prompt.trim() };
+      const body = { prompt: prompt.trim(), fitSteps };
       if (adapter !== "base") body.adapter = adapter;
       const submitted = await api.submitTextTo3D(body);
       setJob(submitted);
@@ -204,6 +205,15 @@ export default function GeneratePanel({ engineRef, onClose }) {
             </option>
           ))}
         </select>
+      </div>
+      <div className="gen__row">
+        <select className="gen__select" value={fitSteps} onChange={(e) => setFitSteps(Number(e.target.value))}
+          aria-label="Gaussian refinement" data-testid="fit-select"
+          title="Refine the Gaussians against renders of the generated mesh with the differentiable renderer">
+          <option value={0}>Gaussians: surface init</option>
+          <option value={100}>Gaussians: refine 100 steps</option>
+          <option value={300}>Gaussians: refine 300 steps</option>
+        </select>
         {running ? (
           <button className="code__btn" onClick={() => api.cancelJob(job.id).then(setJob).catch((e) => setError(e.message))}>
             <Square size={12} /> <span>Cancel</span>
@@ -233,7 +243,9 @@ export default function GeneratePanel({ engineRef, onClose }) {
           <div className="gen__title">Triangle mesh · {result.mesh.producer.model}{result.mesh.producer.adapter ? ` + ${result.mesh.producer.adapter}` : " (base)"}</div>
           <div>{m.n_faces.toLocaleString()} faces · {m.components} component(s) · {m.watertight ? "watertight" : "not watertight"}</div>
           <div>units: {result.mesh.labels.units} · {result.mesh.labels.confidence}</div>
-          {result.gaussian && <div>{result.gaussian.validation.n.toLocaleString()} Gaussians{result.gaussian.config?.fit?.steps ? ` · fitted ${result.gaussian.config.fit.steps} steps` : " · surface-initialised"}</div>}
+          {result.gaussian && <div>{result.gaussian.validation.n.toLocaleString()} Gaussians{result.gaussian.config?.fit?.steps
+            ? ` · refined ${result.gaussian.config.fit.steps} steps (PSNR ${result.gaussian.config.fit.psnr_before?.toFixed(1) ?? "?"} → ${result.gaussian.config.fit.psnr_after?.toFixed(1)} dB vs mesh renders)`
+            : " · surface-initialised"}</div>}
           <div className="gen__id">mesh {result.mesh.id.slice(0, 12)}{result.gaussian ? ` · gaussians ${result.gaussian.id.slice(0, 12)}` : ""}</div>
           {shown && (
             <figure className="gen__figure">
