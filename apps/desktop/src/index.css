@@ -36,6 +36,9 @@
   --accent-dim: rgba(0, 212, 212, 0.6);
   --accent-bg: rgba(0, 212, 212, 0.1);
 
+  /* The BK logo's cyan, blue, violet sweep. Used only for the wordmark. */
+  --brand-gradient: linear-gradient(90deg, #26D4FB 0%, #2E7BFF 55%, #8B5CFF 100%);
+
   /* Status colors */
   --success: #4ade80;
   --error: #f87171;

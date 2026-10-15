@@ -1923,3 +1923,40 @@
 .addmenu__item:focus-visible {
     outline: none;
 }
+
+/* ---------- Brand: BK logo in the top bar ---------- */
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* The orb from the BK logo, cut out with a transparent background. */
+.brand__mark {
+    width: 26px;
+    height: 26px;
+    display: block;
+    /* Soft glow so the orb reads as lit, like the full logo. */
+    filter: drop-shadow(0 0 6px rgba(46, 140, 255, 0.45));
+}
+
+.brand__wordmark {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: var(--fw-semibold);
+    letter-spacing: 0.22em;
+    background: var(--brand-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* Bigger lockup for Settings > About. */
+.brand--large .brand__mark {
+    width: 40px;
+    height: 40px;
+}
+
+.brand--large .brand__wordmark {
+    font-size: 15px;
+}

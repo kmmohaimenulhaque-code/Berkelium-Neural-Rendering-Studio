@@ -9,6 +9,7 @@ import { Check, Copy, RotateCcw } from "lucide-react";
 import { BACKEND_URL, apiFetch } from "./api.js";
 import { usePrefs, setPref, resetSection } from "./prefs.js";
 import { SHORTCUTS, keyLabel } from "./shortcuts.js";
+import brandMark from "./assets/berkelium-mark.png";
 
 // ---------------------------------------------------------------- controls
 
@@ -252,9 +253,9 @@ export function AboutSection() {
     <div className="settings__detail">
       <SectionHead title="About" subtitle="Versions and status. Paste the diagnostics into a bug report." />
       <div className="settings__about-brand">
-        <div className="logo-lockup logo-lockup--horizontal">
-          <div className="logo-icon logo-icon--white" role="img" aria-label="Berkelium" />
-          <span className="logo-wordmark logo-wordmark--white">BERKELIUM</span>
+        <div className="brand brand--large">
+          <img className="brand__mark" src={brandMark} alt="" draggable={false} />
+          <span className="brand__wordmark" aria-label="Berkelium">BERKELIUM</span>
         </div>
         <span className="settings__muted">Neural Rendering Studio · Team Berkelium</span>
       </div>
