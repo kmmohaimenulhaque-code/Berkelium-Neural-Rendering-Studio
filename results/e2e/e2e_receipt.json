@@ -1,19 +1,43 @@
 {
-  "viewport": {
-    "ready": true,
-    "artifactId": "244d07fcb72da84c65e98069f247dfbe4802db4c9a58f21ebb17b6c411fbf9e1",
-    "kind": "triangle_mesh",
-    "faces": 6920,
-    "points": 0
+  "prompt": "a red cone on top of a blue box",
+  "job": "18ffe12cd7224f54a368012414fc59cc",
+  "mesh_artifact": "75d093e465c7488cc9be541ccda3762f11cfdc19dda36dfd7a5b090ceba049c6",
+  "faces": 6780,
+  "gaussian_artifact": "2905ff68786b11da948d836c2bca499c12578da1c89b966e9b375b81e6162356",
+  "gaussians": 4000,
+  "orbit_render_artifact": "d9a64a84d5a0b6aa5742d6d0e38cdf27cfed866fc880bdbc206e4adb560ff498",
+  "renderer": "reference_cpu",
+  "view_render": {
+    "artifact": "8786940722c30166f8f0bbd83a3aa43557345abf4ab846e251f27b4e162b0517",
+    "width": 384,
+    "height": 357,
+    "renderer": "reference_cpu",
+    "n_visible": 4000,
+    "std": 43.01883316040039
   },
-  "gaussian_viewport": {
-    "ready": true,
-    "artifactId": "25b0d4efe45847df94c6723a30374cc5d068e40d285ab4f65ff9c0d5feb3298a",
-    "kind": "gaussian_scene",
-    "faces": 0,
-    "points": 4000
+  "after_restart": {
+    "job_state": "completed",
+    "reopened_mesh": "75d093e465c7488cc9be541ccda3762f11cfdc19dda36dfd7a5b090ceba049c6"
   },
-  "mesh_artifact": "244d07fcb72da84c65e98069f247dfbe4802db4c9a58f21ebb17b6c411fbf9e1",
-  "card": "Triangle mesh\nunits: normalized_object \u00b7 model_output_unverified\n6920 faces \u00b7 1 component(s) \u00b7 watertight\nartifact 244d07fcb72d \u00b7 berkelium-textshape\nmesh\ngaussians",
-  "console_errors": []
+  "console_errors": [
+    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED"
+  ]
 }

@@ -1,21 +1,268 @@
-MIT License
+Berkelium Source-Available License
 
-Copyright (c) 2026 enigmahacker
+Version 1.0
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Copyright © 2026 Berkelium. All rights reserved.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+The Berkelium name, brand, and associated trademarks are not licensed under this agreement except where expressly stated.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+Copyright ownership in Berkelium software remains with its respective authors, contributors, and other lawful rights holders, as applicable. References to Berkelium do not transfer ownership of intellectual property to any individual or organization.
+
+⸻
+
+1. DEFINITIONS
+
+For the purposes of this License:
+
+1.1. “Berkelium” means the software projects, source code, binaries, libraries, tools, applications, and other software expressly distributed under this License.
+
+1.2. “Licensor” means the copyright holder or other party legally authorized to grant rights under this License.
+
+1.3. “You” means any individual or legal entity exercising rights granted by this License.
+
+1.4. “Non-Commercial Use” means use undertaken for personal, educational, academic, or research purposes that is not primarily intended for commercial advantage or monetary compensation.
+
+1.5. “Commercial Use” means any use primarily intended for commercial advantage, monetary compensation, business operations, paid services, commercial deployment, or other revenue-generating activities.
+
+1.6. “Redistribution” means making the software or a modified version available to another person or entity, whether through downloads, distribution packages, public repositories, hosted services, or other means.
+
+1.7. “Derivative Work” means a work that is based upon, incorporates, modifies, or adapts protected portions of the software, to the extent recognized by applicable copyright law.
+
+⸻
+
+2. GRANT OF LIMITED LICENSE
+
+Subject to compliance with this License, the Licensor grants You a limited, revocable only as permitted by applicable law and this License, non-exclusive, non-transferable, and non-sublicensable license to:
+
+a. Access and obtain the source code made publicly available under this License.
+
+b. Install and execute the software for personal use.
+
+c. Use the software for educational activities, including classroom instruction, coursework, and demonstrations.
+
+d. Use the software for non-commercial academic and scientific research.
+
+e. Study the source code and make modifications for personal, educational, or non-commercial research purposes.
+
+f. Create private modifications and experimental implementations for the permitted purposes above.
+
+This License does not transfer ownership of the software or any associated intellectual property.
+
+All rights not expressly granted are reserved by the applicable rights holders.
+
+⸻
+
+3. COMMERCIAL USE REQUIRES WRITTEN PERMISSION
+
+Commercial Use is prohibited unless the Licensor has granted prior written authorization.
+
+Without such authorization, You may not:
+
+a. Use the software as part of a commercial product or service.
+
+b. Deploy the software in commercial production environments.
+
+c. Offer paid services, hosted access, or commercial applications powered by the software.
+
+d. Incorporate the software into a product or service offered for commercial advantage.
+
+e. Use the software to provide commercial software development, rendering, scientific computing, AI inference, or other paid services.
+
+f. Sell access to the software or charge others for its functionality.
+
+g. Use the software internally for business operations where such use constitutes Commercial Use under this License.
+
+Written authorization may be granted through a separate commercial license, agreement, or other written permission issued by the Licensor.
+
+Any such authorization may specify permitted uses, fees, duration, territory, deployment conditions, attribution requirements, and other applicable terms.
+
+Unless expressly stated otherwise in writing, permission to use one Berkelium project commercially does not authorize commercial use of other projects.
+
+⸻
+
+4. REDISTRIBUTION REQUIRES WRITTEN PERMISSION
+
+Redistribution of the original software or any modified version requires prior written permission from the applicable Licensor.
+
+Without such permission, You may not:
+
+a. Republish the source code or binaries in another repository.
+
+b. Distribute modified versions of the software.
+
+c. Publish forks containing the software or its protected portions.
+
+d. Package the software for redistribution through software registries, application stores, package managers, or downloadable bundles.
+
+e. Distribute the software as part of another product or software collection.
+
+f. Mirror or republish the software on another hosting platform.
+
+g. Sublicense or grant redistribution rights to another party.
+
+Public availability of the source code does not constitute permission to redistribute it.
+
+Where written permission is granted, the recipient must comply with the conditions specified in that permission and any applicable legal obligations.
+
+Nothing in this section prohibits activities that cannot lawfully be restricted under applicable law.
+
+⸻
+
+5. MODIFICATIONS AND DERIVATIVE WORKS
+
+You may modify the software for permitted personal, educational, and non-commercial research purposes.
+
+However:
+
+a. Modified versions may not be redistributed without prior written permission.
+
+b. Modified versions may not be used commercially without the required written authorization.
+
+c. You may not represent a modified version as an official Berkelium release unless expressly authorized.
+
+d. You must not remove or falsify copyright, authorship, or ownership notices in copies you are lawfully permitted to possess or modify.
+
+e. Your modifications do not automatically transfer ownership of your original contributions to Berkelium.
+
+f. Ownership of modifications and derivative works is determined by applicable law, the rights in the underlying material, and any valid agreements between the relevant parties.
+
+The creation of a modification does not grant You ownership of the original Berkelium software.
+
+⸻
+
+6. COPYRIGHT AND ATTRIBUTION
+
+Copyright remains with the applicable copyright holders.
+
+Where the software identifies its authors, contributors, or copyright holders, those notices must not be falsely altered or attributed to another party.
+
+A recommended copyright notice for projects whose rights are held by the relevant Berkelium rights holders is:
+
+Copyright © 2026 Berkelium. All rights reserved.
+
+Where a project has individual authors, external contributors, or other rights holders, their applicable notices must also be preserved.
+
+No provision of this License transfers copyright ownership merely because a person contributes code, reports a defect, proposes a change, or submits a patch.
+
+Contributions are governed by the agreements and policies applicable to the relevant project.
+
+⸻
+
+7. TRADEMARKS AND BRANDING
+
+This License does not grant permission to use the Berkelium name, logos, visual identity, trademarks, or other brand assets except as necessary to make factual statements about the software or where otherwise permitted by law.
+
+You may not:
+
+a. Claim that an independently modified version is an official Berkelium release without authorization.
+
+b. Use Berkelium branding in a manner that falsely suggests endorsement, certification, partnership, or affiliation.
+
+c. Register confusingly similar trademarks, product names, or branding intended to mislead users about the source of a product.
+
+d. Use the Berkelium name or logo to promote a commercial product without appropriate authorization.
+
+Nominative references and other uses permitted by applicable law remain unaffected.
+
+⸻
+
+8. THIRD-PARTY COMPONENTS
+
+Berkelium software may incorporate or depend upon third-party software, libraries, models, or other materials distributed under separate licenses.
+
+Those components remain subject to their respective licensing terms.
+
+This License does not replace, override, or revoke third-party rights.
+
+Where a third-party component is governed by a license that grants rights inconsistent with a restriction in this License, the third-party license governs the relevant component to the extent required by law.
+
+You are responsible for complying with applicable third-party license obligations.
+
+⸻
+
+9. NO WARRANTY
+
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, THE SOFTWARE IS PROVIDED “AS IS” AND “AS AVAILABLE”, WITHOUT WARRANTIES OF ANY KIND, WHETHER EXPRESS, IMPLIED, OR STATUTORY.
+
+THIS INCLUDES, WITHOUT LIMITATION, WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT, TO THE EXTENT SUCH DISCLAIMERS ARE PERMITTED BY LAW.
+
+THE LICENSOR DOES NOT WARRANT THAT THE SOFTWARE WILL BE ERROR-FREE, SECURE, UNINTERRUPTED, ACCURATE, OR SUITABLE FOR ANY PARTICULAR APPLICATION.
+
+YOU ASSUME RESPONSIBILITY FOR EVALUATING THE SOFTWARE BEFORE USING IT.
+
+⸻
+
+10. LIMITATION OF LIABILITY
+
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, NO LICENSOR OR CONTRIBUTOR SHALL BE LIABLE FOR INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES ARISING FROM OR RELATING TO THE SOFTWARE OR THIS LICENSE.
+
+THIS INCLUDES, WITHOUT LIMITATION, LOSS OF DATA, LOSS OF PROFITS, BUSINESS INTERRUPTION, LOSS OF GOODWILL, AND OTHER COMMERCIAL LOSSES.
+
+NOTHING IN THIS LICENSE EXCLUDES OR LIMITS LIABILITY THAT CANNOT LAWFULLY BE EXCLUDED OR LIMITED UNDER APPLICABLE LAW.
+
+⸻
+
+11. TERMINATION
+
+The rights granted under this License terminate automatically if You materially violate its terms.
+
+Upon termination, You must cease activities that depend on the terminated license rights, subject to any rights that survive termination under applicable law.
+
+Termination does not automatically extinguish rights or obligations that lawfully survive, including applicable intellectual property rights, accrued obligations, or provisions intended to survive termination.
+
+The Licensor may reinstate permission through written authorization.
+
+Nothing in this section permits termination of rights that cannot lawfully be terminated.
+
+⸻
+
+12. COMPLIANCE WITH APPLICABLE LAW
+
+You must comply with applicable laws and regulations when accessing, modifying, or using the software.
+
+Nothing in this License is intended to restrict rights that cannot legally be restricted, including any mandatory rights applicable to software users under the law governing the relevant transaction.
+
+If a provision of this License is found unenforceable, the remaining provisions shall continue to apply to the extent permitted by law.
+
+⸻
+
+13. NO ADDITIONAL RIGHTS
+
+Except where expressly authorized in writing, no rights are granted to:
+
+* Use the software commercially.
+* Redistribute original or modified versions.
+* Sublicense the software.
+* Use Berkelium trademarks or branding commercially.
+* Claim ownership of the original software.
+* Represent an independent derivative as an official Berkelium release.
+
+Any additional permission must be granted by a party legally authorized to provide it.
+
+⸻
+
+14. GOVERNING LAW
+
+The governing law and jurisdiction applicable to this License shall be determined by the applicable agreement between the parties or, where no such agreement exists, by the rules of applicable law.
+
+Nothing in this section excludes mandatory legal protections or jurisdictional rules that cannot lawfully be waived.
+
+⸻
+
+15. FINAL PROVISIONS
+
+This License constitutes the terms governing the rights expressly granted for the software to which it applies.
+
+No provision transfers ownership of the software or associated intellectual property.
+
+No person may grant rights in intellectual property they do not own or are not authorized to license.
+
+For permissions beyond those expressly granted here, contact the applicable copyright holder or authorized licensing representative.
+
+⸻
+
+Berkelium
+
+Proudly Indian. Built for the World.
+
+Copyright © 2026 Berkelium. All rights reserved.

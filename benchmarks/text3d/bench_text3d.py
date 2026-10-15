@@ -25,6 +25,17 @@ def _generator(spec: dict, root: Path, res: int):
         g = RetrievalBaseline(load_manifest(root, set(spec["train_splits"])), res)
         g.name = "retrieval[" + "+".join(spec["train_splits"]) + "]"
         return g, {"kind": "retrieval", "train_splits": spec["train_splits"]}
+    if spec["kind"] == "routed":
+        from berkelium_neural.text3d.evaluate import RoutedGenerator
+        ck, ad = ROOT / spec["checkpoint"], ROOT / spec["adapter"]
+        if not ck.exists() or not ad.exists():
+            raise FileNotFoundError(f"checkpoint missing: {ck if not ck.exists() else ad}")
+        adapted = load_model(ck, ad)
+        g = RoutedGenerator(load_model(ck), adapted, adapted.adapter_config["new_tokens"], res, "routed")
+        return g, {"kind": "routed", "checkpoint": spec["checkpoint"], "checkpoint_sha256": file_sha256(ck),
+                   "adapter": spec["adapter"], "adapter_sha256": file_sha256(ad),
+                   "routing": {"rule": "berkelium_neural.text3d.routing.select_adapter",
+                               "concepts": adapted.adapter_config["new_tokens"]}}
     ck = ROOT / spec["checkpoint"]
     ad = ROOT / spec["adapter"] if spec.get("adapter") else None
     if not ck.exists() or (ad is not None and not ad.exists()):

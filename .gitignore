@@ -46,8 +46,18 @@ Thumbs.db
 /cache/
 *.sqlite
 config.json
+
+# Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+config.json.tmp
+
 # Local Python environments and pinned third-party checkouts (fetched by scripts/setup_*.sh)
 .venv*/
 third_party/
-__pycache__/
-*.pyc
+
+# Regenerated datasets (scripts/prepare_dataset.py) and downloaded evaluation assets
+/data/

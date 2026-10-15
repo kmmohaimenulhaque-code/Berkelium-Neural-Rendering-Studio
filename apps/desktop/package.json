@@ -1,19 +1,23 @@
 {
   "name": "berkelium-studio",
+  "productName": "Berkelium",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "electron": "NODE_ENV=development electron electron/main.cjs",
+    "test": "node --test \"src/**/*.test.js\"",
+    "electron": "electron electron/main.cjs",
+    "preview:app": "vite build && electron electron/main.cjs --dist",
     "studio": "concurrently -k \"npm run dev\" \"wait-on tcp:5173 && npm run electron\""
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
     "lucide-react": "^1.55.0",
+    "monaco-editor": "^0.57.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-resizable-panels": "^2.1.9",
@@ -37,5 +41,11 @@
   "allowScripts": {
     "electron-winstaller@5.4.0": true,
     "fsevents@2.3.3": true
+  },
+  "overrides": {
+    "dompurify": "^3.4.17",
+    "@electron/get": {
+      "global-agent": "^4.1.3"
+    }
   }
 }

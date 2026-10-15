@@ -3,16 +3,25 @@
 // and the file system. The renderer talks to us through IPC channels
 // exposed by preload.cjs.
 
-const { app, BrowserWindow, ipcMain, dialog } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog, shell } = require("electron");
 const fs = require("fs/promises");
 const path = require("path");
 
-const isDev = process.env.NODE_ENV === "development";
+// Dev mode = running from source (npm run studio), not an installed app.
+// app.isPackaged works the same on macOS, Windows and Linux. The old
+// NODE_ENV=development prefix in package.json only worked on macOS and Linux.
+// --dist runs the built app (dist/) from source, exactly as an installed copy
+// loads it. "npm run preview:app" uses it to check a release build without
+// packaging. A flag instead of an environment variable works the same on
+// macOS, Windows and Linux with no extra tools.
+const isDev = !app.isPackaged && !process.argv.includes("--dist");
+app.setName("Berkelium");
 
 let mainWindow = null;
 
 function createWindow() {
     mainWindow = new BrowserWindow({
+        title: "Berkelium",
         width: 1400,
         height: 900,
         minWidth: 900,
@@ -25,6 +34,14 @@ function createWindow() {
             nodeIntegration: false,
             preload: path.join(__dirname, "preload.cjs"),
         },
+    });
+
+    // Links like "Get a key" in Settings should open in the user's real
+    // browser, not a bare Electron window. Only https links are allowed out,
+    // so a crafted link cannot launch file:// or custom URL schemes.
+    mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+        if (url.startsWith("https://")) shell.openExternal(url);
+        return { action: "deny" };
     });
 
     if (isDev) {
@@ -114,3 +131,14 @@ ipcMain.handle("file:saveAs", async (_event, { content, suggestedName }) => {
         return { error: err.message };
     }
 });
+// App info for Settings > About. Read-only facts about this build, so it
+// is safe to expose. Nothing here touches the file system or config.json.
+ipcMain.handle("app:info", () => ({
+    name: app.getName(),
+    version: app.getVersion(),
+    electron: process.versions.electron,
+    chrome: process.versions.chrome,
+    node: process.versions.node,
+    platform: process.platform,
+    arch: process.arch,
+}));

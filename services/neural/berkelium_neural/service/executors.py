@@ -40,11 +40,32 @@ def model_registry() -> dict:
     return reg
 
 
+AUTO_ADAPTER = "auto"
+
+
+@lru_cache(maxsize=16)
+def adapter_concepts(path: str) -> tuple[str, ...]:
+    """The concept tokens an adapter was trained to add (its adapter_config.new_tokens)."""
+    import torch
+    return tuple(torch.load(path, map_location="cpu", weights_only=False)["adapter_config"]["new_tokens"])
+
+
+def adapter_routing(model: str) -> dict[str, list[str]]:
+    reg = model_registry().get(model, {"adapters": {}})
+    return {name: list(adapter_concepts(p)) for name, p in reg["adapters"].items() if Path(p).exists()}
+
+
+def route_adapter(model: str, prompt: str) -> tuple[str | None, str]:
+    """adapter="auto": apply an adapter only when the prompt names its concept (text3d/routing.py, measured by E-T2)."""
+    from ..text3d.routing import select_adapter
+    return select_adapter(prompt, adapter_routing(model))
+
+
 def check_model(req: TextTo3DRequest) -> None:
     reg = model_registry()
     if req.model not in reg or not Path(reg[req.model]["checkpoint"]).exists():
         raise ModelUnavailable(f"model {req.model!r} has no trained checkpoint on this server")
-    if req.adapter and (req.adapter not in reg[req.model]["adapters"]
+    if req.adapter and req.adapter != AUTO_ADAPTER and (req.adapter not in reg[req.model]["adapters"]
                         or not Path(reg[req.model]["adapters"][req.adapter]).exists()):
         raise ModelUnavailable(f"adapter {req.adapter!r} is not available for {req.model!r}")
 
@@ -70,29 +91,46 @@ def make_text_to_3d(store: ArtifactStore):
         req = TextTo3DRequest.model_validate(request)
         check_model(req)
         reg = model_registry()[req.model]
-        ctx.progress(0.05, "load_model")
-        model = _load(reg["checkpoint"], reg["adapters"].get(req.adapter) if req.adapter else None)
-        ctx.progress(0.15, "generate_sdf")
-        out = generate_mesh(model, req.prompt, req.resolution, cancel=ctx.cancelled)
-        ctx.check()
-        rep = out["report"]
-        if out["vertices"] is None or not rep["valid"]:
-            raise RuntimeError(f"GENERATION_FAILED: no valid surface for this prompt ({rep.get('reason', rep)})")
-        v, f, col = out["vertices"], out["faces"], out["colors"]
-        producer = {"model": req.model, "adapter": req.adapter, **model.identity, "service": __version__,
-                    "pipeline": "text->SDF->marching_cubes"}
-        cams = orbit_cameras(4, 3.2, 25.0, 128, 128)
-        preview, _, _ = render_mesh(v, f, col, cams[0])
-        ctx.progress(0.45, "write_mesh_artifact")
-        mesh = store.create(ArtifactKind.TRIANGLE_MESH,
-                            {"mesh.glb": (mesh_to_glb(v, f, col), "model/gltf-binary"),
-                             "mesh.ply": (mesh_to_ply(v, f, col), "application/x-ply"),
-                             "preview.png": (_png(preview), "image/png"),
-                             "report.json": (json.dumps(rep, indent=2, default=str).encode(), "application/json")},
-                            producer, config=req.model_dump(), validation=rep,
-                            labels={"units": "normalized_object", "representation": "triangle_mesh",
-                                    "not": "CAD model / measured geometry", "confidence": "model_output_unverified"})
-        ctx.add_artifact(mesh.id)
+        adapter, routing = req.adapter, None
+        if adapter == AUTO_ADAPTER:
+            adapter, reason = route_adapter(req.model, req.prompt)
+            routing = {"requested": AUTO_ADAPTER, "selected": adapter, "reason": reason}
+        # Resumable: the mesh stage is checkpointed in the job workdir, so a job resumed after a crash reuses the
+        # exact mesh (and artifact) it already published instead of publishing a second one.
+        stage = ctx.workdir / "mesh_stage.npz"
+        mesh = _resume_mesh(stage, store)
+        if mesh is not None:
+            mesh, v, f, col = mesh
+            producer = dict(mesh.producer)
+            ctx.add_artifact(mesh.id)
+            ctx.progress(0.5, "mesh_from_checkpoint")
+        else:
+            ctx.progress(0.05, "load_model")
+            model = _load(reg["checkpoint"], reg["adapters"].get(adapter) if adapter else None)
+            ctx.progress(0.15, "generate_sdf")
+            out = generate_mesh(model, req.prompt, req.resolution, cancel=ctx.cancelled)
+            ctx.check()
+            rep = out["report"]
+            if out["vertices"] is None or not rep["valid"]:
+                raise RuntimeError(f"GENERATION_FAILED: no valid surface for this prompt ({rep.get('reason', rep)})")
+            v, f, col = out["vertices"], out["faces"], out["colors"]
+            producer = {"model": req.model, "adapter": adapter, **model.identity, "service": __version__,
+                        "pipeline": "text->SDF->marching_cubes", **({"adapter_routing": routing} if routing else {})}
+            cams = orbit_cameras(4, 3.2, 25.0, 128, 128)
+            preview, _, _ = render_mesh(v, f, col, cams[0])
+            ctx.progress(0.45, "write_mesh_artifact")
+            mesh = store.create(ArtifactKind.TRIANGLE_MESH,
+                                {"mesh.glb": (mesh_to_glb(v, f, col), "model/gltf-binary"),
+                                 "mesh.ply": (mesh_to_ply(v, f, col), "application/x-ply"),
+                                 "preview.png": (_png(preview), "image/png"),
+                                 "report.json": (json.dumps(rep, indent=2, default=str).encode(),
+                                                 "application/json")},
+                                producer, config=req.model_dump(), validation=rep,
+                                labels={"units": "normalized_object", "representation": "triangle_mesh",
+                                        "not": "CAD model / measured geometry",
+                                        "confidence": "model_output_unverified"})
+            _save_mesh_stage(stage, mesh.id, v, f, col)     # before the job lists it: no window for a duplicate
+            ctx.add_artifact(mesh.id)
         ctx.progress(0.55, "gaussian_init")
         scene = mesh_to_gaussians(v, f, col, n=4000, seed=req.seed)
         fit = {"steps": 0}
@@ -163,6 +201,26 @@ def render_scene_views(store: ArtifactStore, scene, parent_id: str, producer: di
                                 "content": "splat render of the gaussian_scene parent"})
 
 
+def _save_mesh_stage(path: Path, mesh_id: str, v, f, col):
+    tmp = path.with_name(path.name + ".tmp")
+    with open(tmp, "wb") as fh:
+        np.savez(fh, v=v, f=f, col=np.zeros((0, 3), np.float32) if col is None else col, mesh_id=np.array(mesh_id))
+    os.replace(tmp, path)
+
+
+def _resume_mesh(path: Path, store: ArtifactStore):
+    """-> (mesh record, v, f, col) from this job's mesh checkpoint, or None if there is none (or its artifact is
+    missing, in which case the mesh is regenerated)."""
+    if not path.exists():
+        return None
+    ck = np.load(path, allow_pickle=False)
+    mid = str(ck["mesh_id"])
+    if not store.exists(mid):
+        return None
+    col = ck["col"] if ck["col"].size else None
+    return store.get(mid), ck["v"], ck["f"], col
+
+
 def fit_gaussians(scene, v, f, col, steps: int, ctx: JobContext):
     """Differentiable refinement of the Gaussian scene against z-buffer renders of the generated mesh
     (4 views, 64^2, white background) with the Berkelium reference renderer. Checkpoints every 25 steps."""
@@ -185,13 +243,15 @@ def fit_gaussians(scene, v, f, col, steps: int, ctx: JobContext):
             p.data.copy_(q)
         opt.load_state_dict(st["opt"])
         start = st["step"]
+        before = st.get("psnr_before")
     R, cfg = ReferenceRenderer(), RenderConfig(background=(1.0, 1.0, 1.0))
 
     def score():
         with torch.no_grad():
             return float(np.mean([psnr(R.render(g, c, cfg).rgb.numpy(), t.numpy()) for c, t in zip(cams, targets,
                                                                                                 strict=True)]))
-    before = score() if start == 0 else None
+    if start == 0:
+        before = score()
     for step in range(start, steps):
         ctx.check()
         opt.zero_grad()
@@ -200,7 +260,7 @@ def fit_gaussians(scene, v, f, col, steps: int, ctx: JobContext):
         opt.step()
         if (step + 1) % 25 == 0 or step + 1 == steps:
             torch.save({"params": [p.detach().clone() for p in g.params()], "opt": opt.state_dict(),
-                        "step": step + 1}, ck)
+                        "step": step + 1, "psnr_before": before}, ck)
             ctx.checkpointed("gaussian_fit", {"step": step + 1})
             ctx.progress(0.55 + 0.35 * (step + 1) / steps, f"gaussian_fit {step + 1}/{steps}")
     from ..scene import GaussianScene

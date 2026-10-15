@@ -60,6 +60,23 @@ class ModelGenerator:
         return generate_mesh(self.model, prompt, self.res)
 
 
+class RoutedGenerator:
+    """Base model by default; the adapted model only for prompts that name the adapter's concept
+    (berkelium_neural.text3d.routing, the same rule the service applies for adapter="auto")."""
+
+    def __init__(self, base, adapted, concepts, resolution: int = 48, name: str = "routed"):
+        self.base, self.adapted, self.concepts, self.res, self.name = base, adapted, list(concepts), resolution, name
+
+    def generate(self, prompt: str):
+        from .generate import generate_mesh
+        from .routing import select_adapter
+        chosen, reason = select_adapter(prompt, {"adapter": self.concepts})
+        out = generate_mesh(self.adapted if chosen else self.base, prompt, self.res)
+        out["report"]["routed_to"] = "adapter" if chosen else "base"
+        out["report"]["routing_reason"] = reason
+        return out
+
+
 def nearest_color(rgb) -> str:
     return min(COLORS, key=lambda k: float(np.sum((np.array(COLORS[k]) - rgb) ** 2)))
 
@@ -73,6 +90,8 @@ def evaluate_record(gen, r: DatasetRecord, root: Path, n_samples=20000) -> dict:
     row = {"asset_id": r.asset_id, "family": r.family, "caption": r.caption, "generator": gen.name,
            "seconds": out["report"]["seconds"]}
     rep = out["report"]
+    if "routed_to" in rep:
+        row["routed_to"] = rep["routed_to"]
     row["success"] = bool(rep.get("valid", False))
     row.update({k: rep.get(k) for k in ("n_faces", "components", "watertight", "edge_manifold", "degenerate_faces",
                                         "in_bounds")})

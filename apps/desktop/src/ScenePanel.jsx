@@ -1,251 +1,289 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import * as THREE from "three";
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { Box, Loader2, Play, Square, AlertCircle, CircleDot } from "lucide-react";
+// ScenePanel.jsx
+// The Scene workspace: toolbar, stats and the 3D viewport. All three.js work
+// lives in scene/SceneEngine.js. This component mounts the engine and wires
+// buttons, keys and file drops to it.
+//
+// What is in the scene and what is selected lives in the scene store, so the
+// hierarchy panel and this viewport always agree without talking directly.
 
+import { useEffect, useRef, useState, useCallback } from "react";
 import {
-  NeuralError,
-  cancelJob,
-  capabilities,
-  fetchFile,
-  getArtifact,
-  getJob,
-  parseGaussianScene,
-  submitTextTo3D,
-} from "./neuralApi.js";
+  Box, Grid3x3, RotateCcw, AlertTriangle, Focus, Move, Rotate3d, Undo2, Redo2, Upload, Loader2, Sparkles,
+} from "lucide-react";
+import { usePrefs } from "./prefs.js";
+import { SceneEngine } from "./scene/SceneEngine.js";
+import { sceneStore, useSceneState } from "./scene/store.js";
+import { importIntoScene, handleSceneKey, addShape } from "./scene/actions.js";
+import { shapeByKind } from "./scene/shapes.js";
+import AddShapeMenu from "./scene/AddShapeMenu.jsx";
+import { ACCEPT } from "./scene/importer.js";
+import PropertiesPanel from "./scene/PropertiesPanel.jsx";
+import GeneratePanel from "./scene/GeneratePanel.jsx";
 
-const TERMINAL = new Set(["completed", "failed", "cancelled"]);
+export const IMPORT_EVENT = "berkelium:import";
+const isMac = typeof navigator !== "undefined" && /Mac/i.test(navigator.platform || navigator.userAgent);
+const MOD = isMac ? "⌘" : "Ctrl+";
 
-// Viewport shows exactly what the service produced: a triangle mesh (GLB) or the Gaussian scene's centres.
-// Every view is labelled with its artifact kind, units and confidence; nothing is substituted or faked.
 export default function ScenePanel() {
   const mountRef = useRef(null);
-  const three = useRef(null);
-  const [caps, setCaps] = useState(null);
-  const [capsError, setCapsError] = useState(null);
-  const [prompt, setPrompt] = useState("a red cone on top of a blue box");
-  const [adapter, setAdapter] = useState("");
-  const [job, setJob] = useState(null);
-  const [error, setError] = useState(null);
-  const [view, setView] = useState("mesh");
-  const [artifacts, setArtifacts] = useState({ mesh: null, gaussian: null });
+  const engineRef = useRef(null);
+  const labelRef = useRef(null);
+  const fileRef = useRef(null);
+  const dragDepth = useRef(0);
+  const [wireframe, setWireframe] = useState(false);
+  const [tool, setToolState] = useState("move");
+  const [stats, setStats] = useState({ fps: 0, tris: 0 });
+  const [failure, setFailure] = useState(null);
+  const [dropping, setDropping] = useState(false);
+  const [importing, setImporting] = useState(null); // file name while loading
+  const [addOpen, setAddOpen] = useState(false);
+  const [genOpen, setGenOpen] = useState(true); // text-to-3D panel
+  const { viewport: prefs } = usePrefs();
+  const state = useSceneState();
+  const gridOn = state.nodes.grid?.visible ?? true;
+  const selected = state.selectedId ? state.nodes[state.selectedId] : null;
 
-  // ------------------------------------------------------------------ three.js scene (created once)
   useEffect(() => {
-    const el = mountRef.current;
-    const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setClearColor(0x16181d);
-    el.appendChild(renderer.domElement);
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(40, 1, 0.01, 100);
-    camera.position.set(2.2, 1.6, 3.2);
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.target.set(0, 0, 0);
-    scene.add(new THREE.HemisphereLight(0xffffff, 0x404050, 1.2));
-    const sun = new THREE.DirectionalLight(0xffffff, 1.6);
-    sun.position.set(2, 4, 3);
-    scene.add(sun);
-    const grid = new THREE.GridHelper(4, 16, 0x3a3f4b, 0x2a2e36);
-    grid.position.y = -1.0;
-    scene.add(grid);
-    const content = new THREE.Group();
-    scene.add(content);
-    const resize = () => {
-      const w = el.clientWidth || 1;
-      const h = el.clientHeight || 1;
-      renderer.setSize(w, h, false);
-      renderer.domElement.style.width = "100%";
-      renderer.domElement.style.height = "100%";
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
-    };
-    const ro = new ResizeObserver(resize);
-    ro.observe(el);
-    resize();
-    let raf = 0;
-    const loop = () => {
-      controls.update();
-      renderer.render(scene, camera);
-      raf = requestAnimationFrame(loop);
-    };
-    loop();
-    three.current = { renderer, scene, camera, controls, content };
-    window.__berkeliumViewport = { ready: true, artifactId: null, kind: null, faces: 0, points: 0 };
-    return () => {
-      cancelAnimationFrame(raf);
-      ro.disconnect();
-      controls.dispose();
-      renderer.dispose();
-      el.removeChild(renderer.domElement);
-    };
-  }, []);
-
-  // ------------------------------------------------------------------ capabilities
-  useEffect(() => {
-    capabilities()
-      .then(setCaps)
-      .catch((e) => setCapsError(e.message));
-  }, []);
-
-  const clearContent = () => {
-    const { content } = three.current;
-    while (content.children.length) {
-      const o = content.children.pop();
-      o.traverse?.((n) => {
-        n.geometry?.dispose();
-        if (n.material) (Array.isArray(n.material) ? n.material : [n.material]).forEach((m) => m.dispose());
-      });
-    }
-  };
-
-  const showMesh = useCallback(async (rec) => {
-    const buf = await fetchFile(rec.id, "mesh.glb");
-    const gltf = await new GLTFLoader().parseAsync(buf, "");
-    clearContent();
-    let faces = 0;
-    gltf.scene.traverse((n) => {
-      if (n.isMesh) {
-        n.material = new THREE.MeshStandardMaterial({
-          vertexColors: !!n.geometry.attributes.color, roughness: 0.6, metalness: 0.05, side: THREE.DoubleSide,
-        });
-        faces += n.geometry.index ? n.geometry.index.count / 3 : n.geometry.attributes.position.count / 3;
-      }
-    });
-    three.current.content.add(gltf.scene);
-    window.__berkeliumViewport = { ready: true, artifactId: rec.id, kind: rec.kind, faces, points: 0 };
-  }, []);
-
-  const showGaussians = useCallback(async (rec) => {
-    const [payload, manBuf] = await Promise.all([fetchFile(rec.id, "scene.soa"), fetchFile(rec.id, "scene.json")]);
-    const g = parseGaussianScene(payload, JSON.parse(new TextDecoder().decode(manBuf)));
-    clearContent();
-    const geom = new THREE.BufferGeometry();
-    geom.setAttribute("position", new THREE.BufferAttribute(g.means, 3));
-    geom.setAttribute("color", new THREE.BufferAttribute(g.colors, 3));
-    three.current.content.add(new THREE.Points(geom, new THREE.PointsMaterial({ size: 0.025, vertexColors: true })));
-    window.__berkeliumViewport = { ready: true, artifactId: rec.id, kind: rec.kind, faces: 0, points: g.n };
-  }, []);
-
-  // reload the viewport when artifacts or the selected view change
-  useEffect(() => {
-    const rec = view === "mesh" ? artifacts.mesh : artifacts.gaussian;
-    if (!rec) return;
-    (view === "mesh" ? showMesh(rec) : showGaussians(rec)).catch((e) => setError(`Could not display artifact: ${e.message}`));
-  }, [artifacts, view, showMesh, showGaussians]);
-
-  // ------------------------------------------------------------------ job lifecycle (poll real state)
-  useEffect(() => {
-    if (!job || TERMINAL.has(job.state)) return undefined;
-    const id = setTimeout(async () => {
-      try {
-        const j = await getJob(job.id);
-        setJob(j);
-        if (j.state === "completed") {
-          const recs = await Promise.all(j.artifacts.map(getArtifact));
-          setArtifacts({
-            mesh: recs.find((r) => r.kind === "triangle_mesh") || null,
-            gaussian: recs.find((r) => r.kind === "gaussian_scene") || null,
-          });
-        } else if (j.state === "failed") {
-          setError(`Job failed: ${j.error?.code ?? "error"} — ${j.error?.message ?? ""}`);
-        }
-      } catch (e) {
-        setError(e.message);
-      }
-    }, 400);
-    return () => clearTimeout(id);
-  }, [job]);
-
-  const generate = async () => {
-    setError(null);
+    const container = mountRef.current;
+    if (!container) return;
+    let engine;
     try {
-      const j = await submitTextTo3D({ prompt: prompt.trim(), adapter: adapter || undefined });
-      setJob(j);
-    } catch (e) {
-      setError(e instanceof NeuralError ? e.message : String(e));
+      engine = new SceneEngine({
+        container,
+        store: sceneStore,
+        labelEl: labelRef.current,
+        onStats: setStats,
+        onContextLost: () =>
+          setFailure("The graphics driver reset the 3D view. Switch tabs and back to restart it."),
+      });
+    } catch {
+      setFailure("WebGL is not available on this machine, so the 3D viewport cannot start.");
+      return;
+    }
+    engineRef.current = engine;
+    return () => {
+      engineRef.current = null;
+      engine.dispose();
+    };
+  }, []);
+
+  // Re-applied when objects are added or removed, so a shape or model added
+  // while wireframe is on matches the rest of the scene.
+  const sceneChildren = state.nodes.scene?.children;
+  useEffect(() => { engineRef.current?.setWireframe(wireframe); }, [wireframe, sceneChildren]);
+
+  const setTool = useCallback((t) => {
+    setToolState(t);
+    engineRef.current?.setTool(t);
+  }, []);
+
+  const runImport = useCallback(async (files) => {
+    if (!files?.length || importing) return;
+    setImporting(files[0].name);
+    try {
+      const id = await importIntoScene(files);
+      if (id) requestAnimationFrame(() => engineRef.current?.frameSelection());
+    } finally {
+      setImporting(null);
+    }
+  }, [importing]);
+
+  const focusViewport = useCallback(() => mountRef.current?.focus({ preventScroll: true }), []);
+
+  // New shapes go in the middle of the view, nudged aside if something is
+  // already there, and come out selected with Move ready.
+  const onAddShape = useCallback((kind) => {
+    const def = shapeByKind(kind);
+    if (!def) return;
+    const spot = engineRef.current?.findFreeSpot(def.footprint);
+    addShape(kind, spot);
+    setTool("move");
+    focusViewport();
+  }, [setTool, focusViewport]);
+
+  // ⌘I / Ctrl+I from anywhere in the app opens the file picker.
+  useEffect(() => {
+    const open = () => fileRef.current?.click();
+    window.addEventListener(IMPORT_EVENT, open);
+    return () => window.removeEventListener(IMPORT_EVENT, open);
+  }, []);
+
+  // Keys only act while the viewport has focus, so typing in the editor or
+  // chat can never move, delete or deselect anything by accident.
+  const onKeyDown = (e) => {
+    if (handleSceneKey(e, { setTool })) {
+      e.preventDefault();
+      return;
+    }
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.shiftKey && (e.key === "A" || e.key === "a")) {
+      setAddOpen(true);
+      e.preventDefault();
+    } else if (e.key === "Escape") {
+      sceneStore.select(null);
+      e.preventDefault();
+    } else if (e.key === "f" || e.key === "F") {
+      engineRef.current?.frameSelection();
+      e.preventDefault();
     }
   };
 
-  const running = job && !TERMINAL.has(job.state);
-  const model = caps?.models?.["berkelium-textshape"];
-  const modelReady = !!model?.checkpoint_present;
-  const shown = view === "mesh" ? artifacts.mesh : artifacts.gaussian;
+  // Drag and drop from Finder, File Explorer or a Linux file manager.
+  // dragenter/dragleave fire for every child element, so count depth.
+  const hasFiles = (e) => [...(e.dataTransfer?.types || [])].includes("Files");
+  const dropHandlers = {
+    onDragEnter: (e) => { if (!hasFiles(e)) return; e.preventDefault(); dragDepth.current += 1; setDropping(true); },
+    onDragOver: (e) => { if (!hasFiles(e)) return; e.preventDefault(); e.dataTransfer.dropEffect = "copy"; },
+    onDragLeave: () => { dragDepth.current = Math.max(0, dragDepth.current - 1); if (!dragDepth.current) setDropping(false); },
+    onDrop: (e) => {
+      if (!hasFiles(e)) return;
+      e.preventDefault();
+      dragDepth.current = 0;
+      setDropping(false);
+      runImport([...e.dataTransfer.files]);
+    },
+  };
+
+  const canEdit = Boolean(selected?.transformable);
 
   return (
-    <div className="scene-panel" data-testid="scene-panel">
-      <div className="scene-toolbar">
-        <Box size={13} color="var(--text-secondary)" />
-        <input
-          className="scene-toolbar__prompt"
-          data-testid="prompt-input"
-          value={prompt}
-          maxLength={300}
-          onChange={(e) => setPrompt(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && !running && modelReady && generate()}
-          placeholder="Describe a shape, e.g. a green torus next to a white sphere"
-          aria-label="Text-to-3D prompt"
-        />
-        <select
-          className="scene-toolbar__select"
-          value={adapter}
-          onChange={(e) => setAdapter(e.target.value)}
-          aria-label="Adapter"
-          data-testid="adapter-select"
-        >
-          <option value="">base model</option>
-          {Object.entries(model?.adapters ?? {}).map(([name, present]) => (
-            <option key={name} value={name} disabled={!present}>
-              {name}{present ? "" : " (not trained)"}
-            </option>
-          ))}
-        </select>
-        {running ? (
-          <button className="scene-btn" onClick={() => cancelJob(job.id).then(setJob).catch((e) => setError(e.message))}>
-            <Square size={12} /> Cancel
+    <div className="scene">
+      <div className="scene__toolbar">
+        <div className="scene__actions">
+          <button className="code__btn scene__btn--primary" onClick={() => fileRef.current?.click()} disabled={Boolean(importing)} title={`Import model (${MOD}I)`}>
+            <Upload size={14} />
+            <span>Import</span>
           </button>
-        ) : (
-          <button className="scene-btn scene-btn--primary" onClick={generate} disabled={!modelReady || !prompt.trim()}
-            data-testid="generate-btn" title={modelReady ? "Generate a 3D mesh" : "No trained model on the backend"}>
-            <Play size={12} /> Generate 3D
+          <input
+            ref={fileRef}
+            type="file"
+            accept={ACCEPT}
+            multiple
+            hidden
+            onChange={(e) => { runImport([...e.target.files]); e.target.value = ""; }}
+          />
+          <AddShapeMenu open={addOpen} onOpenChange={setAddOpen} onPick={onAddShape} onClose={focusViewport} />
+          <button
+            className={`code__btn ${genOpen ? "scene__btn--on" : ""}`}
+            onClick={() => setGenOpen((v) => !v)}
+            aria-pressed={genOpen}
+            data-testid="generate-toggle"
+            title="Generate a 3D model from text"
+          >
+            <Sparkles size={14} />
+            <span>Generate</span>
           </button>
+          <span className="scene__sep" />
+          <button
+            className={`code__btn ${tool === "move" ? "scene__btn--on" : ""}`}
+            onClick={() => setTool("move")}
+            aria-pressed={tool === "move"}
+            title="Move (W)"
+          >
+            <Move size={14} />
+            <span>Move</span>
+          </button>
+          <button
+            className={`code__btn ${tool === "rotate" ? "scene__btn--on" : ""}`}
+            onClick={() => setTool("rotate")}
+            aria-pressed={tool === "rotate"}
+            title="Rotate (E). Hold Shift to snap 15°"
+          >
+            <Rotate3d size={14} />
+            <span>Rotate</span>
+          </button>
+          <span className="scene__sep" />
+          <button className="code__btn" onClick={() => sceneStore.undo()} disabled={!sceneStore.canUndo()} title={`Undo (${MOD}Z)`}>
+            <Undo2 size={14} />
+          </button>
+          <button className="code__btn" onClick={() => sceneStore.redo()} disabled={!sceneStore.canRedo()} title={isMac ? "Redo (⇧⌘Z)" : "Redo (Ctrl+Y)"}>
+            <Redo2 size={14} />
+          </button>
+          <span className="scene__sep" />
+          <button className="code__btn" onClick={() => engineRef.current?.resetView()} title="Reset view">
+            <RotateCcw size={14} />
+            <span>Reset view</span>
+          </button>
+          <button
+            className={`code__btn ${wireframe ? "scene__btn--on" : ""}`}
+            onClick={() => setWireframe((v) => !v)}
+            aria-pressed={wireframe}
+            title="Toggle wireframe"
+          >
+            <Box size={14} />
+            <span>Wireframe</span>
+          </button>
+          <button
+            className={`code__btn ${gridOn ? "scene__btn--on" : ""}`}
+            onClick={() => sceneStore.toggleVisible("grid")}
+            aria-pressed={gridOn}
+            title="Toggle grid"
+          >
+            <Grid3x3 size={14} />
+            <span>Grid</span>
+          </button>
+          <button
+            className="code__btn"
+            onClick={() => engineRef.current?.frameSelection()}
+            disabled={!selected}
+            title="Frame selection (F)"
+          >
+            <Focus size={14} />
+            <span>Frame</span>
+          </button>
+        </div>
+        {prefs.showStats && (
+          <div className="scene__stats" aria-label="Viewport stats">
+            <span>{stats.fps} fps</span>
+            <span>{stats.tris.toLocaleString()} tris</span>
+          </div>
         )}
       </div>
 
-      <div className="scene-viewport" ref={mountRef} data-testid="viewport" />
-
-      <div className="scene-overlay">
-        {capsError && <div className="scene-msg scene-msg--err"><AlertCircle size={12} /> Neural service: {capsError}</div>}
-        {caps && !modelReady && (
-          <div className="scene-msg scene-msg--warn"><AlertCircle size={12} /> No trained text-to-3D checkpoint on this backend.</div>
-        )}
-        {job && (
-          <div className="scene-msg" data-testid="job-state">
-            {running ? <Loader2 size={12} className="spin" /> : <CircleDot size={12} />}
-            job {job.state}{job.stage ? ` · ${job.stage}` : ""}{running ? ` · ${Math.round(job.progress * 100)}%` : ""}
+      <div
+        className="scene__viewport"
+        ref={mountRef}
+        tabIndex={0}
+        onKeyDown={onKeyDown}
+        onPointerDown={() => mountRef.current?.focus({ preventScroll: true })}
+        aria-label="3D viewport"
+        {...dropHandlers}
+      >
+        {failure ? (
+          <div className="scene__failure" role="alert">
+            <AlertTriangle size={20} />
+            <span>{failure}</span>
           </div>
-        )}
-        {error && <div className="scene-msg scene-msg--err" data-testid="scene-error"><AlertCircle size={12} /> {error}</div>}
-        {shown && (
-          <div className="scene-card" data-testid="artifact-card">
-            <div className="scene-card__title">
-              {shown.kind === "triangle_mesh" ? "Triangle mesh" : "Gaussian scene · centres preview (not splatted)"}
-            </div>
-            <div>units: {shown.labels.units} · {shown.labels.confidence ?? "model output"}</div>
-            {shown.kind === "triangle_mesh" && (
-              <div>
-                {shown.validation.n_faces} faces · {shown.validation.components} component(s) ·
-                {shown.validation.watertight ? " watertight" : " not watertight"}
+        ) : (
+          <>
+            {selected && (
+              <div className="scene__selection" aria-live="polite">
+                <span className="scene__selection-dot" />
+                {selected.name}
               </div>
             )}
-            {shown.kind === "gaussian_scene" && <div>{shown.validation.n} Gaussians</div>}
-            <div className="scene-card__id">artifact {shown.id.slice(0, 12)} · {shown.producer.model ?? ""}{shown.producer.adapter ? ` + ${shown.producer.adapter}` : ""}</div>
-            <div className="scene-card__views">
-              <button className={view === "mesh" ? "on" : ""} onClick={() => setView("mesh")}>mesh</button>
-              <button className={view === "gaussian" ? "on" : ""} onClick={() => setView("gaussian")} disabled={!artifacts.gaussian}>gaussians</button>
+            <PropertiesPanel />
+            {genOpen && <GeneratePanel engineRef={engineRef} onClose={() => setGenOpen(false)} />}
+            <div ref={labelRef} className="scene__angle" style={{ display: "none" }} />
+            <div className="scene__hint">
+              {canEdit && tool === "move" && "Drag an arrow to move · "}
+              {canEdit && tool === "rotate" && "Drag the dot to spin · Shift snaps 15° · "}
+              Click to select · Drag to orbit · F to frame · Shift+A to add a shape · Drop a .glb, .gltf or .obj to import
             </div>
-          </div>
+            {dropping && (
+              <div className="scene__drop">
+                <Upload size={22} />
+                <b>Drop to import</b>
+                <small>.glb · .gltf with its .bin and textures · .obj with .mtl</small>
+              </div>
+            )}
+            {importing && (
+              <div className="scene__importing">
+                <Loader2 size={18} className="settings__spin" />
+                Importing {importing}...
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

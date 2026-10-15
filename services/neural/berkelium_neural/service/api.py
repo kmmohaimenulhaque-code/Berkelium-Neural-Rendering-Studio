@@ -44,7 +44,9 @@ def create_router(svc: NeuralService) -> APIRouter:
         models = {k: {"checkpoint_present": Path(v["checkpoint"]).exists(),
                       "adapters": {a: Path(p).exists() for a, p in v["adapters"].items()}} for k, v in reg.items()}
         gs = gsplat_status()
+        from .executors import adapter_routing
         return {"job_kinds": sorted(svc.jobs.executors), "models": models,
+                "adapter_routing": {k: adapter_routing(k) for k in reg},
                 "renderers": {"reference_cpu": {"available": True},
                               "gsplat": {"available": gs["usable"], "pin": gs["pin"]["commit"],
                                          "reason": None if gs["usable"] else "requires ROCm PyTorch + GPU + gsplat"},
@@ -86,7 +88,10 @@ def create_router(svc: NeuralService) -> APIRouter:
 
     @r.get("/jobs/{job_id}")
     def get_job(job_id: str):
-        return {**_job(job_id).model_dump(mode="json"), "transitions": svc.jobs.transitions(job_id)}
+        j = _job(job_id)
+        # reconcile on read: a listed artifact whose record is gone is reported, never silently served
+        missing = [a for a in j.artifacts if not svc.store.exists(a)]
+        return {**j.model_dump(mode="json"), "transitions": svc.jobs.transitions(job_id), "missing_artifacts": missing}
 
     @r.post("/jobs/{job_id}/cancel")
     def cancel(job_id: str):

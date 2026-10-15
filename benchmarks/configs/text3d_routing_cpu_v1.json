@@ -1,0 +1,20 @@
+{
+  "protocol_id": "text3d-routing-cpu-v1",
+  "description": "Adapter routing (service default adapter=auto): the capsule LoRA adapter is applied only to prompts that name its concept. Same protocol berkelium-text3d-eval/1, dataset, resolution and splits as E-T1, released checkpoints from exports/. Routed vs always-on adapter and vs base, on held-out base families (test, retention) and held-out capsule families (adapter_test).",
+  "dataset": "data/procedural_shapes_v1",
+  "resolution": 48,
+  "comparisons": [
+    {"id": "routed_vs_always_adapter_on_base_prompts", "split": "test",
+     "baseline": {"kind": "model", "checkpoint": "exports/textshape-base-v1/model.pt", "adapter": "exports/textshape-lora-capsule-v1/adapter.pt"},
+     "candidate": {"kind": "routed", "checkpoint": "exports/textshape-base-v1/model.pt", "adapter": "exports/textshape-lora-capsule-v1/adapter.pt"}},
+    {"id": "routed_vs_base_on_base_prompts", "split": "test",
+     "baseline": {"kind": "model", "checkpoint": "exports/textshape-base-v1/model.pt"},
+     "candidate": {"kind": "routed", "checkpoint": "exports/textshape-base-v1/model.pt", "adapter": "exports/textshape-lora-capsule-v1/adapter.pt"}},
+    {"id": "routed_vs_base_on_capsule_prompts", "split": "adapter_test",
+     "baseline": {"kind": "model", "checkpoint": "exports/textshape-base-v1/model.pt"},
+     "candidate": {"kind": "routed", "checkpoint": "exports/textshape-base-v1/model.pt", "adapter": "exports/textshape-lora-capsule-v1/adapter.pt"}},
+    {"id": "routed_vs_always_adapter_on_capsule_prompts", "split": "adapter_test",
+     "baseline": {"kind": "model", "checkpoint": "exports/textshape-base-v1/model.pt", "adapter": "exports/textshape-lora-capsule-v1/adapter.pt"},
+     "candidate": {"kind": "routed", "checkpoint": "exports/textshape-base-v1/model.pt", "adapter": "exports/textshape-lora-capsule-v1/adapter.pt"}}
+  ]
+}

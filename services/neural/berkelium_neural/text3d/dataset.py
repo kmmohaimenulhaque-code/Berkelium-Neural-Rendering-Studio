@@ -81,7 +81,9 @@ def check_no_leakage(records: list[DatasetRecord]) -> dict:
             "asset_overlap": 0, "base_families": len(base)}
 
 
-def build(cfg: dict, out: Path, log=print) -> dict:
+def build(cfg: dict, out: Path, log=print, materialize: set[str] | None = None) -> dict:
+    """``materialize`` limits GT meshes/renders to those splits (all records, splits and asset hashes are still
+    generated identically, so split hashes match a full build)."""
     t0 = time.time()
     out = Path(out)
     (out / "gt").mkdir(parents=True, exist_ok=True)
@@ -108,6 +110,7 @@ def build(cfg: dict, out: Path, log=print) -> dict:
             asset_id = f"{fid.replace(':', '__').replace('+', '_')}__{k:03d}"
             files = {}
             eval_asset = split in ("val", "test", "adapter_test") or k < cfg["pilot_images_per_train_family"]
+            eval_asset = eval_asset and (materialize is None or split in materialize)
             cams = cams_eval if split in ("val", "test", "adapter_test") else cams_train
             if eval_asset:
                 vol = sdf(c, pts).reshape((cfg["gt_mesh_res"],) * 3)
@@ -150,7 +153,8 @@ def build(cfg: dict, out: Path, log=print) -> dict:
             "leakage_check": leak, "split_hashes": split_hashes, "manifest_sha256": sha256_hex(man_path.read_bytes()),
             "files_sha256": files_hash.hexdigest(), "vocabulary": {"shapes": list(SHAPES), "colors": list(COLORS),
             "relations": list(RELATIONS)}, "camera_convention": "OpenCV, T_cw world->camera, +Y-up world",
-            "units": "normalized_object", "build_seconds": round(time.time() - t0, 1)}
+            "units": "normalized_object", "build_seconds": round(time.time() - t0, 1),
+            "materialized_splits": sorted(materialize) if materialize else "all"}
     (out / "dataset_card.json").write_text(json.dumps(card, indent=2))
     return card
 

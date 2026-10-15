@@ -20,6 +20,7 @@ def main(argv=None):
     ap.add_argument("--config", required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--force", action="store_true", help="rebuild even if a dataset already exists at --out")
+    ap.add_argument("--splits", nargs="+", help="materialise GT meshes/images only for these splits (split hashes are unchanged)")
     a = ap.parse_args(argv)
     from berkelium_neural.text3d.dataset import build
     cfg = load_json(a.config)
@@ -32,7 +33,7 @@ def main(argv=None):
             return 2
         print(f"dataset already built: {old['n_assets']} assets, manifest {old['manifest_sha256'][:16]}")
         return 0
-    card = build(cfg, out)
+    card = build(cfg, out, materialize=set(a.splits) if a.splits else None)
     card["provenance"] = provenance()
     card_p.write_text(json.dumps(card, indent=2))
     print(json.dumps({k: card[k] for k in ("n_assets", "counts", "leakage_check", "manifest_sha256", "files_sha256",

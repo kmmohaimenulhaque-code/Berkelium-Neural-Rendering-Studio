@@ -14,8 +14,10 @@
 // on first save.
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import "./monacoSetup.js"; // must run before the first <Editor> mounts
 import Editor from "@monaco-editor/react";
 import { FilePlus, FolderOpen, Save, SaveAll } from "lucide-react";
+import { usePrefs } from "./prefs.js";
 
 // Map common extensions to Monaco language ids. Anything missing falls
 // back to plain text, which is better than crashing on an unknown lang.
@@ -60,6 +62,7 @@ export default function CodePanel() {
     const [status, setStatus] = useState(""); // transient status line
     const [error, setError] = useState("");
     const editorRef = useRef(null);
+    const { editor: prefs } = usePrefs();
 
     const dirty = content !== savedContent;
     const language = languageForFile(fileName);
@@ -71,6 +74,13 @@ export default function CodePanel() {
         const t = setTimeout(() => setStatus(""), 2500);
         return () => clearTimeout(t);
     }, [status]);
+
+    // Tab size belongs to the file model in Monaco, not the editor, so the
+    // options prop below cannot change it. Re-apply it whenever the
+    // preference changes or a different file is loaded into the model.
+    useEffect(() => {
+        editorRef.current?.getModel()?.updateOptions({ tabSize: prefs.tabSize, indentSize: prefs.tabSize });
+    }, [prefs.tabSize, filePath, fileName]);
 
     const handleNew = useCallback(() => {
         // Confirm if there are unsaved changes. A real IDE would offer
@@ -152,12 +162,31 @@ export default function CodePanel() {
         setError("");
         setStatus(`Saved ${result.name}`);
     }, [content, fileName]);
+    // Define a custom Monaco theme that matches our near-black app background,
+    // so the editor does not look like a lighter grey slab in the middle.
+    const handleBeforeMount = (monaco) => {
+        monaco.editor.defineTheme("berkelium-dark", {
+            base: "vs-dark",
+            inherit: true,
+            rules: [],
+            colors: {
+                "editor.background": "#08090A",
+                "editor.lineHighlightBackground": "#0E0F11",
+                "editorGutter.background": "#08090A",
+                "editorLineNumber.foreground": "#4a4a4a",
+                "editorLineNumber.activeForeground": "#F7F8F8",
+                "editor.selectionBackground": "#1A1B1E",
+                "editorCursor.foreground": "#00D4D4",
+            },
+        });
+    };
 
     // Wire Monaco's keyboard shortcuts after the editor mounts.
     // Doing this through Monaco (not the window) means they only fire
     // when the editor is focused, which is the right behavior.
     const handleMount = (editor, monaco) => {
         editorRef.current = editor;
+        editor.getModel()?.updateOptions({ tabSize: prefs.tabSize, indentSize: prefs.tabSize });
         editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => handleSave());
         editor.addCommand(
             monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyS,
@@ -201,18 +230,22 @@ export default function CodePanel() {
                     language={language}
                     value={content}
                     onChange={(v) => setContent(v ?? "")}
+                    beforeMount={handleBeforeMount}
                     onMount={handleMount}
-                    theme="vs-dark"
+                    theme="berkelium-dark"
                     options={{
-                        fontSize: 13,
+                        fontSize: prefs.fontSize,
                         fontFamily: "'JetBrains Mono', 'SF Mono', Menlo, monospace",
-                        minimap: { enabled: false },
+                        minimap: { enabled: prefs.minimap },
+                        lineNumbers: prefs.lineNumbers ? "on" : "off",
                         scrollBeyondLastLine: false,
                         smoothScrolling: true,
                         cursorBlinking: "smooth",
                         renderLineHighlight: "line",
-                        tabSize: 4,
-                        wordWrap: "on",
+                        tabSize: prefs.tabSize,
+                        // Keep the user's tab size instead of guessing from the file.
+                        detectIndentation: false,
+                        wordWrap: prefs.wordWrap ? "on" : "off",
                     }}
                 />
             </div>
