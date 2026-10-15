@@ -17,6 +17,7 @@ from __future__ import annotations
 import hashlib
 import resource
 import time
+import traceback
 
 import numpy as np
 import torch
@@ -222,7 +223,8 @@ def run_case(case: dict, backends: list[str], proto: dict, baseline: str | None 
             res["backends"][b] = {"status": "measured", "renderer": r.name, "device": dev, "dtype": str(dt),
                                   "measurements": meas}
         except Exception as e:  # noqa: BLE001 - preserved failed run
-            res["backends"][b] = {"status": "failed", "reason": f"{type(e).__name__}: {e}", "measurements": meas}
+            res["backends"][b] = {"status": "failed", "reason": f"{type(e).__name__}: {e}", "measurements": meas,
+                                  "traceback": traceback.format_exc()}
     if baseline:
         res["cross_backend"] = cross_backend_rows(fwd_out, first_grads, baseline) if baseline in fwd_out else {
             "status": "not_run", "reason": f"baseline backend {baseline!r} produced no output in this run"}
@@ -315,5 +317,10 @@ def run(cfg: dict) -> dict:
     for case in cfg["cases"]:
         out["cases"].append(run_case(case, cfg["backends"], cfg["protocol"], cfg.get("baseline_backend")))
     if cfg["protocol"].get("fit"):
-        out["quality"] = {b: fit_quality(b, cfg["protocol"]) for b in cfg["backends"]}
+        for b in cfg["backends"]:
+            try:
+                out["quality"][b] = fit_quality(b, cfg["protocol"])
+            except Exception as e:  # noqa: BLE001 - preserved failed measurement; never discards the case results
+                out["quality"][b] = m("heldout_view_psnr_after_fit", status="failed", group="quality",
+                                      reason=f"{type(e).__name__}: {e}", traceback=traceback.format_exc())
     return out
