@@ -1,14 +1,14 @@
 {
   "prompt": "a red cone on top of a blue box",
-  "job": "18ffe12cd7224f54a368012414fc59cc",
-  "mesh_artifact": "75d093e465c7488cc9be541ccda3762f11cfdc19dda36dfd7a5b090ceba049c6",
+  "job": "c817f6b31fcf450d8ea1ed5bab8096e1",
+  "mesh_artifact": "7bce160e53ccb3ac229f0e1062d92b860613fe60ef87b6dd4b806bfebc4f944e",
   "faces": 6780,
-  "gaussian_artifact": "2905ff68786b11da948d836c2bca499c12578da1c89b966e9b375b81e6162356",
+  "gaussian_artifact": "2360a10fd2c665c47ffc58e5f7317e841d9cb19d6cce17efc9f06753fd3cdbe5",
   "gaussians": 4000,
-  "orbit_render_artifact": "d9a64a84d5a0b6aa5742d6d0e38cdf27cfed866fc880bdbc206e4adb560ff498",
+  "orbit_render_artifact": "461c5ba107efbed7fb0bddb0f245164a82d4b97395ad41bc17f7fd850c23c3ba",
   "renderer": "reference_cpu",
   "view_render": {
-    "artifact": "8786940722c30166f8f0bbd83a3aa43557345abf4ab846e251f27b4e162b0517",
+    "artifact": "a1afe99ce0c7dd0e3e6a3eb1d7b4d6e72cc841c6553aaf15e855a8eea2ae59c0",
     "width": 384,
     "height": 357,
     "renderer": "reference_cpu",
@@ -17,27 +17,8 @@
   },
   "after_restart": {
     "job_state": "completed",
-    "reopened_mesh": "75d093e465c7488cc9be541ccda3762f11cfdc19dda36dfd7a5b090ceba049c6"
+    "reopened_mesh": "7bce160e53ccb3ac229f0e1062d92b860613fe60ef87b6dd4b806bfebc4f944e"
   },
-  "console_errors": [
-    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
-    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
-    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
-    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
-    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
-    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
-    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
-    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
-    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
-    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
-    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
-    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
-    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
-    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
-    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
-    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
-    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
-    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED",
-    "error: Failed to load resource: net::ERR_CONNECTION_REFUSED"
-  ]
+  "console_errors_before_restart": [],
+  "console_errors_during_restart": 1
 }

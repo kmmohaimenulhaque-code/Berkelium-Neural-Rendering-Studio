@@ -52,10 +52,10 @@ These capabilities represent the product direction, not a claim that every subsy
 |---|---|---|
 | Prompt → 3D in the Studio scene | **works** — Scene → *Generate*: the released BerkeliumTextShape model runs on the backend, the mesh is imported as a normal scene object (move, rotate, undo), its Gaussian scene is splat-rendered by the Berkelium renderer, and *Render this view* re-renders it from the live viewport camera | `tests/e2e/test_studio_text_to_3d.py` (real UI + real backend + released checkpoint), `results/e2e/` |
 | Durable jobs | **works** — jobs and artifacts persist (SQLite + content-addressed store), resume after a crash without duplicate results, and Studio's *Recent* list reopens them after a restart | `services/neural/tests/test_durable_jobs.py` (SIGKILL mid-job), E2E restart step |
-| Adapter routing | **works** — `auto` applies the capsule LoRA adapter only to prompts that name a capsule | `services/neural/tests/test_routing.py`, `results/text3d/E-T2_routing_cpu.*` |
+| Adapter routing | **works** — `auto` applies the capsule LoRA adapter only to prompts that name a capsule; vs always-on adapter on 32 held-out base prompts Chamfer 0.132 → 0.090 (paired 95% CI excludes 0), capsule gains kept | `results/text3d/E-T2_routing_cpu.report.md`, `test_routing.py` |
 | Deterministic differentiable renderer (AMD) | **verified on one MI300X** — gsplat forward + Berkelium deterministic HIP backward: bit-identical gradients, forward bitwise-equal to gsplat, backward 1.32–2.21× gsplat | `results/renderer/E-R1_analysis.md` |
-| Gaussian fitting to real objects (M7) | **works on CPU** — fitted to observations of Google Scanned Objects scans, evaluated on held-out views | `results/m7/` |
-| TripoSR image → 3D prior (M6) | **runs on CPU** with a documented CUDA-extension replacement; compared with exact ground truth | `results/m6/M6_receipt.json` |
+| Gaussian fitting to real objects (M7) | **works on CPU** — 8,000 Gaussians fitted to 24 views of 3 Google Scanned Objects scans: held-out PSNR 31.7–34.7 dB (+10 to +12.5 dB over init); coarse geometry improves, fine geometry on thin shapes does not | `results/m7/SUMMARY.md` |
+| TripoSR image → 3D prior (M6) | **runs on CPU** (CUDA marching cubes replaced): 3/3 owned controls recognisable, closer to exact ground truth than our text model, merges side-by-side parts | `results/m6/REVIEW.md` |
 | Z-Image-Turbo image prior (M5) | **not run** — needs a GPU and ~33 GB; script and preflight ready | `results/m5/E-A1_preflight.json`, `docs/GPU_RUN_PLAN.md` R5 |
 
 Generated geometry is labelled `normalized_object` / `model_output_unverified`: it is model output, not a CAD

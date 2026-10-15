@@ -40,8 +40,8 @@ flowchart TD
 | M3 | pass on one MI300X | E-R1 (10-13, rerun 10-15): 16/16 gates, bitwise-repeatable gradients, forward bitwise-equal to gsplat, backward 1.32–2.21× gsplat (`results/renderer/E-R1_analysis.md`) |
 | M4 | pass (superseded by integration) | text-to-3D is a feature of the Studio scene editor (D-017); E2E `tests/e2e/test_studio_text_to_3d.py` |
 | M5 | **blocked_environment** | script + pinned config ready (`scripts/m5_image_prior_smoke.py`); preflight receipt `results/m5/E-A1_preflight.json` lists the blockers on the development host (no GPU, 15 GB disk vs ~33 GB snapshot). Needs one approved MI300X session (R5 in `docs/GPU_RUN_PLAN.md`). |
-| M6 | see `results/m6/M6_receipt.json` | TripoSR on 3 owned control images on CPU with the D-020 compatibility branch; compared with exact GT and with Berkelium text-to-3D; consumed by the Gaussian pipeline |
-| M7 | see `results/m7/*/report.json` | Gaussians fitted to observations of Google Scanned Objects scans (D-021), held-out PSNR/SSIM/IoU and geometry vs scan |
+| M6 | **pass on CPU** (stage C, owned controls) | TripoSR on 3 owned control images (D-020): 3/3 recognisable, valid, 24-view orbits, 47–56 s/input, ≤2.9 GiB host; Chamfer vs exact GT 0.009/0.021/0.026 (Berkelium text-to-3D 0.022/0.035/0.027); part count 1/3; meshes → Gaussians → splat render. Not done: generated anchors (needs M5); AMD/ROCm run (`results/m6/REVIEW.md`) |
+| M7 | **pass on CPU** (scan renders, not photographs) | 3 Google Scanned Objects (D-021): held-out PSNR 31.7/34.7/32.9 dB (+10 to +12.5 over the silhouette init); rendered depth within 0.05 of the scan 45%/97%/99%; fine geometry not improved on thin shapes (`results/m7/SUMMARY.md`) |
 | M8 | pass | SQLite jobs + transition log, write-once artifacts, resumable stages (D-019); SIGKILL-mid-fit test on a real server (`test_durable_jobs.py`); Studio "Recent" survives a backend restart (E2E) |
 
 ## Immediate implementation queue

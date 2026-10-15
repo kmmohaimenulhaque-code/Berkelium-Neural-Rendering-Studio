@@ -180,3 +180,23 @@ Development host: GitHub Codespace, 2 vCPU, 7.8 GB RAM, no GPU, Python 3.14.2, t
   control camera's 16° elevation (TripoSR assumes a level camera) — handled by the evaluation's similarity alignment.
 - Marching cubes emits zero-area faces (1 on two of the meshes), which Berkelium's validator rejects; the TripoSR
   output now gets Berkelium's own `clean_mesh` (trimesh's `nondegenerate_faces` did not catch them).
+
+**M6 outcome** (`results/m6/REVIEW.md`, `M6_receipt.json`): 3/3 owned controls recognisable and valid (after
+`clean_mesh`), 24-view orbits rendered, 47–56 s/input on CPU, ≤2.9 GiB; Chamfer-L1 vs exact GT after the same
+similarity alignment: TripoSR 0.0093 / 0.0213 / 0.0259 vs Berkelium text-to-3D 0.0217 / 0.0353 / 0.0265 (image vs
+caption input — priors compared, not models on one task); part count correct 1/3 (both side-by-side pairs merged).
+TripoSR meshes → 4,000 surface Gaussians → Berkelium splat render works.
+
+**M7 outcome** (`results/m7/SUMMARY.md`): bowl / lion / raccoon, 8,000 Gaussians, 1,000 steps, 5–6 min each on CPU.
+Held-out PSNR 21.0→31.7, 22.2→34.7, 23.0→32.9 dB (held-out within 1.1 dB of training views). Added a held-out
+rendered-depth metric because Gaussian-centre distance alone is misleading: depth within 0.05 rises 16→45% / 87→97% /
+76→99%, but on the thin lion depth within 0.02 falls 62→26% and centre F@0.02 0.80→0.05 — the photometric fit does
+not pin Gaussians to the surface. Recorded as a limitation, not hidden. Fitted scenes published to the neural store.
+
+**Final verification (this host, 2026-10-15)**
+- `pytest services/neural/tests`: 75 passed, 4 skipped (3 `hip` tests + 1 gsplat render test: no ROCm device here;
+  the `hip` tests passed 4/4 on the MI300X earlier the same day).
+- `pytest services/backend/tests`: 25 passed (needs the pinned `litellm==1.105.0`, now in `configs/environments/cpu.txt`).
+- `pytest tests/e2e`: 1 passed (65 s) — includes the restart step and asserts no browser console errors before it.
+- `apps/desktop`: `npm test` 35 passed; `vite build` succeeds. Lint: new files clean; two pre-existing errors in
+  main's `ScenePanel.jsx`/`api.js` left as they were.

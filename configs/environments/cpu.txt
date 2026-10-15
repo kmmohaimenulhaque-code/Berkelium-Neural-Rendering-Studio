@@ -16,3 +16,4 @@ slowapi==0.1.10
 pypdf==5.9.0
 pytesseract==0.3.13
 python-multipart==0.0.20
+litellm==1.105.0
