@@ -61,4 +61,6 @@ third_party/
 
 # Regenerated datasets (scripts/prepare_dataset.py) and downloaded evaluation assets
 /data/
+# Pretrained weights (data/models/ is covered by /data/); Shap-E's default cache lands in the CWD
+/shap_e_model_cache/
 /results/demo/

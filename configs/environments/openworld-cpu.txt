@@ -1,0 +1,13 @@
+# E-T3 open-world generator (Shap-E text300M, CPU) — installed INTO .venv-cpu on top of configs/environments/cpu.txt.
+# Exact versions verified 2026-10-15, Python 3.14.2, torch 2.14.1+cpu. scripts/setup_openworld.sh installs these,
+# the two pinned code checkouts, and the pinned weights (sha256-verified).
+# Shap-E is installed editable with --no-deps from third_party/shap-e @ 50131012ee11c9d2617f3886c10f000d3c7a3b43
+# (its setup.py pulls unpinned extras such as ipywidgets; none are needed: shap_e.util.notebooks is never imported).
+clip @ git+https://github.com/openai/CLIP.git@d05afc436d78f1c48dc0dbf8e5980a9d471f35f6
+ftfy==6.3.1
+regex==2026.9.29
+blobfile==3.3.0
+filelock==3.32.3
+fire==0.7.1
+humanize==4.16.0
+PyYAML==6.0.3
