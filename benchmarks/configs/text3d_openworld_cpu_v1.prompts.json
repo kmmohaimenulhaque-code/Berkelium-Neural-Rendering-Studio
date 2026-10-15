@@ -1,0 +1,64 @@
+{
+  "benchmark": "E-T3 open-world text-to-3D (CPU)",
+  "frozen": "2026-10-15, before any candidate generation. Prompts were written from object names only; never tuned.",
+  "B1_open_world_gt": {
+    "source": "Google Scanned Objects (Google LLC, CC-BY 4.0) via Gazebo Fuel, owner GoogleResearch, version 1",
+    "selection": "12 objects across 12 categories, chosen by name from Fuel search results before any generation",
+    "objects": [
+      {"name": "Cole_Hardware_Mug_Classic_Blue", "category": "mug", "prompt": "a blue coffee mug",
+       "zip_sha256": "077446e8c3509a48dae63f2d5e67a1dfe086e794b2facb552a26b890c725bd26"},
+      {"name": "Threshold_Porcelain_Teapot_White", "category": "teapot", "prompt": "a white porcelain teapot",
+       "zip_sha256": "45c7f86892f983b59e28cfe80af5de473d7981bab321addae10bea7503e6b9cc"},
+      {"name": "Threshold_Porcelain_Pitcher_White", "category": "pitcher", "prompt": "a white porcelain pitcher",
+       "zip_sha256": "8b3262924d9aa226d76c5a411ab3bb62cb6407b9dd34b7e96179b9c85db6b1a6"},
+      {"name": "Cole_Hardware_Deep_Bowl_Good_Earth_1075", "category": "bowl", "prompt": "a deep bowl",
+       "zip_sha256": "5c37dab794eb76a1118a378dbb6fb46b0a0ec95f480c5b8842e237aa97f09a05"},
+      {"name": "Spritz_Easter_Basket_Plastic_Teal", "category": "basket", "prompt": "a teal plastic easter basket",
+       "zip_sha256": "5799f0c9c3f8b67282017c97c5619147102603235d6403c9bc2ee0391e5fca74"},
+      {"name": "Timberland_Mens_Earthkeepers_Newmarket_6Inch_Cupsole_Boot", "category": "boot", "prompt": "a men's boot",
+       "zip_sha256": "7468468c6a5eacec2305785e03a9d42f57a0dcedff4efa289be15ddda2a8d02b"},
+      {"name": "CLIMACOOL_BOAT_BREEZE_IE6CyqSaDwN", "category": "boat shoe", "prompt": "a boat shoe",
+       "zip_sha256": "a8529180c0917ccb7bf14d248ff3cea90bd19bedb00c83bdb9f6be5253b74550"},
+      {"name": "SCHOOL_BUS", "category": "school bus", "prompt": "a school bus",
+       "zip_sha256": "d1fdfbf364c8aba734e52387f062f16d6203997d4a7253617951fffd9f9d7022"},
+      {"name": "TURBOPROP_AIRPLANE_WITH_PILOT", "category": "airplane", "prompt": "a turboprop airplane with a pilot",
+       "zip_sha256": "b4d382067a9075f09722b83aa66fae5cf4e6cee0019dfa5e6278c16dbffc08bf"},
+      {"name": "Lovable_Huggable_Cuddly_Boutique_Teddy_Bear_Beige", "category": "teddy bear",
+       "prompt": "a beige teddy bear",
+       "zip_sha256": "7b7e3ef0d30e9eb82e823d4906d36aac39bce890387e718df872328eedea5cd6"},
+      {"name": "Pony_C_Clamp_1440", "category": "C-clamp", "prompt": "a C-clamp",
+       "zip_sha256": "e1203dc885d7e046ee5c7ad2c9aaa1abbf9209ae09ff985ac1bd1f81920abc80"},
+      {"name": "Elephant", "category": "elephant", "prompt": "an elephant",
+       "zip_sha256": "cc30bd19102fa621789eb4f82593082423297609e5d78a9b284f4d93204d5cc6"}
+    ]
+  },
+  "B2_gt_free": {
+    "note": "semantic relevance only (no ground truth): thin parts, handles, cavities, materials",
+    "prompts": [
+      {"prompt": "a bicycle", "probe": "thin parts"},
+      {"prompt": "a ladder", "probe": "thin parts"},
+      {"prompt": "a hammer", "probe": "handle"},
+      {"prompt": "a watering can", "probe": "handle"},
+      {"prompt": "a flower vase", "probe": "cavity"},
+      {"prompt": "an open cardboard box", "probe": "cavity"},
+      {"prompt": "a glass wine bottle", "probe": "material"},
+      {"prompt": "a shiny metal trophy", "probe": "material"}
+    ]
+  },
+  "B3_retention": {
+    "source": "berkelium-procedural-shapes-v1, split test (hash 5c35fa4d...)",
+    "selection": "variant 000 of every test family + variant 001 of every other family in sorted family order",
+    "asset_ids": ["next_to__box_box__000", "next_to__cylinder_cone__000", "next_to__sphere_cone__000",
+                  "next_to__torus_torus__000", "on_top_of__cylinder_sphere__000", "on_top_of__sphere_sphere__000",
+                  "on_top_of__sphere_torus__000", "on_top_of__torus_sphere__000", "next_to__box_box__001",
+                  "next_to__sphere_cone__001", "on_top_of__cylinder_sphere__001", "on_top_of__sphere_torus__001"]
+  },
+  "B4_composition": {
+    "source": "berkelium-procedural-shapes-v1, split test (disjoint from B3)",
+    "selection": "variant 003 of every test family (4 on_top_of, 4 next_to)",
+    "asset_ids": ["next_to__box_box__003", "next_to__cylinder_cone__003", "next_to__sphere_cone__003",
+                  "next_to__torus_torus__003", "on_top_of__cylinder_sphere__003", "on_top_of__sphere_sphere__003",
+                  "on_top_of__sphere_torus__003", "on_top_of__torus_sphere__003"]
+  },
+  "p2_smoke_prompt_not_in_benchmark": "a wooden chair with four legs"
+}
