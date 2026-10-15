@@ -1,0 +1,119 @@
+# CI: builds and tests Berkelium Studio on macOS, Windows and Linux on every
+# push to main and on every pull request, so breakage shows up here before
+# anyone pulls it.
+#
+# What each job proves:
+#   safety   No API keys are committed (config.json must stay untracked).
+#   desktop  Clean install from the lockfile, unit tests, release build, then
+#            a smoke test that starts the real app and opens the 3D viewport.
+#   backend  Clean install of the pinned Python packages, then the test suite.
+#            The tests never call a paid API.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch: # run it by hand from the Actions tab
+
+# Read-only token. CI never needs to write to the repo.
+permissions:
+  contents: read
+
+# A newer push to the same branch cancels the older run, so runs never queue up.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  safety:
+    name: No secrets committed
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: config.json must not be in git
+        run: |
+          if git ls-files --error-unmatch config.json > /dev/null 2>&1; then
+            echo "::error file=config.json::config.json is committed. It holds API keys. Remove it with: git rm --cached config.json"
+            exit 1
+          fi
+          echo "OK: config.json is not tracked."
+
+  desktop:
+    name: Desktop app (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      # Let every OS finish, so one failure does not hide another.
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+    defaults:
+      run:
+        working-directory: apps/desktop
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/desktop/package-lock.json
+
+      # npm ci installs exactly what package-lock.json says, and fails if
+      # package.json and the lockfile disagree.
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Release build
+        run: npm run build
+
+      # Linux runners have no screen, so the app runs inside a virtual one.
+      # --no-sandbox only for this CI run: Ubuntu 24.04 blocks Chromium's
+      # sandbox for apps outside the system package manager.
+      - name: Smoke test (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          command -v xvfb-run > /dev/null || (sudo apt-get update && sudo apt-get install -y xvfb)
+          xvfb-run -a npm run smoke -- --no-sandbox
+
+      - name: Smoke test
+        if: runner.os != 'Linux'
+        run: npm run smoke
+
+  backend:
+    name: Backend (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+    defaults:
+      run:
+        working-directory: services/backend
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: services/backend/requirements.txt
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Tests
+        run: python -m pytest -q

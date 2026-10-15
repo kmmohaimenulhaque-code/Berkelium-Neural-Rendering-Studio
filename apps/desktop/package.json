@@ -12,6 +12,7 @@
     "test": "node --test \"src/**/*.test.js\"",
     "electron": "electron electron/main.cjs",
     "preview:app": "vite build && electron electron/main.cjs --dist",
+    "smoke": "electron electron/smoke.cjs",
     "studio": "concurrently -k \"npm run dev\" \"wait-on tcp:5173 && npm run electron\""
   },
   "dependencies": {
