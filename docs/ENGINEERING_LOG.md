@@ -151,3 +151,18 @@ Development host: GitHub Codespace, 2 vCPU, 7.8 GB RAM, no GPU, Python 3.14.2, t
   equal determinism) is only measurable on a GPU, which this host lacks. Next step: implement as an opt-in kernel
   variant behind the existing interface, accept only if HIP-CPU error vs the FP64 oracle drops and MI300X E-R1 timing
   stays within budget.
+
+**P5 text-to-3D adapter — E-T2 (`results/text3d/E-T2_routing_cpu.report.md`), CPU, 24 min**
+- Same protocol, dataset and splits as E-T1 (evaluation splits rebuilt with `prepare_dataset.py --splits test
+  adapter_test`; all five split hashes equal the released model card's), released checkpoints from `exports/`.
+- Routing (`adapter=auto`, the Studio default) sent 32/32 base-test prompts to the base model and 30/30 capsule
+  prompts to the adapter. Routed outputs are per-asset identical to base on base prompts and to the adapter on capsule
+  prompts (paired deltas exactly 0).
+- vs always-on adapter, base prompts: Chamfer-L1 0.132 → 0.090 (paired Δ −0.042, 95% CI [−0.055, −0.029]),
+  F@0.05 0.25 → 0.40, view PSNR +1.6 dB (CI [1.06, 2.19]), part count 0.28 → 0.47: the retention regression is gone.
+- vs base, capsule prompts: Chamfer 0.134 → 0.081 (Δ −0.053, CI [−0.071, −0.036]), PSNR +2.2 dB, normal consistency
+  +0.12 — the adapter's gains are kept.
+- Not fixed: the adapter's **part-count regression on capsule prompts (0.53 → 0.27)** — it merges separated parts;
+  routing cannot change what the adapter generates. Needs adapter retraining (e.g. part-separation-aware loss or
+  base-data replay); not attempted in this sprint (no evidence yet that a CPU retrain would fix it).
+- Base model on `test` reproduces E-T1 (Chamfer 0.0899 vs 0.090 recorded).
