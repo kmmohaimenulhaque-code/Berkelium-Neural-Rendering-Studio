@@ -10,7 +10,11 @@ const path = require("path");
 // Dev mode = running from source (npm run studio), not an installed app.
 // app.isPackaged works the same on macOS, Windows and Linux. The old
 // NODE_ENV=development prefix in package.json only worked on macOS and Linux.
-const isDev = !app.isPackaged;
+// --dist runs the built app (dist/) from source, exactly as an installed copy
+// loads it. "npm run preview:app" uses it to check a release build without
+// packaging. A flag instead of an environment variable works the same on
+// macOS, Windows and Linux with no extra tools.
+const isDev = !app.isPackaged && !process.argv.includes("--dist");
 app.setName("Berkelium");
 
 let mainWindow = null;

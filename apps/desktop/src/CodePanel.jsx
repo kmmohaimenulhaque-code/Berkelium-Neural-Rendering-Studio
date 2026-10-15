@@ -14,6 +14,7 @@
 // on first save.
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import "./monacoSetup.js"; // must run before the first <Editor> mounts
 import Editor from "@monaco-editor/react";
 import { FilePlus, FolderOpen, Save, SaveAll } from "lucide-react";
 import { usePrefs } from "./prefs.js";
