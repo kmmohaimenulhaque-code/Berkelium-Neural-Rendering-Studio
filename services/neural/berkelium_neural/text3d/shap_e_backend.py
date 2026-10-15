@@ -256,19 +256,20 @@ def _patched_loaders(cache: Path, clip_dtype):
         torch.load, clip.load = orig_load, orig_clip
 
 
-def load_shap_e_model(name: str, cache: Path, clip_dtype=None):
-    """shap_e.models.download.load_model, but the checkpoint (hash-checked by Shap-E's fetch) is memory-mapped and
-    assigned in place of the randomly initialised parameters (assign=True; strict) when every dtype and shape
-    matches, so the weights stay file-backed instead of being copied into a second anonymous buffer."""
+def load_shap_e_model(name: str, cache: Path, clip_dtype=None, device: str = "cpu"):
+    """shap_e.models.download.load_model, but the checkpoint (hash-checked by Shap-E's fetch) is memory-mapped and,
+    on CPU, assigned in place of the randomly initialised parameters (assign=True; strict) when every dtype and shape
+    matches, so the weights stay file-backed instead of being copied into a second anonymous buffer. On a GPU device
+    the parameters are copied to the device as usual (that path is UNVERIFIED: no GPU on the development host)."""
     import torch
     from shap_e.models.configs import model_from_config
     from shap_e.models.download import load_checkpoint, load_config
     with _patched_loaders(cache, clip_dtype or torch.float32):
-        model = model_from_config(load_config(name, cache_dir=str(cache)), device=torch.device("cpu"))
+        model = model_from_config(load_config(name, cache_dir=str(cache)), device=torch.device(device))
         sd = load_checkpoint(name, device=torch.device("cpu"), cache_dir=str(cache), progress=False)
     target = model.state_dict()
-    assign = set(sd) == set(target) and all(sd[k].dtype == target[k].dtype and sd[k].shape == target[k].shape
-                                            for k in sd)
+    assign = device == "cpu" and set(sd) == set(target) and all(
+        sd[k].dtype == target[k].dtype and sd[k].shape == target[k].shape for k in sd)
     model.load_state_dict(sd, strict=True, assign=assign)
     del sd, target
     gc.collect()
@@ -324,10 +325,12 @@ class ShapEGenerator:
     name = "shap-e-text300m"
 
     def __init__(self, steps: int = 64, guidance_scale: float = 15.0, cache_dir: Path | None = None,
-                 threads: int | None = None, grid_size: int | None = None, clip_dtype: str = "float32"):
+                 threads: int | None = None, grid_size: int | None = None, clip_dtype: str = "float32",
+                 device: str = "cpu", fp16: bool | None = None):
         self.steps, self.guidance = int(steps), float(guidance_scale)
         self.cache = Path(cache_dir or DEFAULT_CACHE)
-        self.threads, self.grid_size, self.clip_dtype = threads, grid_size, clip_dtype
+        self.threads, self.grid_size, self.clip_dtype, self.device = threads, grid_size, clip_dtype, device
+        self.fp16 = (device != "cpu") if fp16 is None else bool(fp16)   # Shap-E's GPU default; CPU stays fp32
 
     def available(self) -> tuple[bool, str]:
         return available(self.cache)
@@ -340,9 +343,10 @@ class ShapEGenerator:
                 "conditioning": "CLIP ViT-L/14 text embedding (text tower only)",
                 "license": "MIT (Shap-E code and weights); MIT (CLIP)",
                 "sampler": {"karras_steps": self.steps, "guidance_scale": self.guidance, "sigma_min": 1e-3,
-                            "sigma_max": 160, "s_churn": 0, "clip_denoised": True, "use_fp16": False},
+                            "sigma_max": 160, "s_churn": 0, "clip_denoised": True, "use_fp16": self.fp16},
                 "decoder": {"rendering_mode": "stf", "grid_size": self.grid_size or "checkpoint default"},
-                "clip_dtype": self.clip_dtype, "device": "cpu",
+                "clip_dtype": self.clip_dtype, "device": self.device,
+                **({"gpu_path": "UNVERIFIED (never run on a GPU)"} if self.device != "cpu" else {}),
                 "labels": "model-generated, normalized units, not measured geometry"}
 
     def latent(self, prompt: str, seed: int = 0, cancel=None, progress=None):
@@ -352,7 +356,7 @@ class ShapEGenerator:
         from shap_e.models.download import load_config
         if self.threads:
             torch.set_num_threads(self.threads)
-        model = load_shap_e_model("text300M", self.cache, getattr(torch, self.clip_dtype))
+        model = load_shap_e_model("text300M", self.cache, getattr(torch, self.clip_dtype), self.device)
         diffusion = diffusion_from_config(load_config("diffusion", cache_dir=str(self.cache)))
         calls = {"n": 0}
         expected = max(2 * self.steps - 1, 1)     # Heun (s_churn=0): 2 denoiser calls per step, 1 on the last; CFG
@@ -369,7 +373,7 @@ class ShapEGenerator:
         try:
             with torch.no_grad():
                 lat = sample_latents(batch_size=1, model=model, diffusion=diffusion, model_kwargs={"texts": [prompt]},
-                                     guidance_scale=self.guidance, clip_denoised=True, use_fp16=False,
+                                     guidance_scale=self.guidance, clip_denoised=True, use_fp16=self.fp16,
                                      use_karras=True, karras_steps=self.steps, sigma_min=1e-3, sigma_max=160,
                                      s_churn=0, progress=False)[0]
         finally:
@@ -382,22 +386,23 @@ class ShapEGenerator:
         """Local equivalent of shap_e.util.notebooks.decode_latent_mesh -> (v, f, colours or None) in Shap-E's frame."""
         import torch
         from shap_e.util.collections import AttrDict
-        dec = load_shap_e_model("decoder", self.cache)
+        dec = load_shap_e_model("decoder", self.cache, device=self.device)
         if self.grid_size:
             dec.renderer.grid_size = int(self.grid_size)
         try:
             with torch.no_grad():
-                out = dec.renderer.render_views(AttrDict(cameras=pan_cameras(2)),
+                out = dec.renderer.render_views(AttrDict(cameras=pan_cameras(2, self.device)),
                                                 params=dec.bottleneck_to_params(lat[None]),
                                                 options=AttrDict(rendering_mode="stf", render_with_direction=False))
                 tm = out.raw_meshes[0].tri_mesh()
         finally:
             del dec
             gc.collect()
-        v = np.asarray(tm.verts, np.float64)
-        f = np.asarray(tm.faces, np.int64)
+        host = lambda a: a.detach().cpu().numpy() if hasattr(a, "detach") else np.asarray(a)  # noqa: E731
+        v = host(tm.verts).astype(np.float64)
+        f = host(tm.faces).astype(np.int64)
         ch = tm.vertex_channels or {}
-        col = np.stack([ch[c] for c in "RGB"], 1).astype(np.float32) if all(c in ch for c in "RGB") else None
+        col = np.stack([host(ch[c]) for c in "RGB"], 1).astype(np.float32) if all(c in ch for c in "RGB") else None
         return v, f, col
 
     def generate(self, prompt: str, seed: int = 0, cancel=None, progress=None) -> dict:

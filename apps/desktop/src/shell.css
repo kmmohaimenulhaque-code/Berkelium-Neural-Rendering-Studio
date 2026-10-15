@@ -2046,6 +2046,11 @@
 .gen__title { color: var(--text-primary); font-size: var(--fs-sm); font-weight: var(--fw-medium); }
 
 .gen__id { font-family: var(--font-mono); color: var(--text-tertiary); }
+.gen__check { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text-secondary);
+  white-space: nowrap; }
+.gen__prov { display: flex; flex-direction: column; gap: 2px; padding: 4px 0; border-top: 1px solid var(--border-subtle, rgba(255,255,255,0.08)); }
+.gen__dim { color: var(--text-tertiary); font-size: 10.5px; overflow-wrap: anywhere; }
+.gen__label { color: var(--warning); font-size: 10.5px; }
 
 .gen__figure { margin: 6px 0 4px; }
 

@@ -36,6 +36,8 @@ def main(argv=None):
     ap.add_argument("--out", default=str(ROOT / "results" / "text3d" / "E-T3" / "p2"))
     ap.add_argument("--dir-name", default=None, help="output subdirectory (default <slug>__s<seed>)")
     ap.add_argument("--rss-abort-mib", type=int, default=3100)
+    ap.add_argument("--device", default="cpu", help="cpu (verified) or cuda (ROCm/HIP or CUDA; UNVERIFIED)")
+    ap.add_argument("--fp32", action="store_true", help="fp32 sampling on a GPU (CPU is always fp32)")
     a = ap.parse_args(argv)
     out = Path(a.out if os.path.isabs(a.out) else ROOT / a.out)
     d = out / (a.dir_name or f"{slug(a.prompt)}__s{a.seed}")
@@ -54,7 +56,8 @@ def main(argv=None):
         return 2
     t0 = time.time()
     o = run(a.prompt, d, a.seed, a.steps, a.guidance, a.threads, a.grid_size, a.clip_dtype, a.rss_abort_mib,
-            emit=lambda s: print(time.strftime("%T"), s, flush=True))
+            emit=lambda s: print(time.strftime("%T"), s, flush=True), device=a.device,
+            fp16=False if a.fp32 else None)
     rep = o["report"]
     if o["vertices"] is not None:
         (d / "mesh.glb").write_bytes(mesh_to_glb(o["vertices"], o["faces"], o["colors"]))

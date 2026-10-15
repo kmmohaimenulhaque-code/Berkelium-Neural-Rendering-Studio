@@ -4,11 +4,12 @@ Text3DModel      text encoding + 3D generation (+ optional reconstruction from i
 TrainingAdapter  a model's ACTUALLY SUPPORTED fine-tuning mechanism (never a universal format)
 
 Implemented: BerkeliumTextShape (text -> SDF -> mesh) with LoRA+token-embedding-delta training adapter.
-Not integrated (each needs a weight download that has not been approved; listed so nobody assumes they exist):
-  Shap-E (MIT, openai/shap-e)        text->implicit; fine-tuning would need its latent encoder (separate weights)
-  Point-E base40M-textvec (MIT)      text->point cloud diffusion; fine-tunable on point clouds directly
-  TripoSR (MIT, stabilityai)         single image->mesh reconstruction; NOT text-conditioned by itself
-Decision D-006 (Z-Image -> TripoSR) remains a candidate path; it is image-conditioned 3D, not trained here.
+Generators used at inference (text3d/generators.py; none of them trained or fine-tuned here):
+  Shap-E text300M (MIT, openai/shap-e)  open-world text->implicit->STF mesh on CPU (E-T3, D-023); fine-tuning would
+                                        need its latent encoder (separate weights; not downloaded)
+  TripoSR (MIT, stabilityai)            single image->mesh reconstruction (M6); NOT text-conditioned by itself
+Not integrated: Point-E base40M-textvec (MIT). Decision D-006 (Z-Image -> TripoSR) is registered as the GPU-gated
+generator "zimage-triposr" and never emits output until M5 runs on a GPU.
 """
 
 from __future__ import annotations

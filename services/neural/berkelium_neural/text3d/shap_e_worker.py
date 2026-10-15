@@ -64,12 +64,12 @@ class Monitor:
 
 def run(prompt: str, out: Path, seed: int = 0, steps: int = 16, guidance: float = 15.0, threads: int = 2,
         grid_size: int | None = None, clip_dtype: str = "float32", rss_abort_mib: int = 3100,
-        emit=print) -> dict:
+        emit=print, device: str = "cpu", fp16: bool | None = None) -> dict:
     from .shap_e_backend import ShapEGenerator
     out = Path(out)
     mon = Monitor(rss_abort_mib, out / "report.json")
     gen = ShapEGenerator(steps=steps, guidance_scale=guidance, threads=threads, grid_size=grid_size,
-                         clip_dtype=clip_dtype)
+                         clip_dtype=clip_dtype, device=device, fp16=fp16)
     ok, why = gen.available()
     if not ok:
         raise RuntimeError(f"MODEL_UNAVAILABLE: {why}")
@@ -107,9 +107,11 @@ def main(argv=None):
     ap.add_argument("--grid-size", type=int, default=None)
     ap.add_argument("--clip-dtype", default="float32", choices=["float32", "float16"])
     ap.add_argument("--rss-abort-mib", type=int, default=3100)
+    ap.add_argument("--device", default="cpu", help="cpu (verified) or cuda (ROCm/HIP or CUDA; UNVERIFIED)")
+    ap.add_argument("--fp32", action="store_true", help="fp32 sampling on a GPU (CPU is always fp32)")
     a = ap.parse_args(argv)
     o = run(a.prompt, Path(a.out), a.seed, a.steps, a.guidance, a.threads, a.grid_size, a.clip_dtype,
-            a.rss_abort_mib, emit=lambda s: print(s, flush=True))
+            a.rss_abort_mib, emit=lambda s: print(s, flush=True), device=a.device, fp16=False if a.fp32 else None)
     return 0 if o["report"].get("valid") else 1
 
 

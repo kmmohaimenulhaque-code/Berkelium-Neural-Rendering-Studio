@@ -3,9 +3,14 @@ Gaussian fitting stage checkpoints to the job workdir and resumes after a restar
 
 from __future__ import annotations
 
+import hashlib
 import io
 import json
 import os
+import queue
+import subprocess
+import sys
+import threading
 from functools import lru_cache
 from pathlib import Path
 
@@ -14,9 +19,11 @@ import numpy as np
 from .. import __version__
 from ..contracts import ArtifactKind, RenderConfig, RenderRequest, TextTo3DRequest
 from .artifacts import ArtifactStore
-from .jobs import JobContext
+from .jobs import Cancelled, JobContext
 
 REPO = Path(__file__).resolve().parents[4]
+PKG_ROOT = Path(__file__).resolve().parents[2]          # services/neural (holds the berkelium_neural package)
+OPEN_WORLD_LABEL = "model-generated, normalized units, not measured geometry"
 
 
 class ModelUnavailable(RuntimeError):
@@ -68,6 +75,142 @@ def check_model(req: TextTo3DRequest) -> None:
     if req.adapter and req.adapter != AUTO_ADAPTER and (req.adapter not in reg[req.model]["adapters"]
                         or not Path(reg[req.model]["adapters"][req.adapter]).exists()):
         raise ModelUnavailable(f"adapter {req.adapter!r} is not available for {req.model!r}")
+    # Generator admission happens here, before any side effect: a request that would route to an unavailable
+    # generator is refused with the reason instead of failing (or silently falling back) later.
+    needed = {g for _, g in planned_generators(req)}
+    for g in needed - {"berkelium-textshape"}:
+        ok, why = _generator_available(g)
+        if not ok:
+            raise ModelUnavailable(f"generator {g!r} is unavailable: {why}")
+
+
+def _generator_available(name: str) -> tuple[bool, str]:
+    from ..text3d.generators import get_generator
+    return get_generator(name).available()
+
+
+def planned_generators(req: TextTo3DRequest) -> list[tuple[str, str]]:
+    """[(prompt or part prompt, generator name)] this request will run. auto routes each prompt (or each planner
+    part) with text3d.generators.route against the native checkpoint's vocabulary. No model call beyond the vocab."""
+    from ..text3d import planner
+    from ..text3d.generators import AUTO, route
+    prompts = [req.prompt]
+    if req.compose:
+        plan, _ = planner.parse(req.prompt)
+        if plan is not None:
+            prompts = [plan.a, plan.b]
+    if req.generator != AUTO:
+        return [(p, req.generator) for p in prompts]
+    vocab = native_vocab(req.model)
+    return [(p, route(p, vocab)["generator"]) for p in prompts]
+
+
+def native_vocab(model: str) -> list[str]:
+    reg = model_registry()[model]
+    return list(_load(reg["checkpoint"], None).vocab)
+
+
+class SubprocessShapE:
+    """Shap-E behind the Generator protocol, run by text3d.shap_e_worker in a child process: the API server never
+    holds Shap-E's weights, and a memory-guard abort or watchdog kill fails the job, not the service. Stage progress
+    is streamed back; cancellation is polled every 0.5 s and terminates the child. A finished child result in the
+    job workdir is reused when the job resumes after a restart."""
+
+    name = "shap-e-text300m"
+
+    def __init__(self, steps: int, workdir: Path, threads: int = 2):
+        from ..text3d.shap_e_backend import ShapEGenerator
+        self.steps, self.workdir, self.threads = steps, Path(workdir), threads
+        self._identity = ShapEGenerator(steps=steps, threads=threads).identity
+
+    def available(self):
+        from ..text3d.shap_e_backend import available
+        return available()
+
+    @property
+    def identity(self) -> dict:
+        return {**self._identity, "execution": "subprocess (berkelium_neural.text3d.shap_e_worker)"}
+
+    def generate(self, prompt: str, seed: int = 0, cancel=None, progress=None) -> dict:
+        key = hashlib.sha256(json.dumps([prompt, seed, self.steps]).encode()).hexdigest()[:16]
+        out = self.workdir / "shap_e" / key
+        res = self._load(out)
+        if res is not None:
+            res["report"]["resumed_from_workdir"] = True
+            return res
+        out.mkdir(parents=True, exist_ok=True)
+        env = {**os.environ, "PYTHONPATH": os.pathsep.join(p for p in (str(PKG_ROOT), os.environ.get("PYTHONPATH"))
+                                                           if p)}
+        cmd = [sys.executable, "-m", "berkelium_neural.text3d.shap_e_worker", "--prompt", prompt, "--out", str(out),
+               "--seed", str(seed), "--steps", str(self.steps), "--threads", str(self.threads)]
+        with open(out / "worker.log", "w") as err:
+            proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=err, text=True, env=env)
+            q: queue.Queue = queue.Queue()
+            threading.Thread(target=_pump, args=(proc.stdout, q), daemon=True).start()
+            try:
+                while True:
+                    if cancel and cancel():
+                        raise Cancelled()
+                    try:
+                        line = q.get(timeout=0.5)
+                    except queue.Empty:
+                        if proc.poll() is not None and q.empty():
+                            break
+                        continue
+                    try:
+                        ev = json.loads(line)
+                    except ValueError:
+                        continue
+                    if ev.get("event") == "progress" and progress:
+                        progress(ev["frac"], ev["stage"])
+            finally:
+                if proc.poll() is None:
+                    proc.terminate()
+                    try:
+                        proc.wait(10)
+                    except subprocess.TimeoutExpired:
+                        proc.kill()
+        rc = proc.wait()
+        res = self._load(out)
+        if res is not None:
+            return res
+        tail = (out / "worker.log").read_text(errors="replace")[-1500:]
+        if rc == 86:
+            raise RuntimeError(f"RESOURCE_LIMIT: Shap-E worker stopped by its memory guard: {tail[-400:]}")
+        raise RuntimeError(f"GENERATION_FAILED: Shap-E worker exited with {rc}: {tail}")
+
+    @staticmethod
+    def _load(out: Path):
+        rp = out / "report.json"
+        if not rp.exists():
+            return None
+        rep = json.loads(rp.read_text())
+        if rep.get("status") == "ok" and (out / "mesh.npz").exists():
+            z = np.load(out / "mesh.npz")
+            return {"vertices": z["v"], "faces": z["f"], "colors": z["col"] if z["col"].size else None, "report": rep}
+        if rep.get("status") == "invalid_mesh":
+            return {"vertices": None, "faces": None, "colors": None, "report": rep}
+        return None
+
+
+def _pump(stream, q: queue.Queue):
+    for line in stream:
+        q.put(line)
+
+
+def _generator_for(req: TextTo3DRequest, ctx: JobContext):
+    """Generator objects for this request: native in-process (service registry checkpoint/adapters), Shap-E in a
+    subprocess; auto routes per prompt/part exactly as planned_generators does."""
+    from ..text3d.generators import NATIVE, SHAP_E, NativeTextShape, get_generator
+    reg = model_registry()[req.model]
+    native = NativeTextShape(reg["checkpoint"], reg["adapters"], adapter=req.adapter, resolution=req.resolution)
+    shap = SubprocessShapE(req.shap_e_steps, ctx.workdir)
+    plan = dict(planned_generators(req))
+
+    def pick(prompt: str):
+        g = plan.get(prompt, req.generator)
+        return native if g == NATIVE else shap if g == SHAP_E else get_generator(g)
+    return pick
 
 
 @lru_cache(maxsize=4)
@@ -104,6 +247,8 @@ def make_text_to_3d(store: ArtifactStore):
             producer = dict(mesh.producer)
             ctx.add_artifact(mesh.id)
             ctx.progress(0.5, "mesh_from_checkpoint")
+        elif _needs_open_world_path(req):
+            mesh, v, f, col, producer = _open_world_mesh(req, ctx, store, stage)
         else:
             ctx.progress(0.05, "load_model")
             model = _load(reg["checkpoint"], reg["adapters"].get(adapter) if adapter else None)
@@ -115,7 +260,8 @@ def make_text_to_3d(store: ArtifactStore):
                 raise RuntimeError(f"GENERATION_FAILED: no valid surface for this prompt ({rep.get('reason', rep)})")
             v, f, col = out["vertices"], out["faces"], out["colors"]
             producer = {"model": req.model, "adapter": adapter, **model.identity, "service": __version__,
-                        "pipeline": "text->SDF->marching_cubes", **({"adapter_routing": routing} if routing else {})}
+                        "pipeline": "text->SDF->marching_cubes", **({"adapter_routing": routing} if routing else {}),
+                        "generator": "berkelium-textshape", **_native_route_record(req)}
             cams = orbit_cameras(4, 3.2, 25.0, 128, 128)
             preview, _, _ = render_mesh(v, f, col, cams[0])
             ctx.progress(0.45, "write_mesh_artifact")
@@ -152,6 +298,106 @@ def make_text_to_3d(store: ArtifactStore):
         img = render_scene_views(store, scene, gauss.id, producer)
         ctx.add_artifact(img.id)
     return run
+
+
+def _needs_open_world_path(req: TextTo3DRequest) -> bool:
+    """False when the request reduces to the native model on the whole prompt (generator=native, or auto routed
+    to native, with no applicable planner): that path is the original executor code, unchanged."""
+    from ..text3d import planner
+    if req.compose and planner.parse(req.prompt)[0] is not None:
+        return True
+    return any(g != "berkelium-textshape" for _, g in planned_generators(req))
+
+
+def _native_route_record(req: TextTo3DRequest) -> dict:
+    out = {}
+    if req.generator == "auto":
+        from ..text3d.generators import route
+        out["routing"] = [{"prompt": req.prompt, **route(req.prompt, native_vocab(req.model))}]
+    if req.compose:
+        from ..text3d import planner
+        out.update({"planner": None, "planner_reason": planner.parse(req.prompt)[1]})
+    return out
+
+
+def _open_world_mesh(req: TextTo3DRequest, ctx: JobContext, store: ArtifactStore, stage: Path):
+    """Mesh stage for generator != native or compose=True: one generator (auto routes it), or the two-object planner
+    (each part generated and validated on its own, then placed). -> (mesh record, v, f, col, producer)."""
+    from ..camera import orbit_cameras
+    from ..text3d import planner
+    from ..text3d.generate import mesh_to_glb, mesh_to_ply
+    from ..text3d.generators import AUTO, SHAP_E, route
+    from ..text3d.geometry import render_mesh
+    pick = _generator_for(req, ctx)
+
+    def prog(lo, hi):
+        return lambda fr, st: ctx.progress(lo + (hi - lo) * float(fr), st)
+    plan, plan_reason = planner.parse(req.prompt) if req.compose else (None, "compose not requested")
+    files, used = {}, {}
+    try:
+        if plan is not None:
+            res, _ = planner.generate_scene(req.prompt, pick, req.seed, cancel=ctx.cancelled,
+                                            progress=prog(0.05, 0.45))
+            if res["status"] != "ok":
+                raise RuntimeError(f"GENERATION_FAILED: planner part {res.get('failed_part')!r} produced no surface "
+                                   f"({res.get('part_report', {}).get('reason')})")
+            sc = res["scene"]
+            v, f, col, rep = sc["vertices"], sc["faces"], sc["colors"], sc["report"]
+            for p in res["parts"]:
+                files[f"part_{p['role']}.glb"] = (mesh_to_glb(p["vertices"], p["faces"], p["colors"]),
+                                                  "model/gltf-binary")
+                used[p["generator"]] = p["generator_identity"]
+            files["parts.json"] = (json.dumps({"plan": res["plan"], "parts": [
+                {**{k: p[k] for k in ("prompt", "role", "generator", "transform", "report")},
+                 "generation": {k: p["generation_report"].get(k) for k in
+                                ("seconds", "sample_s", "decode_s", "valid", "n_faces", "memory_mib")}}
+                for p in res["parts"]]}, indent=2, default=str).encode(), "application/json")
+            pipeline = "planner(two parts)->per-part generation->bbox placement"
+        else:
+            g = pick(req.prompt)
+            out = g.generate(req.prompt, req.seed, cancel=ctx.cancelled, progress=prog(0.05, 0.45))
+            rep = out["report"]
+            if out["vertices"] is None or not rep.get("valid"):
+                raise RuntimeError(f"GENERATION_FAILED: no valid surface for this prompt ({rep.get('reason', rep)})")
+            v, f, col = out["vertices"], out["faces"], out["colors"]
+            used[g.name] = g.identity
+            pipeline = ("text->CLIP ViT-L/14->Shap-E latent->STF mesh" if g.name == SHAP_E
+                        else "text->SDF->marching_cubes")
+    except InterruptedError:
+        ctx.check()
+        raise
+    ctx.check()
+    open_world = SHAP_E in used
+    decisions = None
+    if req.generator == AUTO:
+        vocab = native_vocab(req.model)
+        decisions = [{"prompt": p, **route(p, vocab)} for p in ([plan.a, plan.b] if plan else [req.prompt])]
+    first = next(iter(used.values()))
+    producer = {"model": first.get("model"), "generator": req.generator if req.generator != AUTO else "+".join(used),
+                "requested_generator": req.generator, "generator_identity": used, "service": __version__,
+                "pipeline": pipeline, "seed": req.seed, "seconds": rep.get("seconds"),
+                "peak_rss_mib": (rep.get("memory_mib") or {}).get("peak_VmRSS"),
+                **({"routing": decisions} if decisions else {}),
+                **({"planner": plan.as_dict()} if plan else {"planner": None, "planner_reason": plan_reason}
+                   if req.compose else {})}
+    cams = orbit_cameras(4, 3.2, 25.0, 128, 128)
+    preview, _, _ = render_mesh(v, f, col if col is not None else np.full((len(v), 3), 0.7, np.float32), cams[0])
+    ctx.progress(0.45, "write_mesh_artifact")
+    labels = {"units": "normalized_object", "representation": "triangle_mesh", "not": "CAD model / measured geometry",
+              "confidence": "model_output_unverified"}
+    if open_world:
+        labels["provenance"] = OPEN_WORLD_LABEL
+    mesh = store.create(ArtifactKind.TRIANGLE_MESH,
+                        {"mesh.glb": (mesh_to_glb(v, f, col), "model/gltf-binary"),
+                         "mesh.ply": (mesh_to_ply(v, f, col), "application/x-ply"),
+                         "preview.png": (_png(preview), "image/png"),
+                         "report.json": (json.dumps(rep, indent=2, default=str).encode(), "application/json"),
+                         **files},
+                        producer, config=req.model_dump(), validation=json.loads(json.dumps(rep, default=str)),
+                        labels=labels)
+    _save_mesh_stage(stage, mesh.id, v, f, col)
+    ctx.add_artifact(mesh.id)
+    return mesh, v, f, col, dict(mesh.producer)
 
 
 def default_render_backend() -> str:

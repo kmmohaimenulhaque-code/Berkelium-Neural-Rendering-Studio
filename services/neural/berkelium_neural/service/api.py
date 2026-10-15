@@ -44,8 +44,14 @@ def create_router(svc: NeuralService) -> APIRouter:
         models = {k: {"checkpoint_present": Path(v["checkpoint"]).exists(),
                       "adapters": {a: Path(p).exists() for a, p in v["adapters"].items()}} for k, v in reg.items()}
         gs = gsplat_status()
+        from ..text3d.generators import generator_status
         from .executors import adapter_routing
-        return {"job_kinds": sorted(svc.jobs.executors), "models": models,
+        gens = generator_status()             # availability reasons + identities; loads no weights
+        native_ok = bool(models.get("berkelium-textshape", {}).get("checkpoint_present"))
+        for k in ("berkelium-textshape", "auto"):
+            gens[k]["available"] = native_ok
+            gens[k]["reason"] = "" if native_ok else "native checkpoint missing on this server"
+        return {"job_kinds": sorted(svc.jobs.executors), "models": models, "generators": gens,
                 "adapter_routing": {k: adapter_routing(k) for k in reg},
                 "renderers": {"reference_cpu": {"available": True},
                               "gsplat": {"available": gs["usable"], "pin": gs["pin"]["commit"],

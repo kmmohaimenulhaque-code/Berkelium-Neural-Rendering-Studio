@@ -5,13 +5,13 @@
 # Needs ~3.5 GB free disk. Nothing here runs on a GPU; nothing is trained.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"; cd "$ROOT"
-PY=.venv-cpu/bin/python
+PY="${PYTHON:-.venv-cpu/bin/python}"     # on the MI300X: PYTHON=<the ROCm env's python>
 SHAP_E_PIN=50131012ee11c9d2617f3886c10f000d3c7a3b43
-[[ -x "$PY" ]] || { echo "run scripts/setup_cpu.sh first (.venv-cpu)"; exit 2; }
+command -v "$PY" >/dev/null || [[ -x "$PY" ]] || { echo "run scripts/setup_cpu.sh first (.venv-cpu) or set PYTHON"; exit 2; }
 [[ -d third_party/shap-e/.git ]] || git clone -q https://github.com/openai/shap-e.git third_party/shap-e
 git -C third_party/shap-e checkout -q "$SHAP_E_PIN"
-.venv-cpu/bin/pip install -q -r configs/environments/openworld-cpu.txt
-.venv-cpu/bin/pip install -q --no-deps -e third_party/shap-e
+"$PY" -m pip install -q -r configs/environments/openworld-cpu.txt
+"$PY" -m pip install -q --no-deps -e third_party/shap-e
 D=data/models/shap_e; mkdir -p "$D"
 B=https://openaipublic.azureedge.net/main/shap-e
 for f in text_cond_config.yaml vector_decoder_config.yaml diffusion_config.yaml text_cond.pt vector_decoder.pt; do
@@ -33,4 +33,4 @@ H
 import json, sys; sys.path.insert(0, 'services/neural')
 from berkelium_neural.text3d.shap_e_backend import prepare_clip_text
 print(json.dumps(prepare_clip_text(), indent=2))"
-echo "next: .venv-cpu/bin/python scripts/openworld_generate.py 'a wooden chair with four legs' --steps 16"
+echo "next: $PY scripts/openworld_generate.py 'a wooden chair with four legs' --steps 16   [--device cuda on a GPU]"

@@ -264,3 +264,10 @@ def test_touch_components_merges_touching_pieces_only():
     apart = (np.concatenate([a_v, c_v]), np.concatenate([a_f, c_f + len(a_v)]))
     assert touch_components(*touching) == 1 and touch_components(*apart) == 2
     assert touch_components(a_v, a_f) == 1 and touch_components(None, None) is None
+
+
+def test_gpu_device_option_is_labelled_unverified_and_cpu_stays_fp32():
+    cpu, gpu = S.ShapEGenerator(steps=16), S.ShapEGenerator(steps=16, device="cuda")
+    assert cpu.identity["device"] == "cpu" and cpu.identity["sampler"]["use_fp16"] is False
+    assert "gpu_path" not in cpu.identity
+    assert gpu.identity["sampler"]["use_fp16"] is True and gpu.identity["gpu_path"].startswith("UNVERIFIED")

@@ -55,9 +55,13 @@ const json = async (path, init) => (await call(path, init)).json();
 
 export const capabilities = () => json("/v1/neural/capabilities");
 
-export function submitTextTo3D({ prompt, adapter, seed = 0, resolution = 48, fitSteps = 0 }) {
+export function submitTextTo3D({
+  prompt, adapter, seed = 0, resolution = 48, fitSteps = 0, generator, compose = false, shapESteps,
+}) {
   const body = {
     kind: "text_to_3d", prompt, seed, resolution, gaussian_fit_steps: fitSteps, ...(adapter ? { adapter } : {}),
+    ...(generator ? { generator } : {}), ...(compose ? { compose: true } : {}),
+    ...(shapESteps ? { shap_e_steps: shapESteps } : {}),
   };
   return json("/v1/neural/jobs", { method: "POST", body: JSON.stringify(body) });
 }

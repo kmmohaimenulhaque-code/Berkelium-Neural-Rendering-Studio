@@ -16,6 +16,15 @@ import { sceneStore } from "./store.js";
 import { cameraSpecFor } from "./neuralCamera.js";
 
 const MODEL = "berkelium-textshape";
+// Generators the backend may offer (text3d/generators.py). "auto" = the native model when every content word is
+// in its vocabulary, otherwise Shap-E. Availability and the reason it is unavailable come from /capabilities.
+const GENERATORS = [
+  ["auto", "auto (native if it can read the prompt, else Shap-E)"],
+  ["berkelium-textshape", "Berkelium native (procedural primitives)"],
+  ["shap-e-text300m", "Shap-E text300M (open-world, CPU, minutes)"],
+  ["zimage-triposr", "Z-Image → TripoSR (GPU)"],
+];
+const short = (h) => (h ? String(h).slice(0, 10) : "?");
 const VIEW_RENDER_MAX_SIDE = 384;
 const SCENE_BG = [8 / 255, 9 / 255, 10 / 255]; // the viewport background, so a view render matches it
 
@@ -32,6 +41,8 @@ export default function GeneratePanel({ engineRef, onClose }) {
   const [capsError, setCapsError] = useState(null);
   const [prompt, setPrompt] = useState("a red cone on top of a blue box");
   const [adapter, setAdapter] = useState("auto");
+  const [generator, setGenerator] = useState("auto");
+  const [compose, setCompose] = useState(false); // two-object planner (A on top of / next to B)
   const [fitSteps, setFitSteps] = useState(0); // differentiable Gaussian refinement on the backend
   const [job, setJob] = useState(null);
   const [result, setResult] = useState(null); // { job, mesh, gaussian, image }
@@ -104,7 +115,7 @@ export default function GeneratePanel({ engineRef, onClose }) {
     if (!prompt.trim() || running) return;
     setError(null);
     try {
-      const body = { prompt: prompt.trim(), fitSteps };
+      const body = { prompt: prompt.trim(), fitSteps, generator, compose };
       if (adapter !== "base") body.adapter = adapter;
       const submitted = await api.submitTextTo3D(body);
       setJob(submitted);
@@ -194,6 +205,28 @@ export default function GeneratePanel({ engineRef, onClose }) {
         aria-label="Text-to-3D prompt"
       />
       <div className="gen__row">
+        <select className="gen__select" value={generator} onChange={(e) => setGenerator(e.target.value)}
+          aria-label="Generator" data-testid="generator-select"
+          title={caps?.generators?.[generator]?.reason || "Which model turns the prompt into a mesh"}>
+          {GENERATORS.map(([name, label]) => {
+            const g = caps?.generators?.[name];
+            const ok = g ? g.available : name === "auto" || name === MODEL;
+            return (
+              <option key={name} value={name} disabled={!ok} title={g?.reason || ""}>
+                {label}{ok ? "" : " — unavailable"}
+              </option>
+            );
+          })}
+        </select>
+        <label className="gen__check" title="Split 'A on top of B' / 'A next to B' into two separately generated, validated parts">
+          <input type="checkbox" checked={compose} onChange={(e) => setCompose(e.target.checked)} data-testid="compose-check" />
+          <span>plan 2 objects</span>
+        </label>
+      </div>
+      {caps?.generators?.[generator] && !caps.generators[generator].available && (
+        <div className="gen__msg gen__msg--warn" data-testid="generator-reason"><AlertCircle size={12} /> {caps.generators[generator].reason}</div>
+      )}
+      <div className="gen__row">
         <select className="gen__select" value={adapter} onChange={(e) => setAdapter(e.target.value)}
           aria-label="Adapter" data-testid="adapter-select"
           title="auto applies an adapter only when the prompt names its concept">
@@ -240,7 +273,8 @@ export default function GeneratePanel({ engineRef, onClose }) {
 
       {result && (
         <div className="gen__result" data-testid="artifact-card">
-          <div className="gen__title">Triangle mesh · {result.mesh.producer.model}{result.mesh.producer.adapter ? ` + ${result.mesh.producer.adapter}` : " (base)"}</div>
+          <div className="gen__title">Triangle mesh · {result.mesh.producer.model}{result.mesh.producer.adapter ? ` + ${result.mesh.producer.adapter}` : result.mesh.producer.generator_identity ? "" : " (base)"}</div>
+          <Provenance producer={result.mesh.producer} labels={result.mesh.labels} />
           <div>{m.n_faces.toLocaleString()} faces · {m.components} component(s) · {m.watertight ? "watertight" : "not watertight"}</div>
           <div>units: {result.mesh.labels.units} · {result.mesh.labels.confidence}</div>
           {result.gaussian && <div>{result.gaussian.validation.n.toLocaleString()} Gaussians{result.gaussian.config?.fit?.steps
@@ -283,6 +317,32 @@ export default function GeneratePanel({ engineRef, onClose }) {
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+// What produced this mesh: generator, code commit, weight hash, seed, time and memory. Read from the artifact's
+// producer record, i.e. what the backend actually ran.
+function Provenance({ producer, labels }) {
+  const ids = producer.generator_identity ? Object.values(producer.generator_identity) : [];
+  const routing = producer.routing || [];
+  return (
+    <div className="gen__prov" data-testid="provenance-card">
+      <div>generator: <b data-testid="provenance-generator">{producer.generator ?? MODEL}</b>
+        {producer.requested_generator && producer.requested_generator !== producer.generator ? ` (requested ${producer.requested_generator})` : ""}</div>
+      {routing.map((r, i) => <div key={i} className="gen__dim">route “{r.prompt}” → {r.generator}: {r.reason}</div>)}
+      {producer.planner && <div>planner: {producer.planner.relation} · top/left “{producer.planner.a}” · bottom/right “{producer.planner.b}”</div>}
+      {ids.map((id) => (
+        <div key={id.generator} className="gen__dim">
+          {id.generator}{id.shap_e_commit ? ` · shap-e ${short(id.shap_e_commit)}` : ""}
+          {id.weights_sha256 ? ` · text_cond ${short(id.weights_sha256["text_cond.pt"])} · decoder ${short(id.weights_sha256["vector_decoder.pt"])}` : ""}
+          {id.sampler ? ` · ${id.sampler.karras_steps} steps, cfg ${id.sampler.guidance_scale}` : ""}
+          {id.license ? ` · ${id.license}` : ""}
+        </div>
+      ))}
+      {!ids.length && producer.base_checkpoint_sha256 && <div className="gen__dim">checkpoint {short(producer.base_checkpoint_sha256)}</div>}
+      <div className="gen__dim">seed {producer.seed ?? 0}{producer.seconds != null ? ` · ${Number(producer.seconds).toFixed(1)} s` : ""}{producer.peak_rss_mib ? ` · peak ${Math.round(producer.peak_rss_mib)} MiB` : ""}</div>
+      {labels?.provenance && <div className="gen__label" data-testid="provenance-label">{labels.provenance}</div>}
     </div>
   );
 }
