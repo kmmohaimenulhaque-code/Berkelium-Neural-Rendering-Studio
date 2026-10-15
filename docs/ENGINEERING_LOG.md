@@ -102,3 +102,52 @@ is scheduling-dependent. The historical MI300X environment (ROCm 7.0, PyTorch 2.
   authorization record (static `approved` unchanged; CLI flag recorded separately); detach before scalar conversion.
 - Tests fixed for GPU machines: hipify shims (PyTorch 2.8 ROCm stream spelling), simulated no-HIP-device, simulated
   gsplat unavailability split from a real gsplat success test (hip-marked).
+
+## 2026-10-15 — Integration sprint: Studio product path, M5–M8, MI300X rerun
+
+Development host: GitHub Codespace, 2 vCPU, 7.8 GB RAM, no GPU, Python 3.14.2, torch 2.14.1+cpu.
+
+**Found and fixed before anything else**
+- The committed backend (`services/backend/main.py`) never mounted `/v1/neural`, and the committed Studio never
+  mounted the neural panel or its CSS (earlier uploads lost them); the model registry pointed at `runs/`, which does
+  not exist in a clone. A fresh checkout therefore could not generate anything from Studio.
+- `origin/main` had 14 commits of Studio work (scene editor, settings, multi-provider backend). Merged into this
+  branch (merge commit, no history rewrite); conflicts resolved keeping both sides.
+
+**Product path (P0) — verified**
+- Studio Scene → *Generate*: prompt → `text_to_3d` job (released `exports/textshape-base-v1`, adapter routing) →
+  mesh imported into the scene through main's import path → Gaussian scene → splat render by the reference renderer
+  (GPU path when gsplat is usable) shown in Studio → *Render this view*: the three.js camera + model transform →
+  OpenCV `CameraSpec` (`scene/neuralCamera.js`, 5 unit tests incl. exact agreement with three.js projection) →
+  `render` job → image. Optional Gaussian refinement (100/300 steps) from the panel.
+- `tests/e2e/test_studio_text_to_3d.py` (real backend process, built UI, headless Chromium/SwiftShader, released
+  checkpoint): **passed in 140 s** — 6,780-face mesh in the scene (Model panel shows the same triangle count and the
+  artifact id), 4,000-Gaussian orbit render, view render 384×357 with all 4,000 Gaussians in view, backend restart →
+  job still `completed`, reopened from *Recent*. Headless: `scripts/start_backend.sh` +
+  `scripts/demo_text_to_3d.py` verified ("a green capsule next to a white sphere" → routed to the capsule adapter,
+  10,008-face watertight mesh, 4,000 Gaussians, splat render).
+- Status-bar health check used a hard-coded port; now uses the configured backend URL.
+
+**M8 durable jobs — pass**
+- Bug found by reading the executor: a job resumed after a crash regenerated its mesh; the mesh record contains a
+  timing field, so it got a new artifact id and the job listed two meshes. Fixed: the mesh stage is checkpointed in
+  the job workdir *before* the job lists the artifact; resumed jobs reuse it. Fit checkpoints keep `psnr_before`.
+  Job reads report `missing_artifacts`.
+- `test_durable_jobs.py` on a real uvicorn process: SIGKILL after the first fit checkpoint → restart → job resumed
+  (first post-restart checkpoint at step 50, not 25) → exactly one mesh/Gaussian/image artifact, same mesh id →
+  clean restart → still retrievable; a deleted record is reported and 404s. **1 passed (386 s).**
+
+**M5 image prior — blocked_environment (not run)**
+- `scripts/m5_image_prior_smoke.py` (pinned Z-Image-Turbo `f332072a`, ≤4 anchors, 9 steps, CFG 0, repeatability,
+  `geometry_generated: false`). Preflight here: no GPU, diffusers absent, 14.8 GB free vs ~33 GB snapshot →
+  `results/m5/E-A1_preflight.json`. Requires R5 on an MI300X.
+
+**Renderer (P6)**
+- MI300X rerun recorded (`results/renderer/E-R1_analysis.md` §6): direct comparison now measured — forward bitwise
+  equal to gsplat; gradients within 4.1e-7 relative; Berkelium bit-identical over 10 repeats; backward 1.32–2.21×.
+- Replay-based transmittance recovery: **not implemented**. Exact replay needs per-element forward transmittance
+  during the back-to-front sweep (O(m²/256) recomputation per tile, or per-pixel-per-batch scratch), a structural
+  change to a kernel that is verified on MI300X; its accuracy is checkable on HIP-CPU but its purpose (performance at
+  equal determinism) is only measurable on a GPU, which this host lacks. Next step: implement as an opt-in kernel
+  variant behind the existing interface, accept only if HIP-CPU error vs the FP64 oracle drops and MI300X E-R1 timing
+  stays within budget.

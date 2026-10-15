@@ -61,3 +61,4 @@ third_party/
 
 # Regenerated datasets (scripts/prepare_dataset.py) and downloaded evaluation assets
 /data/
+/results/demo/

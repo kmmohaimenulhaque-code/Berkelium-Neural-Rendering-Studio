@@ -218,6 +218,10 @@ def main(argv=None):
         infer_s = time.time() - t0
         to_gradio_3d_orientation(mesh)                   # TripoSR's own z-up -> glTF/Berkelium y-up
         mesh.fix_normals()
+        raw = validate_mesh(np.asarray(mesh.vertices, np.float64), np.asarray(mesh.faces, np.int64))
+        # same clean-up as Berkelium's own marching cubes output: drop zero-area faces, then unreferenced vertices
+        mesh.update_faces(mesh.nondegenerate_faces())
+        mesh.remove_unreferenced_vertices()
         v, f = np.asarray(mesh.vertices, np.float64), np.asarray(mesh.faces, np.int64)
         col = np.asarray(mesh.visual.vertex_colors[:, :3], np.float32) / 255.0
         rep = validate_mesh(v, f)
@@ -238,6 +242,9 @@ def main(argv=None):
         row = {"asset_id": aid, "caption": rec.caption, "family": rec.family,
                "control_image": f"results/m6/control_{aid}.png",
                "gates": {"finite": bool(np.isfinite(v).all()), "faces": int(len(f)), "valid": bool(rep["valid"]),
+                         "raw_valid": bool(raw["valid"]), "raw_degenerate_faces_removed": raw.get("degenerate_faces"),
+                         "part_count": {"reconstructed": rep.get("components"), "ground_truth": int(gt["components"]),
+                                        "correct": rep.get("components") == int(gt["components"])},
                          "components": rep.get("components"), "watertight": rep.get("watertight"),
                          "bounds": [v.min(0).round(4).tolist(), v.max(0).round(4).tolist()],
                          "units": "TripoSR canonical frame (radius 0.87); not metric",
