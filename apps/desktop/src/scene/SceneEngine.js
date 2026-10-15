@@ -16,6 +16,7 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { isEffectivelyVisible, topLevelOf } from "./sceneStore.js";
 import { assets } from "./assets.js";
 import { Turntable } from "./Turntable.js";
+import { freeSpot } from "./shapes.js";
 
 const BG = 0x08090a;
 const ACCENT = 0x00d4d4;
@@ -343,7 +344,7 @@ export class SceneEngine {
         if (obj.parent) obj.removeFromParent();
         continue;
       }
-      this.#ensureEnvironment();
+      if (obj.userData.needsEnvironment) this.#ensureEnvironment(); // models only; shapes and the cube do not use it
       const home = node.parentId === "scene" ? this.scene : obj.userData.homeParent;
       if (home && obj.parent !== home) home.add(obj);
     }
@@ -369,13 +370,18 @@ export class SceneEngine {
     const shown = Boolean(obj && isEffectivelyVisible(state, sel));
 
     this.cubeOutline.visible = sel === "cube" && shown;
+    // Added shapes with corners carry their own outline (see shapes.js).
+    const outline = shown ? obj.userData.selectionOutline || null : null;
+    if (this.activeOutline && this.activeOutline !== outline) this.activeOutline.visible = false;
+    if (outline) outline.visible = true;
+    this.activeOutline = outline;
     for (const [id, helper] of Object.entries(this.lightHelpers)) {
       helper.visible = id === sel && shown;
       if (helper.visible) helper.update();
     }
     this.builtins.grid.material = sel === "grid" ? this.gridMaterials.selected : this.gridMaterials.normal;
 
-    const boxed = shown && node.transformable && sel !== "cube";
+    const boxed = shown && node.transformable && sel !== "cube" && !outline;
     this.selectionBox.visible = boxed;
     if (boxed) this.selectionBox.box.setFromObject(obj).expandByScalar(0.02);
 
@@ -409,6 +415,26 @@ export class SceneEngine {
         for (const m of Array.isArray(o.material) ? o.material : [o.material]) if (m && "wireframe" in m) m.wireframe = on;
       });
     }
+  }
+
+  // Where a new shape should go: the middle of the view, on the floor,
+  // nudged aside if something already stands there (see freeSpot).
+  // footprint: the new shape's radius seen from above.
+  findFreeSpot(footprint = 0.5) {
+    const occupied = [];
+    const state = this.store.get();
+    for (const id of state.nodes.scene?.children || []) {
+      const node = state.nodes[id];
+      const obj = this.objectFor(id);
+      if (!node?.transformable || !node.visible || !obj?.parent) continue;
+      const box = new THREE.Box3().setFromObject(obj);
+      if (box.isEmpty()) continue;
+      const c = box.getCenter(new THREE.Vector3());
+      const size = box.getSize(new THREE.Vector3());
+      occupied.push({ x: c.x, z: c.z, r: Math.hypot(size.x, size.z) / 2 });
+    }
+    const t = this.controls.target;
+    return freeSpot({ center: [t.x, t.z], occupied, footprint });
   }
 
   resetView() {
@@ -515,6 +541,9 @@ export class SceneEngine {
     // Remove before forceContextLoss below, or our own cleanup would show
     // the "graphics driver reset" message.
     el.removeEventListener("webglcontextlost", this.onLost);
+    // Shapes outlive this engine (assets registry). Do not leave one looking
+    // selected for the next engine.
+    if (this.activeOutline) this.activeOutline.visible = false;
     this.transformControls.detach();
     this.transformControls.dispose();
     this.turntable.dispose();

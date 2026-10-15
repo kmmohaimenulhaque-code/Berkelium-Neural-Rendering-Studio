@@ -13,7 +13,9 @@ import {
 import { usePrefs } from "./prefs.js";
 import { SceneEngine } from "./scene/SceneEngine.js";
 import { sceneStore, useSceneState } from "./scene/store.js";
-import { importIntoScene, handleSceneKey } from "./scene/actions.js";
+import { importIntoScene, handleSceneKey, addShape } from "./scene/actions.js";
+import { shapeByKind } from "./scene/shapes.js";
+import AddShapeMenu from "./scene/AddShapeMenu.jsx";
 import { ACCEPT } from "./scene/importer.js";
 import PropertiesPanel from "./scene/PropertiesPanel.jsx";
 
@@ -33,6 +35,7 @@ export default function ScenePanel() {
   const [failure, setFailure] = useState(null);
   const [dropping, setDropping] = useState(false);
   const [importing, setImporting] = useState(null); // file name while loading
+  const [addOpen, setAddOpen] = useState(false);
   const { viewport: prefs } = usePrefs();
   const state = useSceneState();
   const gridOn = state.nodes.grid?.visible ?? true;
@@ -62,7 +65,10 @@ export default function ScenePanel() {
     };
   }, []);
 
-  useEffect(() => { engineRef.current?.setWireframe(wireframe); }, [wireframe, state.rootIds]);
+  // Re-applied when objects are added or removed, so a shape or model added
+  // while wireframe is on matches the rest of the scene.
+  const sceneChildren = state.nodes.scene?.children;
+  useEffect(() => { engineRef.current?.setWireframe(wireframe); }, [wireframe, sceneChildren]);
 
   const setTool = useCallback((t) => {
     setToolState(t);
@@ -80,6 +86,19 @@ export default function ScenePanel() {
     }
   }, [importing]);
 
+  const focusViewport = useCallback(() => mountRef.current?.focus({ preventScroll: true }), []);
+
+  // New shapes go in the middle of the view, nudged aside if something is
+  // already there, and come out selected with Move ready.
+  const onAddShape = useCallback((kind) => {
+    const def = shapeByKind(kind);
+    if (!def) return;
+    const spot = engineRef.current?.findFreeSpot(def.footprint);
+    addShape(kind, spot);
+    setTool("move");
+    focusViewport();
+  }, [setTool, focusViewport]);
+
   // ⌘I / Ctrl+I from anywhere in the app opens the file picker.
   useEffect(() => {
     const open = () => fileRef.current?.click();
@@ -95,7 +114,10 @@ export default function ScenePanel() {
       return;
     }
     if (e.metaKey || e.ctrlKey || e.altKey) return;
-    if (e.key === "Escape") {
+    if (e.shiftKey && (e.key === "A" || e.key === "a")) {
+      setAddOpen(true);
+      e.preventDefault();
+    } else if (e.key === "Escape") {
       sceneStore.select(null);
       e.preventDefault();
     } else if (e.key === "f" || e.key === "F") {
@@ -138,6 +160,7 @@ export default function ScenePanel() {
             hidden
             onChange={(e) => { runImport([...e.target.files]); e.target.value = ""; }}
           />
+          <AddShapeMenu open={addOpen} onOpenChange={setAddOpen} onPick={onAddShape} onClose={focusViewport} />
           <span className="scene__sep" />
           <button
             className={`code__btn ${tool === "move" ? "scene__btn--on" : ""}`}
@@ -232,7 +255,7 @@ export default function ScenePanel() {
             <div className="scene__hint">
               {canEdit && tool === "move" && "Drag an arrow to move · "}
               {canEdit && tool === "rotate" && "Drag the dot to spin · Shift snaps 15° · "}
-              Click to select · Drag to orbit · F to frame · Drop a .glb, .gltf or .obj to import
+              Click to select · Drag to orbit · F to frame · Shift+A to add a shape · Drop a .glb, .gltf or .obj to import
             </div>
             {dropping && (
               <div className="scene__drop">

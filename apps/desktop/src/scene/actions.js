@@ -10,6 +10,7 @@ import { loadModelFiles, placement, ImportError, formatBytes } from "./importer.
 import { isUntouched, uniqueName } from "./sceneStore.js";
 import { STARTER_CUBE_ID } from "./defaultScene.js";
 import { toast } from "./toast.js";
+import { shapeByKind, makeShapeMesh } from "./shapes.js";
 
 const MAX_LISTED_PARTS = 200; // deeper or larger models still render, they just are not all listed
 const MAX_DEPTH = 4;
@@ -98,6 +99,7 @@ export async function importIntoScene(files) {
   // file's own internal transforms stay untouched inside it.
   const wrapper = new THREE.Group();
   wrapper.name = name;
+  wrapper.userData.needsEnvironment = true; // real PBR materials need reflection lighting
   wrapper.add(loaded.object);
   assets.set(id, wrapper);
 
@@ -130,6 +132,34 @@ export async function importIntoScene(files) {
     action: cubeRemoved ? undoIfStill(nodesAfter, "Undo", () => { keepStarterCube = true; }) : null,
   });
   for (const w of [place.note, ...loaded.warnings].filter(Boolean)) toast({ text: w, kind: "warn", timeout: 9000 });
+  return id;
+}
+
+// Adds a basic shape resting on the floor. spot is [x, z] from the viewport
+// (the middle of the view, nudged to a free space); without one it goes to
+// the center of the floor. The new shape is selected so it can be moved
+// right away. One undo step.
+export function addShape(kind, spot = [0, 0]) {
+  const def = shapeByKind(kind);
+  if (!def) return null;
+  const id = `shape-${kind}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
+  const name = uniqueName(sceneStore.get(), def.label);
+  const mesh = makeShapeMesh(kind);
+  mesh.name = name;
+  assets.set(id, mesh);
+  const [x, z] = spot.map((n) => (Number.isFinite(n) ? n : 0));
+  sceneStore.addNode(
+    {
+      id,
+      name,
+      type: "mesh",
+      transformable: true,
+      transform: { p: [x, def.halfHeight, z], r: [0, 0, 0], s: [1, 1, 1] },
+      meta: { shape: kind },
+    },
+    "scene"
+  );
+  sceneStore.select(id);
   return id;
 }
 

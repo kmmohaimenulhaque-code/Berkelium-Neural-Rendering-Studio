@@ -11,11 +11,12 @@ import { Box, Eye, EyeOff, Grid3x3, Layers, Sun, Video, Folder, CloudSun, Packag
 import { flatten } from "./sceneStore.js";
 import { sceneStore, useSceneState } from "./store.js";
 import { handleSceneKey } from "./actions.js";
+import { SHAPE_ICONS } from "./shapeIcons.js";
 
 function iconFor(node) {
   if (node.type === "scene") return Layers;
   if (node.type === "camera") return Video;
-  if (node.type === "mesh") return Box;
+  if (node.type === "mesh") return SHAPE_ICONS[node.meta?.shape] || Box;
   if (node.type === "helper") return Grid3x3;
   if (node.type === "group") return Folder;
   if (node.type === "model") return Package;

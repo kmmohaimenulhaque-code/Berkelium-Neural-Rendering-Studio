@@ -57,7 +57,9 @@ export default function PropertiesPanel() {
     { key: "r", label: "Rotation", digits: 1, value: (i) => t.r[i] * DEG, unit: "°" },
     { key: "s", label: "Scale", digits: 2, value: (i) => t.s[i] },
   ];
-  const meta = node.meta;
+  // Only imported models carry file details. Added shapes have meta too
+  // ({ shape }), which must not be read as a file.
+  const meta = node.type === "model" ? node.meta : null;
 
   return (
     <div className="props" onPointerDown={(e) => e.stopPropagation()}>

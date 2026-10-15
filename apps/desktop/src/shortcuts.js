@@ -35,6 +35,7 @@ export const SHORTCUTS = [
     group: "3D viewport",
     items: [
       { keys: ["Click"], action: "Select an object" },
+      { keys: ["Shift", "A"], action: "Add a shape" },
       { keys: ["W"], action: "Move tool" },
       { keys: ["E"], action: "Rotate tool" },
       { keys: ["Shift"], action: "Snap rotation to 15° while dragging" },
