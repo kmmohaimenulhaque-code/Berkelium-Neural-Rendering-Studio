@@ -14,6 +14,9 @@
     "dirty_files": 4
   },
   "pushed_at": "2026-10-16T14:41:57Z",
-  "status": "pushed",
-  "push_response": "Kernel version 2 successfully pushed.  Please check progress at https://www.kaggle.com/code/kmmohaimenulhaque/berkelium-final"
+  "status": "pulled",
+  "push_response": "Kernel version 2 successfully pushed.  Please check progress at https://www.kaggle.com/code/kmmohaimenulhaque/berkelium-final",
+  "kernel_final_status": "complete",
+  "verified_files": 278,
+  "admitted": 278
 }

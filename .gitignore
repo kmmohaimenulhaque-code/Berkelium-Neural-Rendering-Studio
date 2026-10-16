@@ -72,3 +72,6 @@ third_party/
 /runs/
 /results/kaggle/*/*/kernel/
 /results/kaggle/*/*/remote/
+# GPU-run E-T3 units: mesh.glb is a re-encoding of mesh.npz (the scoring input); its sha256 stays in the Kaggle
+# runner receipt manifest (results/kaggle/<job>/<run>/receipt.json). Already-tracked CPU-run GLBs are unaffected.
+/results/text3d/E-T3/units/**/mesh.glb
