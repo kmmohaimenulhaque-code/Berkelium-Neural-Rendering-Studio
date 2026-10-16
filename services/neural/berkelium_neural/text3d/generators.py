@@ -29,7 +29,10 @@ STOPWORDS = frozenset({"a", "an", "the", "and", "of", "in", "is", "it", "its", "
 _WORD = re.compile(r"[a-z]+")      # the native tokenizer's own word rule (model.tokenize)
 # Open-world generators in E-T3 evidence order (decision D-029, NEURAL_RENDERING_DECISIONS.md). auto sends a prompt
 # the native model cannot read to the first of these that is available on this host, and records any it skipped.
-OPEN_WORLD_RANKING = (SHAP_E,)
+# D-029 outcome (E-T3, results/text3d/E-T3_openworld_cpu.json): zimage-triposr (v2) did not beat Shap-E on B1 F@0.05
+# (0.603 vs 0.669), B1 Chamfer-L1 (0.055 vs 0.047) or B2 R@1 (0.85 vs 0.95), so Shap-E stays first. It is second:
+# a GPU host whose Shap-E weights are missing uses it, and it can always be requested by name.
+OPEN_WORLD_RANKING = (SHAP_E, ZIMAGE_TRIPOSR)
 ROUTING_RULE = ("native iff every content word is in its vocabulary; otherwise the first available of "
                 + " > ".join(OPEN_WORLD_RANKING) + " (E-T3 evidence order, D-029)")
 
