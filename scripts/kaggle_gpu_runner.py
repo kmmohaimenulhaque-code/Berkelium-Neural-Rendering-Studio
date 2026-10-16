@@ -113,11 +113,15 @@ def sha256_file(p: Path) -> str:
 def bundle_files(spec: dict) -> list[str]:
     r = subprocess.run(["git", "-C", str(ROOT), "ls-files", "-co", "--exclude-standard", "--", *spec["include"]],
                        capture_output=True, text=True, check=True)
-    files = sorted({f for f in r.stdout.splitlines() if (ROOT / f).is_file()} |
-                   {f for f in spec.get("include_files", []) if (ROOT / f).is_file()})
-    missing = [f for f in spec.get("include_files", []) if not (ROOT / f).is_file()]
+    extra, missing = set(), []
+    for pat in spec.get("include_files", []):         # exact paths must exist; glob patterns may match nothing
+        hits = [str(q.relative_to(ROOT)) for q in ROOT.glob(pat) if q.is_file()]
+        if not hits and not any(c in pat for c in "*?["):
+            missing.append(pat)
+        extra.update(hits)
     if missing:
         raise RunnerError(f"include_files missing locally: {missing}")
+    files = sorted({f for f in r.stdout.splitlines() if (ROOT / f).is_file()} | extra)
     return files
 
 

@@ -256,3 +256,30 @@ termination (D-026). Studio has a generator selector (the GPU-gated option is di
 "plan 2 objects" toggle and a provenance card. `tests/e2e/test_openworld_api.py`: **2 passed** with real
 inference (chair through auto → Shap-E → valid 39,093-face mesh → 4,000 Gaussians → non-blank splat render →
 explicit-camera render, 938 s; plus a cancellation mid-sampling with the worker gone).
+
+## 2026-10-16 — Federated GPU (Kaggle), zimage-triposr, adapter replay, anchor LoRA
+
+Development host for this session: a cloud container, 4 vCPU, 15.7 GB RAM, no GPU, Python 3.13.16, torch 2.14.1+cpu.
+GPU work: Kaggle notebooks, 2× Tesla T4 (15 GB each), 4 vCPU, 31 GB RAM, Python 3.13.15, torch 2.11.0+cu128. All
+GPU results below are **CUDA (T4) evidence; none of them is ROCm/AMD evidence.**
+
+**Control plane (`scripts/kaggle_gpu_runner.py`, D-032).** A job spec names the code to ship, pinned installs, ordered
+steps and output globs. The code is a byte-reproducible tar.gz of the working tree embedded in the kernel source and
+hash-checked remotely before it runs; every returned file is re-hashed against the remote manifest before admission.
+Findings while bringing it up, each kept as a receipt under `results/kaggle/`:
+- `KAGGLE_USERNAME` held the display name, not the account handle; the token alone authenticates, so the handle is
+  read back from the API.
+- The Kaggle image has no `ensurepip`: a plain `python -m venv` failed. The TripoSR overlay venv is created with
+  `--without-pip` and filled by the system pip run from inside it.
+- diffusers 0.41 needs huggingface_hub ≥ 1.32 while TripoSR's transformers 4.57 needs < 1.0, so stage A (Z-Image) uses
+  the image's own pinned stack (diffusers 0.40.0, transformers 5.16.1) and stage B (TripoSR) runs in the overlay venv.
+
+**M5 attempt 1 (`results/m5/E-A1_receipt.attempt1_1024_oom.json`).** All 19 pinned Z-Image-Turbo files fetched and
+verified (30.6 GB, 235 s). The Qwen3 text encoder ran in bf16 on a T4 (finite embeddings, 40 s for 4 prompts). At the
+upstream 1024² the fp16 transformer (12.3 GB resident) ran out of memory in both precisions; the failed allocations
+(1.00 GiB fp16, 1.88 GiB bf16) equal one 30-head 4096² attention score matrix, i.e. the T4 fell back to the math
+attention kernel. Anchors are therefore 768² (2304 tokens), with VAE tiling and expandable CUDA segments.
+
+**Local environment fix.** CLIP pulled a PyPI torchvision whose ops do not register against torch+cpu
+(`operator torchvision::nms does not exist`); `setup_openworld.sh` now installs the matching CPU torchvision first.
+**Test fix.** `test_durable_jobs.py` left its uvicorn servers running when an assertion failed; it now kills them.
