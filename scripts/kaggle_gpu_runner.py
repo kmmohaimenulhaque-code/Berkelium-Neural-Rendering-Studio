@@ -138,7 +138,8 @@ def make_bundle(spec: dict) -> tuple[bytes, list[str]]:
         g.write(raw.getvalue())
     blob = gz.getvalue()
     if len(blob) > MAX_BUNDLE_BYTES:
-        raise RunnerError(f"bundle is {len(blob) / 2**20:.1f} MiB (> {MAX_BUNDLE_BYTES / 2**20:.0f} MiB): ship code and "
+        raise RunnerError(f"bundle is {len(blob) / 2**20:.1f} MiB (> {MAX_BUNDLE_BYTES / 2**20:.0f} MiB): ship code "
+                          "and "
                           "configs only; large inputs are fetched remotely by pinned URL + sha256")
     return blob, files
 
@@ -171,8 +172,10 @@ if got != BUNDLE_SHA256:
     receipt["status"] = "failed"; receipt["error"] = "bundle sha256 mismatch"; save(); raise SystemExit(0)
 shutil.rmtree(WORK, ignore_errors=True); os.makedirs(WORK)
 tarfile.open(fileobj=io.BytesIO(BUNDLE), mode="r:gz").extractall(WORK, filter="data")
-env = {"python": platform.python_version(), "host": platform.node(), "nvidia_smi": sh("nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader"),
-       "torch": sh(sys.executable + " -c 'import torch;print(torch.__version__, torch.version.cuda, torch.cuda.device_count())'"),
+env = {"python": platform.python_version(), "host": platform.node(),
+       "nvidia_smi": sh("nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader"),
+       "torch": sh(sys.executable + " -c 'import torch;"
+                   "print(torch.__version__, torch.version.cuda, torch.cuda.device_count())'"),
        "disk_free_gb": {p: round(shutil.disk_usage(p).free / 1e9, 1) for p in ("/kaggle/working", "/tmp")},
        "mem_total_mib": int(open("/proc/meminfo").readline().split()[1]) // 1024, "cpu_count": os.cpu_count()}
 receipt["environment"] = env; save()
@@ -220,11 +223,16 @@ def build_kernel(spec: dict, blob: bytes, run_id: str, kdir: Path, slug: str):
             f"BUNDLE_SHA256 = {sha256_bytes(blob)!r}\nRUN_ID = {run_id!r}\n"
             f"BUNDLE_B64 = {base64.b64encode(blob).decode()!r}\n")
     (kdir / "run.py").write_text(head + REMOTE)
-    meta = {"id": f"{account_handle()}/{slug}", "title": spec.get("title", slug), "code_file": "run.py", "language": "python",
+    meta = {"id": f"{account_handle()}/{slug}", "title": spec.get("title", slug), "code_file": "run.py",
+            "language": "python",
             "kernel_type": "script", "is_private": True, "enable_gpu": True, "enable_internet": True,
             "dataset_sources": [], "competition_sources": [], "kernel_sources": []}
     (kdir / "kernel-metadata.json").write_text(json.dumps(meta, indent=2))
     return meta["id"]
+
+
+def _rel(p: Path) -> str:
+    return str(p.relative_to(ROOT)) if p.is_relative_to(ROOT) else str(p)
 
 
 # --------------------------------------------------------------------------------------------------------- state
@@ -321,7 +329,8 @@ def pull(spec: dict, st: dict, admit: bool) -> dict:
             if dst.exists() and sha256_file(dst) != m["sha256"]:
                 conflicts.append(rel)
         if conflicts:
-            raise RunnerError(f"refusing to admit: {len(conflicts)} files differ from existing ones, e.g. {conflicts[:5]}")
+            raise RunnerError(f"refusing to admit: {len(conflicts)} files differ from existing ones, "
+                              f"e.g. {conflicts[:5]}")
         for rel in manifest:
             dst = ROOT / rel
             dst.parent.mkdir(parents=True, exist_ok=True)
@@ -331,7 +340,7 @@ def pull(spec: dict, st: dict, admit: bool) -> dict:
     st.update({"status": "pulled", "verified_files": verify["verified"], "admitted": len(admitted)})
     write_state(spec, st)
     print(json.dumps({"job": spec["name"], "remote_status": receipt["status"], "verification": verify,
-                      "admitted": len(admitted), "receipt": str((run_dir / "receipt.json").relative_to(ROOT))},
+                      "admitted": len(admitted), "receipt": _rel(run_dir / "receipt.json")},
                      indent=2))
     return receipt
 
