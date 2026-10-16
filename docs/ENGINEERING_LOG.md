@@ -283,3 +283,34 @@ attention kernel. Anchors are therefore 768² (2304 tokens), with VAE tiling and
 **Local environment fix.** CLIP pulled a PyPI torchvision whose ops do not register against torch+cpu
 (`operator torchvision::nms does not exist`); `setup_openworld.sh` now installs the matching CPU torchvision first.
 **Test fix.** `test_durable_jobs.py` left its uvicorn servers running when an assertion failed; it now kills them.
+
+**M5 completed (Kaggle T4; `results/m5/E-A1_receipt.json`).** 768², 9 steps, CFG 0. Precision study (recorded rule:
+fastest dtype whose image is finite and non-blank): fp16 anchor non-finite (NaN → black) on T4; bf16 finite
+(std 0.17) → bf16. ~122 s per anchor (bf16 is emulated on sm75), 13.8 GiB peak, same prompt and seed repeated
+bit-exactly (CPU-seeded noise).
+
+**Shap-E: the frozen E-T3 design is complete.** 54 GPU units (B1 seeds 0-2, B2, B4 single + planner parts) and,
+for a like-for-like B3 comparison, all 12 B3 prompts: 66/66 valid, ~98 s wall per unit with two workers on 4 vCPU.
+
+**zimage-triposr v1 (pre-registered colour key): 37/80.** The anchors are clean, but Z-Image paints studio
+backdrops with gradients and vignetting; a key against one median border colour rejected 33 as "background not
+uniform" and 10 as "touches the frame". **v2** replaces stage 3 with U²-Net salient-object segmentation (the
+network TripoSR's own preprocessing uses; onnx sha256-pinned), applied to the same bit-exact anchors: 80/80 valid.
+The change was made after seeing v1's rejections and before scoring any geometry; both are in the record. Known v2
+limit: U²-Net fills enclosed background (bicycle wheels, basket handle).
+
+**E-T3 scored (`results/text3d/E-T3_openworld_cpu.report.md`).** B1 (12 GSO scans, generous alignment): F@0.05
+(failures = 0) native 0.566, Shap-E 0.669, zimage v1 0.327, v2 0.603; mean Chamfer-L1 0.061 / 0.047 / 0.047 (6
+valid) / 0.055; v2 − Shap-E paired ΔCD +0.008 (95% CI [−0.001, +0.017]), ΔF −0.066 ([−0.157, +0.022]). B2 CLIP R@1
+(ViT-B/32 evaluator): native 0.05, Shap-E 0.95, v1 0.35, v2 0.85 (scans 1.00). B3 (procedural): native best (CD
+0.094, part count 0.42); Shap-E 0.185 / 0.00, v2 0.142 / 0.08. B4 part count single / planner: native 0.75 / 0.375,
+Shap-E 0.125 / 0.00, v2 0.375 / 0.50. Seed variance (B1, 3 seeds): within-object CD std Shap-E 0.0064, v2 0.0036.
+**D-029 applied:** v2 meets none of the three criteria → Shap-E first, zimage-triposr second.
+
+**E-T4 (`results/text3d/E-T4_capsule_replay.report.md`).** Capsule v2 (replay of the 1,032 base training assets +
+separation margin, CPU, 41 min): adapter_test part count 0.27 → 0.40 (base 0.53), Chamfer vs v1 +0.018 (CI
+[+0.007, +0.031]) → **not promoted** (D-031); exported as NOT PROMOTED for reproducibility.
+
+**Runner bug found and fixed.** Pushing a new version to a busy kernel does not start it; the previous (fp16)
+version's NaN output was pulled under the new run id. It was deleted before any commit; `pull` now refuses output
+whose run id or bundle hash differs from the push, and `run` refuses a busy kernel. Every other receipt was audited.
