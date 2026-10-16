@@ -114,7 +114,9 @@ async function waitFor(label, expression, ms = 30000) {
 await send("Runtime.enable");
 
 // Same checks as the source smoke test, now against the installed app.
-const loadedFrom = await waitFor("the app page", `location.href`);
+// The window starts as about:blank for a moment before the app page loads,
+// so wait for the real page instead of reading the first URL we see.
+const loadedFrom = await waitFor("the app page", `location.href.includes("index.html") ? location.href : null`);
 if (!loadedFrom.includes("app.asar")) fail(`expected the app to load from inside app.asar, got ${loadedFrom}`, child);
 await waitFor("the app shell", `document.querySelectorAll(".workspace-tab").length >= 3`);
 await waitFor("the BK logo", `[...document.querySelectorAll(".brand__mark")].every((i) => i.complete && i.naturalWidth > 0) && document.querySelector(".brand__mark") !== null`);
