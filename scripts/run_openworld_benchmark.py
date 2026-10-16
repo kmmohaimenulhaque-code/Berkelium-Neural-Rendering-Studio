@@ -421,7 +421,10 @@ def cmd_score(cfg, prompts, out, a=None):
               "hardware_note": ("CPU and GPU units use the same weights, 16 steps, fp32 sampling and the same initial "
                                 "noise (seeded CPU generator); they are not bitwise identical (different kernels), "
                                 "so every row records the device it ran on"),
-              "units": {"done": len(done), "planned_full_design": len(units_planned), "duplicates": duplicates},
+              "units": {"done": len(done), "planned_full_design": len(units_planned), "duplicates": duplicates,
+                        "excluded_infrastructure": [json.loads(x) for x in (out / "excluded_units.jsonl").read_text()
+                                                    .splitlines() if x.strip()]
+                        if (out / "excluded_units.jsonl").exists() else []},
               "omitted_units": omitted, "completeness": "full" if not omitted else "partial"}
 
     # ---- B1: open-world prompts with real-object ground truth (generous alignment)
@@ -655,6 +658,9 @@ def cmd_report(cfg, prompts, out):
           f"{', '.join(R['devices'])}. {R['hardware_note']}."), ""]
     if n["duplicates"]:
         L += [f"Duplicate units ignored (kept the first ledger): {n['duplicates']}", ""]
+    for x in n.get("excluded_infrastructure", []):
+        L += [(f"**Excluded run (infrastructure, re-run):** `{x['key']}` {x['status']} after {x['wall_s']} s on "
+              f"{x.get('device', 'cpu')}: {x['exclusion_reason']} Log: `{x['log']}`."), ""]
     if R["omitted_units"]:
         L += [f"**Not run ({len(R['omitted_units'])} generation units):** " +
               ", ".join(f"`{u}`" for u in R["omitted_units"]), ""]
