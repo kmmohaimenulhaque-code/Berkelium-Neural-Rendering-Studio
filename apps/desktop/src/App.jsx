@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 
 import "./shell.css";
-import "./berkelium-logo.css";
+import brandMark from "./assets/berkelium-mark.png";
 import ChatPanel from "./ChatPanel.jsx";
 import CodePanel from "./CodePanel.jsx";
 import ScenePanel from "./ScenePanel.jsx";
@@ -187,9 +187,9 @@ function TopBar({
   return (
     <header className="topbar" role="banner">
       <div className="topbar__brand">
-        <div className="logo-lockup logo-lockup--horizontal">
-          <div className="logo-icon logo-icon--white" role="img" aria-label="Berkelium" />
-          <span className="logo-wordmark logo-wordmark--white">BERKELIUM</span>
+        <div className="brand">
+          <img className="brand__mark" src={brandMark} alt="" draggable={false} />
+          <span className="brand__wordmark" aria-label="Berkelium">BERKELIUM</span>
         </div>
       </div>
 
