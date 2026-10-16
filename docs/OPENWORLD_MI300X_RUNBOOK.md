@@ -1,5 +1,8 @@
 # Open-world text-to-3D on the MI300X: runbook (E-T3 follow-up)
 
+> **To resume E-T3 on a GPU, use `docs/E-T3_GPU_RESUME.md`** (smoke gate, pending-unit partition, MI300X and
+> Kaggle commands). This file keeps the background and the later experiments.
+
 Status: **UNVERIFIED on any GPU.** Everything below was run only on the 2-vCPU development host (CPU). Shap-E is
 pure PyTorch (no custom CUDA kernels in the text300M + STF-mesh path used here: transformer, Karras sampler, MLP
 SDF/texture queries, Shap-E's own torch marching cubes; PyTorch3D is optional and absent), so it is *likely* to run

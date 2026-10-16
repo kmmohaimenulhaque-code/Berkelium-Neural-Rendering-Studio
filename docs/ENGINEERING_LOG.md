@@ -200,3 +200,59 @@ not pin Gaussians to the surface. Recorded as a limitation, not hidden. Fitted s
 - `pytest tests/e2e`: 1 passed (65 s) — includes the restart step and asserts no browser console errors before it.
 - `apps/desktop`: `npm test` 35 passed; `vite build` succeeds. Lint: new files clean; two pre-existing errors in
   main's `ScenePanel.jsx`/`api.js` left as they were.
+
+## 2026-10-15/16 — E-T3: open-world text-to-3D on CPU (Shap-E), generator layer, planner
+
+Goal: unfamiliar text → validated, editable 3D in the product, measured on a frozen held-out benchmark with real
+ground truth. Non-goals: training, ROCm porting, new paid compute. Training performed: **none**.
+
+**Why not retrain the native model.** BerkeliumTextShape has a 30-token vocabulary learned from scratch (6
+primitives, 8 colours, small/large, relation and filler words). "a wooden chair with four legs" → 4 of 6 tokens are
+`<unk>`, so the model cannot read the request at all. More training on the same grammar cannot fix that: the
+knowledge is missing, not the capacity. The fix is a pretrained open-world prior behind the same interface (D-023).
+
+**P0/P1.** The interrupted session had left a complete CLIP ViT-L/14 in `$CWD/shap_e_model_cache` (Shap-E's default
+cache), whose hash matched; it was moved to `data/models/shap_e` and the stray directory git-ignored. The Shap-E
+weights were fetched with resume. All six files verify. Disk was 8.5 GB free, not the 12 GB the audit assumed;
+5.9 GB remains after the downloads.
+
+**Memory is the binding constraint on this host** (7.8 GB, about 4 GB taken by the editor and agent processes,
+no swap). An external watchdog SIGTERMs the largest process when system-wide available memory falls to ~0.8 GB:
+- `torch.jit.load` of ViT-L-14.pt (the only reader for OpenAI's TorchScript `.pt`, also used inside
+  `clip.load(jit=False)`) passed 3.2 GB RSS while holding the GIL. It was killed twice, and a self-abort monitor
+  thread could not even run. Fix: a restricted unpickler over the uncompressed TorchScript zip reads only the text
+  tower's 150 tensors (123,650,305 parameters) bit-for-bit, refuses any other global, and peaks at 1.5 GB.
+  `clip.model.CLIP`'s own text code is rebuilt from them with a 1-parameter vision stub (D-025). A unit test shows
+  the rebuilt text tower equals the full model bitwise (small CLIP).
+- The first service E2E then showed that a second Shap-E worker was SIGTERMed 12.5 s into loading. The API server
+  was not the cause: its splat render peaks at 346 MB. The worker's own loading peak was: Shap-E builds the model
+  with random init (1.26 GB written, then thrown away). Models are now built with `torch.nn.init` disabled and the
+  memory-mapped checkpoint assigned in place (strict). Loading peak 2.3 → 1.1 GB anonymous, and the generated chair
+  is bitwise identical before and after. Workers are not started below 2,000 MiB available (`RESOURCE_LIMIT`).
+
+**P2 (cost model, `results/text3d/E-T3/P2_COST_MODEL.md`).** One 16-step generation of "a wooden chair with four
+legs": 827 s wall (47.7 s per Karras step, decode 41 s), peak RSS 2.6 GB, a recognisable upright chair (four legs,
+seat, back, stretchers). The validator flagged one zero-area face. That was a real bug in my frame conversion
+(cleaned in float64, then cast to float32), fixed with a regression test that fails on the old order. Budget:
+floor(6.5 h × 3600 / 827 s) = **28** Shap-E generations. The full design needs 69, so E-T3 runs a stated minimum:
+B1, B2, B4 single-shot on Shap-E, and every native and planner case. Omitted: the B4 Shap-E-planner arm and the
+B1 seed-1/2 variance runs.
+
+**P3.** `text3d/generators.py`: a Generator protocol with native, Shap-E, GPU-gated `zimage-triposr` (never emits
+output) and an `auto` router (native iff no content word outside its vocabulary, D-024). `text3d/planner.py`: a
+deterministic two-object parser with bbox placement under the procedural GT's conventions (D-027). Each part is
+validated on its own and stored with an explicit 4x4 transform. `text3d/openworld_eval.py`: a generous alignment
+(unit extent, 24 rotations, ICP) used for every generator, touch-merged part count, and CLIP R-precision (D-028).
+44 new unit/service tests; mocks only in unit tests.
+
+**P4.** Prompt list and GSO pins were committed (`1f4fa50`) before any candidate ran: 12 GSO objects in 12
+categories (prompts written from object names only), 8 GT-free prompts, and 12 + 8 procedural test prompts by a
+fixed rule. Evaluator: CLIP ViT-B/32 (not the conditioner).
+
+**P5.** `generator`/`compose`/`shap_e_steps` on `TextTo3DRequest`. Admission refuses an unavailable routed
+generator with its reason. Native-routed requests take the original executor path unchanged. Shap-E runs in a
+worker subprocess with stage progress (loading → sampling → decoding → validating) and cancellation by
+termination (D-026). Studio has a generator selector (the GPU-gated option is disabled with its reason), a
+"plan 2 objects" toggle and a provenance card. `tests/e2e/test_openworld_api.py`: **2 passed** with real
+inference (chair through auto → Shap-E → valid 39,093-face mesh → 4,000 Gaussians → non-blank splat render →
+explicit-camera render, 938 s; plus a cancellation mid-sampling with the worker gone).

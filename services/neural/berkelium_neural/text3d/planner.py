@@ -112,6 +112,19 @@ def place(plan: Plan, va: np.ndarray, vb: np.ndarray) -> tuple[np.ndarray, np.nd
     return N @ Ta, N @ Tb
 
 
+def _clean_transformed(v: np.ndarray, f: np.ndarray, col):
+    """Placement scales a part (face areas by s^2) and stores float32: a face can fall below validate_mesh's absolute
+    zero-area threshold (E-T3: 1 face of "a purple box"). Clean on exactly the stored float32 coordinates;
+    colours follow the kept vertices. -> (v float32, f, col, n_removed)."""
+    from .geometry import clean_mesh
+    v = np.asarray(v, np.float32).astype(np.float64)
+    a = 0.5 * np.linalg.norm(np.cross(v[f[:, 1]] - v[f[:, 0]], v[f[:, 2]] - v[f[:, 0]]), axis=1)
+    v2, f2, removed = clean_mesh(v, f)
+    if col is not None and removed:
+        col = np.asarray(col)[np.unique(f[a >= 1e-12])]
+    return v2.astype(np.float32), f2, col, removed
+
+
 def assemble(parts: list[dict]) -> dict:
     """Concatenate transformed parts into one scene mesh (parts stay separate meshes; no boolean union)."""
     vs, fs, cs, off = [], [], [], 0
@@ -136,11 +149,13 @@ def compose(plan: Plan, generated: list[tuple[str, dict]]) -> dict:
     roles = plan.as_dict()["roles"]
     parts = []
     for role, text, ident, out, T in (("a", plan.a, ida, oa, Ta), ("b", plan.b, idb, ob, Tb)):
-        v = _apply(T, np.asarray(out["vertices"], np.float64)).astype(np.float32)
+        v, f, col, removed = _clean_transformed(_apply(T, np.asarray(out["vertices"], np.float64)), out["faces"],
+                                                out["colors"])
+        rep = validate_mesh(v, f)
+        rep["degenerate_faces_removed_after_transform"] = removed
         parts.append({"prompt": text, "role": roles[role], "generator": ident.get("generator"),
                       "generator_identity": ident, "transform": T.round(9).tolist(), "vertices": v,
-                      "faces": out["faces"], "colors": out["colors"], "report": validate_mesh(v, out["faces"]),
-                      "generation_report": out["report"]})
+                      "faces": f, "colors": col, "report": rep, "generation_report": out["report"]})
     scene = assemble(parts)
     srep = validate_mesh(scene["vertices"], scene["faces"])
     srep.update({"planned": True, "relation": plan.relation, "n_parts": 2,

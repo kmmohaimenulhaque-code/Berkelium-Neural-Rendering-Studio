@@ -1,0 +1,58 @@
+{
+  "n_vertices": 2126,
+  "n_faces": 4248,
+  "finite": true,
+  "in_bounds": true,
+  "degenerate_faces": 0,
+  "components": 1,
+  "watertight": true,
+  "winding_consistent": true,
+  "edge_manifold": true,
+  "euler_number": 2,
+  "surface_area": 2.626258231962077,
+  "volume": 0.21153520993390576,
+  "bounds_min": [
+    -0.6976000070571899,
+    -0.29170000553131104,
+    -0.4499000012874603
+  ],
+  "bounds_max": [
+    0.7973999977111816,
+    0.24809999763965607,
+    0.45820000767707825
+  ],
+  "valid": true,
+  "prompt": "a glass wine bottle",
+  "tokens": 4,
+  "unknown_words": [
+    "glass",
+    "wine",
+    "bottle"
+  ],
+  "resolution": 48,
+  "sdf_min": -0.023374643176794052,
+  "sdf_max": 4.883055686950684,
+  "seconds": 1.661,
+  "artifact_kind": "triangle_mesh",
+  "units": "normalized_object",
+  "generator": "berkelium-textshape",
+  "seed": 0,
+  "adapter": null,
+  "base_checkpoint_sha256": "4989d90b206ae185a81aa33b22f7a5869470feb1f5e5c617cff56983a85e8504",
+  "train_version": "berkelium-textshape-train/1",
+  "adapter_routing": {
+    "requested": "auto",
+    "selected": null,
+    "reason": "no adapter concept in the prompt"
+  },
+  "identity": {
+    "generator": "berkelium-textshape",
+    "model": "BerkeliumTextShape (text->SDF->marching cubes)",
+    "checkpoint": "exports/textshape-base-v1/model.pt",
+    "license": "MIT (Berkelium-owned weights and data)",
+    "resolution": 48,
+    "adapter": "auto",
+    "device": "cpu"
+  },
+  "wall_s": 1.67
+}

@@ -39,6 +39,20 @@ def mem_available_mib() -> int | None:
     return None
 
 
+def hardware(device: str) -> dict:
+    import platform
+
+    import torch
+    h = {"device": device, "host": platform.node(), "cpu_count": os.cpu_count(), "torch": torch.__version__,
+         "torch_hip": getattr(torch.version, "hip", None), "torch_cuda": getattr(torch.version, "cuda", None),
+         "threads": torch.get_num_threads()}
+    if device != "cpu" and torch.cuda.is_available():
+        p = torch.cuda.get_device_properties(torch.device(device))
+        h.update({"gpu_name": p.name, "gpu_total_mib": round(p.total_memory / 2**20), "gpu_count":
+                  torch.cuda.device_count()})
+    return h
+
+
 def rss_mib() -> dict:
     out = {}
     try:
@@ -97,6 +111,10 @@ def run(prompt: str, out: Path, seed: int = 0, steps: int = 16, guidance: float 
             emit(json.dumps({"event": "progress", "frac": round(float(frac), 4), "stage": stage, "rss_mib": rss_mib()}))
     t0 = time.time()
     mem0 = mem_available_mib()
+    gpu = device != "cpu"
+    if gpu:
+        import torch
+        torch.cuda.reset_peak_memory_stats()
     o = gen.generate(prompt, seed, progress=progress)
     rep = o["report"]
     out.mkdir(parents=True, exist_ok=True)
@@ -106,7 +124,11 @@ def run(prompt: str, out: Path, seed: int = 0, steps: int = 16, guidance: float 
     rep.update({"status": "ok" if rep.get("valid") else "invalid_mesh", "identity": gen.identity, "threads": threads,
                 "wall_s": round(time.time() - t0, 1), "seconds_per_step": round(rep["sample_s"] / steps, 2),
                 "memory_mib": {"peak_" + k: v for k, v in mon.peak.items()}, "rss_abort_mib": rss_abort_mib,
-                "mem_available_mib_at_start": mem0})
+                "mem_available_mib_at_start": mem0, "hardware": hardware(device)})
+    if gpu:
+        import torch
+        rep["hardware"].update({"gpu_peak_allocated_mib": round(torch.cuda.max_memory_allocated() / 2**20, 1),
+                                "gpu_peak_reserved_mib": round(torch.cuda.max_memory_reserved() / 2**20, 1)})
     (out / "report.json").write_text(json.dumps(rep, indent=2, default=str))
     emit(json.dumps({"event": "done", "status": rep["status"], "report": rep}, default=str))
     return {**o, "report": rep}

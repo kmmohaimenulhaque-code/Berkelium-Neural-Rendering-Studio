@@ -304,6 +304,25 @@ def load_shap_e_model(name: str, cache: Path, clip_dtype=None, device: str = "cp
     return model.eval()
 
 
+@contextlib.contextmanager
+def _cpu_noise(device: str):
+    """torch.randn(..., device=<gpu>) draws on the seeded CPU generator and moves the result: Shap-E's only
+    consequential random draw is x_T (k_diffusion.karras_sample_progressive); Heun's per-step randn_like is unused
+    when s_churn=0."""
+    import torch
+    orig = torch.randn
+
+    def randn(*size, device=None, **kw):
+        if device is not None and str(device) != "cpu":
+            return orig(*size, device="cpu", **kw).to(device)
+        return orig(*size, device=device, **kw)
+    torch.randn = randn
+    try:
+        yield
+    finally:
+        torch.randn = orig
+
+
 # ------------------------------------------------------------------------------------------------ mesh decoding
 def pan_cameras(size: int, device="cpu"):
     """Local copy of shap_e.util.notebooks.create_pan_cameras (that module imports ipywidgets)."""
@@ -354,11 +373,14 @@ class ShapEGenerator:
 
     def __init__(self, steps: int = 64, guidance_scale: float = 15.0, cache_dir: Path | None = None,
                  threads: int | None = None, grid_size: int | None = None, clip_dtype: str = "float32",
-                 device: str = "cpu", fp16: bool | None = None):
+                 device: str = "cpu", fp16: bool | None = None, noise_on_cpu: bool = True):
         self.steps, self.guidance = int(steps), float(guidance_scale)
         self.cache = Path(cache_dir or DEFAULT_CACHE)
         self.threads, self.grid_size, self.clip_dtype, self.device = threads, grid_size, clip_dtype, device
         self.fp16 = (device != "cpu") if fp16 is None else bool(fp16)   # Shap-E's GPU default; CPU stays fp32
+        # The Heun sampler with s_churn=0 is deterministic given x_T, so drawing x_T from the seeded CPU generator
+        # on every device makes a GPU run reproduce the CPU run's sample (up to floating-point differences).
+        self.noise_on_cpu = bool(noise_on_cpu)
 
     def available(self) -> tuple[bool, str]:
         return available(self.cache)
@@ -374,6 +396,9 @@ class ShapEGenerator:
                             "sigma_max": 160, "s_churn": 0, "clip_denoised": True, "use_fp16": self.fp16},
                 "decoder": {"rendering_mode": "stf", "grid_size": self.grid_size or "checkpoint default"},
                 "clip_dtype": self.clip_dtype, "device": self.device,
+                "initial_noise": ("torch.randn on the seeded CPU generator" + (", moved to the device"
+                                  if self.device != "cpu" else "") if self.device == "cpu" or self.noise_on_cpu
+                                  else "torch.randn on the device generator (NOT the CPU draw for this seed)"),
                 **({"gpu_path": "UNVERIFIED (never run on a GPU)"} if self.device != "cpu" else {}),
                 "labels": "model-generated, normalized units, not measured geometry"}
 
@@ -398,8 +423,9 @@ class ShapEGenerator:
                 progress(min(calls["n"] / expected, 1.0), "sampling")
         h = model.register_forward_pre_hook(hook)
         torch.manual_seed(seed)
+        noise = _cpu_noise(self.device) if self.device != "cpu" and self.noise_on_cpu else contextlib.nullcontext()
         try:
-            with torch.no_grad():
+            with torch.no_grad(), noise:
                 lat = sample_latents(batch_size=1, model=model, diffusion=diffusion, model_kwargs={"texts": [prompt]},
                                      guidance_scale=self.guidance, clip_denoised=True, use_fp16=self.fp16,
                                      use_karras=True, karras_steps=self.steps, sigma_min=1e-3, sigma_max=160,

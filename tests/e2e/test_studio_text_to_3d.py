@@ -199,3 +199,43 @@ def test_prompt_to_rendered_result_in_studio_and_after_restart(stack):
     receipt["console_errors_during_restart"] = len([x for x in logs if x.startswith("error")]) - len(errors_before_restart)
     (OUT / "e2e_receipt.json").write_text(json.dumps(receipt, indent=2))
     shutil.copy(OUT / "studio_text_to_3d.png", OUT / "latest.png")
+
+
+def test_generator_selector_planner_and_provenance_in_studio(stack):
+    """The generator selector reflects /capabilities (the GPU-gated generator is disabled with its reason), the
+    two-object planner runs as a real job, and the provenance card shows what the artifact's producer recorded."""
+    from playwright.sync_api import sync_playwright
+    api = stack["api"]
+    caps = json.loads(_get(f"{api.url}/v1/neural/capabilities"))["generators"]
+    prompt = "a red sphere next to a blue box"
+    with sync_playwright() as p:
+        browser = p.chromium.launch(args=["--use-angle=swiftshader", "--enable-unsafe-swiftshader",
+                                          "--ignore-gpu-blocklist"])
+        page = browser.new_page(viewport={"width": 1440, "height": 900})
+        logs = []
+        page.on("console", lambda m: logs.append(f"{m.type}: {m.text}"))
+        _open_scene(page, stack["ui"])
+        sel = page.get_by_test_id("generator-select")
+        opts = {o.get_attribute("value"): o.is_disabled() for o in sel.locator("option").all()}
+        assert opts["zimage-triposr"] is True and caps["zimage-triposr"]["available"] is False
+        assert opts["shap-e-text300m"] is (not caps["shap-e-text300m"]["available"])
+        assert opts["auto"] is False and opts["berkelium-textshape"] is False
+        sel.select_option("berkelium-textshape")
+        page.get_by_test_id("compose-check").check()
+        page.get_by_test_id("prompt-input").fill(prompt)
+        page.get_by_test_id("generate-btn").click()
+        page.get_by_test_id("job-state").filter(has_text="completed").wait_for(timeout=240000)
+        page.get_by_test_id("render-image").wait_for(state="visible", timeout=60000)
+        st = page.evaluate("window.__berkeliumNeural")
+        mesh = json.loads(_get(f"{api.url}/v1/neural/artifacts/{st['meshArtifact']}"))
+        assert mesh["producer"]["planner"]["relation"] == "next_to" and mesh["validation"]["valid"]
+        assert {"part_left.glb", "part_right.glb", "parts.json"} <= {f["name"] for f in mesh["files"]}
+        card = page.get_by_test_id("provenance-card").inner_text()
+        assert page.get_by_test_id("provenance-generator").inner_text() == mesh["producer"]["generator"]
+        assert "planner: next_to" in card and "a red sphere" in card and "a blue box" in card, card
+        props = page.locator(".props").inner_text()
+        assert f"{mesh['validation']['n_faces']:,}" in props, props
+        page.screenshot(path=str(OUT / "studio_planner_provenance.png"))
+        browser.close()
+    errors = [x for x in logs if x.startswith("error")]
+    assert not errors, errors

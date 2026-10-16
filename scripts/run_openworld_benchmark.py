@@ -15,6 +15,7 @@ started in the config's priority order until the Shap-E budget is spent; every u
 import argparse
 import hashlib
 import json
+import os
 import subprocess
 import sys
 import time
@@ -47,29 +48,48 @@ def unit_dir(out: Path, gen: str, prompt: str, seed: int) -> Path:
     return out / "units" / gen / f"{slug(prompt)}__{h}__s{seed}"
 
 
-def records(prompts, key):
-    from berkelium_neural.text3d.dataset import load_manifest
+CAPTIONS = ROOT / "benchmarks" / "configs" / "text3d_openworld_cpu_v1.procedural_captions.json"
+
+
+def records(prompts, key, captions_only=False):
+    """Frozen procedural records. With ``captions_only`` (unit planning on a GPU host without the regenerated
+    dataset) the committed caption file is used, verified against the dataset manifest hash it was written from."""
+    from types import SimpleNamespace
     root = ROOT / "data" / "procedural_shapes_v1"
+    if captions_only and not (root / "manifest.jsonl").exists():
+        c = json.loads(CAPTIONS.read_text())
+        return [SimpleNamespace(asset_id=a, caption=c["captions"][a]) for a in prompts[key]["asset_ids"]], root
+    from berkelium_neural.text3d.dataset import load_manifest
     by_id = {r.asset_id: r for r in load_manifest(root, {"test"})}
+    if CAPTIONS.exists():
+        c = json.loads(CAPTIONS.read_text())
+        bad = [a for a in prompts[key]["asset_ids"] if c["captions"].get(a) != by_id[a].caption]
+        if bad:
+            raise RuntimeError(f"committed captions disagree with the dataset for {bad}")
     return [by_id[a] for a in prompts[key]["asset_ids"]], root
 
 
 def all_benchmark_prompts(prompts):
-    b3, _ = records(prompts, "B3_retention")
-    b4, _ = records(prompts, "B4_composition")
+    b3, _ = records(prompts, "B3_retention", captions_only=True)
+    b4, _ = records(prompts, "B4_composition", captions_only=True)
     return ([("B1", o["prompt"]) for o in prompts["B1_open_world_gt"]["objects"]] +
             [("B2", p["prompt"]) for p in prompts["B2_gt_free"]["prompts"]] +
             [("B3", r.caption) for r in b3] + [("B4", r.caption) for r in b4])
 
 
-def plan_units(cfg, prompts):
-    """-> (ordered list of units {gen, prompt, seed, group}, routing decisions per benchmark prompt)."""
+EXTRA_GROUPS = ["B1_seed1", "B1_seed2"]          # frozen design, run "on budget left over" (P2_COST_MODEL.md)
+GPU_DEFAULT_GROUPS = ["B4_planner", "B1_seed1", "B1_seed2"]   # outside the CPU budget: no overlap with the CPU run
+
+
+def plan_units(cfg, prompts, groups_order=None):
+    """-> (ordered list of units {gen, prompt, seed, group}, routing decisions per benchmark prompt).
+    ``groups_order`` defaults to the config's priority list (the CPU run)."""
     from berkelium_neural.text3d import planner
     from berkelium_neural.text3d.generators import route
     from berkelium_neural.text3d.model import build_vocab
     vocab, seed = build_vocab(), cfg["seed"]
     routing = {p: route(p, vocab) for _, p in all_benchmark_prompts(prompts)}
-    b4, _ = records(prompts, "B4_composition")
+    b4, _ = records(prompts, "B4_composition", captions_only=True)
     parts = []
     for r in b4:
         pl, _ = planner.parse(r.caption)
@@ -83,29 +103,37 @@ def plan_units(cfg, prompts):
         "B3_routed": [p for g, p in all_benchmark_prompts(prompts) if g == "B3" and routing[p]["generator"] == SHAP_E],
     }
     units, seen = [], set()
-    for group in cfg["priority"]:
+    for group in groups_order or cfg["priority"]:
         gen = NATIVE if group == "native" else SHAP_E
-        for p in groups[group]:
-            k = unit_key(gen, p, seed)
+        prompts_, s = (groups["B1"], int(group[-1])) if group.startswith("B1_seed") else (groups[group], seed)
+        for p in prompts_:
+            k = unit_key(gen, p, s)
             if k not in seen:
                 seen.add(k)
-                units.append({"gen": gen, "prompt": p, "seed": seed, "group": group})
+                units.append({"gen": gen, "prompt": p, "seed": s, "group": group})
     return units, routing
 
 
-def read_units(out: Path) -> dict:
-    p = out / "units.jsonl"
+def read_units(out: Path, duplicates: list | None = None) -> dict:
+    """Every ledger in ``out``: units.jsonl (the CPU run) and units_<device>_<host>[_shard].jsonl (GPU runs).
+    A key is kept from the first ledger that has it (units.jsonl first); later copies go to ``duplicates``."""
     rows = {}
-    if p.exists():
+    for p in sorted(out.glob("units*.jsonl"), key=lambda q: (q.name != "units.jsonl", q.name)):
         for line in p.read_text().splitlines():
             if line.strip():
                 r = json.loads(line)
+                r.setdefault("ledger", p.name)
+                r.setdefault("device", "cpu")
+                if r["key"] in rows:
+                    if duplicates is not None:
+                        duplicates.append({"key": r["key"], "kept": rows[r["key"]]["ledger"], "dropped": p.name})
+                    continue
                 rows[r["key"]] = r
     return rows
 
 
-def append_unit(out: Path, row: dict):
-    with open(out / "units.jsonl", "a") as fh:
+def append_unit(out: Path, row: dict, ledger: str = "units.jsonl"):
+    with open(out / ledger, "a") as fh:
         fh.write(json.dumps(row, default=str) + "\n")
 
 
@@ -127,7 +155,14 @@ def run_native(u, out: Path, cfg) -> dict:
             "valid": bool(rep.get("valid")), "seconds": rep.get("seconds")}
 
 
-def run_shap_e(u, out: Path, cfg) -> dict:
+def _mem_total_mib() -> int:
+    with open("/proc/meminfo") as fh:
+        return int(fh.readline().split()[1]) // 1024
+
+
+def run_shap_e(u, out: Path, cfg, device: str = "cpu") -> dict:
+    """One unit in its own process. On a GPU: fp32 sampling (as the CPU run) and the initial noise drawn from the
+    seeded CPU generator (shap_e_backend), so a GPU unit is the same draw as a CPU unit with that seed."""
     s = cfg["shap_e"]
     d = unit_dir(out, u["gen"], u["prompt"], u["seed"])
     d.parent.mkdir(parents=True, exist_ok=True)
@@ -135,6 +170,8 @@ def run_shap_e(u, out: Path, cfg) -> dict:
     cmd = [sys.executable, str(ROOT / "scripts" / "openworld_generate.py"), u["prompt"], "--steps", str(s["steps"]),
            "--guidance", str(s["guidance"]), "--seed", str(u["seed"]), "--threads", str(s["threads"]),
            "--out", str(d.parent), "--dir-name", d.name]
+    if device != "cpu":
+        cmd += ["--device", device, "--fp32", "--rss-abort-mib", str(int(0.8 * _mem_total_mib()))]
     t0 = time.time()
     with open(log, "w") as fh:
         try:
@@ -152,7 +189,7 @@ def run_shap_e(u, out: Path, cfg) -> dict:
     return {"status": status, "dir": str(d.relative_to(ROOT)), "valid": bool(rep.get("valid")), "rc": rc,
             "wall_s": wall, "seconds": rep.get("seconds"), "sample_s": rep.get("sample_s"),
             "decode_s": rep.get("decode_s"), "peak_rss_mib": (rep.get("memory_mib") or {}).get("peak_VmRSS"),
-            "log": str(log.relative_to(ROOT))}
+            "log": str(log.relative_to(ROOT)), "device": device, "hardware": rep.get("hardware")}
 
 
 def cmd_plan(cfg, prompts, out):
@@ -169,16 +206,34 @@ def cmd_plan(cfg, prompts, out):
     return units
 
 
-def cmd_generate(cfg, prompts, out):
-    out.mkdir(parents=True, exist_ok=True)
-    units, _ = plan_units(cfg, prompts)
+def gpu_units(cfg, prompts, out, groups, shard):
+    units, _ = plan_units(cfg, prompts, groups)
     done = read_units(out)
-    budget = cfg["budget"]["max_shap_e_generations"]
-    deadline = time.time() + cfg["budget"]["wall_hours_shap_e"] * 3600
-    used = sum(1 for r in done.values() if r["gen"] == SHAP_E)
+    pending = [u for u in units if u["gen"] == SHAP_E and unit_key(u["gen"], u["prompt"], u["seed"]) not in done]
+    i, n = shard
+    return [u for j, u in enumerate(pending) if j % n == i]
+
+
+def cmd_generate(cfg, prompts, out, a=None):
+    out.mkdir(parents=True, exist_ok=True)
+    device = getattr(a, "device", "cpu")
+    if device == "cpu":                       # the frozen CPU run: config priority, P2 budget and wall deadline
+        units, _ = plan_units(cfg, prompts)
+        budget = cfg["budget"]["max_shap_e_generations"]
+        deadline = time.time() + cfg["budget"]["wall_hours_shap_e"] * 3600
+        ledger = "units.jsonl"
+    else:                                     # GPU continuation: only pending Shap-E units, never native ones
+        units = gpu_units(cfg, prompts, out, a.groups, a.shard)
+        budget, deadline = a.max_units, time.time() + a.wall_hours * 3600
+        import platform
+        ledger = f"units_{device.replace(':', '')}_{platform.node()}" + (f"_shard{a.shard[0]}of{a.shard[1]}"
+                                                                          if a.shard[1] > 1 else "") + ".jsonl"
+        print(f"{len(units)} pending Shap-E units for groups {a.groups} (shard {a.shard[0]}/{a.shard[1]}) -> {ledger}")
+    done = read_units(out)
+    used = sum(1 for r in done.values() if r["gen"] == SHAP_E) if device == "cpu" else 0
     for u in units:
         k = unit_key(u["gen"], u["prompt"], u["seed"])
-        if k in done:
+        if k in read_units(out):             # re-read: another ledger may have finished it meanwhile
             continue
         if u["gen"] == SHAP_E:
             if used >= budget or time.time() > deadline:
@@ -186,10 +241,76 @@ def cmd_generate(cfg, prompts, out):
                 break
             used += 1
         t0 = time.time()
-        res = run_native(u, out, cfg) if u["gen"] == NATIVE else run_shap_e(u, out, cfg)
+        res = run_native(u, out, cfg) if u["gen"] == NATIVE else run_shap_e(u, out, cfg, device)
         row = {"key": k, **u, **res, "finished_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
-        append_unit(out, row)
+        append_unit(out, row, ledger)
         print(f"[{u['group']}] {u['gen']} {u['prompt']!r}: {res['status']} ({time.time() - t0:.0f}s)", flush=True)
+
+
+SMOKE_PROMPT = "a wooden chair with four legs"
+SMOKE_REFERENCE = "results/e2e/openworld_api_mesh.glb"     # the CPU chair (seed 0, 16 steps), P2 prompt
+
+
+def cmd_gpu_smoke(cfg, prompts, out, a):
+    """GPU feasibility gate: environment, one fixed generation (P2 prompt, seed 0, 16 steps, fp32, initial noise from
+    the seeded CPU generator), mesh validation, comparison with the CPU mesh of the same draw, and the runtime
+    estimate for the pending units. Writes <out>/gpu_smoke/<host>_<device>/smoke.json. Exit 1 if the gate fails."""
+    import platform
+    import shutil
+
+    import torch
+    from berkelium_neural.text3d.geometry import geometry_metrics
+    from berkelium_neural.text3d.openworld_eval import align_and_score
+    from berkelium_neural.text3d.shap_e_backend import available
+    host = platform.node()
+    d = out / "gpu_smoke" / f"{host}_{a.device.replace(':', '')}"
+    d.mkdir(parents=True, exist_ok=True)
+    env = {"host": host, "python": platform.python_version(), "torch": torch.__version__,
+           "torch_hip": getattr(torch.version, "hip", None), "torch_cuda": getattr(torch.version, "cuda", None),
+           "cuda_available": torch.cuda.is_available(), "device_count": torch.cuda.device_count(),
+           "gpus": [{"name": torch.cuda.get_device_properties(i).name,
+                     "total_mib": round(torch.cuda.get_device_properties(i).total_memory / 2**20)}
+                    for i in range(torch.cuda.device_count())],
+           "host_mem_total_mib": _mem_total_mib(), "disk_free_gb": round(shutil.disk_usage(ROOT).free / 1e9, 1),
+           "cpu_count": os.cpu_count()}
+    res = {"gate": "fail", "environment": env, "prompt": SMOKE_PROMPT, "seed": 0, "steps": cfg["shap_e"]["steps"],
+           "sampling": "fp32, initial noise from the seeded CPU generator"}
+    ok, why = available()
+    if not torch.cuda.is_available() or not ok:
+        res["blocker"] = "no GPU visible to PyTorch" if not torch.cuda.is_available() else why
+        (d / "smoke.json").write_text(json.dumps(res, indent=2, default=str))
+        print(json.dumps(res, indent=2, default=str))
+        sys.exit(1)
+    u = {"gen": SHAP_E, "prompt": SMOKE_PROMPT, "seed": 0, "group": "gpu_smoke"}
+    t0 = time.time()
+    r = run_shap_e(u, d, cfg, a.device)
+    res["run"] = {**r, "wall_s": round(time.time() - t0, 1)}
+    rep = json.loads((ROOT / r["dir"] / "report.json").read_text()) if (ROOT / r["dir"] / "report.json").exists() \
+        else {}
+    res["report"] = {k: rep.get(k) for k in ("valid", "n_faces", "components", "sample_s", "decode_s", "seconds",
+                                              "memory_mib", "hardware")}
+    if r["valid"]:
+        import trimesh
+        z = np.load(ROOT / r["dir"] / "mesh.npz")
+        ref = trimesh.load(ROOT / SMOKE_REFERENCE, force="mesh", process=False)
+        rv, rf = np.asarray(ref.vertices, np.float32), np.asarray(ref.faces)
+        same = geometry_metrics(z["v"], z["f"], rv, rf)
+        al = align_and_score(z["v"], z["f"], rv, rf)
+        res["vs_cpu_same_draw"] = {"reference": SMOKE_REFERENCE, "reference_faces": len(rf),
+                                   "shared_frame_chamfer_l1": same["chamfer_l1"],
+                                   "shared_frame_fscore@0.02": same["fscore@0.02"],
+                                   "aligned_chamfer_l1_unit_extent": al["chamfer_l1"],
+                                   "bitwise_equal": bool(len(rf) == len(z["f"]) and np.array_equal(rv, z["v"]))}
+        res["equivalent_to_cpu"] = bool(same["chamfer_l1"] is not None and same["chamfer_l1"] < 0.01)
+    res["gate"] = "pass" if r["valid"] else "fail"
+    pend = gpu_units(cfg, prompts, out, a.groups, (0, 1))
+    sec = r.get("wall_s") or 0
+    res["estimate"] = {"pending_units_for_groups": len(pend), "groups": a.groups, "seconds_per_unit": sec,
+                       "hours_one_gpu": round(len(pend) * sec / 3600, 2),
+                       "note": "measured on this smoke run only; a warm page cache may make later units faster"}
+    (d / "smoke.json").write_text(json.dumps(res, indent=2, default=str))
+    print(json.dumps({k: res[k] for k in res if k != "environment"}, indent=2, default=str))
+    sys.exit(0 if res["gate"] == "pass" else 1)
 
 
 # --------------------------------------------------------------------------------------------------- scoring
@@ -266,7 +387,7 @@ def mean(xs):
     return float(np.mean(xs)) if xs else None
 
 
-def cmd_score(cfg, prompts, out):
+def cmd_score(cfg, prompts, out, a=None):
     from berkelium_neural.fitting.real_object import (
         contact_sheet,
         load_scan,
@@ -281,8 +402,9 @@ def cmd_score(cfg, prompts, out):
         touch_components,
         view_images,
     )
-    units_planned, routing = plan_units(cfg, prompts)
-    done = read_units(out)
+    units_planned, routing = plan_units(cfg, prompts, cfg["priority"] + EXTRA_GROUPS)   # the full frozen design
+    duplicates = []
+    done = read_units(out, duplicates)
     seed = cfg["seed"]
     U = lambda gen, p: done.get(unit_key(gen, p, seed))
     omitted = [unit_key(u["gen"], u["prompt"], u["seed"]) for u in units_planned
@@ -294,7 +416,12 @@ def cmd_score(cfg, prompts, out):
     result = {"experiment": "E-T3", "protocol": "berkelium-text3d-eval/1 + E-T3 extensions (openworld_eval.py)",
               "config": cfg, "prompts_file": cfg["prompts"],
               "prompts_sha256": hashlib.sha256((ROOT / cfg["prompts"]).read_bytes()).hexdigest(),
-              "training_performed": "none", "device": "cpu", "environment": provenance(),
+              "training_performed": "none", "scoring_environment": provenance(),
+              "devices": sorted({r.get("device", "cpu") for r in done.values()}),
+              "hardware_note": ("CPU and GPU units use the same weights, 16 steps, fp32 sampling and the same initial "
+                                "noise (seeded CPU generator); they are not bitwise identical (different kernels), "
+                                "so every row records the device it ran on"),
+              "units": {"done": len(done), "planned_full_design": len(units_planned), "duplicates": duplicates},
               "omitted_units": omitted, "completeness": "full" if not omitted else "partial"}
 
     # ---- B1: open-world prompts with real-object ground truth (generous alignment)
@@ -311,7 +438,7 @@ def cmd_score(cfg, prompts, out):
             u = U(gen, o["prompt"])
             m = load_mesh(u)
             row[cand] = {"status": u["status"] if u else "omitted", "valid": bool(m), "generator": gen,
-                         "seconds": u.get("seconds") if u else None,
+                         "seconds": u.get("seconds") if u else None, "device": u.get("device") if u else None,
                          **({k: v for k, v in align_and_score(m["vertices"], m["faces"], scan.v, scan.f).items()}
                             if m else {"chamfer_l1": None, "fscore@0.05": 0.0 if u else None})}
         b1.append(row)
@@ -324,18 +451,35 @@ def cmd_score(cfg, prompts, out):
                       "fscore@0.02_mean": mean([r.get("fscore@0.02") for r in rows])}
     both = [r for r in b1 if r[NATIVE].get("chamfer_l1") is not None and r[SHAP_E].get("chamfer_l1") is not None]
     agg1["shap_e_better_chamfer"] = f"{sum(r[SHAP_E]['chamfer_l1'] < r[NATIVE]['chamfer_l1'] for r in both)}/{len(both)}"
+    # seed variance (frozen design: seeds 1-2 on B1, Shap-E only; the native model is deterministic)
+    var = []
+    for o in prompts["B1_open_world_gt"]["objects"]:
+        per = []
+        for sd in (0, 1, 2):
+            u = done.get(unit_key(SHAP_E, o["prompt"], sd))
+            m = load_mesh(u)
+            sc = align_and_score(m["vertices"], m["faces"], gt_cache[o["prompt"]].v, gt_cache[o["prompt"]].f) \
+                if m else None
+            per.append({"seed": sd, "status": u["status"] if u else "omitted", "device": u.get("device") if u else None,
+                        "chamfer_l1": sc and sc["chamfer_l1"], "fscore@0.05": sc and sc["fscore@0.05"]})
+        cd = [x["chamfer_l1"] for x in per if x["chamfer_l1"] is not None]
+        var.append({"prompt": o["prompt"], "seeds": per, "n": len(cd),
+                    "chamfer_l1_mean": mean(cd), "chamfer_l1_std": float(np.std(cd)) if len(cd) > 1 else None})
     result["B1"] = {"rows": b1, "aggregate": agg1, "alignment": "unit extent + best of 24 axis rotations + ICP "
-                    "(same for every generator; generous: forgives pose, frame and scale)"}
+                    "(same for every generator; generous: forgives pose, frame and scale)",
+                    "seed_variance": {"rows": var, "objects_with_3_seeds": sum(v["n"] == 3 for v in var),
+                                      "mean_within_object_std": mean([v["chamfer_l1_std"] for v in var])}}
 
     # ---- B2: semantic relevance (evaluator CLIP ViT-B/32), B1 + GT-free prompts, all benchmark prompts as candidates
-    model, preprocess = clip_evaluator(cfg)
+    skip_b2 = bool(getattr(a, "skip_b2", False))
+    model, preprocess = (None, None) if skip_b2 else clip_evaluator(cfg)
     cand_prompts = [p for _, p in all_benchmark_prompts(prompts)]
-    T = embed_texts(model, cand_prompts)
+    T = None if skip_b2 else embed_texts(model, cand_prompts)
     sem_prompts = [o["prompt"] for o in prompts["B1_open_world_gt"]["objects"]] + \
         [p["prompt"] for p in prompts["B2_gt_free"]["prompts"]]
     b2 = {"evaluator": cfg["evaluator"], "candidates": len(cand_prompts), "views": 4, "rows": []}
     sheets = []
-    for cand in ("gt_scan", NATIVE, SHAP_E, AUTO):
+    for cand in () if skip_b2 else ("gt_scan", NATIVE, SHAP_E, AUTO):
         embs, truth, rows = [], [], []
         for p in sem_prompts:
             if cand == "gt_scan":
@@ -418,6 +562,7 @@ def cmd_score(cfg, prompts, out):
                         row[name] = {"status": "omitted"}
                         continue
                     ma, mb = mesh_or_empty(ua), mesh_or_empty(ub)
+                    devs = sorted({ua.get("device", "cpu"), ub.get("device", "cpu")})
                     comp = planner.compose(plan, [({"generator": gen}, ma), ({"generator": gen}, mb)])
                     if comp["status"] != "ok":
                         out_ = {"vertices": None, "faces": None, "colors": None,
@@ -427,7 +572,8 @@ def cmd_score(cfg, prompts, out):
                 ev = evaluate_record(_Fixed(out_, name), r, root)
                 al = align_and_score(out_["vertices"], out_["faces"], gt["v"], gt["f"])
                 tc = touch_components(out_["vertices"], out_["faces"])
-                row[name] = {**ev, "aligned_chamfer_l1": al.get("chamfer_l1"),
+                row[name] = {**ev, "device": "+".join(devs) if mode == "planner" else u.get("device", "cpu"),
+                             "aligned_chamfer_l1": al.get("chamfer_l1"),
                              "aligned_fscore@0.05": al.get("fscore@0.05"), "touch_components": tc,
                              "touch_part_count_correct": tc == gt_touch if tc is not None else False}
         b4["rows"].append(row)
@@ -457,7 +603,19 @@ def cmd_score(cfg, prompts, out):
 
     # ---- cost
     sh = [r for r in done.values() if r["gen"] == SHAP_E]
-    result["cost"] = {"shap_e_units": len(sh), "shap_e_valid": sum(bool(r.get("valid")) for r in sh),
+    by_dev = {}
+    for dev in sorted({r.get("device", "cpu") for r in sh}):
+        rs = [r for r in sh if r.get("device", "cpu") == dev]
+        hw = next((r.get("hardware") for r in rs if r.get("hardware")), None)
+        by_dev[dev] = {"units": len(rs), "valid": sum(bool(r.get("valid")) for r in rs),
+                       "seconds_mean": mean([r.get("seconds") for r in rs]),
+                       "wall_s_mean": mean([r.get("wall_s") for r in rs]),
+                       "wall_hours_total": round(sum(r.get("wall_s") or 0 for r in rs) / 3600, 2),
+                       "peak_rss_mib_max": max([r.get("peak_rss_mib") or 0 for r in rs], default=None),
+                       "gpu_peak_allocated_mib_max": max([(r.get("hardware") or {}).get("gpu_peak_allocated_mib") or 0
+                                                          for r in rs], default=None),
+                       "hardware": hw}
+    result["cost"] = {"shap_e_by_device": by_dev,"shap_e_units": len(sh), "shap_e_valid": sum(bool(r.get("valid")) for r in sh),
                       "shap_e_seconds_mean": mean([r.get("seconds") for r in sh]),
                       "shap_e_wall_s_mean": mean([r.get("wall_s") for r in sh]),
                       "shap_e_peak_rss_mib_max": max([r.get("peak_rss_mib") or 0 for r in sh], default=None),
@@ -469,8 +627,11 @@ def cmd_score(cfg, prompts, out):
         save_png(out / "B2_views_gt_native_shap_e.png", contact_sheet(rows_img))
         result["images"] = {"B2_views": str((out / "B2_views_gt_native_shap_e.png").relative_to(ROOT)),
                             "order": [f"{c}: {p}" for c, p, _ in sheets]}
-    (ROOT / cfg["result_json"]).write_text(json.dumps(result, indent=2, default=str))
-    print(f"wrote {cfg['result_json']} ({result['completeness']}; {len(omitted)} omitted units)")
+    if skip_b2:
+        result["B2"]["status"] = "skipped (--skip-b2 validation run)"
+    dest = Path(a.out_json) if getattr(a, "out_json", None) else ROOT / cfg["result_json"]
+    dest.write_text(json.dumps(result, indent=2, default=str))
+    print(f"wrote {dest} ({result['completeness']}; {len(omitted)} omitted units)")
     return result
 
 
@@ -488,11 +649,26 @@ def cmd_report(cfg, prompts, out):
          (f"Shap-E: text300M + vector decoder, {cfg['shap_e']['steps']} Karras steps, guidance "
          f"{cfg['shap_e']['guidance']}, seed {cfg['seed']}. Native: BerkeliumTextShape, resolution "
          f"{cfg['native']['resolution']}, adapter {cfg['native']['adapter']}."), ""]
+    n = R["units"]
+    L += [(f"**Units: {n['done']} of {n['planned_full_design']} in the full frozen design done "
+          f"({'complete' if R['completeness'] == 'full' else 'PARTIAL: E-T3 is not complete'}).** Devices: "
+          f"{', '.join(R['devices'])}. {R['hardware_note']}."), ""]
+    if n["duplicates"]:
+        L += [f"Duplicate units ignored (kept the first ledger): {n['duplicates']}", ""]
     if R["omitted_units"]:
-        L += [f"**Omitted ({len(R['omitted_units'])} generation units, budget):** " +
+        L += [f"**Not run ({len(R['omitted_units'])} generation units):** " +
               ", ".join(f"`{u}`" for u in R["omitted_units"]), ""]
     c = R["cost"]
-    L += ["## Cost", "", "| | value |", "|---|---|",
+    L += ["## Cost by device (Shap-E)", "",
+          ("| device | hardware | units | valid | s/unit in-process | s/unit wall | wall h total | peak RSS MiB | "
+          "peak GPU MiB |"), "|---|---|---|---|---|---|---|---|---|"]
+    for dev, x in c["shap_e_by_device"].items():
+        hw = x.get("hardware") or {}
+        name = hw.get("gpu_name") or f"{hw.get('cpu_count', '?')} vCPU" if hw else "cpu"
+        L.append(f"| {dev} | {name} | {x['units']} | {x['valid']} | {_f(x['seconds_mean'], 1)} | "
+                 f"{_f(x['wall_s_mean'], 1)} | {x['wall_hours_total']} | {x['peak_rss_mib_max']} | "
+                 f"{x['gpu_peak_allocated_mib_max'] or '—'} |")
+    L += ["", "| | value |", "|---|---|",
           f"| Shap-E generations run | {c['shap_e_units']} ({c['shap_e_valid']} valid meshes) |",
           f"| Shap-E seconds / generation (in-process) | {_f(c['shap_e_seconds_mean'], 1)} |",
           f"| Shap-E wall seconds / generation (incl. process start) | {_f(c['shap_e_wall_s_mean'], 1)} |",
@@ -502,18 +678,27 @@ def cmd_report(cfg, prompts, out):
     b1 = R["B1"]
     L += ["## B1 — open-world prompts with real-object ground truth (Google Scanned Objects)", "",
           f"Alignment: {b1['alignment']}. Chamfer-L1 and F-score in unit-extent units.", "",
-          "| object | prompt | route | native CD | native F@0.05 | Shap-E CD | Shap-E F@0.05 | Shap-E valid |",
+          "| object | prompt | route | native CD | native F@0.05 | Shap-E CD | Shap-E F@0.05 | Shap-E status (device) |",
           "|---|---|---|---|---|---|---|---|"]
     for r in b1["rows"]:
         L.append(f"| {r['category']} | {r['prompt']} | {r['route']['generator']} | {_f(r[NATIVE].get('chamfer_l1'))} |"
                  f" {_f(r[NATIVE].get('fscore@0.05'))} | {_f(r[SHAP_E].get('chamfer_l1'))} |"
-                 f" {_f(r[SHAP_E].get('fscore@0.05'))} | {r[SHAP_E]['status']} |")
+                 f" {_f(r[SHAP_E].get('fscore@0.05'))} | {r[SHAP_E]['status']} ({r[SHAP_E].get('device') or '—'}) |")
     L += ["", "| generator | n | valid rate | mean CD-L1 | mean F@0.02 | mean F@0.05 |", "|---|---|---|---|---|---|"]
     for k in (NATIVE, SHAP_E, AUTO):
         a = b1["aggregate"][k]
         L.append(f"| {k} | {a['n']} | {_f(a['valid_rate'], 2)} | {_f(a['chamfer_l1_mean'])} | "
                  f"{_f(a['fscore@0.02_mean'])} | {_f(a['fscore@0.05_mean'])} |")
     L += ["", f"Shap-E closer to GT than native (Chamfer): {b1['aggregate']['shap_e_better_chamfer']}.", ""]
+    sv = b1["seed_variance"]
+    L += ["### B1 seed variance (Shap-E, seeds 0-2)", "",
+          (f"Objects with all 3 seeds: {sv['objects_with_3_seeds']}/12; mean within-object std of Chamfer-L1: "
+          f"{_f(sv['mean_within_object_std'], 4)}."), "",
+          "| prompt | seed 0 CD (dev) | seed 1 CD (dev) | seed 2 CD (dev) | std |", "|---|---|---|---|---|"]
+    for v in sv["rows"]:
+        cells = [f"{_f(x['chamfer_l1'])} ({x['device'] or x['status']})" for x in v["seeds"]]
+        L.append(f"| {v['prompt']} | " + " | ".join(cells) + f" | {_f(v['chamfer_l1_std'], 4)} |")
+    L += [""]
     b2 = R["B2"]
     L += ["## B2 — semantic relevance (CLIP R-precision)", "",
           (f"Evaluator: {b2['evaluator']['model']} (sha256 `{b2['evaluator']['sha256'][:16]}…`), 4 views per mesh, "
@@ -574,12 +759,29 @@ def cmd_report(cfg, prompts, out):
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("phase", choices=["plan", "generate", "score", "report"])
+    ap.add_argument("phase", choices=["plan", "generate", "gpu-smoke", "score", "report"])
+    ap.add_argument("--device", default="cpu", help="generate/gpu-smoke: cpu (the frozen CPU run) or cuda[:N]")
+    ap.add_argument("--groups", default=",".join(GPU_DEFAULT_GROUPS),
+                    help="GPU generate: unit groups, in order (default: the ones outside the CPU budget)")
+    ap.add_argument("--include-cpu-reserved", action="store_true",
+                    help="GPU generate: also take pending B1/B4_single/B2 units; only once the CPU run has stopped")
+    ap.add_argument("--shard", default="0/1", help="GPU generate: i/n, e.g. 0/2 and 1/2 on two GPUs")
+    ap.add_argument("--max-units", type=int, default=10**6)
+    ap.add_argument("--wall-hours", type=float, default=3.0)
+    ap.add_argument("--skip-b2", action="store_true", help="score: validation run without the CLIP evaluator")
+    ap.add_argument("--out-json", default=None, help="score: write here instead of the config's result_json")
     a = ap.parse_args(argv)
+    groups = [g for g in a.groups.split(",") if g]
+    if a.include_cpu_reserved:
+        groups = [g for g in ("B1", "B4_single", "B2")] + [g for g in groups if g not in ("B1", "B4_single", "B2")]
+    a.groups = groups
+    a.shard = tuple(int(x) for x in a.shard.split("/"))
     cfg, prompts = load_cfg()
     out = ROOT / cfg["out"]
-    {"plan": cmd_plan, "generate": cmd_generate, "score": cmd_score, "report": cmd_report}[a.phase](cfg, prompts,
-                                                                                                    out)
+    if a.phase in ("generate", "gpu-smoke", "score"):
+        {"generate": cmd_generate, "gpu-smoke": cmd_gpu_smoke, "score": cmd_score}[a.phase](cfg, prompts, out, a)
+    else:
+        {"plan": cmd_plan, "report": cmd_report}[a.phase](cfg, prompts, out)
     return 0
 
 

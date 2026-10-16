@@ -1,14 +1,14 @@
 {
   "prompt": "a red cone on top of a blue box",
-  "job": "c817f6b31fcf450d8ea1ed5bab8096e1",
-  "mesh_artifact": "7bce160e53ccb3ac229f0e1062d92b860613fe60ef87b6dd4b806bfebc4f944e",
+  "job": "927aca73b21e42a991adb07eb0347a48",
+  "mesh_artifact": "1ba5a8f9cba56737f4011dc238f4e59b59fcea82c6cc1128dd450ef9afd6d730",
   "faces": 6780,
-  "gaussian_artifact": "2360a10fd2c665c47ffc58e5f7317e841d9cb19d6cce17efc9f06753fd3cdbe5",
+  "gaussian_artifact": "b06b8191b004cb4c5bd9e8dd0548503a2345a1ad2afc8112489456c165060d6b",
   "gaussians": 4000,
-  "orbit_render_artifact": "461c5ba107efbed7fb0bddb0f245164a82d4b97395ad41bc17f7fd850c23c3ba",
+  "orbit_render_artifact": "8398e94ac1badb11dc0e81e24ca8b4ea84bb6917128b0133f51dc39368675c35",
   "renderer": "reference_cpu",
   "view_render": {
-    "artifact": "a1afe99ce0c7dd0e3e6a3eb1d7b4d6e72cc841c6553aaf15e855a8eea2ae59c0",
+    "artifact": "775658d31750e61957f07ab7d66a44280ccf092f0d0a6360f3f02e143495ecf1",
     "width": 384,
     "height": 357,
     "renderer": "reference_cpu",
@@ -17,8 +17,8 @@
   },
   "after_restart": {
     "job_state": "completed",
-    "reopened_mesh": "7bce160e53ccb3ac229f0e1062d92b860613fe60ef87b6dd4b806bfebc4f944e"
+    "reopened_mesh": "1ba5a8f9cba56737f4011dc238f4e59b59fcea82c6cc1128dd450ef9afd6d730"
   },
   "console_errors_before_restart": [],
-  "console_errors_during_restart": 1
+  "console_errors_during_restart": 0
 }

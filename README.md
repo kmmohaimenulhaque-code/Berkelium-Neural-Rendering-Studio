@@ -72,6 +72,13 @@ cd apps/desktop && npm ci && npm run dev     # Studio in the browser at http://l
 In Studio: **Scene** workspace → **Generate** → type a prompt (e.g. *a red cone on top of a blue box*) → **Generate**.
 Headless, through the same API: `python scripts/demo_text_to_3d.py "a green capsule next to a white sphere"`.
 
+Open-world prompts (optional, CPU): `bash scripts/setup_openworld.sh` installs Shap-E + CLIP (MIT) into `.venv-cpu`
+and fetches ~3.1 GB of sha256-pinned weights. With the generator on **auto**, Studio sends prompts the native
+model can read to it, and everything else (e.g. *a wooden chair with four legs*) to Shap-E. That takes about 15
+minutes per object on a 2-vCPU machine (16 steps), needs ~2 GB of free RAM, and shows its stage, progress and
+provenance. **plan 2 objects** splits *A on top of / next to B* into two separately generated, editable parts.
+One generation from the command line: `.venv-cpu/bin/python scripts/openworld_generate.py "a teapot" --steps 16`.
+
 Tests: `python -m pytest services/neural/tests -q` (CPU), `python -m pytest tests/e2e -q` (needs
 `npm ci` and `python -m playwright install chromium`), `cd apps/desktop && npm test`. GPU runs: `docs/GPU_RUN_PLAN.md`.
 

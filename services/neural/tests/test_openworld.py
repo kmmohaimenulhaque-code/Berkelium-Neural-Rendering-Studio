@@ -271,3 +271,39 @@ def test_gpu_device_option_is_labelled_unverified_and_cpu_stays_fp32():
     assert cpu.identity["device"] == "cpu" and cpu.identity["sampler"]["use_fp16"] is False
     assert "gpu_path" not in cpu.identity
     assert gpu.identity["sampler"]["use_fp16"] is True and gpu.identity["gpu_path"].startswith("UNVERIFIED")
+
+
+def test_gpu_initial_noise_is_the_seeded_cpu_draw():
+    torch = pytest.importorskip("torch")
+    torch.manual_seed(7)
+    ref = torch.randn(1, 1024 * 1024 // 64, 64)                     # what the CPU run draws for x_T
+    torch.manual_seed(7)
+    with S._cpu_noise("cuda"):
+        moved = []
+        orig_to = torch.Tensor.to
+        torch.Tensor.to = lambda self, *a, **k: moved.append(a) or self   # no GPU here: record the move only
+        try:
+            got = torch.randn(1, 1024 * 1024 // 64, 64, device="cuda")
+        finally:
+            torch.Tensor.to = orig_to
+    assert torch.equal(got, ref) and moved == [("cuda",)]
+    assert torch.randn is not None and torch.randn(2).device.type == "cpu"     # restored
+    ident = S.ShapEGenerator(device="cuda").identity
+    assert ident["initial_noise"].startswith("torch.randn on the seeded CPU generator, moved")
+    assert S.ShapEGenerator().identity["initial_noise"] == "torch.randn on the seeded CPU generator"
+
+
+def test_compose_cleans_faces_that_placement_shrinks_below_the_zero_area_threshold():
+    from berkelium_neural.text3d.geometry import validate_mesh
+    v, f = box()
+    # a sliver of area 2e-12 inside the part: valid before placement, ~0 after the part is scaled down
+    sl = np.array([[0.1, 0.1, 0.1], [0.1 + 2e-6, 0.1, 0.1], [0.1, 0.1 + 2e-6, 0.1]], np.float32)
+    v2 = np.concatenate([v * 2.0, sl * 2.0]).astype(np.float32)
+    f2 = np.concatenate([f, [[len(v), len(v) + 1, len(v) + 2]]])
+    col = np.random.default_rng(0).random((len(v2), 3)).astype(np.float32)
+    assert validate_mesh(v2, f2)["valid"]
+    part = {"vertices": v2, "faces": f2, "colors": col, "report": {"valid": True}}
+    res = P.compose(P.parse("a small red box next to a box")[0], [({"generator": "g"}, part), ({"generator": "g"}, part)])
+    assert res["scene"]["report"]["valid"] and all(p["report"]["valid"] for p in res["parts"])
+    assert res["parts"][0]["report"]["degenerate_faces_removed_after_transform"] == 1
+    assert len(res["parts"][0]["colors"]) == len(res["parts"][0]["vertices"])
