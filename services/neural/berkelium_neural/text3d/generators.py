@@ -3,10 +3,12 @@
   berkelium-textshape  the native 362k-parameter text->SDF model (+ concept adapters routed by routing.py). It reads
                        only its 30-token procedural vocabulary; any other word is <unk>.
   shap-e-text300m      OpenAI Shap-E (MIT) on CPU: open-world prior conditioned on CLIP ViT-L/14 text embeddings.
-  zimage-triposr       Z-Image-Turbo -> TripoSR (decision D-006). Registered but GPU-gated: available() is False with
-                       the M5 blocker (results/m5/E-A1_preflight.json) as the reason, and it never emits output.
+  zimage-triposr       Z-Image-Turbo -> keyed canonical anchor -> TripoSR (decision D-006, zimage_triposr.py). Needs a
+                       GPU (6B diffusion transformer); available() names what is missing on this host. Benchmarked on
+                       Kaggle T4 in E-T3.
   auto                 route(): the native model when the prompt has no content word outside its vocabulary,
-                       otherwise Shap-E. Measured by E-T3 (results/text3d/E-T3_openworld_cpu.json).
+                       otherwise the first AVAILABLE generator of OPEN_WORLD_RANKING (E-T3 evidence order, D-029);
+                       a ranked generator that is skipped because it is unavailable is recorded with its reason.
 
 Every backend returns {vertices, faces, colors, report} in normalized_object units (+Y up, centred, max extent 1.6),
 and exposes an ``identity`` dict (model, commit, weight sha256, licence, sampler) that goes into artifact provenance.
@@ -25,6 +27,11 @@ NATIVE, SHAP_E, ZIMAGE_TRIPOSR, AUTO = "berkelium-textshape", "shap-e-text300m",
 # the native model cannot read (it becomes <unk>).
 STOPWORDS = frozenset({"a", "an", "the", "and", "of", "in", "is", "it", "its", "at", "by", "for", "from", "as"})
 _WORD = re.compile(r"[a-z]+")      # the native tokenizer's own word rule (model.tokenize)
+# Open-world generators in E-T3 evidence order (decision D-029, NEURAL_RENDERING_DECISIONS.md). auto sends a prompt
+# the native model cannot read to the first of these that is available on this host, and records any it skipped.
+OPEN_WORLD_RANKING = (SHAP_E,)
+ROUTING_RULE = ("native iff every content word is in its vocabulary; otherwise the first available of "
+                + " > ".join(OPEN_WORLD_RANKING) + " (E-T3 evidence order, D-029)")
 
 
 class GeneratorUnavailable(RuntimeError):
@@ -109,29 +116,33 @@ def _adapter_concepts(path: str) -> tuple[str, ...]:
     return tuple(torch.load(path, map_location="cpu", weights_only=False)["adapter_config"]["new_tokens"])
 
 
-# ------------------------------------------------------------------------------------------------ GPU-gated
+# ------------------------------------------------------------------------------------------------ zimage-triposr
 class ZImageTripoSR:
-    """D-006 image-prior path. Not runnable here: see results/m5/E-A1_preflight.json. Never emits output."""
+    """D-006 image-prior path (text3d/zimage_triposr.py). Imports nothing heavy until generate()."""
 
     name = ZIMAGE_TRIPOSR
-    PREFLIGHT = REPO / "results/m5/E-A1_preflight.json"
+
+    def __init__(self, **kw):
+        self.kw = kw
+
+    def _impl(self):
+        from .zimage_triposr import ZImageTripoSRGenerator
+        return ZImageTripoSRGenerator(**self.kw)
 
     def available(self) -> tuple[bool, str]:
-        import json
-        try:
-            pf = json.loads(self.PREFLIGHT.read_text())
-            blockers = pf.get("preflight", {}).get("blockers") or [pf.get("status", "unknown")]
-        except (OSError, ValueError):
-            blockers = ["no M5 preflight record"]
-        return False, "GPU-gated (M5 blocked_environment): " + "; ".join(blockers)
+        from .zimage_triposr import available
+        ok, why = available(self.kw.get("cache"))
+        return ok, ("" if ok else "GPU-gated: " + why)
 
     @property
     def identity(self) -> dict:
-        return {"generator": self.name, "model": "Z-Image-Turbo (f332072a) -> TripoSR", "status": "gpu_gated",
-                "license": "Apache-2.0 (Z-Image-Turbo model card) + MIT (TripoSR)"}
+        return self._impl().identity
 
     def generate(self, prompt: str, seed: int = 0, cancel=None, progress=None) -> dict:
-        raise GeneratorUnavailable(self.available()[1])
+        ok, why = self.available()
+        if not ok:
+            raise GeneratorUnavailable(why)
+        return self._impl().generate(prompt, seed, cancel=cancel, progress=progress)
 
 
 # ---------------------------------------------------------------------------------------------------- route
@@ -144,33 +155,47 @@ def route(prompt: str, vocab) -> dict:
     known = set(vocab)
     unknown = sorted({w for w in content_words(prompt) if w not in known})
     if unknown:
-        return {"generator": SHAP_E, "reason": f"content words outside the native vocabulary: {', '.join(unknown)}",
+        return {"generator": OPEN_WORLD_RANKING[0], "ranking": list(OPEN_WORLD_RANKING),
+                "reason": f"content words outside the native vocabulary: {', '.join(unknown)}",
                 "unknown_words": unknown}
     return {"generator": NATIVE, "reason": "every content word is in the native vocabulary", "unknown_words": []}
 
 
+def resolve_open_world(available_fn) -> tuple[str | None, list[dict]]:
+    """First generator of OPEN_WORLD_RANKING whose ``available_fn(name) -> (ok, why)`` is true, plus the ones skipped
+    (with their reasons). (None, skipped) when none is available."""
+    skipped = []
+    for g in OPEN_WORLD_RANKING:
+        ok, why = available_fn(g)
+        if ok:
+            return g, skipped
+        skipped.append({"generator": g, "reason": why})
+    return None, skipped
+
+
 class AutoGenerator:
-    """route() then delegate. If Shap-E is chosen but unavailable, fails with the reason (never silently falls back to
-    a model that cannot read the prompt)."""
+    """route() then delegate. For an open-world prompt the first available generator in E-T3 evidence order is used
+    and every skipped one is recorded in the report; if none is available it fails with all reasons (it never hands
+    the prompt to the native model, which cannot read it)."""
 
     name = AUTO
 
     def __init__(self, native: NativeTextShape | None = None, open_world=None):
         self.native = native or NativeTextShape()
-        self.open_world = open_world
+        self._open = {} if open_world is None else (
+            dict(open_world) if isinstance(open_world, dict) else {open_world.name: open_world})
 
-    def _open_world(self):
-        if self.open_world is None:
-            from .shap_e_backend import ShapEGenerator
-            self.open_world = ShapEGenerator()
-        return self.open_world
+    def _gen(self, name: str):
+        if name not in self._open:
+            self._open[name] = get_generator(name)
+        return self._open[name]
 
     def available(self) -> tuple[bool, str]:
         return self.native.available()
 
     @property
     def identity(self) -> dict:
-        return {"generator": self.name, "rule": "native iff no content word outside its vocabulary, else shap-e",
+        return {"generator": self.name, "rule": ROUTING_RULE, "ranking": list(OPEN_WORLD_RANKING),
                 "stopwords": sorted(STOPWORDS)}
 
     def decide(self, prompt: str) -> dict:
@@ -178,12 +203,16 @@ class AutoGenerator:
 
     def generate(self, prompt: str, seed: int = 0, cancel=None, progress=None) -> dict:
         d = self.decide(prompt)
-        gen = self.native if d["generator"] == NATIVE else self._open_world()
-        ok, why = gen.available()
-        if not ok:
-            raise GeneratorUnavailable(f"auto routed to {gen.name}: {why}")
+        if d["generator"] == NATIVE:
+            gen, skipped = self.native, []
+        else:                                   # injected generators (tests, service) stand in for their names
+            chosen, skipped = resolve_open_world(lambda n: self._gen(n).available())
+            if chosen is None:
+                raise GeneratorUnavailable(f"auto routed to {d['generator']}: " +
+                                           "; ".join(f"{x['generator']}: {x['reason']}" for x in skipped))
+            gen = self._gen(chosen)
         out = gen.generate(prompt, seed, cancel=cancel, progress=progress)
-        out["report"]["routing"] = {"requested": AUTO, "selected": gen.name, **d}
+        out["report"]["routing"] = {"requested": AUTO, "selected": gen.name, **d, "skipped_unavailable": skipped}
         out["report"]["generator_identity"] = gen.identity
         return out
 
@@ -195,7 +224,7 @@ def get_generator(name: str, **kw) -> Generator:
         from .shap_e_backend import ShapEGenerator
         return ShapEGenerator(**kw)
     if name == ZIMAGE_TRIPOSR:
-        return ZImageTripoSR()
+        return ZImageTripoSR(**kw)
     if name == AUTO:
         return AutoGenerator(**kw)
     raise GeneratorUnavailable(f"unknown generator {name!r}")
@@ -209,5 +238,6 @@ def generator_status() -> dict:
         ok, why = g.available()
         out[name] = {"available": ok, "reason": why, "identity": g.identity}
     out[AUTO] = {"available": out[NATIVE]["available"], "reason": out[NATIVE]["reason"],
-                 "identity": AutoGenerator().identity, "routes_to": [NATIVE, SHAP_E]}
+                 "identity": AutoGenerator().identity, "routes_to": [NATIVE, *OPEN_WORLD_RANKING],
+                 "open_world_now": resolve_open_world(lambda n: (out[n]["available"], out[n]["reason"]))[0]}
     return out

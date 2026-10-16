@@ -24,6 +24,9 @@ from .jobs import Cancelled, JobContext
 REPO = Path(__file__).resolve().parents[4]
 PKG_ROOT = Path(__file__).resolve().parents[2]          # services/neural (holds the berkelium_neural package)
 OPEN_WORLD_LABEL = "model-generated, normalized units, not measured geometry"
+PIPELINES = {"shap-e-text300m": "text->CLIP ViT-L/14->Shap-E latent->STF mesh",
+             "zimage-triposr": "text->canonical anchor prompt->Z-Image-Turbo anchor->colour key->TripoSR->clean mesh",
+             "berkelium-textshape": "text->SDF->marching_cubes"}
 SHAP_E_MIN_FREE_MIB = 2000          # E-T3: worker peak ~1.5 GB RSS (1.1 GB anonymous) + ~0.8 GB watchdog margin
 
 
@@ -103,7 +106,14 @@ def planned_generators(req: TextTo3DRequest) -> list[tuple[str, str]]:
     if req.generator != AUTO:
         return [(p, req.generator) for p in prompts]
     vocab = native_vocab(req.model)
-    return [(p, route(p, vocab)["generator"]) for p in prompts]
+    out = []
+    for p in prompts:
+        g = route(p, vocab)["generator"]
+        if g != "berkelium-textshape":           # first AVAILABLE generator in E-T3 evidence order (D-029)
+            from ..text3d.generators import resolve_open_world
+            g = resolve_open_world(_generator_available)[0] or g     # none available: check_model refuses with g
+        out.append((p, g))
+    return out
 
 
 def native_vocab(model: str) -> list[str]:
@@ -201,6 +211,20 @@ class SubprocessShapE:
         if rep.get("status") == "invalid_mesh":
             return {"vertices": None, "faces": None, "colors": None, "report": rep}
         return None
+
+
+def execution_record() -> dict:
+    """Where this job's generation ran: this service host, and its GPU when torch sees one ("local-cpu" otherwise).
+    Benchmark units produced on Kaggle carry their own hardware record in E-T3; this is the live service."""
+    import platform
+    rec = {"host": platform.node(), "device": "local-cpu"}
+    try:
+        import torch
+        if torch.cuda.is_available():
+            rec.update({"device": "local-gpu", "gpu": torch.cuda.get_device_name(0)})
+    except ImportError:
+        pass
+    return rec
 
 
 def _pump(stream, q: queue.Queue):
@@ -336,7 +360,7 @@ def _open_world_mesh(req: TextTo3DRequest, ctx: JobContext, store: ArtifactStore
     from ..camera import orbit_cameras
     from ..text3d import planner
     from ..text3d.generate import mesh_to_glb, mesh_to_ply
-    from ..text3d.generators import AUTO, SHAP_E, route
+    from ..text3d.generators import AUTO, route
     from ..text3d.geometry import render_mesh
     pick = _generator_for(req, ctx)
 
@@ -371,21 +395,30 @@ def _open_world_mesh(req: TextTo3DRequest, ctx: JobContext, store: ArtifactStore
                 raise RuntimeError(f"GENERATION_FAILED: no valid surface for this prompt ({rep.get('reason', rep)})")
             v, f, col = out["vertices"], out["faces"], out["colors"]
             used[g.name] = g.identity
-            pipeline = ("text->CLIP ViT-L/14->Shap-E latent->STF mesh" if g.name == SHAP_E
-                        else "text->SDF->marching_cubes")
+            pipeline = PIPELINES.get(g.name, "text->SDF->marching_cubes")
+            for key, name in (("anchor", "anchor.png"), ("anchor_rgba", "anchor_rgba.png")):
+                if out.get(key) is not None:            # zimage-triposr: the generated image is a first-class artifact
+                    files[name] = (_png(out[key]), "image/png")
     except InterruptedError:
         ctx.check()
         raise
     ctx.check()
-    open_world = SHAP_E in used
+    open_world = bool(set(used) - {"berkelium-textshape"})
     decisions = None
     if req.generator == AUTO:
         vocab = native_vocab(req.model)
-        decisions = [{"prompt": p, **route(p, vocab)} for p in ([plan.a, plan.b] if plan else [req.prompt])]
+        from ..text3d.generators import resolve_open_world
+        selected = dict(planned_generators(req))
+        decisions = []
+        for p in ([plan.a, plan.b] if plan else [req.prompt]):
+            d = {"prompt": p, **route(p, vocab), "selected": selected.get(p)}
+            if d["generator"] != "berkelium-textshape":
+                d["skipped_unavailable"] = resolve_open_world(_generator_available)[1]
+            decisions.append(d)
     first = next(iter(used.values()))
     producer = {"model": first.get("model"), "generator": req.generator if req.generator != AUTO else "+".join(used),
                 "requested_generator": req.generator, "generator_identity": used, "service": __version__,
-                "pipeline": pipeline, "seed": req.seed, "seconds": rep.get("seconds"),
+                "pipeline": pipeline, "seed": req.seed, "seconds": rep.get("seconds"), "execution": execution_record(),
                 "peak_rss_mib": (rep.get("memory_mib") or {}).get("peak_VmRSS"),
                 **({"routing": decisions} if decisions else {}),
                 **({"planner": plan.as_dict()} if plan else {"planner": None, "planner_reason": plan_reason}

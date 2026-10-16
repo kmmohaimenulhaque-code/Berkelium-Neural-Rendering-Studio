@@ -1,0 +1,11 @@
+# zimage-triposr stage B (TripoSR reconstruction) on a CUDA GPU: an overlay venv created with
+#   python -m venv --system-site-packages --without-pip .venv-triposr-cuda && .venv-triposr-cuda/bin/python -m pip install -r <this file>
+# (--without-pip: the Kaggle image has no ensurepip; the system pip, run by the venv interpreter, installs into the venv)
+# so torch/numpy/scipy/scikit-image come from the GPU image and only these shadow it. transformers < 5 because
+# TripoSR's pinned checkpoint stores ViT keys that transformers 5 renamed (D-020, verified in M6).
+transformers==4.57.6
+tokenizers==0.22.2
+huggingface_hub==0.36.2
+omegaconf==2.3.0
+einops==0.8.2
+trimesh==5.1.1

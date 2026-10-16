@@ -26,6 +26,9 @@ from _common import ROOT, provenance
 
 CFG = ROOT / "benchmarks" / "configs" / "text3d_openworld_cpu_v1.json"
 NATIVE, SHAP_E, AUTO = "berkelium-textshape", "shap-e-text300m", "auto"
+ZIMAGE = "zimage-triposr"                       # D-006 image-prior path, GPU only (scripts/zimage_triposr_batch.py)
+ZIMAGE_LORA = "zimage-triposr-anchorlora"       # same, with the canonical 3D-anchor LoRA (Phase II), if trained
+OPEN_WORLD = (SHAP_E, ZIMAGE, ZIMAGE_LORA)      # scored wherever they have units; Shap-E is the frozen baseline
 
 
 def load_cfg():
@@ -81,9 +84,11 @@ EXTRA_GROUPS = ["B1_seed1", "B1_seed2"]          # frozen design, run "on budget
 GPU_DEFAULT_GROUPS = ["B4_planner", "B1_seed1", "B1_seed2"]   # outside the CPU budget: no overlap with the CPU run
 
 
-def plan_units(cfg, prompts, groups_order=None):
+def plan_units(cfg, prompts, groups_order=None, gen=SHAP_E):
     """-> (ordered list of units {gen, prompt, seed, group}, routing decisions per benchmark prompt).
-    ``groups_order`` defaults to the config's priority list (the CPU run)."""
+    ``groups_order`` defaults to the config's priority list (the CPU run). Every group except "native" is generated
+    by ``gen`` (the open-world generator under test; Shap-E for the frozen design). "B3_all" is every B3 prompt
+    (retention of an open-world generator on procedural captions, run for generators other than the frozen ones)."""
     from berkelium_neural.text3d import planner
     from berkelium_neural.text3d.generators import route
     from berkelium_neural.text3d.model import build_vocab
@@ -101,16 +106,17 @@ def plan_units(cfg, prompts, groups_order=None):
         "B2": [p["prompt"] for p in prompts["B2_gt_free"]["prompts"]],
         "B4_planner": parts,
         "B3_routed": [p for g, p in all_benchmark_prompts(prompts) if g == "B3" and routing[p]["generator"] == SHAP_E],
+        "B3_all": [p for g, p in all_benchmark_prompts(prompts) if g == "B3"],
     }
     units, seen = [], set()
     for group in groups_order or cfg["priority"]:
-        gen = NATIVE if group == "native" else SHAP_E
+        g = NATIVE if group == "native" else gen
         prompts_, s = (groups["B1"], int(group[-1])) if group.startswith("B1_seed") else (groups[group], seed)
         for p in prompts_:
-            k = unit_key(gen, p, s)
+            k = unit_key(g, p, s)
             if k not in seen:
                 seen.add(k)
-                units.append({"gen": gen, "prompt": p, "seed": s, "group": group})
+                units.append({"gen": g, "prompt": p, "seed": s, "group": group})
     return units, routing
 
 
@@ -387,7 +393,38 @@ def mean(xs):
     return float(np.mean(xs)) if xs else None
 
 
+def fetch_b1_scan(o: dict) -> Path:
+    """The B1 ground-truth scan zip, downloaded once from Gazebo Fuel and checked against the sha256 frozen in the
+    prompt list (a changed download is refused)."""
+    z = ROOT / "data" / "gso" / o["name"] / f"{o['name']}.zip"
+    if not z.exists():
+        import urllib.request
+
+        from berkelium_neural.fitting.real_object import GSO_BASE
+        z.parent.mkdir(parents=True, exist_ok=True)
+        tmp = z.with_suffix(".part")
+        urllib.request.urlretrieve(f"{GSO_BASE}/{o['name']}/1/{o['name']}.zip", tmp)
+        tmp.rename(z)
+    sha = hashlib.sha256(z.read_bytes()).hexdigest()
+    if sha != o["zip_sha256"]:
+        raise RuntimeError(f"{o['name']}: scan zip sha256 {sha} != frozen {o['zip_sha256']}")
+    return z
+
+
+def fetch_evaluator(cfg) -> Path:
+    p = ROOT / cfg["evaluator"]["path"]
+    if not p.exists():
+        import urllib.request
+        p.parent.mkdir(parents=True, exist_ok=True)
+        urllib.request.urlretrieve(cfg["evaluator"]["url"], p.with_suffix(".part"))
+        p.with_suffix(".part").rename(p)
+    return p
+
+
 def cmd_score(cfg, prompts, out, a=None):
+    """Score every generator that has units: the frozen E-T3 design (native, Shap-E, auto) plus any further
+    open-world generator (zimage-triposr, its anchor-LoRA variant). Rules are the frozen ones; candidates are only
+    added. A generator's units that were planned but are missing are listed as omitted for that generator."""
     from berkelium_neural.fitting.real_object import (
         contact_sheet,
         load_scan,
@@ -409,6 +446,15 @@ def cmd_score(cfg, prompts, out, a=None):
     U = lambda gen, p: done.get(unit_key(gen, p, seed))
     omitted = [unit_key(u["gen"], u["prompt"], u["seed"]) for u in units_planned
                if unit_key(u["gen"], u["prompt"], u["seed"]) not in done]
+    opens = [g for g in OPEN_WORLD if any(r["gen"] == g for r in done.values())]
+    extra_omitted = {}
+    for g in opens:
+        if g == SHAP_E:
+            continue
+        pl, _ = plan_units(cfg, prompts, ["B1", "B2", "B3_all", "B4_single", "B4_planner", "B1_seed1", "B1_seed2"],
+                           gen=g)
+        extra_omitted[g] = [unit_key(u["gen"], u["prompt"], u["seed"]) for u in pl
+                            if unit_key(u["gen"], u["prompt"], u["seed"]) not in done]
 
     def routed(p):
         return routing[p]["generator"]
@@ -416,28 +462,29 @@ def cmd_score(cfg, prompts, out, a=None):
     result = {"experiment": "E-T3", "protocol": "berkelium-text3d-eval/1 + E-T3 extensions (openworld_eval.py)",
               "config": cfg, "prompts_file": cfg["prompts"],
               "prompts_sha256": hashlib.sha256((ROOT / cfg["prompts"]).read_bytes()).hexdigest(),
-              "training_performed": "none", "scoring_environment": provenance(),
+              "training_performed": "none for native/Shap-E/zimage-triposr; see the anchor-LoRA model card for "
+                                    "zimage-triposr-anchorlora", "scoring_environment": provenance(),
+              "generators": [NATIVE, *opens], "router": routing_rule_name(),
               "devices": sorted({r.get("device", "cpu") for r in done.values()}),
-              "hardware_note": ("CPU and GPU units use the same weights, 16 steps, fp32 sampling and the same initial "
-                                "noise (seeded CPU generator); they are not bitwise identical (different kernels), "
-                                "so every row records the device it ran on"),
+              "hardware_note": ("Shap-E CPU and GPU units use the same weights, 16 steps, fp32 sampling and the same "
+                                "initial noise (seeded CPU generator); they are not bitwise identical (different "
+                                "kernels). zimage-triposr runs only on a GPU. Every row records its device"),
               "units": {"done": len(done), "planned_full_design": len(units_planned), "duplicates": duplicates,
                         "excluded_infrastructure": [json.loads(x) for x in (out / "excluded_units.jsonl").read_text()
                                                     .splitlines() if x.strip()]
                         if (out / "excluded_units.jsonl").exists() else []},
-              "omitted_units": omitted, "completeness": "full" if not omitted else "partial"}
+              "omitted_units": omitted, "omitted_units_other_generators": extra_omitted,
+              "completeness": "full" if not omitted and not any(extra_omitted.values()) else "partial"}
 
     # ---- B1: open-world prompts with real-object ground truth (generous alignment)
     b1 = []
     gt_cache = {}
+    cands1 = [NATIVE, *opens]
     for o in prompts["B1_open_world_gt"]["objects"]:
-        z = ROOT / "data" / "gso" / o["name"] / f"{o['name']}.zip"
-        scan = load_scan(z, tex_size=256)
-        if scan.source["zip_sha256"] != o["zip_sha256"]:
-            raise RuntimeError(f"{o['name']}: scan zip changed since the prompt list was frozen")
+        scan = load_scan(fetch_b1_scan(o), tex_size=256)
         gt_cache[o["prompt"]] = scan
         row = {"object": o["name"], "category": o["category"], "prompt": o["prompt"], "route": routing[o["prompt"]]}
-        for cand, gen in ((NATIVE, NATIVE), (SHAP_E, SHAP_E), (AUTO, routed(o["prompt"]))):
+        for cand, gen in [(c, c) for c in cands1] + [(AUTO, routed(o["prompt"]))]:
             u = U(gen, o["prompt"])
             m = load_mesh(u)
             row[cand] = {"status": u["status"] if u else "omitted", "valid": bool(m), "generator": gen,
@@ -446,35 +493,57 @@ def cmd_score(cfg, prompts, out, a=None):
                             if m else {"chamfer_l1": None, "fscore@0.05": 0.0 if u else None})}
         b1.append(row)
     agg1 = {}
-    for cand in (NATIVE, SHAP_E, AUTO):
+    for cand in [*cands1, AUTO]:
         rows = [r[cand] for r in b1 if r[cand]["status"] != "omitted"]
         agg1[cand] = {"n": len(rows), "valid_rate": mean([float(r["valid"]) for r in rows]),
                       "chamfer_l1_mean": mean([r.get("chamfer_l1") for r in rows]),
                       "fscore@0.05_mean": mean([r.get("fscore@0.05") for r in rows]),
-                      "fscore@0.02_mean": mean([r.get("fscore@0.02") for r in rows])}
-    both = [r for r in b1 if r[NATIVE].get("chamfer_l1") is not None and r[SHAP_E].get("chamfer_l1") is not None]
-    agg1["shap_e_better_chamfer"] = f"{sum(r[SHAP_E]['chamfer_l1'] < r[NATIVE]['chamfer_l1'] for r in both)}/{len(both)}"
-    # seed variance (frozen design: seeds 1-2 on B1, Shap-E only; the native model is deterministic)
-    var = []
-    for o in prompts["B1_open_world_gt"]["objects"]:
-        per = []
-        for sd in (0, 1, 2):
-            u = done.get(unit_key(SHAP_E, o["prompt"], sd))
-            m = load_mesh(u)
-            sc = align_and_score(m["vertices"], m["faces"], gt_cache[o["prompt"]].v, gt_cache[o["prompt"]].f) \
-                if m else None
-            per.append({"seed": sd, "status": u["status"] if u else "omitted", "device": u.get("device") if u else None,
-                        "chamfer_l1": sc and sc["chamfer_l1"], "fscore@0.05": sc and sc["fscore@0.05"]})
-        cd = [x["chamfer_l1"] for x in per if x["chamfer_l1"] is not None]
-        var.append({"prompt": o["prompt"], "seeds": per, "n": len(cd),
-                    "chamfer_l1_mean": mean(cd), "chamfer_l1_std": float(np.std(cd)) if len(cd) > 1 else None})
+                      "fscore@0.02_mean": mean([r.get("fscore@0.02") for r in rows]),
+                      "fscore@0.05_with_failures_as_0": mean([r.get("fscore@0.05") or 0.0 for r in rows])}
+    pairs = {}
+    for g in opens:
+        both = [r for r in b1 if r[NATIVE].get("chamfer_l1") is not None and r[g].get("chamfer_l1") is not None]
+        wins = sum(r[g]["chamfer_l1"] < r[NATIVE]["chamfer_l1"] for r in both)
+        pairs[f"{g}_better_chamfer_than_native"] = f"{wins}/{len(both)}"
+    if SHAP_E in opens:
+        for g in opens:
+            if g == SHAP_E:
+                continue
+            both = [r for r in b1 if r[SHAP_E].get("chamfer_l1") is not None and r[g].get("chamfer_l1") is not None]
+            d = [r[g]["chamfer_l1"] - r[SHAP_E]["chamfer_l1"] for r in both]
+            df = [(r[g].get("fscore@0.05") or 0) - (r[SHAP_E].get("fscore@0.05") or 0) for r in b1
+                  if r[g]["status"] != "omitted" and r[SHAP_E]["status"] != "omitted"]
+            pairs[f"{g}_vs_shap_e"] = {"n_both_valid": len(both), "better_chamfer": sum(x < 0 for x in d),
+                                       "paired_chamfer_delta": paired_ci(d), "paired_fscore@0.05_delta": paired_ci(df)}
+    agg1["pairwise"] = pairs
+    agg1["shap_e_better_chamfer"] = pairs.get(f"{SHAP_E}_better_chamfer_than_native")
+    var = {}
+    for g in opens:
+        rows_v = []
+        for o in prompts["B1_open_world_gt"]["objects"]:
+            per = []
+            for sd in (0, 1, 2):
+                u = done.get(unit_key(g, o["prompt"], sd))
+                m = load_mesh(u)
+                sc = align_and_score(m["vertices"], m["faces"], gt_cache[o["prompt"]].v, gt_cache[o["prompt"]].f) \
+                    if m else None
+                per.append({"seed": sd, "status": u["status"] if u else "omitted",
+                            "device": u.get("device") if u else None,
+                            "chamfer_l1": sc and sc["chamfer_l1"], "fscore@0.05": sc and sc["fscore@0.05"]})
+            cd = [x["chamfer_l1"] for x in per if x["chamfer_l1"] is not None]
+            rows_v.append({"prompt": o["prompt"], "seeds": per, "n": len(cd), "chamfer_l1_mean": mean(cd),
+                           "chamfer_l1_std": float(np.std(cd)) if len(cd) > 1 else None})
+        var[g] = {"rows": rows_v, "objects_with_3_seeds": sum(v["n"] == 3 for v in rows_v),
+                  "mean_within_object_std": mean([v["chamfer_l1_std"] for v in rows_v]),
+                  "seed_mean_chamfer_l1": mean([v["chamfer_l1_mean"] for v in rows_v])}
     result["B1"] = {"rows": b1, "aggregate": agg1, "alignment": "unit extent + best of 24 axis rotations + ICP "
                     "(same for every generator; generous: forgives pose, frame and scale)",
-                    "seed_variance": {"rows": var, "objects_with_3_seeds": sum(v["n"] == 3 for v in var),
-                                      "mean_within_object_std": mean([v["chamfer_l1_std"] for v in var])}}
+                    "seed_variance": var.get(SHAP_E, {}), "seed_variance_by_generator": var}
 
     # ---- B2: semantic relevance (evaluator CLIP ViT-B/32), B1 + GT-free prompts, all benchmark prompts as candidates
     skip_b2 = bool(getattr(a, "skip_b2", False))
+    if not skip_b2:
+        fetch_evaluator(cfg)
     model, preprocess = (None, None) if skip_b2 else clip_evaluator(cfg)
     cand_prompts = [p for _, p in all_benchmark_prompts(prompts)]
     T = None if skip_b2 else embed_texts(model, cand_prompts)
@@ -482,7 +551,7 @@ def cmd_score(cfg, prompts, out, a=None):
         [p["prompt"] for p in prompts["B2_gt_free"]["prompts"]]
     b2 = {"evaluator": cfg["evaluator"], "candidates": len(cand_prompts), "views": 4, "rows": []}
     sheets = []
-    for cand in () if skip_b2 else ("gt_scan", NATIVE, SHAP_E, AUTO):
+    for cand in () if skip_b2 else ("gt_scan", NATIVE, *opens, AUTO):
         embs, truth, rows = [], [], []
         for p in sem_prompts:
             if cand == "gt_scan":
@@ -492,8 +561,8 @@ def cmd_score(cfg, prompts, out, a=None):
                 cams = orbit_cameras(4, 3.2, 25.0, 224, 224, phase_deg=30.0)
                 ims = []
                 for c in cams:
-                    rgb, a = render_scan(gt_cache[p], c)[:2]
-                    ims.append(rgb + (1 - a[..., None]))        # premultiplied on black -> white background
+                    rgb, al = render_scan(gt_cache[p], c)[:2]
+                    ims.append(rgb + (1 - al[..., None]))       # premultiplied on black -> white background
                 gen, st = "gt", "ok"
             else:
                 gen = cand if cand != AUTO else routed(p)
@@ -505,7 +574,7 @@ def cmd_score(cfg, prompts, out, a=None):
             embs.append(embed_views(model, preprocess, ims))
             truth.append(cand_prompts.index(p))
             rows.append({"prompt": p, "generator": gen, "status": st})
-            if cand in (SHAP_E, NATIVE, "gt_scan") and p in sem_prompts[:4]:
+            if cand != AUTO and p in sem_prompts[:4]:
                 sheets.append((cand, p, ims))
         if not embs:
             continue
@@ -516,32 +585,36 @@ def cmd_score(cfg, prompts, out, a=None):
                            "per_prompt": rows})
     b2["residual_bias"] = ("evaluator (ViT-B/32) and Shap-E's conditioner (ViT-L/14) are both OpenAI CLIP models "
                            "trained on the same WIT-400M data: Shap-E outputs may score higher partly because they "
-                           "were optimised toward a related embedding space, not only because they look right")
+                           "were optimised toward a related embedding space, not only because they look right. "
+                           "zimage-triposr is conditioned by Qwen3 (a different lineage) and is not favoured this way")
     result["B2"] = b2
 
-    # ---- B3: retention on procedural prompts (existing protocol), auto vs native
+    # ---- B3: retention on procedural prompts (existing protocol): native, auto, and every open-world generator
     b3r, root = records(prompts, "B3_retention")
     b3 = {"rows": [], "aggregate": {}}
+    cands3 = [NATIVE, AUTO, *opens]
     for r in b3r:
         row = {"asset_id": r.asset_id, "caption": r.caption, "route": routing[r.caption]}
-        for cand, gen in ((NATIVE, NATIVE), (AUTO, routed(r.caption))):
+        for cand in cands3:
+            gen = routed(r.caption) if cand == AUTO else cand
             u = U(gen, r.caption)
             if u is None:
                 row[cand] = {"status": "omitted"}
                 continue
             row[cand] = {**evaluate_record(_Fixed(mesh_or_empty(u), gen), r, root), "generator": gen}
         b3["rows"].append(row)
-    for cand in (NATIVE, AUTO):
+    for cand in cands3:
         rows = [x[cand] for x in b3["rows"] if x[cand].get("status") != "omitted"]
         b3["aggregate"][cand] = {"n": len(rows), "success_rate": mean([float(x["success"]) for x in rows]),
                                  "chamfer_l1_mean": mean([x["chamfer_l1"] for x in rows]),
                                  "fscore@0.05_mean": mean([x["fscore@0.05"] for x in rows]),
                                  "part_count_accuracy": mean([float(x["part_count_correct"]) for x in rows]),
                                  "color_accuracy": (sum(x["color_parts_correct"] for x in rows) /
-                                                    max(1, sum(x["color_parts_total"] for x in rows)))}
+                                                    max(1, sum(x["color_parts_total"] for x in rows)))
+                                 if rows else None}
     result["B3"] = b3
 
-    # ---- B4: composition {native, shap-e} x {single-shot, planner}
+    # ---- B4: composition {native, open-world generators} x {single-shot, planner}
     b4r, root = records(prompts, "B4_composition")
     b4 = {"rows": [], "aggregate": {}, "touch_tolerance": 0.02}
     for r in b4r:
@@ -550,7 +623,7 @@ def cmd_score(cfg, prompts, out, a=None):
         plan, _ = planner.parse(r.caption)
         row = {"asset_id": r.asset_id, "caption": r.caption, "plan": plan.as_dict() if plan else None,
                "gt_components": int(gt["components"]), "gt_touch_components": gt_touch}
-        for gen in (NATIVE, SHAP_E):
+        for gen in (NATIVE, *opens):
             for mode in ("single", "planner"):
                 name = f"{gen}:{mode}"
                 if mode == "single":
@@ -559,28 +632,25 @@ def cmd_score(cfg, prompts, out, a=None):
                         row[name] = {"status": "omitted"}
                         continue
                     out_ = mesh_or_empty(u)
+                    dev = u.get("device", "cpu")
                 else:
                     ua, ub = U(gen, plan.a), U(gen, plan.b)
                     if ua is None or ub is None:
                         row[name] = {"status": "omitted"}
                         continue
                     ma, mb = mesh_or_empty(ua), mesh_or_empty(ub)
-                    devs = sorted({ua.get("device", "cpu"), ub.get("device", "cpu")})
+                    dev = "+".join(sorted({ua.get("device", "cpu"), ub.get("device", "cpu")}))
                     comp = planner.compose(plan, [({"generator": gen}, ma), ({"generator": gen}, mb)])
-                    if comp["status"] != "ok":
-                        out_ = {"vertices": None, "faces": None, "colors": None,
-                                "report": {"valid": False, "seconds": None}}
-                    else:
-                        out_ = comp["scene"]
+                    out_ = comp["scene"] if comp["status"] == "ok" else \
+                        {"vertices": None, "faces": None, "colors": None, "report": {"valid": False, "seconds": None}}
                 ev = evaluate_record(_Fixed(out_, name), r, root)
                 al = align_and_score(out_["vertices"], out_["faces"], gt["v"], gt["f"])
                 tc = touch_components(out_["vertices"], out_["faces"])
-                row[name] = {**ev, "device": "+".join(devs) if mode == "planner" else u.get("device", "cpu"),
-                             "aligned_chamfer_l1": al.get("chamfer_l1"),
+                row[name] = {**ev, "device": dev, "aligned_chamfer_l1": al.get("chamfer_l1"),
                              "aligned_fscore@0.05": al.get("fscore@0.05"), "touch_components": tc,
                              "touch_part_count_correct": tc == gt_touch if tc is not None else False}
         b4["rows"].append(row)
-    for gen in (NATIVE, SHAP_E):
+    for gen in (NATIVE, *opens):
         for mode in ("single", "planner"):
             name = f"{gen}:{mode}"
             rows = [x[name] for x in b4["rows"] if x[name].get("status") != "omitted"]
@@ -594,31 +664,43 @@ def cmd_score(cfg, prompts, out, a=None):
                                    max(1, sum(x["color_parts_total"] for x in rows))) if rows else None}
     result["B4"] = b4
 
-    # ---- router accuracy against the intended domain of each benchmark (B1/B2 open-world, B3/B4 procedural)
-    intended = {p: (SHAP_E if g in ("B1", "B2") else NATIVE) for g, p in all_benchmark_prompts(prompts)}
-    ok = [routing[p]["generator"] == intended[p] for p in intended]
-    oracle = [(r["prompt"], SHAP_E if r[SHAP_E]["chamfer_l1"] < r[NATIVE]["chamfer_l1"] else NATIVE)
-              for r in both]
-    result["routing"] = {"rule": "native iff no content word outside the native vocabulary, else shap-e",
-                         "domain_accuracy": f"{sum(ok)}/{len(ok)}",
+    # ---- router: domain accuracy and agreement with the per-prompt oracle (best B1 Chamfer among generators)
+    intended = {p: ("open_world" if g in ("B1", "B2") else NATIVE) for g, p in all_benchmark_prompts(prompts)}
+    ok = [(routing[p]["generator"] != NATIVE) == (intended[p] == "open_world") for p in intended]
+    oracle = []
+    for r in b1:
+        scored = {g: r[g]["chamfer_l1"] for g in cands1 if r[g].get("chamfer_l1") is not None}
+        if scored:
+            oracle.append((r["prompt"], min(scored, key=scored.get)))
+    result["routing"] = {"rule": routing_rule_name(), "domain_accuracy": f"{sum(ok)}/{len(ok)}",
                          "b1_oracle_agreement": f"{sum(routing[p]['generator'] == g for p, g in oracle)}/{len(oracle)}",
-                         "decisions": routing}
+                         "b1_oracle": dict(oracle), "decisions": routing,
+                         "in_sample_note": ("the open-world default was chosen from these same B1/B2 numbers "
+                                            "(NEURAL_RENDERING_DECISIONS.md); auto's B1/B2 scores are therefore "
+                                            "in-sample, not an independent test of the router")}
 
-    # ---- cost
+    # ---- cost (per generator, per device)
+    cost = {}
+    for g in opens:
+        sh = [r for r in done.values() if r["gen"] == g]
+        by_dev = {}
+        for dev in sorted({r.get("device", "cpu") for r in sh}):
+            rs = [r for r in sh if r.get("device", "cpu") == dev]
+            hw = next((r.get("hardware") for r in rs if r.get("hardware")), None)
+            by_dev[dev] = {"units": len(rs), "valid": sum(bool(r.get("valid")) for r in rs),
+                           "seconds_mean": mean([r.get("seconds") for r in rs]),
+                           "wall_s_mean": mean([r.get("wall_s") or r.get("seconds") for r in rs]),
+                           "wall_hours_total": round(sum((r.get("wall_s") or r.get("seconds") or 0) for r in rs)
+                                                     / 3600, 2),
+                           "peak_rss_mib_max": max([r.get("peak_rss_mib") or 0 for r in rs], default=None),
+                           "gpu_peak_allocated_mib_max": max([(r.get("hardware") or {}).get("gpu_peak_allocated_mib")
+                                                              or r.get("peak_gpu_mib") or 0 for r in rs], default=None),
+                           "hardware": hw}
+        cost[g] = {"by_device": by_dev, "units": len(sh), "valid": sum(bool(r.get("valid")) for r in sh),
+                   "status_counts": {s: sum(r["status"] == s for r in sh) for s in sorted({r["status"] for r in sh})}}
     sh = [r for r in done.values() if r["gen"] == SHAP_E]
-    by_dev = {}
-    for dev in sorted({r.get("device", "cpu") for r in sh}):
-        rs = [r for r in sh if r.get("device", "cpu") == dev]
-        hw = next((r.get("hardware") for r in rs if r.get("hardware")), None)
-        by_dev[dev] = {"units": len(rs), "valid": sum(bool(r.get("valid")) for r in rs),
-                       "seconds_mean": mean([r.get("seconds") for r in rs]),
-                       "wall_s_mean": mean([r.get("wall_s") for r in rs]),
-                       "wall_hours_total": round(sum(r.get("wall_s") or 0 for r in rs) / 3600, 2),
-                       "peak_rss_mib_max": max([r.get("peak_rss_mib") or 0 for r in rs], default=None),
-                       "gpu_peak_allocated_mib_max": max([(r.get("hardware") or {}).get("gpu_peak_allocated_mib") or 0
-                                                          for r in rs], default=None),
-                       "hardware": hw}
-    result["cost"] = {"shap_e_by_device": by_dev,"shap_e_units": len(sh), "shap_e_valid": sum(bool(r.get("valid")) for r in sh),
+    result["cost"] = {"by_generator": cost, "shap_e_by_device": cost.get(SHAP_E, {}).get("by_device", {}),
+                      "shap_e_units": len(sh), "shap_e_valid": sum(bool(r.get("valid")) for r in sh),
                       "shap_e_seconds_mean": mean([r.get("seconds") for r in sh]),
                       "shap_e_wall_s_mean": mean([r.get("wall_s") for r in sh]),
                       "shap_e_peak_rss_mib_max": max([r.get("peak_rss_mib") or 0 for r in sh], default=None),
@@ -627,15 +709,31 @@ def cmd_score(cfg, prompts, out, a=None):
                                         for s in sorted({r["status"] for r in done.values()})}}
     if sheets:
         rows_img = [[*ims] for _, _, ims in sheets]
-        save_png(out / "B2_views_gt_native_shap_e.png", contact_sheet(rows_img))
-        result["images"] = {"B2_views": str((out / "B2_views_gt_native_shap_e.png").relative_to(ROOT)),
+        save_png(out / "B2_views.png", contact_sheet(rows_img))
+        result["images"] = {"B2_views": str((out / "B2_views.png").relative_to(ROOT)),
                             "order": [f"{c}: {p}" for c, p, _ in sheets]}
     if skip_b2:
         result["B2"]["status"] = "skipped (--skip-b2 validation run)"
     dest = Path(a.out_json) if getattr(a, "out_json", None) else ROOT / cfg["result_json"]
     dest.write_text(json.dumps(result, indent=2, default=str))
-    print(f"wrote {dest} ({result['completeness']}; {len(omitted)} omitted units)")
+    print(f"wrote {dest} ({result['completeness']}; {len(omitted)} omitted frozen-design units)")
     return result
+
+
+def paired_ci(d: list, n_boot: int = 10000, seed: int = 0) -> dict:
+    """Mean of paired differences with a 95 % percentile-bootstrap CI (the E-T1/E-T2 convention)."""
+    if not d:
+        return {"n": 0, "mean": None, "ci95": None}
+    x = np.asarray(d, np.float64)
+    rng = np.random.default_rng(seed)
+    bs = x[rng.integers(0, len(x), (n_boot, len(x)))].mean(1)
+    return {"n": len(x), "mean": float(x.mean()), "ci95": [float(np.percentile(bs, 2.5)),
+                                                          float(np.percentile(bs, 97.5))]}
+
+
+def routing_rule_name() -> str:
+    from berkelium_neural.text3d.generators import ROUTING_RULE
+    return ROUTING_RULE
 
 
 def _f(x, nd=3):
@@ -643,72 +741,83 @@ def _f(x, nd=3):
 
 
 def cmd_report(cfg, prompts, out):
-    """E-T3_openworld_cpu.report.md from the result JSON (numbers only from that file)."""
+    """E-T3 report markdown from the result JSON (numbers only from that file)."""
     R = json.loads((ROOT / cfg["result_json"]).read_text())
-    L = [f"# E-T3 open-world text-to-3D on CPU — {R['completeness']} run", "",
-         f"Config `{CFG.relative_to(ROOT)}`; frozen prompts `{R['prompts_file']}` (sha256 `{R['prompts_sha256'][:16]}…`).",
-         (f"Device: CPU ({R['environment'].get('platform')}); torch {R['environment'].get('torch')}; "
-         f"git {R['environment'].get('git_commit')}. Training performed: **{R['training_performed']}**."),
+    gens = R.get("generators", [NATIVE, SHAP_E])
+    L = [f"# E-T3 open-world text-to-3D — {R['completeness']} run", "",
+         f"Config `{CFG.relative_to(ROOT)}`; frozen prompts `{R['prompts_file']}` "
+         f"(sha256 `{R['prompts_sha256'][:16]}…`).",
+         (f"Scored on {R['scoring_environment'].get('platform')}; git {R['scoring_environment'].get('git_commit')}. "
+          f"Generators: {', '.join(gens)}. Training: {R['training_performed']}."),
          (f"Shap-E: text300M + vector decoder, {cfg['shap_e']['steps']} Karras steps, guidance "
-         f"{cfg['shap_e']['guidance']}, seed {cfg['seed']}. Native: BerkeliumTextShape, resolution "
-         f"{cfg['native']['resolution']}, adapter {cfg['native']['adapter']}."), ""]
+          f"{cfg['shap_e']['guidance']}, seed {cfg['seed']}. Native: BerkeliumTextShape, resolution "
+          f"{cfg['native']['resolution']}, adapter {cfg['native']['adapter']}. zimage-triposr: Z-Image-Turbo "
+          "(9 steps, CFG 0, 1024², canonical anchor template) -> colour key -> TripoSR (mc 256)."), ""]
     n = R["units"]
-    L += [(f"**Units: {n['done']} of {n['planned_full_design']} in the full frozen design done "
-          f"({'complete' if R['completeness'] == 'full' else 'PARTIAL: E-T3 is not complete'}).** Devices: "
-          f"{', '.join(R['devices'])}. {R['hardware_note']}."), ""]
+    L += [(f"**Units: {n['done']} done; frozen design {n['planned_full_design']} units "
+           f"({len(R['omitted_units'])} omitted).** Devices: {', '.join(R['devices'])}. {R['hardware_note']}."), ""]
+    for g, om in R.get("omitted_units_other_generators", {}).items():
+        L += [f"{g}: {len(om)} planned units not produced" + (": " + ", ".join(f"`{u}`" for u in om) if om else "."),
+              ""]
     if n["duplicates"]:
-        L += [f"Duplicate units ignored (kept the first ledger): {n['duplicates']}", ""]
+        L += [f"Duplicate units ignored (kept the first ledger): {len(n['duplicates'])}", ""]
     for x in n.get("excluded_infrastructure", []):
         L += [(f"**Excluded run (infrastructure, re-run):** `{x['key']}` {x['status']} after {x['wall_s']} s on "
-              f"{x.get('device', 'cpu')}: {x['exclusion_reason']} Log: `{x['log']}`."), ""]
+               f"{x.get('device', 'cpu')}: {x['exclusion_reason']} Log: `{x['log']}`."), ""]
     if R["omitted_units"]:
-        L += [f"**Not run ({len(R['omitted_units'])} generation units):** " +
+        L += [f"**Frozen-design units not run ({len(R['omitted_units'])}):** " +
               ", ".join(f"`{u}`" for u in R["omitted_units"]), ""]
-    c = R["cost"]
-    L += ["## Cost by device (Shap-E)", "",
-          ("| device | hardware | units | valid | s/unit in-process | s/unit wall | wall h total | peak RSS MiB | "
-          "peak GPU MiB |"), "|---|---|---|---|---|---|---|---|---|"]
-    for dev, x in c["shap_e_by_device"].items():
-        hw = x.get("hardware") or {}
-        name = hw.get("gpu_name") or f"{hw.get('cpu_count', '?')} vCPU" if hw else "cpu"
-        L.append(f"| {dev} | {name} | {x['units']} | {x['valid']} | {_f(x['seconds_mean'], 1)} | "
-                 f"{_f(x['wall_s_mean'], 1)} | {x['wall_hours_total']} | {x['peak_rss_mib_max']} | "
-                 f"{x['gpu_peak_allocated_mib_max'] or '—'} |")
-    L += ["", "| | value |", "|---|---|",
-          f"| Shap-E generations run | {c['shap_e_units']} ({c['shap_e_valid']} valid meshes) |",
-          f"| Shap-E seconds / generation (in-process) | {_f(c['shap_e_seconds_mean'], 1)} |",
-          f"| Shap-E wall seconds / generation (incl. process start) | {_f(c['shap_e_wall_s_mean'], 1)} |",
-          f"| Shap-E peak RSS (max over runs) | {c['shap_e_peak_rss_mib_max']} MiB |",
-          f"| native seconds / generation | {_f(c['native_seconds_mean'], 2)} |",
-          f"| unit status counts | {c['status_counts']} |", ""]
+    L += ["## Cost by generator and device", "",
+          "| generator | device | hardware | units | valid | s/unit | wall h total | peak RSS MiB | peak GPU MiB |",
+          "|---|---|---|---|---|---|---|---|---|"]
+    for g, c in R["cost"].get("by_generator", {}).items():
+        for dev, x in c["by_device"].items():
+            hw = x.get("hardware") or {}
+            name = hw.get("gpu_name") or (f"{hw.get('cpu_count', '?')} vCPU" if hw else "cpu")
+            L.append(f"| {g} | {dev} | {name} | {x['units']} | {x['valid']} | {_f(x['seconds_mean'], 1)} | "
+                     f"{x['wall_hours_total']} | {x['peak_rss_mib_max'] or '—'} | "
+                     f"{x['gpu_peak_allocated_mib_max'] or '—'} |")
+    L += ["", f"Unit status counts: {R['cost']['status_counts']}.", ""]
     b1 = R["B1"]
     L += ["## B1 — open-world prompts with real-object ground truth (Google Scanned Objects)", "",
-          f"Alignment: {b1['alignment']}. Chamfer-L1 and F-score in unit-extent units.", "",
-          "| object | prompt | route | native CD | native F@0.05 | Shap-E CD | Shap-E F@0.05 | Shap-E status (device) |",
-          "|---|---|---|---|---|---|---|---|"]
+          f"Alignment: {b1['alignment']}. Chamfer-L1 and F-score in unit-extent units; lower CD / higher F is better.",
+          "", "| object | prompt | route | " + " | ".join(f"{g} CD / F@0.05" for g in gens) + " |",
+          "|---|---|---|" + "---|" * len(gens)]
     for r in b1["rows"]:
-        L.append(f"| {r['category']} | {r['prompt']} | {r['route']['generator']} | {_f(r[NATIVE].get('chamfer_l1'))} |"
-                 f" {_f(r[NATIVE].get('fscore@0.05'))} | {_f(r[SHAP_E].get('chamfer_l1'))} |"
-                 f" {_f(r[SHAP_E].get('fscore@0.05'))} | {r[SHAP_E]['status']} ({r[SHAP_E].get('device') or '—'}) |")
-    L += ["", "| generator | n | valid rate | mean CD-L1 | mean F@0.02 | mean F@0.05 |", "|---|---|---|---|---|---|"]
-    for k in (NATIVE, SHAP_E, AUTO):
+        cells = [f"{_f(r[g].get('chamfer_l1'))} / {_f(r[g].get('fscore@0.05'))}"
+                 + ("" if r[g]["status"] in ("ok", "omitted") else f" ({r[g]['status']})") for g in gens]
+        L.append(f"| {r['category']} | {r['prompt']} | {r['route']['generator']} | " + " | ".join(cells) + " |")
+    L += ["", "| generator | n | valid rate | mean CD-L1 (valid) | mean F@0.02 | mean F@0.05 (valid) | "
+          "mean F@0.05 (failures = 0) |", "|---|---|---|---|---|---|---|"]
+    for k in [*gens, AUTO]:
         a = b1["aggregate"][k]
         L.append(f"| {k} | {a['n']} | {_f(a['valid_rate'], 2)} | {_f(a['chamfer_l1_mean'])} | "
-                 f"{_f(a['fscore@0.02_mean'])} | {_f(a['fscore@0.05_mean'])} |")
-    L += ["", f"Shap-E closer to GT than native (Chamfer): {b1['aggregate']['shap_e_better_chamfer']}.", ""]
-    sv = b1["seed_variance"]
-    L += ["### B1 seed variance (Shap-E, seeds 0-2)", "",
-          (f"Objects with all 3 seeds: {sv['objects_with_3_seeds']}/12; mean within-object std of Chamfer-L1: "
-          f"{_f(sv['mean_within_object_std'], 4)}."), "",
-          "| prompt | seed 0 CD (dev) | seed 1 CD (dev) | seed 2 CD (dev) | std |", "|---|---|---|---|---|"]
-    for v in sv["rows"]:
-        cells = [f"{_f(x['chamfer_l1'])} ({x['device'] or x['status']})" for x in v["seeds"]]
-        L.append(f"| {v['prompt']} | " + " | ".join(cells) + f" | {_f(v['chamfer_l1_std'], 4)} |")
+                 f"{_f(a['fscore@0.02_mean'])} | {_f(a['fscore@0.05_mean'])} | "
+                 f"{_f(a.get('fscore@0.05_with_failures_as_0'))} |")
     L += [""]
+    for k, v in b1["aggregate"].get("pairwise", {}).items():
+        if isinstance(v, dict):
+            c, f_ = v["paired_chamfer_delta"], v["paired_fscore@0.05_delta"]
+            L.append(f"- {k}: better Chamfer on {v['better_chamfer']}/{v['n_both_valid']} objects; paired ΔCD "
+                     f"{_f(c['mean'])} (95% CI {[round(x, 4) for x in c['ci95']] if c['ci95'] else '—'}); paired "
+                     f"ΔF@0.05 {_f(f_['mean'])} (95% CI {[round(x, 4) for x in f_['ci95']] if f_['ci95'] else '—'}).")
+        else:
+            L.append(f"- {k}: {v}")
+    L += [""]
+    for g, sv in b1.get("seed_variance_by_generator", {}).items():
+        L += [f"### B1 seed variance — {g} (seeds 0-2)", "",
+              (f"Objects with all 3 seeds: {sv['objects_with_3_seeds']}/12; mean within-object std of Chamfer-L1: "
+               f"{_f(sv['mean_within_object_std'], 4)}; mean over seeds and objects: "
+               f"{_f(sv.get('seed_mean_chamfer_l1'))}."), "",
+              "| prompt | seed 0 CD (dev) | seed 1 CD (dev) | seed 2 CD (dev) | std |", "|---|---|---|---|---|"]
+        for v in sv["rows"]:
+            cells = [f"{_f(x['chamfer_l1'])} ({x['device'] or x['status']})" for x in v["seeds"]]
+            L.append(f"| {v['prompt']} | " + " | ".join(cells) + f" | {_f(v['chamfer_l1_std'], 4)} |")
+        L += [""]
     b2 = R["B2"]
     L += ["## B2 — semantic relevance (CLIP R-precision)", "",
           (f"Evaluator: {b2['evaluator']['model']} (sha256 `{b2['evaluator']['sha256'][:16]}…`), 4 views per mesh, "
-          f"ranked against all {b2['candidates']} benchmark prompts."), "",
+           f"ranked against all {b2['candidates']} benchmark prompts."), "",
           "| candidate | n | R@1 | R@5 |", "|---|---|---|---|"]
     for r in b2["rows"]:
         L.append(f"| {r['candidate']} | {r['n']} | {_f(r['r_at_1'], 2)} | {_f(r['r_at_5'], 2)} |")
@@ -729,17 +838,17 @@ def cmd_report(cfg, prompts, out):
     L += ["", f"Residual bias: {b2['residual_bias']}.", ""]
     b3 = R["B3"]
     L += ["## B3 — retention on procedural prompts (existing protocol berkelium-text3d-eval/1)", "",
-          "| generator | n | success | mean CD-L1 | mean F@0.05 | part-count acc | colour acc |", "|---|---|---|---|---|---|---|"]
-    for k in (NATIVE, AUTO):
-        a = b3["aggregate"][k]
+          "| generator | n | success | mean CD-L1 | mean F@0.05 | part-count acc | colour acc |",
+          "|---|---|---|---|---|---|---|"]
+    for k, a in b3["aggregate"].items():
         L.append(f"| {k} | {a['n']} | {_f(a['success_rate'], 2)} | {_f(a['chamfer_l1_mean'])} | "
                  f"{_f(a['fscore@0.05_mean'])} | {_f(a['part_count_accuracy'], 2)} | {_f(a['color_accuracy'], 2)} |")
     L += ["", "Routes: " + ", ".join(sorted({r["route"]["generator"] for r in b3["rows"]})) + ".", ""]
     b4 = R["B4"]
-    L += ["## B4 — composition: {native, Shap-E} × {single-shot, planner}", "",
+    L += ["## B4 — composition: generators × {single-shot, planner}", "",
           ("CD = Chamfer-L1 in the shared normalized frame (existing protocol, no alignment); aligned CD = B1 "
-          "alignment; part count = existing rule (connected components == GT); touch-merged = components after "
-          f"merging pieces within {b4['touch_tolerance']} (evaluate.py's 'touching parts merge'), same for GT."), "",
+           "alignment; part count = existing rule (connected components == GT); touch-merged = components after "
+           f"merging pieces within {b4['touch_tolerance']} (evaluate.py's 'touching parts merge'), same for GT."), "",
           "| candidate | n | success | part-count acc | touch-merged acc | CD-L1 | aligned CD-L1 | colour acc |",
           "|---|---|---|---|---|---|---|---|"]
     for k, a in b4["aggregate"].items():
@@ -756,11 +865,12 @@ def cmd_report(cfg, prompts, out):
                          f"{x.get('components', '—')}c / CD {_f(x.get('chamfer_l1'))}")
         L.append(f"| {r['asset_id']} | {r['caption']} | {r['gt_components']} | " + " | ".join(cells) + " |")
     ro = R["routing"]
-    L += ["", "## Router", "", (f"Rule: {ro['rule']}. Domain accuracy (B1/B2 → Shap-E, B3/B4 → native): "
-          f"{ro['domain_accuracy']}. Agreement with the better generator on B1 (Chamfer oracle): "
-          f"{ro['b1_oracle_agreement']}."), ""]
-    (ROOT / cfg["result_json"]).with_suffix("").with_suffix(".report.md").write_text("\n".join(L) + "\n")
-    print("wrote", (ROOT / cfg["result_json"]).with_suffix("").with_suffix(".report.md").relative_to(ROOT))
+    L += ["", "## Router", "", (f"Rule: {ro['rule']}. Domain accuracy (B1/B2 → an open-world generator, B3/B4 → "
+          f"native): {ro['domain_accuracy']}. Agreement with the per-prompt best generator on B1 (Chamfer oracle "
+          f"over {', '.join(gens)}): {ro['b1_oracle_agreement']}. {ro.get('in_sample_note', '')}"), ""]
+    dest = (ROOT / cfg["result_json"]).with_suffix("").with_suffix(".report.md")
+    dest.write_text("\n".join(L) + "\n")
+    print("wrote", dest.relative_to(ROOT))
 
 
 def main(argv=None):

@@ -17,12 +17,13 @@ import { cameraSpecFor } from "./neuralCamera.js";
 
 const MODEL = "berkelium-textshape";
 // Generators the backend may offer (text3d/generators.py). "auto" = the native model when every content word is
-// in its vocabulary, otherwise Shap-E. Availability and the reason it is unavailable come from /capabilities.
+// in its vocabulary, otherwise the first available open-world generator in E-T3 evidence order (decision D-029).
+// Availability and the reason a generator is unavailable come from /capabilities.
 const GENERATORS = [
-  ["auto", "auto (native if it can read the prompt, else Shap-E)"],
+  ["auto", "auto (native if it can read the prompt, else the best available open-world model)"],
   ["berkelium-textshape", "Berkelium native (procedural primitives)"],
-  ["shap-e-text300m", "Shap-E text300M (open-world, CPU, minutes)"],
-  ["zimage-triposr", "Z-Image → TripoSR (GPU)"],
+  ["shap-e-text300m", "Shap-E text300M (open-world; CPU minutes, GPU ~1 min)"],
+  ["zimage-triposr", "Z-Image → TripoSR (open-world, needs a GPU)"],
 ];
 const short = (h) => (h ? String(h).slice(0, 10) : "?");
 const VIEW_RENDER_MAX_SIDE = 384;
@@ -97,7 +98,9 @@ export default function GeneratePanel({ engineRef, onClose }) {
     const image = recs.find((r) => r.kind === "image") || null;
     if (!mesh) throw new Error("The job finished without a mesh artifact.");
     const nodeId = add ? await addToScene(mesh, j.request.prompt) : linked.get(mesh.id) ?? null;
-    setResult({ job: j, mesh, gaussian, image });
+    // zimage-triposr stores the generated anchor image with the mesh: show what the reconstruction was made from.
+    const anchor = mesh.files?.some((f) => f.name === "anchor.png") ? await api.imageUrl(mesh.id, "anchor.png") : null;
+    setResult({ job: j, mesh, gaussian, image, anchor });
     if (image) {
       showImage(await api.imageUrl(image.id, "render.png"), `${image.producer.renderer} · 4-view orbit · splat render`,
         image.id);
@@ -274,7 +277,13 @@ export default function GeneratePanel({ engineRef, onClose }) {
       {result && (
         <div className="gen__result" data-testid="artifact-card">
           <div className="gen__title">Triangle mesh · {result.mesh.producer.model}{result.mesh.producer.adapter ? ` + ${result.mesh.producer.adapter}` : result.mesh.producer.generator_identity ? "" : " (base)"}</div>
-          <Provenance producer={result.mesh.producer} labels={result.mesh.labels} />
+          <Provenance producer={result.mesh.producer} labels={result.mesh.labels} files={result.mesh.files} />
+          {result.anchor && (
+            <figure className="gen__figure" data-testid="anchor-image">
+              <img src={result.anchor} alt="Generated anchor image the mesh was reconstructed from" />
+              <figcaption>anchor image (Z-Image-Turbo, generated; no calibrated camera) → TripoSR</figcaption>
+            </figure>
+          )}
           <div>{m.n_faces.toLocaleString()} faces · {m.components} component(s) · {m.watertight ? "watertight" : "not watertight"}</div>
           <div>units: {result.mesh.labels.units} · {result.mesh.labels.confidence}</div>
           {result.gaussian && <div>{result.gaussian.validation.n.toLocaleString()} Gaussians{result.gaussian.config?.fit?.steps
@@ -321,27 +330,38 @@ export default function GeneratePanel({ engineRef, onClose }) {
   );
 }
 
-// What produced this mesh: generator, code commit, weight hash, seed, time and memory. Read from the artifact's
-// producer record, i.e. what the backend actually ran.
-function Provenance({ producer, labels }) {
+// What produced this mesh: generator, code commit, weight hashes, routing (including generators skipped because
+// they are unavailable here), the hardware it ran on, seed, time and memory. Read from the artifact's producer
+// record, i.e. what the backend actually ran; file hashes come from the artifact store.
+function Provenance({ producer, labels, files }) {
   const ids = producer.generator_identity ? Object.values(producer.generator_identity) : [];
   const routing = producer.routing || [];
+  const hw = producer.execution;
   return (
     <div className="gen__prov" data-testid="provenance-card">
       <div>generator: <b data-testid="provenance-generator">{producer.generator ?? MODEL}</b>
         {producer.requested_generator && producer.requested_generator !== producer.generator ? ` (requested ${producer.requested_generator})` : ""}</div>
-      {routing.map((r, i) => <div key={i} className="gen__dim">route “{r.prompt}” → {r.generator}: {r.reason}</div>)}
-      {producer.planner && <div>planner: {producer.planner.relation} · top/left “{producer.planner.a}” · bottom/right “{producer.planner.b}”</div>}
+      {hw && <div className="gen__dim" data-testid="provenance-hardware">ran on {hw.device}{hw.gpu ? ` (${hw.gpu})` : ""} · {hw.host}</div>}
+      {routing.map((r, i) => (
+        <div key={i} className="gen__dim">
+          route “{r.prompt}” → {r.selected ?? r.generator}: {r.reason}
+          {(r.skipped_unavailable || []).map((k) => <div key={k.generator} data-testid="provenance-skipped">skipped {k.generator}: {k.reason}</div>)}
+        </div>
+      ))}
+      {producer.planner && <div data-testid="provenance-planner">planner: {producer.planner.relation} · top/left “{producer.planner.a}” · bottom/right “{producer.planner.b}” (each part generated and validated separately, placed by bounding box)</div>}
       {ids.map((id) => (
         <div key={id.generator} className="gen__dim">
           {id.generator}{id.shap_e_commit ? ` · shap-e ${short(id.shap_e_commit)}` : ""}
           {id.weights_sha256 ? ` · text_cond ${short(id.weights_sha256["text_cond.pt"])} · decoder ${short(id.weights_sha256["vector_decoder.pt"])}` : ""}
-          {id.sampler ? ` · ${id.sampler.karras_steps} steps, cfg ${id.sampler.guidance_scale}` : ""}
+          {id.weights?.zimage ? ` · z-image ${short(id.weights.zimage.revision)} (${Object.keys(id.weights.zimage.files || {}).length} safetensors sha256-verified) · triposr ckpt ${short(id.weights.triposr?.model_ckpt_sha256)} · ${id.dtype}` : ""}
+          {id.sampler?.karras_steps ? ` · ${id.sampler.karras_steps} steps, cfg ${id.sampler.guidance_scale}` : ""}
+          {id.sampler?.steps && !id.sampler.karras_steps ? ` · ${id.sampler.steps} steps, ${id.sampler.height}²` : ""}
           {id.license ? ` · ${id.license}` : ""}
         </div>
       ))}
       {!ids.length && producer.base_checkpoint_sha256 && <div className="gen__dim">checkpoint {short(producer.base_checkpoint_sha256)}</div>}
       <div className="gen__dim">seed {producer.seed ?? 0}{producer.seconds != null ? ` · ${Number(producer.seconds).toFixed(1)} s` : ""}{producer.peak_rss_mib ? ` · peak ${Math.round(producer.peak_rss_mib)} MiB` : ""}</div>
+      {files?.length > 0 && <div className="gen__dim" data-testid="provenance-files">files: {files.map((f) => `${f.name} ${short(f.sha256)}`).join(" · ")}</div>}
       {labels?.provenance && <div className="gen__label" data-testid="provenance-label">{labels.provenance}</div>}
     </div>
   );

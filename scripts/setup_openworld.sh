@@ -10,6 +10,11 @@ SHAP_E_PIN=50131012ee11c9d2617f3886c10f000d3c7a3b43
 command -v "$PY" >/dev/null || [[ -x "$PY" ]] || { echo "run scripts/setup_cpu.sh first (.venv-cpu) or set PYTHON"; exit 2; }
 [[ -d third_party/shap-e/.git ]] || git clone -q https://github.com/openai/shap-e.git third_party/shap-e
 git -C third_party/shap-e checkout -q "$SHAP_E_PIN"
+# CLIP depends on torchvision; on a CPU torch build install the matching CPU torchvision first, or pip pulls a PyPI
+# build whose C++ ops do not register against torch+cpu ("operator torchvision::nms does not exist").
+if "$PY" -c 'import sys, torch; sys.exit(0 if torch.__version__.endswith("+cpu") else 1)'; then
+  "$PY" -m pip install -q --index-url https://download.pytorch.org/whl/cpu torchvision==0.29.1+cpu
+fi
 "$PY" -m pip install -q -r configs/environments/openworld-cpu.txt
 "$PY" -m pip install -q --no-deps -e third_party/shap-e
 D=data/models/shap_e; mkdir -p "$D"

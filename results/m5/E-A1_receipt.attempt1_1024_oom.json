@@ -1,0 +1,191 @@
+{
+  "experiment": "E-A1 (research E1) Z-Image-Turbo image-prior smoke",
+  "milestone": "M5",
+  "pins": {
+    "repo": "Tongyi-MAI/Z-Image-Turbo",
+    "revision": "f332072aa78be7aecdf3ee76d5c247082da564a6",
+    "license": "Apache-2.0 (model card; verify LICENSE)"
+  },
+  "config": {
+    "size": 1024,
+    "steps": 9,
+    "guidance_scale": 0.0,
+    "dtype": null,
+    "prompts": [
+      "a red ceramic teapot on a plain light grey background, studio product photo, whole object visible",
+      "a small wooden toy car on a plain light grey background, studio product photo, whole object visible",
+      "a blue sneaker on a plain light grey background, studio product photo, whole object visible",
+      "a green potted cactus on a plain light grey background, studio product photo, whole object visible"
+    ],
+    "seed": 42
+  },
+  "geometry_generated": false,
+  "note": "text-to-image output only: no 3D geometry, no calibrated camera, no multi-view consistency",
+  "started_at": "2026-10-16T14:58:38Z",
+  "environment": {
+    "git_commit": null,
+    "python": "3.13.15",
+    "platform": "Linux-6.18.48+-x86_64-with-glibc2.39",
+    "numpy": "2.1.3",
+    "torch": "2.11.0+cu128",
+    "torch_hip": null,
+    "torch_cuda": "12.8",
+    "gpu_visible": true,
+    "gpu_name": "Tesla T4"
+  },
+  "preflight": {
+    "checks": {
+      "torch": "2.11.0+cu128",
+      "torch_hip": null,
+      "gpu_visible": true,
+      "gpu": {
+        "name": "Tesla T4",
+        "total_gb": 14.6
+      },
+      "diffusers": "0.40.0",
+      "ZImagePipeline": true,
+      "huggingface_hub": "1.29.0",
+      "disk_free_gb": 1037.5
+    },
+    "blockers": []
+  },
+  "snapshot": {
+    "repo": "Tongyi-MAI/Z-Image-Turbo",
+    "revision": "f332072aa78be7aecdf3ee76d5c247082da564a6",
+    "local_dir": "/tmp/berkelium/data/models/zimage_turbo/f332072a",
+    "verified_files": {
+      "model_index.json": {
+        "bytes": 467,
+        "git_sha1": "570c63a7c5580f63d0a8ed622324f50015dcf914",
+        "download_s": 0.4
+      },
+      "scheduler/scheduler_config.json": {
+        "bytes": 173,
+        "git_sha1": "2349bc43351afa730341d07dd44fce4ace1c4257",
+        "download_s": 0.0
+      },
+      "text_encoder/config.json": {
+        "bytes": 726,
+        "git_sha1": "e49eccdc32f36da9c09cfa0e737084f9e0105e5e",
+        "download_s": 0.1
+      },
+      "text_encoder/generation_config.json": {
+        "bytes": 239,
+        "git_sha1": "20a8a9156fc8c3f25295ca067f61fdf120d517c5",
+        "download_s": 0.0
+      },
+      "text_encoder/model-00001-of-00003.safetensors": {
+        "bytes": 3957900840,
+        "sha256": "328a91d3122359d5547f9d79521205bc0a46e1f79a792dfe650e99fc2d651223",
+        "download_s": 34.7
+      },
+      "text_encoder/model-00002-of-00003.safetensors": {
+        "bytes": 3987450520,
+        "sha256": "6cd087b316306a68c562436b5492edbcf6e16c6dba3a1308279caa5a58e21ca5",
+        "download_s": 18.8
+      },
+      "text_encoder/model-00003-of-00003.safetensors": {
+        "bytes": 99630640,
+        "sha256": "7ca841ee75b9c61267c0c6148fd8d096d3d21b6d3e161256a9b878154f91fc52",
+        "download_s": 1.0
+      },
+      "text_encoder/model.safetensors.index.json": {
+        "bytes": 32819,
+        "git_sha1": "95c0a0059df040d75dc6c396b174382cf61d2f91",
+        "download_s": 0.0
+      },
+      "tokenizer/merges.txt": {
+        "bytes": 1671853,
+        "git_sha1": "31349551d90c7606f325fe0f11bbb8bd5fa0d7c7",
+        "download_s": 0.1
+      },
+      "tokenizer/tokenizer.json": {
+        "bytes": 11422654,
+        "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+        "download_s": 0.3
+      },
+      "tokenizer/tokenizer_config.json": {
+        "bytes": 9732,
+        "git_sha1": "417d038a63fa3de29cfde265caedae14d1a58d92",
+        "download_s": 0.0
+      },
+      "tokenizer/vocab.json": {
+        "bytes": 2776833,
+        "git_sha1": "4783fe10ac3adce15ac8f358ef5462739852c569",
+        "download_s": 0.0
+      },
+      "transformer/config.json": {
+        "bytes": 473,
+        "git_sha1": "c579190a5e03d602a2fd9647221c9d0d9441f150",
+        "download_s": 0.0
+      },
+      "transformer/diffusion_pytorch_model-00001-of-00003.safetensors": {
+        "bytes": 9973693184,
+        "sha256": "95facd593e2549e8252acb571c653d57f7ddb7f1060d4e81712f152555a88804",
+        "download_s": 61.8
+      },
+      "transformer/diffusion_pytorch_model-00002-of-00003.safetensors": {
+        "bytes": 9973714824,
+        "sha256": "a4bbe43ee184a1fb5af4b412d27555f532893bdc3165b1149e304ed82b5d7015",
+        "download_s": 62.6
+      },
+      "transformer/diffusion_pytorch_model-00003-of-00003.safetensors": {
+        "bytes": 4672282880,
+        "sha256": "aba4e37a590e63210878160a718d916d80398f4e1f78ab6c9b2b2a00d92769fa",
+        "download_s": 35.6
+      },
+      "transformer/diffusion_pytorch_model.safetensors.index.json": {
+        "bytes": 48969,
+        "git_sha1": "a3cadc1ed28e334ef58d4e6bbda107e25168ef47",
+        "download_s": 0.1
+      },
+      "vae/config.json": {
+        "bytes": 805,
+        "git_sha1": "894fa30ac1950cef422189d2d4cef11043c62875",
+        "download_s": 0.0
+      },
+      "vae/diffusion_pytorch_model.safetensors": {
+        "bytes": 167666902,
+        "sha256": "f5b59a26851551b67ae1fe58d32e76486e1e812def4696a4bea97f16604d40a3",
+        "download_s": 1.3
+      }
+    },
+    "total_gb": 30.59,
+    "fetch_s": 0.0
+  },
+  "text_encoder": {
+    "attempts": [
+      {
+        "dtype": "bfloat16",
+        "device": "cuda:0",
+        "seconds": 40.5,
+        "finite": true,
+        "tokens": [
+          27,
+          27,
+          26,
+          28
+        ]
+      }
+    ],
+    "chosen": {
+      "dtype": "bfloat16",
+      "device": "cuda:0"
+    }
+  },
+  "precision_study": {
+    "float16": {
+      "error": "OutOfMemoryError: CUDA out of memory. Tried to allocate 1024.00 MiB. GPU 0 has a total capacity of 14.56 GiB of which 206.81 MiB is free. Including non-PyTorch memory, this process has 14.36 GiB memory in use. Of the allocated memory 13.64 GiB is allocated by PyTorch, and 597.17 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-con",
+      "device": "cuda:0"
+    },
+    "bfloat16": {
+      "error": "OutOfMemoryError: CUDA out of memory. Tried to allocate 1.88 GiB. GPU 1 has a total capacity of 14.56 GiB of which 1.74 GiB is free. Including non-PyTorch memory, this process has 12.82 GiB memory in use. Of the allocated memory 12.33 GiB is allocated by PyTorch, and 366.53 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)",
+      "device": "cuda:1"
+    },
+    "rule": "use the fastest dtype whose image is finite and non-blank (std > 0.02)",
+    "chosen": null
+  },
+  "status": "failed",
+  "error": "RuntimeError: no dtype produced a finite, non-blank image: {'float16': {'error': 'OutOfMemoryError: CUDA out of memory. Tried to allocate 1024.00 MiB. GPU 0 has a total capacity of 14.56 GiB of which 206.81 MiB is free. Including non-PyTorch memory, this process has 14.36 GiB memory in use. Of the allocated memory 13.64 GiB is allocated by PyTorch, and 597.17 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-con', 'device': 'cuda:0'}, 'bfloat16': {'error': 'OutOfMemoryError: CUDA out of memory. Tried to allocate 1.88 GiB. GPU 1 has a total capacity of 14.56 GiB of which 1.74 GiB is free. Including non-PyTorch memory, this process has 12.82 GiB memory in use. Of the allocated memory 12.33 GiB is allocated by PyTorch, and 366.53 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)', 'device': 'cuda:1'}, 'rule': 'use the fastest dtype whose image is finite and non-blank (std > 0.02)', 'chosen': None}",
+  "traceback": "Traceback (most recent call last):\n  File \"/tmp/berkelium/scripts/m5_image_prior_smoke.py\", line 194, in main\n    run(a, receipt)\n    ~~~^^^^^^^^^^^^\n  File \"/tmp/berkelium/scripts/m5_image_prior_smoke.py\", line 142, in run\n    raise RuntimeError(f\"no dtype produced a finite, non-blank image: {study}\")\nRuntimeError: no dtype produced a finite, non-blank image: {'float16': {'error': 'OutOfMemoryError: CUDA out of memory. Tried to allocate 1024.00 MiB. GPU 0 has a total capacity of 14.56 GiB of which 206.81 MiB is free. Including non-PyTorch memory, this process has 14.36 GiB memory in use. Of the allocated memory 13.64 GiB is allocated by PyTorch, and 597.17 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-con', 'device': 'cuda:0'}, 'bfloat16': {'error': 'OutOfMemoryError: CUDA out of memory. Tried to allocate 1.88 GiB. GPU 1 has a total capacity of 14.56 GiB of which 1.74 GiB is free. Including non-PyTorch memory, this process has 12.82 GiB memory in use. Of the allocated memory 12.33 GiB is allocated by PyTorch, and 366.53 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)', 'device': 'cuda:1'}, 'rule': 'use the fastest dtype whose image is finite and non-blank (std > 0.02)', 'chosen': None}\n"
+}
