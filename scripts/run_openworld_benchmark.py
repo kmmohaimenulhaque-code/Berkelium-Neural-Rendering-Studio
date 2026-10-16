@@ -27,8 +27,9 @@ from _common import ROOT, provenance
 CFG = ROOT / "benchmarks" / "configs" / "text3d_openworld_cpu_v1.json"
 NATIVE, SHAP_E, AUTO = "berkelium-textshape", "shap-e-text300m", "auto"
 ZIMAGE = "zimage-triposr"                       # D-006 image-prior path, GPU only (scripts/zimage_triposr_batch.py)
-ZIMAGE_LORA = "zimage-triposr-anchorlora"       # same, with the canonical 3D-anchor LoRA (Phase II), if trained
-OPEN_WORLD = (SHAP_E, ZIMAGE, ZIMAGE_LORA)      # scored wherever they have units; Shap-E is the frozen baseline
+ZIMAGE_V2 = "zimage-triposr-v2"                 # same anchors, stage 3 = U²-Net segmentation (after v1's keying failed)
+ZIMAGE_LORA = "zimage-triposr-anchorlora"       # anchor-LoRA anchors (Phase II.2), stage 3 = U²-Net
+OPEN_WORLD = (SHAP_E, ZIMAGE, ZIMAGE_V2, ZIMAGE_LORA)  # scored wherever they have units; Shap-E: frozen baseline
 
 
 def load_cfg():

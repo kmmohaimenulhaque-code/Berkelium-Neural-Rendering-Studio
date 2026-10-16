@@ -1,0 +1,31 @@
+{
+  "status": "ok",
+  "anchor_prompt": {
+    "text": "an elephant. A single complete object, centered, fully visible with empty margin around it, three-quarter view from slightly above, isolated on a plain solid bright green background, soft even studio lighting, no shadow, no text, no other objects",
+    "background": "bright green",
+    "background_rgb": [
+      0,
+      177,
+      64
+    ],
+    "named_colours": [],
+    "colour_margin": Infinity,
+    "template": "{prompt}. A single complete object, centered, fully visible with empty margin around it, three-quarter view from slightly above, isolated on a plain solid {bg} background, soft even studio lighting, no shadow, no text, no other objects"
+  },
+  "sampler": {
+    "steps": 9,
+    "guidance_scale": 0.0,
+    "height": 768,
+    "width": 768,
+    "noise": "seeded CPU generator"
+  },
+  "dtype": "bfloat16",
+  "device": "cuda",
+  "gpu": "Tesla T4",
+  "load_s": 93.9,
+  "seconds": 123.16,
+  "finite": true,
+  "std": 0.2152920961380005,
+  "peak_gpu_mib": 13799.3,
+  "anchor_sha256": "4c3ee880d08adda2bd114181693ea06f6c61da1a80a1b86cee5108430ff750cb"
+}

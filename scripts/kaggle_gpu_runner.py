@@ -183,6 +183,23 @@ env = {"python": platform.python_version(), "host": platform.node(),
        "disk_free_gb": {p: round(shutil.disk_usage(p).free / 1e9, 1) for p in ("/kaggle/working", "/tmp")},
        "mem_total_mib": int(open("/proc/meminfo").readline().split()[1]) // 1024, "cpu_count": os.cpu_count()}
 receipt["environment"] = env; save()
+if SPEC.get("data"):          # large inputs shipped as a private Kaggle dataset: verify each file, then place it
+    src = glob.glob("/kaggle/input/*/data_manifest.json") + glob.glob("/kaggle/input/**/data_manifest.json",
+                                                                      recursive=True)
+    man = json.load(open(src[0])) if src else None
+    if man is None or man["sha256"] != DATA_SHA256:
+        receipt["status"] = "failed"; receipt["error"] = "data manifest missing or not the one pushed"; save()
+        raise SystemExit(0)
+    base = os.path.dirname(src[0]); bad = []
+    with tarfile.open(os.path.join(base, "data.bin")) as tf:
+        tf.extractall(WORK, filter="data")
+    for rel, h in man["files"].items():
+        if hashlib.sha256(open(os.path.join(WORK, rel), "rb").read()).hexdigest() != h:
+            bad.append(rel)
+    receipt["data"] = {"files": len(man["files"]), "bad": bad}; save()
+    if bad:
+        receipt["status"] = "failed"; receipt["error"] = f"{len(bad)} data files fail their sha256"; save()
+        raise SystemExit(0)
 def run_step(i, step):
     cmds = step["parallel"] if "parallel" in step else [step["cmd"]]
     t0 = time.time(); procs = []
@@ -221,16 +238,51 @@ print("BERKELIUM_JOB_STATUS", receipt["status"], flush=True)
 '''
 
 
-def build_kernel(spec: dict, blob: bytes, run_id: str, kdir: Path, slug: str):
+def upload_data(spec: dict, run_dir: Path) -> tuple[str | None, str | None]:
+    """spec["data"] globs -> data.tar + data_manifest.json (sha256 per file) uploaded as a private Kaggle dataset
+    <handle>/berkelium-data-<name> (a new version per run). -> (dataset ref, manifest sha256)."""
+    if not spec.get("data"):
+        return None, None
+    files = sorted({str(q.relative_to(ROOT)) for pat in spec["data"] for q in ROOT.glob(pat) if q.is_file()})
+    if not files:
+        raise RunnerError(f"spec data globs match nothing: {spec['data']}")
+    d = run_dir / "dataset"
+    d.mkdir(parents=True, exist_ok=True)
+    with tarfile.open(d / "data.bin", "w") as tar:
+        for f in files:
+            tar.add(ROOT / f, arcname=f)
+    man = {"files": {f: sha256_file(ROOT / f) for f in files}}
+    man["sha256"] = sha256_bytes(json.dumps(man["files"], sort_keys=True).encode())
+    (d / "data_manifest.json").write_text(json.dumps(man, indent=1))
+    ref = f"{account_handle()}/berkelium-data-{spec['name']}"
+    (d / "dataset-metadata.json").write_text(json.dumps({"title": f"berkelium-data-{spec['name']}", "id": ref,
+                                                         "licenses": [{"name": "other"}]}))
+    exists = ref in kaggle("datasets", "list", "--mine", "--csv", "-s", f"berkelium-data-{spec['name']}", check=False)
+    if exists:
+        kaggle("datasets", "version", "-p", str(d), "-m", run_dir.name, timeout=3600)
+    else:
+        kaggle("datasets", "create", "-p", str(d), timeout=3600)
+    for _ in range(60):                       # wait until Kaggle has processed the upload
+        st = kaggle("datasets", "status", ref, check=False)
+        if "ready" in st.lower():
+            break
+        time.sleep(20)
+    else:
+        raise RunnerError(f"dataset {ref} not ready: {st}")
+    print(f"uploaded {len(files)} data files as {ref} (manifest {man['sha256'][:16]}…)")
+    return ref, man["sha256"]
+
+
+def build_kernel(spec: dict, blob: bytes, run_id: str, kdir: Path, slug: str, data_ref=None, data_sha=None):
     kdir.mkdir(parents=True, exist_ok=True)
     head = (f"SPEC_B64 = {base64.b64encode(json.dumps(spec).encode()).decode()!r}\n"
-            f"BUNDLE_SHA256 = {sha256_bytes(blob)!r}\nRUN_ID = {run_id!r}\n"
+            f"BUNDLE_SHA256 = {sha256_bytes(blob)!r}\nRUN_ID = {run_id!r}\nDATA_SHA256 = {data_sha!r}\n"
             f"BUNDLE_B64 = {base64.b64encode(blob).decode()!r}\n")
     (kdir / "run.py").write_text(head + REMOTE)
     meta = {"id": f"{account_handle()}/{slug}", "title": spec.get("title", slug), "code_file": "run.py",
             "language": "python",
             "kernel_type": "script", "is_private": True, "enable_gpu": True, "enable_internet": True,
-            "dataset_sources": [], "competition_sources": [], "kernel_sources": []}
+            "dataset_sources": [data_ref] if data_ref else [], "competition_sources": [], "kernel_sources": []}
     (kdir / "kernel-metadata.json").write_text(json.dumps(meta, indent=2))
     return meta["id"]
 
@@ -362,10 +414,12 @@ def cmd_run(a) -> int:
     run_id = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
     slug = a.slug or spec.get("slug") or f"berkelium-{spec['name']}"
     kdir = state_dir(spec) / run_id / "kernel"
-    ref = build_kernel(spec, blob, run_id, kdir, slug)
+    data_ref, data_sha = upload_data(spec, state_dir(spec) / run_id)
+    ref = build_kernel(spec, blob, run_id, kdir, slug, data_ref, data_sha)
     acc = ACCELERATORS[a.accelerator or spec.get("accelerator", "t4x2")]
     st = {"job": spec["name"], "run_id": run_id, "kernel": ref, "accelerator": acc, "spec": a.spec,
           "spec_sha256": spec_sha, "bundle_sha256": bsha, "bundle_bytes": len(blob), "bundle_files": len(files),
+          "data": {"dataset": data_ref, "manifest_sha256": data_sha} if data_ref else None,
           "git": git_state(), "pushed_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "status": "pushed"}
     (state_dir(spec) / run_id / "bundle_files.txt").write_text("\n".join(files) + "\n")
     out = kaggle("kernels", "push", "-p", str(kdir), "--accelerator", acc, timeout=600)

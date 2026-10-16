@@ -17,6 +17,7 @@ import argparse
 import hashlib
 import json
 import platform
+import shutil
 import sys
 import time
 from pathlib import Path
@@ -54,7 +55,8 @@ def cmd_plan(a):
 
 def cmd_fetch(a):
     from berkelium_neural.text3d import zimage_triposr as zt
-    rec = {"zimage": zt.fetch_zimage(), "triposr": zt.fetch_triposr()}
+    fns = {"zimage": zt.fetch_zimage, "triposr": zt.fetch_triposr, "u2net": zt.fetch_u2net}
+    rec = {k: fns[k]() for k in a.what.split(",")}
     print(json.dumps({k: len(v) for k, v in rec.items()}))
 
 
@@ -135,6 +137,8 @@ def cmd_reconstruct(a):
     ledger = f"units_{a.gen}_cuda_{platform.node()}" + (f"_shard{a.shard[0]}of{a.shard[1]}" if a.shard[1] > 1
                                                        else "") + ".jsonl"
     done = rob.read_units(out)
+    if a.segment == "u2net":
+        zt.fetch_u2net()
     recon = zt.Reconstructor(a.device)
     hw = {"device": "cuda", "gpu_name": torch.cuda.get_device_name(a.device), "host": platform.node(),
           "torch": torch.__version__, "torch_cuda": torch.version.cuda,
@@ -145,9 +149,16 @@ def cmd_reconstruct(a):
         if key in done:
             continue
         d = rob.unit_dir(out, a.gen, u["prompt"], u["seed"])
+        if a.anchors_from:              # reuse another generator's anchors (same prompt+seed, bit-exact images)
+            src = rob.unit_dir(out, a.anchors_from, u["prompt"], u["seed"])
+            d.mkdir(parents=True, exist_ok=True)
+            for name in ("anchor.png", "anchor.json"):
+                if (src / name).exists():
+                    shutil.copy2(src / name, d / name)
         t0 = time.time()
         anc = json.loads((d / "anchor.json").read_text()) if (d / "anchor.json").exists() else None
-        rep = {"prompt": u["prompt"], "seed": u["seed"], "generator": a.gen, "anchor": anc,
+        rep = {"prompt": u["prompt"], "seed": u["seed"], "generator": a.gen, "anchor": anc, "segment": a.segment,
+               "anchors_from": a.anchors_from,
                "identity": zt.ZImageTripoSRGenerator(dtype=(anc or {}).get("dtype", "float16")).identity,
                "artifact_kind": "triangle_mesh", "units": "normalized_object",
                "frame": "TripoSR z-up -> +Y-up (to_gradio_3d_orientation), centred, max extent 1.6",
@@ -160,7 +171,7 @@ def cmd_reconstruct(a):
         else:
             rgb = np.asarray(Image.open(d / "anchor.png").convert("RGB"), np.float32) / 255.0
             try:
-                o = zt.mesh_from_anchor(rgb, anc["anchor_prompt"]["background_rgb"], recon)
+                o = zt.mesh_from_anchor(rgb, anc["anchor_prompt"]["background_rgb"], recon, a.segment)
             except zt.Rejected as e:
                 status, rep["reason"] = "anchor_rejected", str(e)
             else:
@@ -196,6 +207,10 @@ def main(argv=None):
     ap.add_argument("--te-dtype", default="bfloat16", help="embed: text encoder dtype, or from-m5 (also takes the M5 device)")
     ap.add_argument("--lora", default=None, help="anchors: anchor-LoRA weights (safetensors) for a variant")
     ap.add_argument("--shard", default="0/1")
+    ap.add_argument("--what", default="zimage,triposr", help="fetch: comma list of zimage, triposr, u2net")
+    ap.add_argument("--segment", default="u2net", choices=["u2net", "chroma_key"],
+                    help="reconstruct: stage 3 (v2 u2net; chroma_key is the v1 E-T3 run)")
+    ap.add_argument("--anchors-from", default=None, help="reconstruct: reuse this generator's anchor images")
     a = ap.parse_args(argv)
     a.shard = tuple(int(x) for x in a.shard.split("/"))
     {"plan": cmd_plan, "fetch": cmd_fetch, "embed": cmd_embed, "anchors": cmd_anchors,

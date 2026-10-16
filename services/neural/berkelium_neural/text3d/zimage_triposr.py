@@ -91,6 +91,13 @@ TRIPOSR = {
 # results/m5/E-A1_receipt.attempt1_1024_oom.json). TripoSR consumes 512² anyway.
 SAMPLER = {"steps": 9, "guidance_scale": 0.0, "height": 768, "width": 768, "noise": "seeded CPU generator"}
 TRIPOSR_CFG = {"input_size": 512, "foreground_ratio": 0.85, "mc_resolution": 256, "chunk_size": 8192}
+# Stage 3, v2 (2026-10-16, after the v1 E-T3 anchors): U²-Net salient-object segmentation, the network TripoSR's own
+# preprocessing uses (through rembg). v1's colour keying assumed a flat background; Z-Image draws studio backdrops
+# with gradients and vignetting, so 33 of 80 v1 anchors were rejected as "background not uniform" (E-T3 ledger
+# units_zimage-triposr_*). The change was made after seeing those rejections and before any geometry was scored.
+U2NET = {"source": "https://github.com/danielgatis/rembg/releases/download/v0.0.0/u2net.onnx",
+         "sha256": "8d10d2f3bb75ae3b6d527c77944fc5e7dcd94b29809d47a739a7a728a912b491", "bytes": 175997641,
+         "license": "Apache-2.0 (U^2-Net, Qin et al. 2020; ONNX export distributed by rembg, MIT)"}
 
 # Anchor background: the candidate farthest (RGB distance) from every colour the prompt names, in preference order on
 # ties; refused if even the best is closer than MIN_BG_DISTANCE to a named colour (keying would eat the object).
@@ -327,6 +334,59 @@ def key_background(rgb: np.ndarray, expected_rgb=None, t_lo: float = 0.10, t_hi:
     return np.concatenate([np.clip(fg, 0, 1), alpha[..., None]], 2).astype(np.float32), stats
 
 
+def u2net_path(cache: Path | None = None) -> Path:
+    return Path(cache or DEFAULT_CACHE) / "u2net" / "u2net.onnx"
+
+
+def fetch_u2net(cache: Path | None = None) -> dict:
+    import urllib.request
+    p = u2net_path(cache)
+    if not p.exists():
+        p.parent.mkdir(parents=True, exist_ok=True)
+        urllib.request.urlretrieve(U2NET["source"], p.with_suffix(".part"))
+        p.with_suffix(".part").rename(p)
+    try:
+        return verify_file(p, "sha256", U2NET["sha256"], U2NET["bytes"])
+    except ValueError:
+        p.unlink(missing_ok=True)
+        raise
+
+
+_U2 = {}
+
+
+def segment_u2net(rgb: np.ndarray, cache: Path | None = None) -> tuple:
+    """rembg's U²-Net procedure (320² input, ImageNet normalisation after max-scaling, min-max normalised saliency
+    resized back) -> (rgba, stats), with the same recorded gates as keying except background uniformity: rejected
+    if the object touches the frame or the foreground fraction is outside [0.03, 0.85]."""
+    import onnxruntime as ort
+    from PIL import Image
+    p = u2net_path(cache)
+    if str(p) not in _U2:
+        verify_file(p, "sha256", U2NET["sha256"], U2NET["bytes"])
+        _U2[str(p)] = ort.InferenceSession(str(p), providers=["CPUExecutionProvider"])
+    sess = _U2[str(p)]
+    h, w, _ = rgb.shape
+    im = np.asarray(Image.fromarray((np.clip(rgb, 0, 1) * 255).round().astype(np.uint8)).resize(
+        (320, 320), Image.Resampling.LANCZOS), np.float32)
+    im = im / max(float(im.max()), 1e-6)
+    im = (im - np.array([0.485, 0.456, 0.406])) / np.array([0.229, 0.224, 0.225])
+    out = sess.run(None, {sess.get_inputs()[0].name: im.transpose(2, 0, 1)[None].astype(np.float32)})[0][0, 0]
+    out = (out - out.min()) / max(float(out.max() - out.min()), 1e-6)
+    alpha = np.asarray(Image.fromarray((out * 255).astype(np.uint8)).resize((w, h), Image.Resampling.LANCZOS),
+                       np.float32) / 255.0
+    hard = alpha > 0.5
+    frac = float(hard.mean())
+    edge = np.concatenate([hard[0], hard[-1], hard[:, 0], hard[:, -1]])
+    stats = {"method": "U²-Net salient object segmentation (rembg procedure), sha256 " + U2NET["sha256"][:16],
+             "foreground_fraction": round(frac, 4), "touches_frame_fraction": round(float(edge.mean()), 4)}
+    if not 0.03 <= frac <= 0.85:
+        raise Rejected(f"foreground fraction {frac:.3f} outside [0.03, 0.85]")
+    if edge.mean() > 0.01:
+        raise Rejected(f"object touches the frame ({edge.mean():.3f} of the border is foreground)")
+    return np.concatenate([np.clip(rgb, 0, 1), alpha[..., None]], 2).astype(np.float32), stats
+
+
 def triposr_input(rgba: np.ndarray, size: int = TRIPOSR_CFG["input_size"],
                   ratio: float = TRIPOSR_CFG["foreground_ratio"]):
     """TripoSR's documented preprocessing: crop to the alpha bbox, pad square so the object fills ``ratio``,
@@ -414,10 +474,11 @@ def finalize_yup(v: np.ndarray, f: np.ndarray, col: np.ndarray | None):
     return v2.astype(np.float32), f2, col, removed
 
 
-def mesh_from_anchor(rgb: np.ndarray, background_rgb, recon: Reconstructor) -> dict:
-    """Stages 3-4 for one anchor image -> {vertices, faces, colors, report, rgba, tsr_input}."""
+def mesh_from_anchor(rgb: np.ndarray, background_rgb, recon: Reconstructor, segment: str = "u2net") -> dict:
+    """Stages 3-4 for one anchor image -> {vertices, faces, colors, report, rgba, tsr_input}. ``segment``: "u2net"
+    (v2, default) or "chroma_key" (v1, the pre-registered stage)."""
     from .geometry import validate_mesh
-    rgba, kst = key_background(rgb, background_rgb)
+    rgba, kst = segment_u2net(rgb) if segment == "u2net" else key_background(rgb, background_rgb)
     img = triposr_input(rgba)
     v, f, col, rst = recon(img)
     rep = {"keying": kst, "triposr": rst, "raw_vertices": len(v), "raw_faces": len(f)}

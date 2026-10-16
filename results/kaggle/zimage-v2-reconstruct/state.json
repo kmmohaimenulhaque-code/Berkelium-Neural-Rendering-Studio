@@ -1,0 +1,23 @@
+{
+  "job": "zimage-v2-reconstruct",
+  "run_id": "20261016T173330Z",
+  "kernel": "kmmohaimenulhaque/berkelium-zimage",
+  "accelerator": "NvidiaTeslaT4",
+  "spec": "configs/kaggle/zimage_v2_reconstruct.json",
+  "spec_sha256": "aa526afb3ed6868be250f3bbe42580c57f6accb34ce7ea24a2fa12e341abca41",
+  "bundle_sha256": "6a3cb7fb5d1e24703e0d420f3531d63003122bbcc64a46bc03aaa3c241917264",
+  "bundle_bytes": 225112,
+  "bundle_files": 117,
+  "data": {
+    "dataset": "kmmohaimenulhaque/berkelium-data-zimage-v2-reconstruct",
+    "manifest_sha256": "43b7b16c78b0887970d01a67216c9bef0b13b212abc8340a330acc7b8140c32c"
+  },
+  "git": {
+    "commit": "e62c309c0c23182ffdfcda682dbb84a7a3991bb0",
+    "branch": "neural-v1",
+    "dirty_files": 21
+  },
+  "pushed_at": "2026-10-16T17:33:45Z",
+  "status": "pushed",
+  "push_response": "Kernel version 4 successfully pushed.  Please check progress at https://www.kaggle.com/code/kmmohaimenulhaque/berkelium-zimage"
+}

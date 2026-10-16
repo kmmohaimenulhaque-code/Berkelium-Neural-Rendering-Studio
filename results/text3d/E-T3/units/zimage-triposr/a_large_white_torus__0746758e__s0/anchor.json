@@ -1,0 +1,33 @@
+{
+  "status": "ok",
+  "anchor_prompt": {
+    "text": "a large white torus. A single complete object, centered, fully visible with empty margin around it, three-quarter view from slightly above, isolated on a plain solid bright green background, soft even studio lighting, no shadow, no text, no other objects",
+    "background": "bright green",
+    "background_rgb": [
+      0,
+      177,
+      64
+    ],
+    "named_colours": [
+      "white"
+    ],
+    "colour_margin": 1.193,
+    "template": "{prompt}. A single complete object, centered, fully visible with empty margin around it, three-quarter view from slightly above, isolated on a plain solid {bg} background, soft even studio lighting, no shadow, no text, no other objects"
+  },
+  "sampler": {
+    "steps": 9,
+    "guidance_scale": 0.0,
+    "height": 768,
+    "width": 768,
+    "noise": "seeded CPU generator"
+  },
+  "dtype": "bfloat16",
+  "device": "cuda",
+  "gpu": "Tesla T4",
+  "load_s": 93.9,
+  "seconds": 129.19,
+  "finite": true,
+  "std": 0.24649348855018616,
+  "peak_gpu_mib": 13799.4,
+  "anchor_sha256": "ffabcb53cbf54e0572c89137a26f4584ea234f4207bececa3d1fadf030c1bea1"
+}

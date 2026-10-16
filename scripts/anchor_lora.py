@@ -167,12 +167,14 @@ def build_lora(transformer, rank: int):
     return params
 
 
-def train_loop(tr, items, sigmas, steps, lr, seed, device, log, use_amp=True, ckpt_every=0, save_fn=None):
+def train_loop(tr, items, sigmas, steps, lr, seed, device, log, use_amp=True, ckpt_every=0, save_fn=None,
+               amp_dtype=None):
     import torch
     import torch.nn.functional as F
     params = [p for p in tr.parameters() if p.requires_grad]
     opt = torch.optim.AdamW(params, lr=lr, weight_decay=0.0)
-    scaler = torch.amp.GradScaler("cuda", enabled=use_amp)
+    amp_dtype = amp_dtype or torch.float16
+    scaler = torch.amp.GradScaler("cuda", enabled=use_amp and amp_dtype == torch.float16)   # bf16 needs no scaling
     g = torch.Generator().manual_seed(seed)
     tr.train()
     for step in range(1, steps + 1):
@@ -181,8 +183,8 @@ def train_loop(tr, items, sigmas, steps, lr, seed, device, log, use_amp=True, ck
         x0 = it["latent"].to(device)
         eps = torch.randn(x0.shape, generator=g).to(device)
         xt = (1 - s) * x0 + s * eps
-        with torch.autocast("cuda", dtype=torch.float16, enabled=use_amp):
-            out = tr([xt.unsqueeze(1).to(next(tr.parameters()).dtype if not use_amp else torch.float16)],
+        with torch.autocast("cuda", dtype=amp_dtype, enabled=use_amp):
+            out = tr([xt.unsqueeze(1).to(next(tr.parameters()).dtype if not use_amp else amp_dtype)],
                      torch.tensor([1.0 - s], device=device), [it["emb"].to(device)], return_dict=False)[0][0]
         loss = F.mse_loss(out.float().squeeze(1), (x0 - eps).float())
         opt.zero_grad(set_to_none=True)
@@ -209,7 +211,8 @@ def cmd_train(a):
     h, w = items[0]["latent"].shape[-2:]
     sigmas, mu = turbo_sigmas((h // 2) * (w // 2))
     t0 = time.time()
-    tr = ZImageTransformer2DModel.from_pretrained(zt.zimage_dir() / "transformer", torch_dtype=torch.float16,
+    tdt = zt._dtype(a.dtype)                      # M5: fp16 gives non-finite images on T4, bf16 does not
+    tr = ZImageTransformer2DModel.from_pretrained(zt.zimage_dir() / "transformer", torch_dtype=tdt,
                                                   low_cpu_mem_usage=True)
     params = build_lora(tr, a.rank)
     tr.enable_gradient_checkpointing()
@@ -226,10 +229,10 @@ def cmd_train(a):
         if row["step"] % 25 == 0 or row["step"] == 1:
             logf.flush()
             print(json.dumps(row), flush=True)
-    train_loop(tr, items, sigmas, a.steps, a.lr, a.seed, a.device, log)
+    train_loop(tr, items, sigmas, a.steps, a.lr, a.seed, a.device, log, amp_dtype=tdt)
     logf.close()
     sd = get_peft_model_state_dict(tr)
-    ZImagePipeline.save_lora_weights(OUT, transformer_lora_layers={k: v.half() for k, v in sd.items()},
+    ZImagePipeline.save_lora_weights(OUT, transformer_lora_layers={k: v.to(tdt) for k, v in sd.items()},
                                      weight_name="adapter.safetensors")
     losses = [json.loads(x)["loss"] for x in (OUT / "loss.jsonl").read_text().splitlines()]
     n = max(1, len(losses) // 10)
@@ -241,7 +244,8 @@ def cmd_train(a):
                      "license": "CC-BY 4.0 (Google Scanned Objects); derived weights trained on renders"},
             "objective": "rectified-flow x0 - eps target at the 9 Turbo sigmas (training resolution shift mu "
                          f"{mu:.4f}), MSE", "steps": a.steps, "lr": a.lr, "seed": a.seed, "batch": 1,
-            "precision": "fp16 frozen base + fp32 LoRA, autocast fp16, grad scaler, grad clip 1.0",
+            "precision": f"{a.dtype} frozen base + fp32 LoRA, autocast {a.dtype}"
+                         f"{', grad scaler' if a.dtype == 'float16' else ''}, grad clip 1.0",
             "loss_first_10pct_mean": float(np.mean(losses[:n])), "loss_last_10pct_mean": float(np.mean(losses[-n:])),
             "weights": {"adapter.safetensors": sha256(OUT / "adapter.safetensors")},
             "license": "Apache-2.0 (base model) adapter weights released with the repository",
