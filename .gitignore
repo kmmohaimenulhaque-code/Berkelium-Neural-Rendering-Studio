@@ -25,6 +25,8 @@ jspm_packages/
 # Output directories
 dist/
 build/
+# Installers made by npm run package (electron-builder)
+release/
 *.build.js
 
 # Misc

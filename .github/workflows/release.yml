@@ -1,0 +1,142 @@
+# Release: builds the installable app for macOS (Apple Silicon), Windows and
+# Linux, tests each compiled app, and attaches the installers to a DRAFT
+# GitHub Release. Nothing is public until someone presses "Publish release".
+#
+# How to cut a release:
+#   1. Set "version" in apps/desktop/package.json (for example 0.2.0) and push.
+#   2. Tag that commit and push the tag:
+#        git tag v0.2.0 && git push origin v0.2.0
+#   3. Wait for this workflow, open Releases on GitHub, check the draft, publish.
+#
+# Trial run without a release: Actions tab > Release > Run workflow. The
+# installers then appear as downloadable artifacts on that run instead.
+
+name: Release
+
+on:
+  push:
+    tags: ["v*.*.*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Never cancel a release half way. Two pushes of the same tag queue up instead.
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Installer (${{ matrix.label }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest # Apple Silicon runner. Intel Macs are not supported.
+            label: macOS Apple Silicon
+            key: mac
+          - os: windows-latest
+            label: Windows x64
+            key: windows
+          - os: ubuntu-latest
+            label: Linux x64
+            key: linux
+    defaults:
+      run:
+        working-directory: apps/desktop
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/desktop/package-lock.json
+
+      # A tag that does not match package.json would ship an installer whose
+      # About screen shows the wrong version. Stop before building anything.
+      - name: Tag matches package.json version
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          version="v$(node -p "require('./package.json').version")"
+          if [ "$GITHUB_REF_NAME" != "$version" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match package.json version ($version). Update the version, commit, and tag that commit."
+            exit 1
+          fi
+          echo "OK: $GITHUB_REF_NAME matches package.json."
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Unit tests
+        run: npm test
+
+      # No signing certificates yet. macOS gets an ad-hoc signature (mac.identity
+      # "-" in package.json), which Apple Silicon requires for an app to start.
+      - name: Build installer
+        run: npm run package
+
+      # Start the compiled app itself and check it renders, the logo loads and
+      # the 3D view opens. A broken installer never reaches the release.
+      - name: Smoke test the compiled app (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          command -v xvfb-run > /dev/null || (sudo apt-get update && sudo apt-get install -y xvfb)
+          xvfb-run -a npm run smoke:packaged
+
+      - name: Smoke test the compiled app
+        if: runner.os != 'Linux'
+        run: npm run smoke:packaged
+
+      - uses: actions/upload-artifact@v6
+        with:
+          name: installer-${{ matrix.key }}
+          path: |
+            apps/desktop/release/*.dmg
+            apps/desktop/release/*.exe
+            apps/desktop/release/*.AppImage
+          if-no-files-found: error
+          retention-days: 14
+
+  release:
+    name: Draft GitHub Release
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # The only job that can write: it creates the draft release.
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/download-artifact@v7
+        with:
+          pattern: installer-*
+          path: installers
+          merge-multiple: true
+
+      # Checksums let anyone confirm a download was not corrupted or swapped.
+      - name: Checksums
+        working-directory: installers
+        run: |
+          sha256sum * > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+
+      - name: Create draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" installers/* \
+            --repo "$GITHUB_REPOSITORY" \
+            --draft \
+            --title "Berkelium $GITHUB_REF_NAME" \
+            --notes-file apps/desktop/resources/RELEASE_NOTES.md

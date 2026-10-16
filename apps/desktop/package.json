@@ -3,6 +3,9 @@
   "productName": "Berkelium",
   "private": true,
   "version": "0.1.0",
+  "description": "Berkelium Neural Rendering Studio",
+  "author": "Team Berkelium",
+  "main": "electron/main.cjs",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -13,6 +16,8 @@
     "electron": "electron electron/main.cjs",
     "preview:app": "vite build && electron electron/main.cjs --dist",
     "smoke": "electron electron/smoke.cjs",
+    "package": "vite build && electron-builder --publish never",
+    "smoke:packaged": "node scripts/smoke-packaged.mjs",
     "studio": "concurrently -k \"npm run dev\" \"wait-on tcp:5173 && npm run electron\""
   },
   "dependencies": {
@@ -48,5 +53,68 @@
     "@electron/get": {
       "global-agent": "^4.1.3"
     }
+  },
+  "build": {
+    "appId": "ai.berkelium.studio",
+    "productName": "Berkelium",
+    "artifactName": "Berkelium-${version}-${os}-${arch}.${ext}",
+    "directories": {
+      "output": "release",
+      "buildResources": "resources"
+    },
+    "files": [
+      "dist/**",
+      "electron/main.cjs",
+      "electron/preload.cjs",
+      "package.json",
+      "!node_modules/**"
+    ],
+    "asar": true,
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64"
+          ]
+        }
+      ],
+      "category": "public.app-category.graphics-design",
+      "identity": "-",
+      "minimumSystemVersion": "12.0",
+      "hardenedRuntime": false
+    },
+    "dmg": {
+      "title": "Berkelium ${version}"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "shortcutName": "Berkelium"
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "category": "Graphics",
+      "synopsis": "Neural rendering studio"
+    },
+    "publish": null
   }
 }
