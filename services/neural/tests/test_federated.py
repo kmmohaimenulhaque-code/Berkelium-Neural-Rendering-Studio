@@ -177,9 +177,9 @@ def test_runner_bundle_is_reproducible_and_pull_verifies(tmp_path, monkeypatch):
     monkeypatch.setattr(K, "STATE_ROOT", tmp_path / "state")
     monkeypatch.setattr(K, "ROOT", tmp_path / "repo")
     (tmp_path / "repo").mkdir()
-    st = {"run_id": "r1", "kernel": "u/k"}
+    st = {"run_id": "r1", "kernel": "u/k", "bundle_sha256": "b" * 64}
 
-    def fake_output(files_ok=True):
+    def fake_output(files_ok=True, run_id="r1"):
         def run(*args, **kw):
             stage = Path(args[args.index("-p") + 1]) / "out"
             (stage / "files" / "results").mkdir(parents=True)
@@ -187,7 +187,8 @@ def test_runner_bundle_is_reproducible_and_pull_verifies(tmp_path, monkeypatch):
             (stage / "files" / "results" / "a.txt").write_bytes(data if files_ok else b"tampered")
             (stage / "manifest.json").write_text(json.dumps({"results/a.txt": {
                 "sha256": hashlib.sha256(data).hexdigest(), "bytes": len(data)}}))
-            (stage / "receipt.json").write_text(json.dumps({"status": "completed", "steps": []}))
+            (stage / "receipt.json").write_text(json.dumps({"status": "completed", "steps": [], "run_id": run_id,
+                                                            "bundle_sha256": "b" * 64}))
             return ""
         return run
     monkeypatch.setattr(K, "kaggle", fake_output(True))
@@ -195,4 +196,7 @@ def test_runner_bundle_is_reproducible_and_pull_verifies(tmp_path, monkeypatch):
     assert (tmp_path / "repo" / "results" / "a.txt").read_bytes() == b"payload"
     monkeypatch.setattr(K, "kaggle", fake_output(False))
     with pytest.raises(K.RunnerError, match="verification failed"):
+        K.pull(spec, dict(st), admit=True)
+    monkeypatch.setattr(K, "kaggle", fake_output(True, run_id="an-earlier-run"))
+    with pytest.raises(K.RunnerError, match="not this push"):       # a stale kernel version is never admitted
         K.pull(spec, dict(st), admit=True)

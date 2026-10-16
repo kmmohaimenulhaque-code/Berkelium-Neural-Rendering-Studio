@@ -279,7 +279,8 @@ def build_kernel(spec: dict, blob: bytes, run_id: str, kdir: Path, slug: str, da
             f"BUNDLE_SHA256 = {sha256_bytes(blob)!r}\nRUN_ID = {run_id!r}\nDATA_SHA256 = {data_sha!r}\n"
             f"BUNDLE_B64 = {base64.b64encode(blob).decode()!r}\n")
     (kdir / "run.py").write_text(head + REMOTE)
-    meta = {"id": f"{account_handle()}/{slug}", "title": spec.get("title", slug), "code_file": "run.py",
+    title = spec.get("title", slug) if spec.get("slug", slug) == slug else slug    # Kaggle: title must give the slug
+    meta = {"id": f"{account_handle()}/{slug}", "title": title, "code_file": "run.py",
             "language": "python",
             "kernel_type": "script", "is_private": True, "enable_gpu": True, "enable_internet": True,
             "dataset_sources": [data_ref] if data_ref else [], "competition_sources": [], "kernel_sources": []}
@@ -355,6 +356,13 @@ def pull(spec: dict, st: dict, admit: bool) -> dict:
     if not (out / "receipt.json").exists():
         raise RunnerError(f"no receipt in kernel output (see {run_dir / 'remote.log'})")
     receipt = json.loads((out / "receipt.json").read_text())
+    if receipt.get("run_id") != st["run_id"] or receipt.get("bundle_sha256") != st["bundle_sha256"]:
+        # Kaggle keeps running an earlier version when a new one is pushed to a busy kernel; its output must never be
+        # admitted under this run's id (found 2026-10-16: an fp16 run's NaN output pulled for a bf16 push).
+        (run_dir / "receipt.REJECTED_stale_run.json").write_text(json.dumps(receipt, indent=2, default=str))
+        raise RunnerError(f"kernel output is from run {receipt.get('run_id')} (bundle "
+                          f"{str(receipt.get('bundle_sha256'))[:16]}), not this push ({st['run_id']}, "
+                          f"{st['bundle_sha256'][:16]}): nothing admitted")
     manifest = json.loads((out / "manifest.json").read_text()) if (out / "manifest.json").exists() else {}
     bad, present = [], set()
     for rel, m in manifest.items():
@@ -413,6 +421,12 @@ def cmd_run(a) -> int:
         return 0
     run_id = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
     slug = a.slug or spec.get("slug") or f"berkelium-{spec['name']}"
+    try:                                      # a push to a busy kernel does not start; refuse instead of mixing runs
+        busy = kernel_status(f"{account_handle()}/{slug}") in ("running", "queued")
+    except RunnerError:
+        busy = False
+    if busy:
+        raise RunnerError(f"kernel {slug} is still running an earlier version; wait for it or use --slug")
     kdir = state_dir(spec) / run_id / "kernel"
     data_ref, data_sha = upload_data(spec, state_dir(spec) / run_id)
     ref = build_kernel(spec, blob, run_id, kdir, slug, data_ref, data_sha)

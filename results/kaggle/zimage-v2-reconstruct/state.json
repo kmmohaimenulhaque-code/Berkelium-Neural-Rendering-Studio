@@ -18,7 +18,9 @@
     "dirty_files": 21
   },
   "pushed_at": "2026-10-16T17:33:45Z",
-  "status": "pushed",
+  "status": "pulled",
   "push_response": "Kernel version 4 successfully pushed.  Please check progress at https://www.kaggle.com/code/kmmohaimenulhaque/berkelium-zimage",
-  "kernel_final_status": "complete"
+  "kernel_final_status": "complete",
+  "verified_files": 642,
+  "admitted": 642
 }

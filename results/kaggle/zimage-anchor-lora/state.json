@@ -1,20 +1,20 @@
 {
   "job": "zimage-anchor-lora",
-  "run_id": "20261016T173356Z",
-  "kernel": "kmmohaimenulhaque/berkelium-anchorlora",
+  "run_id": "20261016T182530Z",
+  "kernel": "kmmohaimenulhaque/berkelium-anchorlora-bf16",
   "accelerator": "NvidiaTeslaT4",
   "spec": "configs/kaggle/zimage_anchor_lora.json",
   "spec_sha256": "1a6595156dab40fdf0d0d5d5d0686ac61df5f9aa562760083bac787323244558",
-  "bundle_sha256": "880788b8904181dae6cb579c57c27e7d11f0465f11192dc8aa2e10a7b594b6ad",
-  "bundle_bytes": 227653,
+  "bundle_sha256": "ab2a6b417cf585135e5f9879da2a4c5eb39c787dbfa7b0b7f562b91b1d10fddc",
+  "bundle_bytes": 228181,
   "bundle_files": 118,
   "data": null,
   "git": {
-    "commit": "e62c309c0c23182ffdfcda682dbb84a7a3991bb0",
+    "commit": "4dedba4950df1346ae0b68d00df22715b86a2c71",
     "branch": "neural-v1",
-    "dirty_files": 22
+    "dirty_files": 11
   },
-  "pushed_at": "2026-10-16T17:33:57Z",
+  "pushed_at": "2026-10-16T18:25:34Z",
   "status": "pushed",
-  "push_response": "Kernel push error: Maximum batch GPU session count of 2 reached."
+  "push_response": "Kernel version 1 successfully pushed.  Please check progress at https://www.kaggle.com/code/kmmohaimenulhaque/berkelium-anchorlora-bf16"
 }
