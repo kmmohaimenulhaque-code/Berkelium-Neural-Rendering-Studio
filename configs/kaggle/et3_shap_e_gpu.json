@@ -1,0 +1,20 @@
+{
+  "name": "et3-shap-e-gpu",
+  "title": "Berkelium-final",
+  "slug": "berkelium-final",
+  "description": "E-T3: every Shap-E unit the CPU run did not produce (B1 seeds 0-2, B2, B4 single-shot and planner parts), fp32, seeded CPU noise, two disjoint shards on two T4s; gpu-smoke equivalence gate first",
+  "accelerator": "t4x2",
+  "include": ["services/neural", "scripts", "benchmarks", "configs"],
+  "include_files": ["results/text3d/E-T3/units.jsonl", "results/text3d/E-T3/excluded_units.jsonl",
+                    "results/e2e/openworld_api_mesh.glb"],
+  "steps": [
+    {"name": "deps", "cmd": "pip install -q trimesh==5.1.1 scikit-image==0.26.0 pydantic==2.13.5"},
+    {"name": "setup_openworld", "cmd": "PYTHON=python bash scripts/setup_openworld.sh"},
+    {"name": "gpu_smoke", "cmd": "python scripts/run_openworld_benchmark.py gpu-smoke --device cuda --include-cpu-reserved"},
+    {"name": "generate", "parallel": [
+      "CUDA_VISIBLE_DEVICES=0 python scripts/run_openworld_benchmark.py generate --device cuda --include-cpu-reserved --shard 0/2 --wall-hours 2.5",
+      "CUDA_VISIBLE_DEVICES=1 python scripts/run_openworld_benchmark.py generate --device cuda --include-cpu-reserved --shard 1/2 --wall-hours 2.5"]}
+  ],
+  "outputs": ["results/text3d/E-T3/units_cuda_*.jsonl", "results/text3d/E-T3/units/shap-e-text300m/**",
+              "results/text3d/E-T3/gpu_smoke/**"]
+}

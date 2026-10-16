@@ -66,3 +66,9 @@ third_party/
 # Pretrained weights (data/models/ is covered by /data/); Shap-E's default cache lands in the CWD
 /shap_e_model_cache/
 /results/demo/
+
+# Training runs (released weights live in exports/) and Kaggle runner staging: the kernel source embeds the code
+# bundle and remote/ holds the raw download; receipts and state stay tracked
+/runs/
+/results/kaggle/*/*/kernel/
+/results/kaggle/*/*/remote/

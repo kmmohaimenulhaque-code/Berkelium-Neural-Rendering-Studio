@@ -1,0 +1,2 @@
+# Control-plane dependency for scripts/kaggle_gpu_runner.py (this host only; nothing here runs on the GPU node).
+kaggle==2.2.4

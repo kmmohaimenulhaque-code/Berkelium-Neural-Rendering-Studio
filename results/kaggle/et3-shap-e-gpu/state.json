@@ -1,0 +1,19 @@
+{
+  "job": "et3-shap-e-gpu",
+  "run_id": "20261016T144156Z",
+  "kernel": "kmmohaimenulhaque/berkelium-final",
+  "accelerator": "NvidiaTeslaT4",
+  "spec": "configs/kaggle/et3_shap_e_gpu.json",
+  "spec_sha256": "e5fbc2141e837e9c237d5d0ec1c3b917dd3a302fc931c7f8ff8085c5cb13760d",
+  "bundle_sha256": "2aaf060b25e792e5823b4f718448ce67036221930297eebfe0d1f58c7c386c40",
+  "bundle_bytes": 501571,
+  "bundle_files": 112,
+  "git": {
+    "commit": "1c64333aa7a924b96b3be154f6b3380cc19458f4",
+    "branch": "neural-v1",
+    "dirty_files": 4
+  },
+  "pushed_at": "2026-10-16T14:41:57Z",
+  "status": "pushed",
+  "push_response": "Kernel version 2 successfully pushed.  Please check progress at https://www.kaggle.com/code/kmmohaimenulhaque/berkelium-final"
+}
