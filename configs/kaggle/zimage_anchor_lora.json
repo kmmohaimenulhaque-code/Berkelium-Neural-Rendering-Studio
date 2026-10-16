@@ -11,8 +11,7 @@
     "configs"
   ],
   "include_files": [
-    "results/text3d/E-T3/units.jsonl",
-    "results/m5/E-A1_receipt.json"
+    "results/text3d/E-T3/units.jsonl"
   ],
   "steps": [
     {
@@ -45,7 +44,7 @@
     },
     {
       "name": "lora_prepare",
-      "cmd": "python scripts/anchor_lora.py prepare --te-dtype from-m5 --device cuda:0",
+      "cmd": "python scripts/anchor_lora.py prepare --te-dtype bfloat16 --device cuda:0",
       "env": {
         "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"
       }
@@ -59,14 +58,14 @@
     },
     {
       "name": "lora_sample",
-      "cmd": "python scripts/anchor_lora.py sample --te-dtype from-m5 --dtype from-m5 --device cuda:0",
+      "cmd": "python scripts/anchor_lora.py sample --te-dtype bfloat16 --dtype float16 --device cuda:0",
       "env": {
         "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"
       }
     },
     {
       "name": "embed",
-      "cmd": "python scripts/zimage_triposr_batch.py embed --te-dtype from-m5 --gen zimage-triposr-anchorlora",
+      "cmd": "python scripts/zimage_triposr_batch.py embed --te-dtype bfloat16 --gen zimage-triposr-anchorlora",
       "env": {
         "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"
       }
@@ -74,8 +73,8 @@
     {
       "name": "anchors",
       "parallel": [
-        "CUDA_VISIBLE_DEVICES=0 python scripts/zimage_triposr_batch.py anchors --gen zimage-triposr-anchorlora --lora exports/zimage-anchor-lora-v1/adapter.safetensors --dtype from-m5 --shard 0/2",
-        "CUDA_VISIBLE_DEVICES=1 python scripts/zimage_triposr_batch.py anchors --gen zimage-triposr-anchorlora --lora exports/zimage-anchor-lora-v1/adapter.safetensors --dtype from-m5 --shard 1/2"
+        "CUDA_VISIBLE_DEVICES=0 python scripts/zimage_triposr_batch.py anchors --gen zimage-triposr-anchorlora --lora exports/zimage-anchor-lora-v1/adapter.safetensors --dtype float16 --shard 0/2",
+        "CUDA_VISIBLE_DEVICES=1 python scripts/zimage_triposr_batch.py anchors --gen zimage-triposr-anchorlora --lora exports/zimage-anchor-lora-v1/adapter.safetensors --dtype float16 --shard 1/2"
       ],
       "env": {
         "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"
@@ -98,5 +97,6 @@
     "results/text3d/E-T3/units_zimage-triposr-anchorlora_*.jsonl",
     "results/text3d/E-T3/units/zimage-triposr-anchorlora/**"
   ],
-  "env_note": "PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True on every GPU step (fragmentation next to a 12.3 GB resident transformer)"
+  "env_note": "PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True on every GPU step (fragmentation next to a 12.3 GB resident transformer)",
+  "precision_note": "explicit, not from-m5: launched while the M5 job was still running. Text encoder bf16 (measured working on T4 in M5 attempt 1); transformer fp16 (the T4 tensor-core dtype). If M5 shows fp16 anchors are non-finite or blank, the LoRA units are rerun at the M5 choice"
 }
