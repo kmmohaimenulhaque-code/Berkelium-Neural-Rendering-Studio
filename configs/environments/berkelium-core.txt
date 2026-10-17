@@ -1,0 +1,2 @@
+# Berkelium core (deterministic engine) pinned to physics/p1-numerical @ 737dc35; OCCT exact BREP + Manifold mesh.
+berkelium[occt,mesh] @ git+https://github.com/kmmohaimenulhaque-code/BERKELIUM-NEURAL-RENDERING-AND-SCIENCES@737dc35c42aaf97f52a6ac984a806adef9518525
