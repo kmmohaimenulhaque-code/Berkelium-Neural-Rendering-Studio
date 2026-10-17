@@ -1,0 +1,22 @@
+{
+  "job": "cad-dataset",
+  "run_id": "20261017T084505Z",
+  "kernel": "kmmohaimenulhaque/berkelium-cad-dataset",
+  "accelerator": "NvidiaTeslaT4",
+  "spec": "configs/kaggle/cad_dataset.json",
+  "spec_sha256": "d7596101e6751565ae9915126026f59e8c024e4aa57a0c17e62b12cd5a313a1f",
+  "bundle_sha256": "cc883c9892427601b85732a5895b046bf64408f3cb8bd723bd36c7e9e81ca117",
+  "bundle_bytes": 21018,
+  "bundle_files": 6,
+  "data": null,
+  "git": {
+    "commit": "3df93ebe4ac2d1e573daf2b24a4884ab8e050a02",
+    "branch": "Berkelium-Neural-Rendering-Studio-neural-v1",
+    "dirty_files": 7
+  },
+  "pushed_at": "2026-10-17T08:45:10Z",
+  "status": "pulled",
+  "push_response": "Kernel version 2 successfully pushed.  Please check progress at https://www.kaggle.com/code/kmmohaimenulhaque/berkelium-cad-dataset",
+  "verified_files": 6,
+  "admitted": 6
+}

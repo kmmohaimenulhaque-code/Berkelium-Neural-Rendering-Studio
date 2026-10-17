@@ -282,8 +282,10 @@ def build_kernel(spec: dict, blob: bytes, run_id: str, kdir: Path, slug: str, da
     title = spec.get("title", slug) if spec.get("slug", slug) == slug else slug    # Kaggle: title must give the slug
     meta = {"id": f"{account_handle()}/{slug}", "title": title, "code_file": "run.py",
             "language": "python",
-            "kernel_type": "script", "is_private": True, "enable_gpu": True, "enable_internet": True,
-            "dataset_sources": [data_ref] if data_ref else [], "competition_sources": [], "kernel_sources": []}
+            "kernel_type": "script", "is_private": True, "enable_gpu": spec.get("gpu", True),
+            "enable_internet": True,
+            "dataset_sources": ([data_ref] if data_ref else []) + spec.get("dataset_sources", []),
+            "competition_sources": [], "kernel_sources": spec.get("kernel_sources", [])}
     (kdir / "kernel-metadata.json").write_text(json.dumps(meta, indent=2))
     return meta["id"]
 
@@ -438,7 +440,8 @@ def cmd_run(a) -> int:
           "data": {"dataset": data_ref, "manifest_sha256": data_sha} if data_ref else None,
           "git": git_state(), "pushed_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "status": "pushed"}
     (state_dir(spec) / run_id / "bundle_files.txt").write_text("\n".join(files) + "\n")
-    out = kaggle("kernels", "push", "-p", str(kdir), "--accelerator", acc, timeout=600)
+    out = kaggle("kernels", "push", "-p", str(kdir), *(("--accelerator", acc) if spec.get("gpu", True) else ()),
+                 timeout=600)
     st["push_response"] = out[-300:]
     write_state(spec, st)
     print(f"pushed {ref} ({len(files)} files, bundle {len(blob) / 1024:.0f} KiB sha256 {bsha[:16]}…, {acc})")

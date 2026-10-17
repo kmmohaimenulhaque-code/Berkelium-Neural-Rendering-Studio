@@ -323,3 +323,33 @@ objects and away from the prompt.
 
 **MI300X.** The droplet at 165.245.133.213 was not reachable from the agent container (port 22 timed out; the SSH key
 secret arrived after the session started). No AMD run was made in this session.
+
+## 2026-10-17 — E-C1: text → DesignProposal compiler (Qwen3-8B) on Kaggle
+
+Direction (owner): text → engineering design JSON → exact 3D → render, with a small open model trained on Kaggle,
+reusing the Berkelium core (`kmmohaimenulhaque-code/BERKELIUM-NEURAL-RENDERING-AND-SCIENCES` @ `737dc35`: schemas,
+Geometry IR, OCCT/Manifold, gear + beam CEMs, validation). No agent-host CPU compute; no MI300X dependency.
+
+- **Gap found in the owner's assets.** Of the 4 Qwen3-32B adapters on HF, only `berkelium-qwen3-32b-lora` (M1) maps
+  text → DesignProposal, and only for spur gears (+30 lanterns). V1/V2/DPO are ClaimEnv/ModelEnv agent policies.
+  None has an evaluation on record (core `docs/ENDGAME_AUDIT.md` §4).
+- **Dataset `berkelium-cad-v1`** (`services/neural/berkelium_neural/cad/families.py`, `scripts/cad_dataset.py`):
+  33 parametric part families (plates, brackets, beams, flanges, shafts, fasteners, pulleys, wheels, heat sinks,
+  enclosures, piping, pressure vessel, rocket nozzle, rocket airframe, propeller, household objects, truss…) plus a
+  feature grammar (base body + holes/pockets/bosses/slots/counterbores/bolt circles), the core's gear CEM sampler,
+  a cantilever-beam CEM slice and the core's lantern. Geometry IR arguments are expressions over named parameters.
+  Text is precise (mm/cm/in, sizes copied into `body.extent_*` requirements) or vague (canonical sizes listed as
+  assumptions plus an open question). Built and verified on a Kaggle CPU kernel: 19,710 candidates → 18,712 unique
+  rows that the core realises with every requirement met; 866 rejected (custom_part: 345 split into 2 solids, 277
+  unresolvable `X` on disc bases — a generator bug, rejected not fixed; gear: 13 L6 Lewis failures).
+  Held-out families (never trained): pipe_elbow, chair, knob, hinge_leaf.
+- **Found while writing families:** the core's expression language makes a bare number dimensionless, so `L+2`
+  fails against a length. Constants need a unit (`L+2[mm]`). That rule is now in the compiler prompt.
+- **D-033 pre-registered** in `eb7764e` before training. Training: `scripts/cad_train.py` (QLoRA, NF4 + fp16 compute,
+  fp32 LoRA r=32, DDP on 2×T4, Qwen3-0.6B smoke first, 10 h budget guard, NaN guard). Evaluation:
+  `scripts/cad_eval.py` (zero-shot vs m2, same NF4 quantisation; parse/schema/realise/reference-requirement/IoU
+  scored by the core; paired bootstrap CI).
+- **Studio:** `cad` generator (`berkelium_neural/cad/generator.py`): compiler (endpoint / local GPU / injected) →
+  core `run()` → Manifold mesh → existing Gaussian fit + splat render; proposal and core validation stored with the
+  mesh artifact; labels say the geometry is core-realised (mm scale recorded). It is not part of `auto` unless
+  D-033 passes. Tests: `services/neural/tests/test_cad.py` (12 passed, stub compiler).

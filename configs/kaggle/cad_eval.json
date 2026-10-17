@@ -1,0 +1,56 @@
+{
+  "name": "cad-eval",
+  "title": "berkelium-cad-eval",
+  "slug": "berkelium-cad-eval",
+  "description": "E-C1 K3: zero-shot Qwen3-8B (GPU 0) and Qwen3-8B + cad LoRA (GPU 1) on the same items, core scoring of both, D-033 decision",
+  "accelerator": "t4x2",
+  "kernel_sources": [
+    "kmmohaimenulhaque/berkelium-cad-dataset",
+    "kmmohaimenulhaque/berkelium-qwen3-8b-cad-train"
+  ],
+  "include": [
+    "services/neural/berkelium_neural/cad",
+    "services/neural/berkelium_neural/__init__.py",
+    "scripts/cad_eval.py",
+    "scripts/cad_fetch_data.py",
+    "scripts/cad_fetch_inputs.py",
+    "configs/environments/berkelium-core.txt",
+    "configs/environments/cad-train.txt",
+    "configs/datasets/cad_v1.sha256.json"
+  ],
+  "steps": [
+    {
+      "name": "deps",
+      "cmd": "pip install -q -r configs/environments/cad-train.txt -r configs/environments/berkelium-core.txt"
+    },
+    {
+      "name": "inputs",
+      "cmd": "python scripts/cad_fetch_data.py && python scripts/cad_fetch_inputs.py && python scripts/cad_eval.py plan"
+    },
+    {
+      "name": "fetch",
+      "cmd": "python -c \"from huggingface_hub import snapshot_download as s; s('Qwen/Qwen3-8B', revision='b968826d9c46dd6066d109eabc6255188de91218')\""
+    },
+    {
+      "name": "generate",
+      "parallel": [
+        "CUDA_VISIBLE_DEVICES=0 python scripts/cad_eval.py generate --model base --shard 0/1",
+        "CUDA_VISIBLE_DEVICES=1 python scripts/cad_eval.py generate --model m2 --shard 0/1"
+      ],
+      "env": {
+        "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"
+      }
+    },
+    {
+      "name": "score",
+      "cmd": "python scripts/cad_eval.py score --workers 4 && python scripts/cad_eval.py report"
+    }
+  ],
+  "outputs": [
+    "results/cad/E-C1/items.jsonl",
+    "results/cad/E-C1/gen_*.jsonl",
+    "results/cad/E-C1/scores.jsonl",
+    "results/cad/E-C1/E-C1.json",
+    "results/cad/E-C1/E-C1.report.md"
+  ]
+}

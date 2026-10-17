@@ -1,0 +1,117 @@
+{
+  "local": {
+    "job": "cad-dataset",
+    "run_id": "20261017T084505Z",
+    "kernel": "kmmohaimenulhaque/berkelium-cad-dataset",
+    "accelerator": "NvidiaTeslaT4",
+    "spec": "configs/kaggle/cad_dataset.json",
+    "spec_sha256": "d7596101e6751565ae9915126026f59e8c024e4aa57a0c17e62b12cd5a313a1f",
+    "bundle_sha256": "cc883c9892427601b85732a5895b046bf64408f3cb8bd723bd36c7e9e81ca117",
+    "bundle_bytes": 21018,
+    "bundle_files": 6,
+    "data": null,
+    "git": {
+      "commit": "3df93ebe4ac2d1e573daf2b24a4884ab8e050a02",
+      "branch": "Berkelium-Neural-Rendering-Studio-neural-v1",
+      "dirty_files": 7
+    },
+    "pushed_at": "2026-10-17T08:45:10Z",
+    "status": "pushed",
+    "push_response": "Kernel version 2 successfully pushed.  Please check progress at https://www.kaggle.com/code/kmmohaimenulhaque/berkelium-cad-dataset",
+    "verification": {
+      "files": 6,
+      "verified": 6,
+      "problems": [],
+      "bytes": 3140750
+    }
+  },
+  "remote": {
+    "job": "cad-dataset",
+    "run_id": "20261017T084505Z",
+    "started_at": "2026-10-17T08:45:17Z",
+    "bundle_sha256_expected": "cc883c9892427601b85732a5895b046bf64408f3cb8bd723bd36c7e9e81ca117",
+    "steps": [
+      {
+        "name": "core",
+        "seconds": 20.7,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "pip install -q -r configs/environments/berkelium-core.txt && python -c 'import berkelium, OCP, manifold3d; print(berkelium.__file__)'",
+            "rc": 0,
+            "log": "logs/00_core.log",
+            "tail": "   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 66.8/66.8 MB 26.0 MB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 1.4/1.4 MB 37.4 MB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 750.4/750.4 kB 19.8 MB/s eta 0:00:00\n/usr/local/lib/python3.13/dist-packages/berkelium/__init__.py\n"
+          }
+        ]
+      },
+      {
+        "name": "smoke",
+        "seconds": 5.1,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "python scripts/cad_dataset.py smoke",
+            "rc": 1,
+            "log": "logs/01_smoke.log",
+            "tail": "plate_holes      vague=False OK  1.121 \nplate_holes      vague=True  OK  0.014 \nl_bracket        vague=False OK  0.015 \nl_bracket        vague=True  OK  0.012 \nu_channel        vague=False OK  0.006 \nu_channel        vague=True  OK  0.005 \ni_beam           vague=False OK  0.006 \ni_beam           vague=True  OK  0.005 \nflange           vague=False OK  0.037 \nflange           vague=True  OK  0.037 \nwasher           vague=False OK  0.008 \nwasher           vague=True  OK  0.008 \nbushing          vague=False OK  0.008 \nbushing          vague=True  OK  0.009 \nstepped_shaft    vague=False OK  0.009 \nstepped_shaft    vague=True  OK  0.008 \nhex_nut          vague=False OK  0.007 \nhex_nut          vague=True  OK  0.008 \nhex_bolt         vague=False OK  0.007 \nhex_bolt         vague=True  OK  0.007 \npulley           vague=False OK  0.008 \npulley           vague=True  OK  0.009 \nspoked_wheel     vague=False OK  0.035 \nspoked_wheel     vague=True  OK  0.045 \npillow_block     vague=False OK  0.017 \npillow_block     vague=True  OK  0.021 \nsprocket         vague=False OK  0.022 \nsprocket         vague=True  OK  0.022 \nheat_sink        vague=False OK  0.009 \nheat_sink        vague=True  OK  0.007 \nenclosure        vague=False OK  0.006 \nenclosure        vague=True  OK  0.005 \nhoneycomb_panel  vague=False OK  0.02 \nhoneycomb_panel  vague=True  OK  0.014 \npipe_tee         vague=False OK  0.018 \npipe_tee         vague=True  OK  0.026 \npipe_elbow       vague=False OK  0.089 \npipe_elbow       vague=True  OK  0.214 \npressure_vessel  vague=False REJ  generator constraint\npressure_vessel  vague=True  OK  0.702 \nfunnel           vague=False OK  0.009 \nfunnel           vague=True  OK  0.01 \nrocket_nozzle    vague=False OK  0.072 \nrocket_nozzle    vague=True  OK  0.094 \nrocket_body      vague=False OK  0.045 \nrocket_body      vague=True  OK  0.069 \npropeller        vague=False OK  0.015 \npropeller        vague=True  OK  0.014 \nmug              vague=False OK  0.038 \nmug              vague=True  OK  0.043 \nbottle           vague=False OK  0.033 \nbottle           vague=True  OK  0.041 \nvase             vague=False OK  0.06 \nvase             vague=True  OK  0.065 \ntable            vague=False OK  0.007 \ntable            vague=True  OK  0.007 \nchair            vague=False OK  0.008 \nchair            vague=True  OK  0.008 \nladder           vague=False OK  0.034 \nladder           vague=True  OK  0.029 \ntruss            vague=False OK  0.019 \ntruss            vague=True  OK  0.017 \nknob             vague=False OK  0.023 \nknob             vague=True  OK  0.026 \nhinge_leaf       vague=False OK  0.019 \nhinge_leaf       vague=True  OK  0.015 \ncustom_part      vague=False OK  0.012 \ncustom_part      vague=True  REJ  summary fail: ['L4 part.body: 2 solid(s), expected 1']\ngear             OK \nbeam             OK \nlantern          OK \n"
+          }
+        ]
+      },
+      {
+        "name": "build",
+        "seconds": 633.2,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "python scripts/cad_dataset.py build --out data/cad_v1 --workers 4",
+            "rc": 0,
+            "log": "logs/02_build.log",
+            "tail": "1000/19710 done, 1000 verified, 11s\n2000/19710 done, 2000 verified, 14s\n3000/19710 done, 3000 verified, 24s\n4000/19710 done, 4000 verified, 28s\n5000/19710 done, 5000 verified, 31s\n6000/19710 done, 6000 verified, 39s\n7000/19710 done, 6937 verified, 51s\n8000/19710 done, 7937 verified, 56s\n9000/19710 done, 8851 verified, 64s\n10000/19710 done, 9823 verified, 415s\n11000/19710 done, 10823 verified, 445s\n12000/19710 done, 11823 verified, 471s\n13000/19710 done, 12823 verified, 488s\n14000/19710 done, 13823 verified, 508s\n15000/19710 done, 14823 verified, 520s\n16000/19710 done, 15698 verified, 527s\n17000/19710 done, 16469 verified, 535s\n18000/19710 done, 17244 verified, 542s\n19000/19710 done, 18139 verified, 597s\n{\n \"candidates\": 19710,\n \"verified\": 18844,\n \"unique\": 18712,\n \"rejected\": 866,\n \"files\": {\n  \"heldout.jsonl.gz\": {\n   \"rows\": 354,\n   \"sha256_uncompressed\": \"a92792a59fe41da48b30c7a827347ad95d94282fb635cdb91e4a50c40eebf63c\"\n  },\n  \"test.jsonl.gz\": {\n   \"rows\": 889,\n   \"sha256_uncompressed\": \"2bfb23873cf455c5e40e472785f66d78dfda788ede93468c42e055c95022e745\"\n  },\n  \"train.jsonl.gz\": {\n   \"rows\": 16929,\n   \"sha256_uncompressed\": \"b87380a30307117563af6c6e6fd1841f69bec2a175c7c29057a21584f25b0dc3\"\n  },\n  \"val.jsonl.gz\": {\n   \"rows\": 540,\n   \"sha256_uncompressed\": \"dfd8746d04b9f8d50b19789725de0833051f6640a3be967c5fcf8c4091151a00\"\n  }\n }\n}\n"
+          }
+        ]
+      }
+    ],
+    "status": "completed",
+    "bundle_sha256": "cc883c9892427601b85732a5895b046bf64408f3cb8bd723bd36c7e9e81ca117",
+    "environment": {
+      "python": "3.13.15",
+      "host": "6bdef4a7198d",
+      "nvidia_smi": "",
+      "torch": "2.11.0+cpu None 0",
+      "disk_free_gb": {
+        "/kaggle/working": 20.9,
+        "/tmp": 1148.8
+      },
+      "mem_total_mib": 32099,
+      "cpu_count": 4
+    },
+    "finished_at": "2026-10-17T08:56:22Z",
+    "outputs": 6
+  },
+  "manifest": {
+    "data/cad_v1/heldout.jsonl.gz": {
+      "sha256": "6703c97768970060273b4f20dd5074980faab7014bad4247c467f5b87ac35fb7",
+      "bytes": 53486
+    },
+    "data/cad_v1/manifest.json": {
+      "sha256": "a4887f662a22c43f89f07cd4e00abd81c52d8652fc994b5e1d6e5dbd0410efbf",
+      "bytes": 6706
+    },
+    "data/cad_v1/rejected.jsonl.gz": {
+      "sha256": "3df0ecdff099336e7bc333406ba30f13843285d7ff031bbb15d939cabcc49861",
+      "bytes": 85940
+    },
+    "data/cad_v1/test.jsonl.gz": {
+      "sha256": "033d5236360821010a4898067588febfd62004e3aa8f46c08cae2547c6321767",
+      "bytes": 162936
+    },
+    "data/cad_v1/train.jsonl.gz": {
+      "sha256": "8e01f2f16ff5408f0fd3c0d7c5624d57bd6313110d3c7ab81518c77564532ef4",
+      "bytes": 2726553
+    },
+    "data/cad_v1/val.jsonl.gz": {
+      "sha256": "fb20f7a3fa1deea45355e16bf016c7429b46977fcb0e829b43553a118bc78478",
+      "bytes": 105129
+    }
+  }
+}

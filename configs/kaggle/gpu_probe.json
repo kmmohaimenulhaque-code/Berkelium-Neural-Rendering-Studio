@@ -1,0 +1,10 @@
+{
+  "name": "gpu-probe",
+  "slug": "berkelium-gpu-probe",
+  "title": "berkelium-gpu-probe",
+  "description": "1-minute probe: does a GPU session start (quota vs T4 capacity diagnosis)",
+  "accelerator": "p100",
+  "include": ["configs/kaggle/gpu_probe.json"],
+  "steps": [{"name": "nvidia", "cmd": "nvidia-smi --query-gpu=name,memory.total --format=csv"}],
+  "outputs": []
+}

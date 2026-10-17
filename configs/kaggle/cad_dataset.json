@@ -1,0 +1,14 @@
+{
+  "name": "cad-dataset",
+  "title": "berkelium-cad-dataset",
+  "slug": "berkelium-cad-dataset",
+  "description": "E-C1 K1: build and verify the berkelium-cad-v1 text->DesignProposal dataset with the Berkelium core (CPU only)",
+  "gpu": false,
+  "include": ["services/neural/berkelium_neural/cad", "services/neural/berkelium_neural/__init__.py", "scripts/cad_dataset.py", "configs/environments/berkelium-core.txt"],
+  "steps": [
+    {"name": "core", "cmd": "pip install -q -r configs/environments/berkelium-core.txt && python -c 'import berkelium, OCP, manifold3d; print(berkelium.__file__)'"},
+    {"name": "smoke", "cmd": "python scripts/cad_dataset.py smoke", "allow_fail": true},
+    {"name": "build", "cmd": "python scripts/cad_dataset.py build --out data/cad_v1 --workers 4"}
+  ],
+  "outputs": ["data/cad_v1/**"]
+}
