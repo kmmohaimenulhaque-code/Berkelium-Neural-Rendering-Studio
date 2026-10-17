@@ -32,9 +32,10 @@ Status: ☐ todo · ◐ in progress · ☑ done (with evidence file)
 - ☑ Core reviewed and its install checked (OCP + manifold import OK). Its full test suite was not run here
   (the owner stopped CPU runs).
 - ☑ Kaggle API reachable (`kaggle kernels list --mine` OK, 2026-10-17).
-- ☐ Kaggle spec `configs/kaggle/cad_dataset.json`: install core `@737dc35[occt,mesh]` inside the kernel.
+- ☑ Kaggle spec `configs/kaggle/cad_dataset.json` installs core `@737dc35[occt,mesh]` inside the kernel (CPU-only kernel, no GPU quota).
 
-### K1 — Dataset `berkelium-cad-v1` (built and verified **on Kaggle**)
+### K1 — Dataset `berkelium-cad-v1` (built and verified **on Kaggle**) ☑ 2026-10-17
+**Result:** 19,710 candidates → 18,712 unique verified rows (train 16,929 · val 540 · test 889 · held-out 354), 866 rejected with reasons, 13 % vague. Evidence: `results/cad/cad_v1_manifest.json`; file hashes pinned in `configs/datasets/cad_v1.sha256.json`; Kaggle receipt `results/kaggle/cad-dataset/20261017T084505Z/receipt.json`.
 - ☐ `scripts/cad_dataset.py`: ~35 parametric families. Each emits a DesignProposal (named parameters plus an
   expression-based Geometry IR) and several natural-language renderings: precise/vague, mm/cm/inch, terse or
   descriptive, and vague versions that fill `assumptions`/`open_questions`. Families:
@@ -56,28 +57,28 @@ Status: ☐ todo · ◐ in progress · ☑ done (with evidence file)
   Commit the manifest (hashes, counts) to `results/cad/`.
 
 ### K2 — Pre-register, then train Qwen3-8B
-- ☐ **D-033 (write before training).** M2 (Qwen3-8B + LoRA) is promoted to the Studio `cad` generator only if,
+- ☑ **D-033 pre-registered in commit `eb7764e`, before training.** M2 (Qwen3-8B + LoRA) is promoted to the Studio `cad` generator only if,
   on held-out data:
   - in-distribution test: schema-valid ≥ 95 %, realise (L3) ≥ 90 %, requirement pass ≥ 85 %;
   - held-out families: realise ≥ 60 %, and mean voxel IoU against the reference beats zero-shot Qwen3-8B
     (paired 95 % CI above 0);
   - gear test (core `berkelium eval` metrics): not worse than zero-shot Qwen3-8B;
   - 0 proposals that contain measurement or validation fields (schema `extra=forbid` rejects them).
-- ☐ `configs/kaggle/cad_train_qwen3_8b.json`. QLoRA: NF4 base, fp16 compute (the T4 has no bf16), LoRA r=32 on
+- ◐ `configs/kaggle/cad_train.json` launched 2026-10-17 (kernel `kmmohaimenulhaque/berkelium-cad-train-qwen3-8b`): Qwen3-0.6B smoke, then Qwen3-8B, 10 h budget. QLoRA: NF4 base, fp16 compute (the T4 has no bf16), LoRA r=32 on
   all linear layers, seq ≤ 3072, gradient checkpointing, checkpoint every 30 min, resume across 12 h sessions,
   NaN guard. Compact JSON targets (sorted keys, no spaces).
 - ☐ Adapter goes to HF `Mhaquehaque/berkelium-qwen3-8b-cad-v1` with a model card + run manifest (data/config
   SHA-256).
 
 ### K3 — Evaluate on Kaggle
-- ☐ `configs/kaggle/cad_eval.json`: vLLM, fp16, tensor-parallel across 2×T4, LoRA (fallback: HF 4-bit batched).
+- ◐ Zero-shot baseline `configs/kaggle/cad_eval_base.json` launched (kernel `berkelium-cad-eval-base`); the m2 eval spec follows the adapter. HF transformers, NF4 (same quantisation as training), greedy, one shard per T4.
   Generate for zero-shot Qwen3-8B and M2 on test + held-out families + gear test.
 - ☐ Score inside the kernel with the core: parse → schema → realise → requirements → voxel IoU. Repair loop
   (≤ 3 JSON-Patch rounds) is reported separately, as "with repair".
 - ☐ `results/cad/E-C1_*.json` + `.report.md`. Apply D-033 and record the decision in `NEURAL_RENDERING_DECISIONS.md`.
 
 ### K4 — Studio integration
-- ☐ `cad` generator: text → M2 (Kaggle/HF endpoint or local GPU) → core `run()` → GLB → mesh → Gaussians → render.
+- ☑ `cad` generator (`berkelium_neural/cad/generator.py`, tests `services/neural/tests/test_cad.py` 12 passed): text → M2 (Kaggle/HF endpoint or local GPU) → core `run()` → GLB → mesh → Gaussians → render.
   `open_questions` are shown to the user instead of guessing. The provenance card shows the proposal, the
   validation report, artifact hashes and the adapter hash.
 - ☐ Router: an engineering intent goes to `cad`; organic objects go to `auto` open-world, labelled.

@@ -1,0 +1,277 @@
+{
+  "candidates": 19710,
+  "config": {
+    "beams": 400,
+    "cmd": "build",
+    "custom_extra": 2500,
+    "func": null,
+    "gears": 700,
+    "lanterns": 150,
+    "out": "data/cad_v1",
+    "per_family": 520,
+    "seed": 0,
+    "workers": 4
+  },
+  "core_commit": "737dc35",
+  "dataset": "berkelium-cad-v1",
+  "family_counts": {
+    "heldout": {
+      "chair": 90,
+      "hinge_leaf": 90,
+      "knob": 89,
+      "pipe_elbow": 85
+    },
+    "test": {
+      "bottle": 27,
+      "bushing": 27,
+      "cantilever_beam": 16,
+      "custom_part": 117,
+      "enclosure": 16,
+      "flange": 17,
+      "funnel": 27,
+      "gear_pair": 26,
+      "heat_sink": 26,
+      "hex_bolt": 27,
+      "hex_nut": 28,
+      "honeycomb_panel": 21,
+      "i_beam": 20,
+      "l_bracket": 24,
+      "ladder": 30,
+      "lantern": 3,
+      "mug": 28,
+      "pillow_block": 18,
+      "pipe_tee": 25,
+      "plate_holes": 23,
+      "pressure_vessel": 31,
+      "propeller": 31,
+      "pulley": 26,
+      "rocket_body": 37,
+      "rocket_nozzle": 21,
+      "spoked_wheel": 22,
+      "sprocket": 27,
+      "stepped_shaft": 25,
+      "table": 23,
+      "truss": 21,
+      "u_channel": 26,
+      "vase": 24,
+      "washer": 29
+    },
+    "train": {
+      "bottle": 477,
+      "bushing": 474,
+      "cantilever_beam": 366,
+      "custom_part": 2161,
+      "enclosure": 487,
+      "flange": 483,
+      "funnel": 478,
+      "gear_pair": 641,
+      "heat_sink": 479,
+      "hex_bolt": 470,
+      "hex_nut": 470,
+      "honeycomb_panel": 401,
+      "i_beam": 471,
+      "l_bracket": 475,
+      "ladder": 462,
+      "lantern": 142,
+      "mug": 477,
+      "pillow_block": 421,
+      "pipe_tee": 457,
+      "plate_holes": 479,
+      "pressure_vessel": 461,
+      "propeller": 473,
+      "pulley": 479,
+      "rocket_body": 465,
+      "rocket_nozzle": 480,
+      "spoked_wheel": 479,
+      "sprocket": 479,
+      "stepped_shaft": 473,
+      "table": 475,
+      "truss": 481,
+      "u_channel": 471,
+      "vase": 470,
+      "washer": 472
+    },
+    "val": {
+      "bottle": 12,
+      "bushing": 17,
+      "cantilever_beam": 18,
+      "custom_part": 63,
+      "enclosure": 12,
+      "flange": 19,
+      "funnel": 8,
+      "gear_pair": 20,
+      "heat_sink": 12,
+      "hex_bolt": 16,
+      "hex_nut": 19,
+      "honeycomb_panel": 11,
+      "i_beam": 23,
+      "l_bracket": 18,
+      "ladder": 22,
+      "lantern": 5,
+      "mug": 12,
+      "pillow_block": 13,
+      "pipe_tee": 17,
+      "plate_holes": 13,
+      "pressure_vessel": 14,
+      "propeller": 11,
+      "pulley": 9,
+      "rocket_body": 13,
+      "rocket_nozzle": 15,
+      "spoked_wheel": 16,
+      "sprocket": 13,
+      "stepped_shaft": 16,
+      "table": 17,
+      "truss": 13,
+      "u_channel": 16,
+      "vase": 23,
+      "washer": 14
+    }
+  },
+  "files": {
+    "heldout.jsonl.gz": {
+      "rows": 354,
+      "sha256_uncompressed": "a92792a59fe41da48b30c7a827347ad95d94282fb635cdb91e4a50c40eebf63c"
+    },
+    "test.jsonl.gz": {
+      "rows": 889,
+      "sha256_uncompressed": "2bfb23873cf455c5e40e472785f66d78dfda788ede93468c42e055c95022e745"
+    },
+    "train.jsonl.gz": {
+      "rows": 16929,
+      "sha256_uncompressed": "b87380a30307117563af6c6e6fd1841f69bec2a175c7c29057a21584f25b0dc3"
+    },
+    "val.jsonl.gz": {
+      "rows": 540,
+      "sha256_uncompressed": "dfd8746d04b9f8d50b19789725de0833051f6640a3be967c5fcf8c4091151a00"
+    }
+  },
+  "heldout_families": [
+    "pipe_elbow",
+    "chair",
+    "knob",
+    "hinge_leaf"
+  ],
+  "manifest_sha256": "bb07a39ad396b28859812f53a298f1c31b436cc26f8994c1eadebd18865fe49d",
+  "prompt_version": "cad-0.1",
+  "rejected": 866,
+  "rejected_by_family": {
+    "custom_part": 676,
+    "gear_pair": 13,
+    "honeycomb_panel": 81,
+    "pillow_block": 63,
+    "pipe_elbow": 4,
+    "pipe_tee": 21,
+    "pressure_vessel": 8
+  },
+  "seconds": 632.8,
+  "top_rejections": [
+    {
+      "family": "custom_part",
+      "n": 345,
+      "reason": "summary fail: ['L4 part.body: 2 solid(s), expected 1']"
+    },
+    {
+      "family": "custom_part",
+      "n": 277,
+      "reason": "summary fail: [\"L2 part: cannot resolve geometry expressions: cannot resolve offset='-X*0."
+    },
+    {
+      "family": "honeycomb_panel",
+      "n": 81,
+      "reason": "generator constraint"
+    },
+    {
+      "family": "pillow_block",
+      "n": 63,
+      "reason": "generator constraint"
+    },
+    {
+      "family": "custom_part",
+      "n": 54,
+      "reason": "generator constraint"
+    },
+    {
+      "family": "pipe_tee",
+      "n": 21,
+      "reason": "generator constraint"
+    },
+    {
+      "family": "pressure_vessel",
+      "n": 8,
+      "reason": "generator constraint"
+    },
+    {
+      "family": "pipe_elbow",
+      "n": 4,
+      "reason": "generator constraint"
+    },
+    {
+      "family": "gear_pair",
+      "n": 1,
+      "reason": "summary fail: ['L6 pair.pinion: Lewis bending stress 109.498 MPa', 'L6 pair.gear: Lewis be"
+    },
+    {
+      "family": "gear_pair",
+      "n": 1,
+      "reason": "summary fail: ['L6 pair.pinion: Lewis bending stress 142.432 MPa']"
+    },
+    {
+      "family": "gear_pair",
+      "n": 1,
+      "reason": "summary fail: ['L6 pair.pinion: Lewis bending stress 201.072 MPa']"
+    },
+    {
+      "family": "gear_pair",
+      "n": 1,
+      "reason": "summary fail: ['L6 pair.pinion: Lewis bending stress 70.932 MPa']"
+    },
+    {
+      "family": "gear_pair",
+      "n": 1,
+      "reason": "summary fail: ['L6 pair.pinion: Lewis bending stress 61.856 MPa']"
+    },
+    {
+      "family": "gear_pair",
+      "n": 1,
+      "reason": "summary fail: ['L6 pair.pinion: Lewis bending stress 320.387 MPa', 'L6 pair.gear: Lewis be"
+    },
+    {
+      "family": "gear_pair",
+      "n": 1,
+      "reason": "summary fail: ['L6 pair.pinion: Lewis bending stress 150.598 MPa']"
+    },
+    {
+      "family": "gear_pair",
+      "n": 1,
+      "reason": "summary fail: ['L6 pair.pinion: Lewis bending stress 102.837 MPa']"
+    },
+    {
+      "family": "gear_pair",
+      "n": 1,
+      "reason": "summary fail: ['L6 pair.pinion: Lewis bending stress 60.774 MPa']"
+    },
+    {
+      "family": "gear_pair",
+      "n": 1,
+      "reason": "summary fail: ['L6 pair.pinion: Lewis bending stress 124.814 MPa']"
+    },
+    {
+      "family": "gear_pair",
+      "n": 1,
+      "reason": "summary fail: ['L6 pair.pinion: Lewis bending stress 257.701 MPa', 'L6 pair.gear: Lewis be"
+    },
+    {
+      "family": "gear_pair",
+      "n": 1,
+      "reason": "summary fail: ['L6 pair.pinion: Lewis bending stress 61.638 MPa']"
+    },
+    {
+      "family": "gear_pair",
+      "n": 1,
+      "reason": "summary fail: ['L6 pair.pinion: Lewis bending stress 212.441 MPa']"
+    }
+  ],
+  "unique": 18712,
+  "vague_fraction": 0.133,
+  "verified": 18844
+}
