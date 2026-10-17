@@ -50,6 +50,11 @@ No source file from an upstream project is copied into this repository.
 | Qwen3 text encoder (inside the Z-Image-Turbo snapshot) | same revision, `text_encoder/model-0000{1,2,3}-of-00003.safetensors` sha256 in `ZIMAGE` | Apache-2.0 (shipped in the Apache-2.0 snapshot) | anchor prompt embeddings |
 | TripoSR (zimage-triposr stage 4) | code `107cefdc…` and weights `5b521936…` as above (M6) | MIT | reconstruction of keyed anchors on CUDA (Kaggle T4) |
 | diffusers / transformers / accelerate / peft | `configs/environments/zimage-cuda.txt`, `triposr-cuda.txt` | Apache-2.0 | Z-Image pipeline, LoRA training, TripoSR model code |
+| Qwen3-32B / Qwen3-14B / Qwen3-0.6B (Qwen) | revisions `9216db57…` / `40c06982…` / `c1899de2…` (`cadquery/pins.py`) | Apache-2.0 | E-C2 text → CadQuery compiler base models (universal-cadquery); weights downloaded at run time, never in git |
+| Text-to-CadQuery data (arXiv 2505.06507) | HF `ricemonster/IEEE-T-ASE` @ `4091ce30ad85b774a9231484f9b40372dc0451d3`, `data/data_{train,val,test}.jsonl` (linked from github `Text-to-CadQuery/Text-to-CadQuery` @ `4f7f501`) | **not stated** by the source (built from Text2CAD / DeepCAD); check before commercial use | E-C2 training/eval rows (`scripts/cq_data.py`) |
+| CAD-Recode v1.5 (arXiv 2412.14042) | HF dataset `filapro/cad-recode-v1.5` @ `4696421935de9e9a71f1e092d8eee8b341d04619` | **CC-BY-NC-4.0** (non-commercial): a model trained on it is treated as non-commercial | E-C2 training/eval rows with base-model-written texts |
+| CadQuery | `cadquery==2.8.0` (+ `cadquery-ocp`) | Apache-2.0 (CadQuery), LGPL-2.1 with exception (OCCT) | sandboxed execution of compiler scripts (`cadquery/sandbox.py`) |
+| Unsloth / vLLM | from the MI300X image (versions recorded in each run manifest) | Apache-2.0 | E-C2 training (Unsloth, PEFT fallback) and generation/eval (vLLM, HF fallback) |
 | Kaggle CLI | `kaggle==2.2.4` (`configs/environments/kaggle-control.txt`) | Apache-2.0 | control plane for `scripts/kaggle_gpu_runner.py` |
 
 Attribution (CC-BY 4.0): "Google Scanned Objects" by Google LLC, models `Schleich_Lion_Action_Figure`, `Racoon`,

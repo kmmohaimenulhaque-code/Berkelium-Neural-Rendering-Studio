@@ -3,6 +3,63 @@
 Branch `Berkelium-Neural-Rendering-Studio-neural-v1`. Written 2026-10-17. It replaces the 2026-10-16 handoff;
 that work is done and summarised in §5. Agent rules are in `CLAUDE.md`.
 
+## 0. universal-cadquery (branch `universal-cadquery`, 2026-10-17): text → CadQuery on the MI300X
+The owner runs this; agents cannot reach the droplet. Pipeline: text → Qwen3 + CadQuery LoRA → CadQuery script →
+sandbox → STEP + GLB → core validation (repair ≤ 2 rounds) → mesh → existing Gaussian fit → AMD gsplat render
+(`scripts/setup_rocm.sh`, gsplat `ff8bc54`) → Studio. Rule: **D-034** (pre-registered in its own commit `ff8a982`
+before any training code existed).
+
+**Run (on the droplet):**
+```bash
+export HF_TOKEN=...      # owner fills in; never printed or written to disk
+curl -fsSL https://raw.githubusercontent.com/enigmahacker/Berkelium-Neural-Rendering-Studio/universal-cadquery/scripts/mi300x_oneshot.sh -o oneshot.sh && bash oneshot.sh
+tail -f ~/berkelium_run/logs/latest.log           # watch
+kill "$(cat ~/berkelium_run/run.pid)"              # stop; re-run the same bash command to resume
+```
+Stages (markers in `~/berkelium_run/markers/`, logs in `~/berkelium_run/logs/<stage>.log`): checks (rocm-smi sees
+an MI300X, ROCm torch, Unsloth import, ≥ 500 GB free, HF_TOKEN) → env (venv on the image's torch,
+`--system-site-packages`, image torch/vllm/unsloth/transformers frozen by constraints) → smoke (CPU tests,
+tiny dataset, Qwen3-0.6B 20 steps) → data → D-034 gate (refuses to train if D-034 is not committed in the
+branch history) → train → eval → publish → summary (paths, HF links, D-034 PASS/FAIL).
+
+**Timeline (estimates, nothing measured on the MI300X yet):** setup ~0.5 h, smoke ~0.5 h, data 3–6 h
+(`GEN_HOURS=2` of vLLM text generation for CAD-Recode), train: 32B probe ~1 h then one epoch on 32B or 14B
+(the script measures tokens/s after 200 steps and switches to 14B if the projected epoch is > 10 h; written to
+`~/berkelium_run/size_decision.json`), eval 2–4 h, publish ~1 h. Plan for 1–2 days.
+
+**After training: plug the model into Studio (three modes), opt-in until D-034 passes**
+(generator `cadquery`, or `BERKELIUM_CAD_BACKEND=cadquery` for the `cad` generator):
+1. Endpoint: `BERKELIUM_CAD_URL=https://<vllm-or-HF-endpoint>/v1 BERKELIUM_CAD_MODEL=<served name>` (vLLM:
+   `vllm serve Qwen/Qwen3-14B --enable-lora --lora-modules cadquery=<adapter>`; HF Inference Endpoint on the
+   `-merged` repo). Key from `BERKELIUM_CAD_KEY` or `HF_TOKEN`.
+2. Base + adapter on a local GPU: `BERKELIUM_CAD_BASE=Qwen/Qwen3-14B BERKELIUM_CAD_ADAPTER=Mhaquehaque/berkelium-qwen3-14b-cadquery-v1`.
+3. Merged model on a local GPU: `BERKELIUM_CAD_BASE=Mhaquehaque/berkelium-qwen3-14b-cadquery-v1-merged`.
+
+**Files:** `cadquery/` (sandbox, transpile, core_check, cqformat, cqpipeline, llm, pins, unsafe_corpus, tests),
+`scripts/cq_data.py`, `cq_train.py`, `cq_eval.py`, `cq_publish.py`, `mi300x_oneshot.sh`,
+`services/neural/berkelium_neural/cad/cadquery_backend.py`. Results land in `results/cadquery/E-C2.{json,report.md}`
+and `publish_receipt.json`; `cq_publish.py` commits them on the droplet and writes `~/berkelium_run/results.bundle`
+(push only with `BERKELIUM_GIT_PUSH=1`).
+
+**Tested on CPU here (agent host, Python 3.12, cadquery 2.8.0, core `737dc35`):** `pytest cadquery/tests` and
+`services/neural/tests/test_cadquery_backend.py` + `test_cad.py` pass: 73 tests, 92 s. Covered:
+sandbox static check + isolated runs, all 42 injected unsafe scripts rejected with no side effect, timeout and
+memory limits; transpiler round trip on every family (volume and bbox equal to the core's OCCT solid); exact
+IoU; eval scoring with stub models; trainer encode/pack; data cleaning and repair corruptions; `cq_data.py --smoke`
+on 60 real Text-to-CadQuery rows (20 per split; 60/60 verified after the clean-up) + families + repair; the Studio backend with
+a stub model including a repair round; `mi300x_oneshot.sh` detaches and stops at the ROCm check on a non-ROCm host.
+The rest of `services/neural/tests` could not be collected here (no torch/fastapi in this env; same before and
+after the change).
+
+**Not tested anywhere yet (ROCm/GPU):** Unsloth on ROCm and the PEFT fallback, vLLM-ROCm generation (and its HF
+fallback), the 32B→14B size probe, checkpoint/resume under a real run, bf16 NaN behaviour, `unshare -rn` network
+isolation inside the droplet's container (falls back to an in-process socket block; recorded), the full-size
+downloads (CAD-Recode is one shallow git clone with a 20 min budget), `cq_publish.py` uploads, and the merged
+model. No E-C2 number exists until the owner's run writes `results/cadquery/E-C2.json`.
+
+**Licences:** CAD-Recode is **CC-BY-NC-4.0**, so the E-C2 model is treated as non-commercial; Text-to-CadQuery
+states no licence (derived from Text2CAD/DeepCAD). See `THIRD_PARTY_NOTICES.md`.
+
 ## 1. Direction (owner decision, 2026-10-17)
 Go all in on **Qwen3-8B on Kaggle** as the text → design compiler. Never on the agent host's CPU, never MI300X.
 The pipeline is: any natural text → `DesignProposal` JSON (gear/beam CEM requirements, or procedural Geometry
