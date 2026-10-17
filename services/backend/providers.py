@@ -282,6 +282,10 @@ def public_view(p: Provider, data: dict) -> dict:
     values = {}
     for f in p.fields:
         raw = data.get(f, "")
+        # The shipped key is not the user's, so Settings shows nothing for
+        # it (not even masked) and offers no "Remove" that would do nothing.
+        if f in SECRET_FIELDS and data.get("_builtin"):
+            raw = ""
         if f == "base_url" and not raw:
             raw = p.default_base_url or ""
         values[f] = mask(raw) if f in SECRET_FIELDS else raw

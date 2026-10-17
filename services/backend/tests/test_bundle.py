@@ -88,6 +88,7 @@ def test_builtin_makes_groq_ready_and_the_default(bundled):
     assert groq["builtin"] is True
     assert groq["model"] == "llama-3.3-70b-versatile"
     assert body["default"] == "groq"
+    assert groq["values"]["api_key"] == ""  # not even a masked hint of the shipped key
     # The real key must never reach the frontend, masked or not.
     assert FAKE_KEY not in r.text and "SECRET" not in r.text
 

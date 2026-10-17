@@ -6,7 +6,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Check, Copy, RotateCcw } from "lucide-react";
-import { BACKEND_URL, apiFetch } from "./api.js";
+import { getBackend, apiFetch } from "./api.js";
 import { usePrefs, setPref, resetSection } from "./prefs.js";
 import { SHORTCUTS, keyLabel } from "./shortcuts.js";
 import brandMark from "./assets/berkelium-mark.png";
@@ -193,6 +193,7 @@ export function AboutSection() {
   const [health, setHealth] = useState(null); // null = loading, false = offline
   const [providers, setProviders] = useState([]);
   const [copied, setCopied] = useState(false);
+  const [backend, setBackend] = useState(null); // where the backend runs (never shown: its key)
 
   const load = useCallback(async () => {
     setHealth(null);
@@ -206,6 +207,7 @@ export function AboutSection() {
     } else {
       setApp("browser");
     }
+    setBackend(await getBackend());
     try {
       setHealth(await apiFetch("/health"));
     } catch {
@@ -213,7 +215,7 @@ export function AboutSection() {
     }
     try {
       const data = await apiFetch("/providers");
-      setProviders(data.providers.filter((p) => p.configured).map((p) => p.label));
+      setProviders(data.providers.filter((p) => p.configured).map((p) => (p.builtin ? `${p.label} (free built-in key)` : p.label)));
     } catch {
       setProviders([]);
     }
@@ -233,12 +235,14 @@ export function AboutSection() {
     ["Chrome", desktop?.chrome || "n/a"],
     ["Node", desktop?.node || "n/a"],
     ["Platform", desktop ? `${desktop.platform} ${desktop.arch}` : navigator.platform || "unknown"],
-    ["Backend", `${backendLabel} at ${BACKEND_URL}`],
+    ["Backend", backend ? `${backendLabel}, ${backend.managed ? "built in" : "external"}, at ${backend.url || "no port yet"}` : backendLabel],
     ["Python", v.python || "n/a"],
     ["FastAPI", v.fastapi || "n/a"],
     ["LiteLLM", v.litellm || "n/a"],
     ["AI providers set up", providers.length ? providers.join(", ") : "none"],
   ];
+  // Why the built-in backend is down, when it is. Helps more than "Offline".
+  if (backend?.managed && backend.error) rows.splice(6, 0, ["Backend problem", backend.error]);
 
   // Diagnostics never include keys. Only versions, status and provider names.
   const copy = async () => {
@@ -279,6 +283,11 @@ export function AboutSection() {
         <button className="settings__btn settings__btn--ghost settings__btn--tall" onClick={load}>
           <RotateCcw size={11} /> Refresh
         </button>
+        {backend?.managed && window.electronAPI?.openBackendLogs && (
+          <button className="settings__btn settings__btn--ghost settings__btn--tall" onClick={() => window.electronAPI.openBackendLogs()}>
+            Open logs
+          </button>
+        )}
       </div>
       <div className="settings__footnote">Diagnostics never include your API keys.</div>
     </div>

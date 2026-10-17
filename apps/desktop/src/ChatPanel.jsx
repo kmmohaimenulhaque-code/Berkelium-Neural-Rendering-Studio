@@ -35,6 +35,13 @@ function describeError(err, provider) {
             return { text: `${err.message}. Pick another model in Settings.`, action: "settings" };
         case "upstream_rate_limit":
             return { text: `${name} rate limit hit. Wait a minute and try again.` };
+        case "builtin_rate_limit":
+            // The shipped key is one free quota shared by everyone.
+            return { text: "The free AI quota is used up for now. Try again later, or add your own free key in Settings to keep chatting.", action: "settings" };
+        case "builtin_unavailable":
+            return { text: "The free built-in AI key stopped working. Add your own key in Settings to keep chatting.", action: "settings" };
+        case "backend_starting":
+            return { text: err.message };
         case "unreachable":
             return { text: `Could not reach ${name}. Check your internet connection.` };
         default:
@@ -53,6 +60,7 @@ export default function ChatPanel() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null); // { text, action?, retry? }
     const [providers, setProviders] = useState(null); // null = not loaded yet
+    const [defaultId, setDefaultId] = useState(null); // the backend's pick for a fresh install
     const [pickedId, setPickedId] = useState(readPick);
     const [menuOpen, setMenuOpen] = useState(false);
     const scrollRef = useRef(null);
@@ -63,29 +71,40 @@ export default function ChatPanel() {
         try {
             const data = await apiFetch("/providers");
             setProviders(data.providers);
+            setDefaultId(data.default || null);
         } catch {
             setProviders([]);
         }
     }, []);
 
-    // Load once, then again whenever Settings saves something.
+    // Load once, then again whenever Settings saves something, and again when
+    // the built-in backend becomes ready (the panel usually mounts before it
+    // has finished starting, so the first load finds nothing).
     useEffect(() => {
         loadProviders();
         window.addEventListener(PROVIDERS_CHANGED, loadProviders);
-        return () => window.removeEventListener(PROVIDERS_CHANGED, loadProviders);
+        const unsubscribe = window.electronAPI?.onBackendChange?.((info) => {
+            if (info.state === "ready") loadProviders();
+        });
+        return () => {
+            window.removeEventListener(PROVIDERS_CHANGED, loadProviders);
+            unsubscribe?.();
+        };
     }, [loadProviders]);
 
     const usable = useMemo(() => (providers || []).filter((p) => p.configured), [providers]);
 
-    // Remembered pick if it is still usable, otherwise Fireworks (the original
-    // default), otherwise the first usable one. Ollama is always usable because
-    // it needs no key, so a fresh install still has something selected.
+    // Remembered pick if it is still usable, then the backend's default (the
+    // free built-in provider in the installed app), then Fireworks (the
+    // original default), then the first usable one. Ollama is always usable
+    // because it needs no key, so something is always selected.
     const active = useMemo(() => {
         return usable.find((p) => p.id === pickedId)
+            || usable.find((p) => p.id === defaultId)
             || usable.find((p) => p.id === "fireworks")
             || usable[0]
             || null;
-    }, [usable, pickedId]);
+    }, [usable, pickedId, defaultId]);
 
     const choose = (id) => {
         setPickedId(id);
@@ -247,6 +266,7 @@ export default function ChatPanel() {
                     <span className="chat__picker-label">
                         {providers === null ? "Loading..." : active ? active.label : "No provider set up"}
                     </span>
+                    {active?.builtin && <span className="chat__free-tag" title="Uses the free key that ships with Berkelium">Free</span>}
                     {active?.model && <span className="chat__picker-model">{active.model}</span>}
                     <ChevronDown size={12} />
                 </button>
@@ -269,6 +289,7 @@ export default function ChatPanel() {
                                         >
                                             <span className="chat__menu-check">{p.id === active?.id && <Check size={12} />}</span>
                                             <span className="chat__menu-name">{p.label}</span>
+                                            {p.builtin && <span className="chat__free-tag">Free</span>}
                                             <span className="chat__menu-model">{p.model || "no model set"}</span>
                                         </button>
                                     ))}

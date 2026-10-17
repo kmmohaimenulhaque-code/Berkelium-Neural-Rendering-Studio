@@ -30,7 +30,7 @@ import { useSceneState } from "./scene/store.js";
 import Toaster from "./scene/Toaster.jsx";
 import { IMPORT_EVENT } from "./ScenePanel.jsx";
 import SettingsModal from "./SettingsModal.jsx";
-import { OPEN_SETTINGS } from "./api.js";
+import { OPEN_SETTINGS, getBackend } from "./api.js";
 // Workspace definitions. Switching mode swaps the content of the center region.
 // Scene = 3D viewport, Code = Monaco, Combined = both split vertically.
 const WORKSPACES = [
@@ -92,11 +92,22 @@ export default function App() {
   }, []);
 
   // Poll the backend /health endpoint. Honest UI: show real state, never fake green.
+  // The built-in backend also pushes its state, so "Starting" turns into
+  // "online" the moment it is ready instead of up to 5 s later.
   useEffect(() => {
     let cancelled = false;
     const check = async () => {
+      const backend = await getBackend();
+      if (backend.managed && backend.state === "starting") {
+        if (!cancelled) setBackendStatus("starting");
+        return;
+      }
+      if (!backend.url) {
+        if (!cancelled) setBackendStatus("err");
+        return;
+      }
       try {
-        const r = await fetch("http://127.0.0.1:8000/health");
+        const r = await fetch(`${backend.url}/health`);
         if (cancelled) return;
         setBackendStatus(r.ok ? "ok" : "err");
       } catch {
@@ -106,9 +117,11 @@ export default function App() {
     };
     check();
     const id = setInterval(check, 5000);
+    const unsubscribe = window.electronAPI?.onBackendChange?.(() => check());
     return () => {
       cancelled = true;
       clearInterval(id);
+      unsubscribe?.();
     };
   }, []);
 
@@ -278,7 +291,8 @@ function BackendChip({ status }) {
   const label =
     status === "ok" ? "Backend online"
       : status === "err" ? "Backend offline"
-        : "Checking...";
+        : status === "starting" ? "Starting AI engine..."
+          : "Checking...";
   const dotClass =
     status === "ok" ? "status-chip__dot--ok"
       : status === "err" ? "status-chip__dot--err"
@@ -383,7 +397,7 @@ function BottomPanel() {
       <div className="console selectable">
         <ConsoleLine time="12:00:00" level="info" msg="Berkelium Studio shell initialized." />
         <ConsoleLine time="12:00:00" level="ok" msg="Design tokens loaded." />
-        <ConsoleLine time="12:00:01" level="info" msg="Checking backend at http://127.0.0.1:8000/health" />
+        <ConsoleLine time="12:00:01" level="info" msg="Checking backend health..." />
       </div>
     </div>
   );
@@ -401,6 +415,12 @@ function ConsoleLine({ time, level, msg }) {
 
 function StatusBar({ backendStatus, workspace }) {
   const scene = useSceneState();
+  // The real version from package.json, so the footer never shows a stale
+  // hand-typed number. Empty in a plain browser, where there is no bridge.
+  const [version, setVersion] = useState("");
+  useEffect(() => {
+    window.electronAPI?.appInfo?.().then((info) => setVersion(info?.version || "")).catch(() => {});
+  }, []);
   const selected = scene.selectedId ? scene.nodes[scene.selectedId] : null;
   return (
     <footer className="statusbar" role="contentinfo">
@@ -409,14 +429,14 @@ function StatusBar({ backendStatus, workspace }) {
           className={`status-chip__dot ${backendStatus === "ok" ? "status-chip__dot--ok" : "status-chip__dot--err"
             }`}
         />
-        {backendStatus === "ok" ? "API connected" : "API disconnected"}
+        {backendStatus === "ok" ? "API connected" : backendStatus === "starting" ? "API starting" : "API disconnected"}
       </div>
       <div className="statusbar__item">
         Workspace: {WORKSPACES.find((w) => w.id === workspace)?.label}
       </div>
       {selected && <div className="statusbar__item">Selected: {selected.name}</div>}
       <div className="statusbar__spacer" />
-      <div className="statusbar__item">Berkelium Studio v0.1</div>
+      <div className="statusbar__item">Berkelium Studio{version ? ` v${version}` : ""}</div>
     </footer>
   );
 }

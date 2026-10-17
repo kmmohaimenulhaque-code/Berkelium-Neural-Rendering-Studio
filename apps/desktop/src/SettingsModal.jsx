@@ -10,7 +10,7 @@
 // placeholder, and we only send fields the user actually edited. That way
 // changing the model can never overwrite a saved key with its mask.
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { X, Eye, EyeOff, ExternalLink, Check, AlertCircle, Loader2 } from "lucide-react";
 import { apiFetch, PROVIDERS_CHANGED } from "./api.js";
 import { EditorSection, ViewportSection, ShortcutsSection, AboutSection } from "./SettingsSections.jsx";
@@ -81,12 +81,19 @@ export default function SettingsModal({ onClose }) {
   const [busy, setBusy] = useState(null); // "save" | "test" | null
   const [tests, setTests] = useState({}); // providerId -> last test result
   const [notice, setNotice] = useState(null); // { kind: "ok" | "err", text }
+  const openedOnDefault = useRef(false);
 
   const load = useCallback(async () => {
     try {
       const data = await apiFetch("/providers");
       setProviders(data.providers);
       setLoadError(null);
+      // Open on the provider the app actually uses on a fresh install, so a
+      // new user lands on "Groq, free key in use" rather than on Ollama.
+      if (data.default && !openedOnDefault.current) {
+        openedOnDefault.current = true;
+        setSelectedId(data.default);
+      }
     } catch (e) {
       setLoadError(e.message);
     }
@@ -254,7 +261,11 @@ export default function SettingsModal({ onClose }) {
                   <span className="settings__tag">{selected.kind === "local" ? "Local" : selected.kind === "cloud" ? "Cloud" : "Custom"}</span>
                 </h2>
                 <div className="settings__muted">
-                  {selected.kind === "local" ? "Runs models on this computer. No API key needed." : "Uses your own account and key."}
+                  {selected.kind === "local"
+                    ? "Runs models on this computer. No API key needed."
+                    : selected.builtin
+                      ? "Works right away with the free key that ships with Berkelium. That key is shared by everyone, so it can run out for the day. Paste your own free key to get your own limit."
+                      : "Uses your own account and key."}
                   {selected.docs_url && (
                     <>
                       {" "}
@@ -278,7 +289,7 @@ export default function SettingsModal({ onClose }) {
                           className="settings__input selectable"
                           type={secret && !reveal[f] ? "password" : "text"}
                           value={value}
-                          placeholder={secret ? (saved ? `${saved}  (saved)` : "Paste your key") : ""}
+                          placeholder={secret ? (saved ? `${saved}  (saved)` : selected.builtin ? "Free built-in key in use. Paste your own to replace it." : "Paste your key") : ""}
                           onChange={(e) => setField(f, e.target.value)}
                           autoComplete="off"
                           spellCheck={false}

@@ -21,4 +21,19 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
     // Version and platform info for Settings > About.
     appInfo: () => ipcRenderer.invoke("app:info"),
+
+    // { managed, url, key, state, error } for the backend. In the installed
+    // app it is the built-in one on a random port; from source it is :8000.
+    backendInfo: () => ipcRenderer.invoke("backend:info"),
+
+    // Called with the same shape whenever the built-in backend changes state.
+    // Returns a function that stops listening.
+    onBackendChange: (callback) => {
+        const listener = (_event, info) => callback(info);
+        ipcRenderer.on("backend:changed", listener);
+        return () => ipcRenderer.removeListener("backend:changed", listener);
+    },
+
+    // Opens the folder that holds backend.log.
+    openBackendLogs: () => ipcRenderer.invoke("backend:openLogs"),
 });

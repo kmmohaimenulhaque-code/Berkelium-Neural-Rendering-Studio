@@ -6,6 +6,7 @@
 const { app, BrowserWindow, ipcMain, dialog, shell } = require("electron");
 const fs = require("fs/promises");
 const path = require("path");
+const { BackendManager, sidecarPath } = require("./backend.cjs");
 
 // Dev mode = running from source (npm run studio), not an installed app.
 // app.isPackaged works the same on macOS, Windows and Linux. The old
@@ -18,6 +19,32 @@ const isDev = !app.isPackaged && !process.argv.includes("--dist");
 app.setName("Berkelium");
 
 let mainWindow = null;
+let backend = null;
+
+// Running from source keeps the backend you start yourself (uvicorn on 8000).
+// The installed app starts the one bundled inside it. BERKELIUM_SIDECAR lets
+// a developer try a locally built backend with "npm run preview:app".
+const DEV_BACKEND = { managed: false, url: "http://127.0.0.1:8000", key: "", state: "external", error: null };
+
+function backendExe() {
+    if (process.env.BERKELIUM_SIDECAR) return process.env.BERKELIUM_SIDECAR;
+    if (app.isPackaged) return sidecarPath(process.resourcesPath);
+    return null;
+}
+
+// One copy of the app at a time. A second copy would start a second backend
+// writing to the same config.json; focusing the open window is what people
+// expect anyway.
+const gotLock = app.requestSingleInstanceLock();
+if (!gotLock) {
+    app.quit();
+} else {
+    app.on("second-instance", () => {
+        if (!mainWindow) return;
+        if (mainWindow.isMinimized()) mainWindow.restore();
+        mainWindow.focus();
+    });
+}
 
 function createWindow() {
     mainWindow = new BrowserWindow({
@@ -55,6 +82,20 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+    if (!gotLock) return; // this copy is quitting; the first one stays in charge
+    const exe = backendExe();
+    if (exe) {
+        backend = new BackendManager({
+            exe,
+            dataDir: app.getPath("userData"),
+            // Push state changes to the window, so the status chip flips to
+            // "online" the moment the backend is ready, not on the next poll.
+            onChange: (info) => mainWindow?.webContents.send("backend:changed", info),
+        });
+        // Not awaited: the window opens at once and shows "Starting AI
+        // engine..." while the backend boots.
+        backend.start();
+    }
     createWindow();
 
     app.on("activate", () => {
@@ -63,6 +104,11 @@ app.whenReady().then(() => {
         if (BrowserWindow.getAllWindows().length === 0) createWindow();
     });
 });
+
+// Stop the backend on every way out (Cmd+Q, closing the last window on
+// Windows and Linux, logout). If Electron crashes instead, the backend sees
+// its stdin close and exits by itself.
+app.on("will-quit", () => backend?.stop());
 
 app.on("window-all-closed", () => {
     // Quit on non-mac when all windows are closed. On mac we keep the
@@ -142,3 +188,17 @@ ipcMain.handle("app:info", () => ({
     platform: process.platform,
     arch: process.arch,
 }));
+
+// Where the renderer should send API calls, and the private key it needs.
+// The key is generated per install and only ever leaves the main process to
+// reach our own renderer, never a web page.
+ipcMain.handle("backend:info", () => (backend ? backend.info() : DEV_BACKEND));
+
+// Settings > About: open the folder with backend.log so a user can send it
+// to us when something goes wrong.
+ipcMain.handle("backend:openLogs", async () => {
+    const dir = path.join(app.getPath("userData"), "logs");
+    await fs.mkdir(dir, { recursive: true });
+    const err = await shell.openPath(dir);
+    return err ? { ok: false, error: err } : { ok: true };
+});
