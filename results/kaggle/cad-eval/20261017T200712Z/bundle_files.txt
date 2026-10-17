@@ -1,0 +1,11 @@
+configs/datasets/cad_v1.sha256.json
+configs/environments/berkelium-core.txt
+configs/environments/cad-train.txt
+scripts/cad_eval.py
+scripts/cad_fetch_data.py
+scripts/cad_fetch_inputs.py
+services/neural/berkelium_neural/__init__.py
+services/neural/berkelium_neural/cad/__init__.py
+services/neural/berkelium_neural/cad/families.py
+services/neural/berkelium_neural/cad/generator.py
+services/neural/berkelium_neural/cad/prompts.py
