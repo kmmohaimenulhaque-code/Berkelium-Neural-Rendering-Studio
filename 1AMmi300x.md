@@ -100,3 +100,44 @@ If the push from the droplet fails (no GitHub login), copy `~/berkelium_run/resu
 ```bash
 git fetch results.bundle universal-cadquery:tmp && git merge tmp && git push
 ```
+
+## 7. Update (19:13Z → ~19:45Z): data done, training on 32B kept by owner decision
+- `data done in 220 min` (19:13:48Z). `d034` gate passed: D-034 commit `ff8a9825f4e9960e3b93a12e1af57f759d6339c1`
+  (2026-10-17T12:51:23Z), before training.
+- Training input (from the train log): 121,575 train rows → 119,107 examples (2,468 longer than 2048 tokens
+  dropped) → 44,470 packed rows, 74,800,876 tokens; batch 4 × grad-accum 4 = 16; **2,780 steps** for one epoch.
+- Qwen3-32B + Unsloth 2026.9.11 (64 layers patched); trainable 536,870,912 of 33,298,994,176 parameters (1.61 %).
+  Speed at step 47: 15.71 s/step, so the projected epoch is about 12.1 h.
+- That projection is over the 10 h size rule (in `cq_train.py`, the plan's rule, not part of D-034), so the run would
+  have switched to 14B at step 200. **The owner overrode it to keep 32B** (deadline re-checked). The run was
+  restarted with `TRAIN_ARGS=--no-size-switch` before step 200 and before any checkpoint, losing about 12 min. This
+  override is the reason no `size_decision.json` exists.
+- The first 32B launch logged `Unsloth: Ignoring revision 9216db5… since Qwen/Qwen3-32B resolved to
+  unsloth/Qwen3-32B`. Fixed on the branch: `use_exact_model_name=True` keeps the pinned Qwen revision. The
+  restart uses the fix.
+- Eval capped at `--per-source 200` (HF transformers, no vLLM). Publish is public (`--public`), as the teammate asked.
+  GGUF Q4_K_M + teammate hand-off: `scripts/cq_gguf.sh` (waits for publish).
+- Expected (estimate): training ~12.1 h + load, then eval and publish. No E-C2 number yet.
+
+Restart command used:
+```bash
+kill $(cat ~/berkelium_run/run.pid) 2>/dev/null
+pkill -f mi300x_oneshot.sh; pkill -f cq_train.py; sleep 10
+rm -f ~/berkelium_run/size_decision.json
+rm -rf ~/berkelium_run/train/qwen3-32b ~/berkelium_run/train/qwen3-14b
+UPY=/root/.unsloth/studio/unsloth_studio/bin/python
+export HF_TOKEN=<your token>
+unset BERKELIUM_ALLOW_NO_UNSLOTH
+export TRAIN_ARGS="--no-size-switch"
+export EVAL_ARGS="--per-source 200"
+export PUBLISH_ARGS="--public"
+cd ~/berkelium_run/repo && git pull -q
+PATH=$(dirname $UPY):$PATH bash scripts/mi300x_oneshot.sh
+```
+Monitor training:
+```bash
+tail -f ~/berkelium_run/logs/latest.log
+cat ~/berkelium_run/train/qwen3-32b/status.json
+tail -n 3 ~/berkelium_run/train/qwen3-32b/train_log.jsonl
+ls ~/berkelium_run/train/qwen3-32b/ | grep checkpoint
+```
