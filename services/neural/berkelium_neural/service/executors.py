@@ -26,7 +26,9 @@ PKG_ROOT = Path(__file__).resolve().parents[2]          # services/neural (holds
 OPEN_WORLD_LABEL = "model-generated, normalized units, not measured geometry"
 PIPELINES = {"shap-e-text300m": "text->CLIP ViT-L/14->Shap-E latent->STF mesh",
              "zimage-triposr": "text->canonical anchor prompt->Z-Image-Turbo anchor->colour key->TripoSR->clean mesh",
-             "berkelium-textshape": "text->SDF->marching_cubes"}
+             "berkelium-textshape": "text->SDF->marching_cubes",
+             "cad": "text->Qwen3-8B design compiler->DesignProposal->Berkelium core (L0-L6 validation)->"
+                    "exact BREP (OCCT) / Manifold mesh"}
 SHAP_E_MIN_FREE_MIB = 2000          # E-T3: worker peak ~1.5 GB RSS (1.1 GB anonymous) + ~0.8 GB watchdog margin
 
 
@@ -396,6 +398,11 @@ def _open_world_mesh(req: TextTo3DRequest, ctx: JobContext, store: ArtifactStore
             v, f, col = out["vertices"], out["faces"], out["colors"]
             used[g.name] = g.identity
             pipeline = PIPELINES.get(g.name, "text->SDF->marching_cubes")
+            if g.name == "cad":                          # the design itself and the core's verdict travel with the mesh
+                files["design_proposal.json"] = (json.dumps(rep["proposal"], indent=2).encode(), "application/json")
+                files["core_validation.json"] = (json.dumps({k: rep[k] for k in ("validation", "measurements",
+                                                 "artifacts", "record_hash", "proposal_hash", "scale_mm_per_unit")},
+                                                 indent=2, default=str).encode(), "application/json")
             for key, name in (("anchor", "anchor.png"), ("anchor_rgba", "anchor_rgba.png")):
                 if out.get(key) is not None:            # zimage-triposr: the generated image is a first-class artifact
                     files[name] = (_png(out[key]), "image/png")
@@ -403,7 +410,7 @@ def _open_world_mesh(req: TextTo3DRequest, ctx: JobContext, store: ArtifactStore
         ctx.check()
         raise
     ctx.check()
-    open_world = bool(set(used) - {"berkelium-textshape"})
+    open_world = bool(set(used) - {"berkelium-textshape", "cad"})
     decisions = None
     if req.generator == AUTO:
         vocab = native_vocab(req.model)
@@ -430,6 +437,11 @@ def _open_world_mesh(req: TextTo3DRequest, ctx: JobContext, store: ArtifactStore
               "confidence": "model_output_unverified"}
     if open_world:
         labels["provenance"] = OPEN_WORLD_LABEL
+    if set(used) == {"cad"}:                         # core-realised geometry: millimetres before normalisation
+        labels = {"units": f"normalized_object ({rep['scale_mm_per_unit']:.6g} mm per unit)",
+                  "representation": "triangle_mesh (from Berkelium core geometry)",
+                  "confidence": f"core validation {rep['validation']['summary']}",
+                  "provenance": "design proposed by the E-C1 compiler; geometry and measurements by the Berkelium core"}
     mesh = store.create(ArtifactKind.TRIANGLE_MESH,
                         {"mesh.glb": (mesh_to_glb(v, f, col), "model/gltf-binary"),
                          "mesh.ply": (mesh_to_ply(v, f, col), "application/x-ply"),

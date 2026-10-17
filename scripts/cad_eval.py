@@ -82,7 +82,7 @@ def cmd_generate(a) -> int:
     bnb = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4", bnb_4bit_use_double_quant=True,
                              bnb_4bit_compute_dtype=torch.float16)
     model = AutoModelForCausalLM.from_pretrained(MODEL, revision=REVISION, quantization_config=bnb,
-                                                 torch_dtype=torch.float16, device_map={"": 0})
+                                                 dtype=torch.float16, device_map={"": 0})
     if a.model != "base":
         from peft import PeftModel
         model = PeftModel.from_pretrained(model, a.adapter)

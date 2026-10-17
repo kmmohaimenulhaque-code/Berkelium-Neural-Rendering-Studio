@@ -66,6 +66,8 @@ def main() -> int:
     ap.add_argument("--max-rows", type=int, default=0)
     ap.add_argument("--time-budget-h", type=float, default=9.0)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--model", default=MODEL)
+    ap.add_argument("--revision", default=REVISION)
     a = ap.parse_args()
 
     import torch
@@ -81,7 +83,7 @@ def main() -> int:
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
 
-    tok = AutoTokenizer.from_pretrained(MODEL, revision=REVISION)
+    tok = AutoTokenizer.from_pretrained(a.model, revision=a.revision)
     tok.pad_token = tok.pad_token or "<|endoftext|>"
     cat = cem_catalogue()
     data = Path(a.data)
@@ -103,8 +105,8 @@ def main() -> int:
 
     bnb = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4", bnb_4bit_use_double_quant=True,
                              bnb_4bit_compute_dtype=torch.float16)
-    model = AutoModelForCausalLM.from_pretrained(MODEL, revision=REVISION, quantization_config=bnb,
-                                                 torch_dtype=torch.float16, device_map={"": rank},
+    model = AutoModelForCausalLM.from_pretrained(a.model, revision=a.revision, quantization_config=bnb,
+                                                 dtype=torch.float16, device_map={"": rank},
                                                  attn_implementation="sdpa")
     model.config.use_cache = False
     model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=True,
@@ -156,7 +158,7 @@ def main() -> int:
         model.save_pretrained(str(adir), safe_serialization=True)
         tok.save_pretrained(str(adir))
         files = {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(adir.iterdir()) if p.is_file()}
-        man = {"model": MODEL, "revision": REVISION, "method": "QLoRA (NF4 base, fp16 compute, fp32 LoRA), DDP",
+        man = {"model": a.model, "revision": a.revision, "method": "QLoRA (NF4 base, fp16 compute, fp32 LoRA), DDP",
                "world_size": world, "config": vars(a), "data_manifest_sha256":
                json.loads((data / "manifest.json").read_text()).get("manifest_sha256"),
                "data_files": {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(data.glob("*.gz"))},

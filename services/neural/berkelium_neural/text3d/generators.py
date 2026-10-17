@@ -220,7 +220,14 @@ class AutoGenerator:
         return out
 
 
+CAD = "cad"   # E-C1 design compiler + Berkelium core (exact engineering geometry); selectable by name. It joins
+#              auto only if D-033 passes (NEURAL_RENDERING_DECISIONS.md).
+
+
 def get_generator(name: str, **kw) -> Generator:
+    if name == CAD:
+        from ..cad.generator import CadGenerator
+        return CadGenerator(**kw)
     if name == NATIVE:
         return NativeTextShape(**kw)
     if name == SHAP_E:
@@ -236,7 +243,7 @@ def get_generator(name: str, **kw) -> Generator:
 def generator_status() -> dict:
     """name -> {available, reason, identity} for /capabilities and the Studio selector. Loads no weights."""
     out = {}
-    for name in (NATIVE, SHAP_E, ZIMAGE_TRIPOSR):
+    for name in (NATIVE, SHAP_E, ZIMAGE_TRIPOSR, CAD):
         g = get_generator(name)
         ok, why = g.available()
         out[name] = {"available": ok, "reason": why, "identity": g.identity}

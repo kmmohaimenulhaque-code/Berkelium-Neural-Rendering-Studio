@@ -1,0 +1,20 @@
+{
+  "name": "cad-eval-base",
+  "title": "berkelium-cad-eval-base",
+  "slug": "berkelium-cad-eval-base",
+  "description": "E-C1 K3a: zero-shot Qwen3-8B (NF4) generations on the E-C1 items (test + held-out families), 2 shards on 2x T4",
+  "accelerator": "t4x2",
+  "kernel_sources": ["kmmohaimenulhaque/berkelium-cad-dataset"],
+  "include": ["services/neural/berkelium_neural/cad", "services/neural/berkelium_neural/__init__.py", "scripts/cad_eval.py",
+              "scripts/cad_fetch_data.py", "configs/environments/berkelium-core.txt", "configs/environments/cad-train.txt",
+              "configs/datasets/cad_v1.sha256.json"],
+  "steps": [
+    {"name": "deps", "cmd": "pip install -q -r configs/environments/cad-train.txt -r configs/environments/berkelium-core.txt"},
+    {"name": "data", "cmd": "python scripts/cad_fetch_data.py && python scripts/cad_eval.py plan"},
+    {"name": "fetch", "cmd": "python -c \"from huggingface_hub import snapshot_download as s; s('Qwen/Qwen3-8B', revision='b968826d9c46dd6066d109eabc6255188de91218')\""},
+    {"name": "generate", "parallel": ["CUDA_VISIBLE_DEVICES=0 python scripts/cad_eval.py generate --model base --shard 0/2",
+                                      "CUDA_VISIBLE_DEVICES=1 python scripts/cad_eval.py generate --model base --shard 1/2"],
+     "env": {"PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"}}
+  ],
+  "outputs": ["results/cad/E-C1/items.jsonl", "results/cad/E-C1/gen_base_*.jsonl"]
+}
