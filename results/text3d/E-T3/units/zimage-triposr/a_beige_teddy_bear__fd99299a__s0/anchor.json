@@ -1,0 +1,33 @@
+{
+  "status": "ok",
+  "anchor_prompt": {
+    "text": "a beige teddy bear. A single complete object, centered, fully visible with empty margin around it, three-quarter view from slightly above, isolated on a plain solid bright blue background, soft even studio lighting, no shadow, no text, no other objects",
+    "background": "bright blue",
+    "background_rgb": [
+      0,
+      71,
+      187
+    ],
+    "named_colours": [
+      "beige"
+    ],
+    "colour_margin": 1.006,
+    "template": "{prompt}. A single complete object, centered, fully visible with empty margin around it, three-quarter view from slightly above, isolated on a plain solid {bg} background, soft even studio lighting, no shadow, no text, no other objects"
+  },
+  "sampler": {
+    "steps": 9,
+    "guidance_scale": 0.0,
+    "height": 768,
+    "width": 768,
+    "noise": "seeded CPU generator"
+  },
+  "dtype": "bfloat16",
+  "device": "cuda",
+  "gpu": "Tesla T4",
+  "load_s": 93.9,
+  "seconds": 122.77,
+  "finite": true,
+  "std": 0.21806661784648895,
+  "peak_gpu_mib": 13799.4,
+  "anchor_sha256": "037888720ebbb1ac47dec842b79692bbeed4917de13a69c04be466b3bf4c83ae"
+}

@@ -20,7 +20,7 @@ import torch
 from ..contracts import canonical_json, sha256_hex
 from .dataset import composition_of, load_manifest
 from .model import TextShapeModel, adapter_state, apply_adapter, build_vocab, count_params
-from .shapes import TEMPLATES, Composition, colors_at, sdf
+from .shapes import TEMPLATES, Composition, colors_at, half_height, half_width, placements, sdf
 
 TRAIN_VERSION = "berkelium-textshape-train/1"
 
@@ -49,12 +49,17 @@ def sample_points(c: Composition, n: int, rng: np.random.Generator, near_frac=0.
     return pts, sdf(c, pts).astype(np.float32), colors_at(c, pts).astype(np.float32)
 
 
-def make_batch(items: list[tuple[Composition, str]], step: int, cfg: dict):
+def make_batch(items: list[tuple[Composition, str]], step: int, cfg: dict, replay: list | None = None):
+    """``replay`` (experience replay, cfg["replay"]["fraction"]): that share of the batch is drawn from the replay
+    items (base-model training families) instead of the adapter's own split, with the same RNG stream per step."""
     rng = np.random.default_rng([cfg["seed"], step])
-    sel = rng.choice(len(items), size=cfg["batch_assets"], replace=len(items) < cfg["batch_assets"])
-    texts, P, D, C = [], [], [], []
-    for i in sel:
-        c, cap = items[i]
+    n_rep = int(round(cfg["batch_assets"] * cfg["replay"]["fraction"])) if replay else 0
+    n_own = cfg["batch_assets"] - n_rep
+    chosen = [items[i] for i in rng.choice(len(items), size=n_own, replace=len(items) < n_own)]
+    if n_rep:
+        chosen += [replay[i] for i in rng.choice(len(replay), size=n_rep, replace=len(replay) < n_rep)]
+    texts, P, D, C, comps = [], [], [], [], []
+    for c, cap in chosen:
         if cfg.get("paraphrase_augment", True):     # same asset, another grammar template (no new asset)
             t = int(rng.integers(len(TEMPLATES[c.relation])))
             cap = Composition(c.relation, c.parts, t).caption()
@@ -63,15 +68,51 @@ def make_batch(items: list[tuple[Composition, str]], step: int, cfg: dict):
         P.append(p)
         D.append(d)
         C.append(col)
-    return texts, torch.from_numpy(np.stack(P)), torch.from_numpy(np.stack(D)), torch.from_numpy(np.stack(C))
+        comps.append(c)
+    batch = texts, torch.from_numpy(np.stack(P)), torch.from_numpy(np.stack(D)), torch.from_numpy(np.stack(C))
+    if cfg.get("separation_margin"):
+        return (*batch, gap_points(comps, cfg["separation_margin"]["points_per_asset"], rng))
+    return batch
 
 
-def loss_fn(model, texts, pts, gt, gtc, delta=0.1, w_color=0.5):
+def gap_points(comps: list[Composition], k: int, rng: np.random.Generator):
+    """Points in the empty slab between the two parts of every side-by-side composition (exact GT SDF > 0.005
+    there), for the separation-margin loss; other compositions get zero weight. -> (pts [B,k,3], sdf [B,k],
+    weight [B,k])."""
+    P = np.zeros((len(comps), k, 3), np.float32)
+    D = np.zeros((len(comps), k), np.float32)
+    W = np.zeros((len(comps), k), np.float32)
+    for i, c in enumerate(comps):
+        if c.relation != "next_to":
+            continue
+        (ca, cb), scale = placements(c)
+        a, b = c.parts
+        x0, x1 = (ca[0] + half_width(a)) * scale, (cb[0] - half_width(b)) * scale
+        hy = min(half_height(a), half_height(b)) * scale
+        hz = min(half_width(a), half_width(b)) * scale
+        q = np.stack([rng.uniform(x0, x1, 4 * k), rng.uniform(-hy, hy, 4 * k), rng.uniform(-hz, hz, 4 * k)], 1)
+        d = sdf(c, q)
+        q, d = q[d > 0.005][:k], d[d > 0.005][:k]
+        P[i, :len(q)], D[i, :len(q)], W[i, :len(q)] = q, d, 1.0
+    return torch.from_numpy(P), torch.from_numpy(D), torch.from_numpy(W)
+
+
+def loss_fn(model, texts, pts, gt, gtc, delta=0.1, w_color=0.5, gap=None, sep: dict | None = None):
     pred, logit = model(texts, pts)
     l_sdf = (pred.clamp(-delta, delta) - gt.clamp(-delta, delta)).abs().mean()
     near = (gt.abs() < 0.05).float()
     l_col = ((torch.sigmoid(logit) - gtc).abs().mean(-1) * near).sum() / near.sum().clamp(min=1)
-    return l_sdf + w_color * l_col, {"sdf_l1": l_sdf.item(), "color_l1": l_col.item()}
+    loss, parts = l_sdf + w_color * l_col, {"sdf_l1": l_sdf.item(), "color_l1": l_col.item()}
+    if gap is not None and sep:
+        # separation margin: in the empty gap between side-by-side parts the predicted SDF must stay at least
+        # min(GT SDF, margin) above zero; a merged prediction (SDF < 0 there) is penalised linearly.
+        gp, gd, gw = gap
+        gpred, _ = model(texts, gp)
+        hinge = torch.relu(gd.clamp(max=sep["margin"]) - gpred) * gw
+        l_sep = hinge.sum() / gw.sum().clamp(min=1)
+        loss = loss + sep["weight"] * l_sep
+        parts["separation_hinge"] = l_sep.item()
+    return loss, parts
 
 
 def file_sha256(p: Path) -> str:
@@ -113,6 +154,12 @@ def train(cfg: dict, log=print) -> dict:
     items = [(composition_of(r), r.caption) for r in recs]
     if not items:
         raise ValueError(f"no training assets in splits {cfg['train_splits']}")
+    replay = None
+    if cfg.get("replay"):
+        replay = [(composition_of(r), r.caption) for r in load_manifest(Path(cfg["dataset"]),
+                                                                         set(cfg["replay"]["splits"]))]
+        if not replay or set(cfg["replay"]["splits"]) & set(cfg["train_splits"]):
+            raise ValueError("replay needs its own, non-empty splits")
     if cfg["kind"] == "base":
         model = TextShapeModel(build_vocab(), **cfg.get("model", {}))
         params = list(model.parameters())
@@ -153,8 +200,10 @@ def train(cfg: dict, log=print) -> dict:
 
     model.train()
     while step < stop_at:
-        texts, pts, gt, gtc = make_batch(items, step, cfg)
-        loss, parts = loss_fn(model, texts, pts, gt, gtc)
+        batch = make_batch(items, step, cfg, replay)
+        texts, pts, gt, gtc = batch[:4]
+        loss, parts = loss_fn(model, texts, pts, gt, gtc, gap=batch[4] if len(batch) > 4 else None,
+                              sep=cfg.get("separation_margin"))
         opt.zero_grad(set_to_none=True)
         loss.backward()
         gn = torch.nn.utils.clip_grad_norm_(params, cfg.get("grad_clip", 1.0))
@@ -190,6 +239,6 @@ def train(cfg: dict, log=print) -> dict:
         "device": "cpu", "threads": torch.get_num_threads(), "torch": torch.__version__,
         "python": platform.python_version(), "platform": platform.platform(), "gpu_hours": 0.0,
         "dataset_manifest_sha256": card["manifest_sha256"], "dataset_split_hashes": card["split_hashes"],
-        "n_train_assets": len(items), "seed": cfg["seed"]}
+        "n_train_assets": len(items), "n_replay_assets": len(replay) if replay else 0, "seed": cfg["seed"]}
     (out / "receipt.json").write_text(json.dumps(result, indent=2))
     return result

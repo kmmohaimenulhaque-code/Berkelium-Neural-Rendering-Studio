@@ -46,7 +46,7 @@ These capabilities represent the product direction, not a claim that every subsy
 
 ---
 
-## What works today (verified 2026-10-15)
+## What works today (verified 2026-10-16)
 
 | Capability | Status | Evidence |
 |---|---|---|
@@ -56,7 +56,9 @@ These capabilities represent the product direction, not a claim that every subsy
 | Deterministic differentiable renderer (AMD) | **verified on one MI300X** — gsplat forward + Berkelium deterministic HIP backward: bit-identical gradients, forward bitwise-equal to gsplat, backward 1.32–2.21× gsplat | `results/renderer/E-R1_analysis.md` |
 | Gaussian fitting to real objects (M7) | **works on CPU** — 8,000 Gaussians fitted to 24 views of 3 Google Scanned Objects scans: held-out PSNR 31.7–34.7 dB (+10 to +12.5 dB over init); coarse geometry improves, fine geometry on thin shapes does not | `results/m7/SUMMARY.md` |
 | TripoSR image → 3D prior (M6) | **runs on CPU** (CUDA marching cubes replaced): 3/3 owned controls recognisable, closer to exact ground truth than our text model, merges side-by-side parts | `results/m6/REVIEW.md` |
-| Z-Image-Turbo image prior (M5) | **not run** — needs a GPU and ~33 GB; script and preflight ready | `results/m5/E-A1_preflight.json`, `docs/GPU_RUN_PLAN.md` R5 |
+| Open-world text → 3D, measured (E-T3) | **complete benchmark** — 12 real-object scans (B1), 20 semantic prompts (B2), 12 procedural (B3), 8 two-object (B4), CPU + Kaggle T4. Shap-E: B1 F@0.05 0.669, B2 R@1 0.95; Z-Image→TripoSR v2: 0.603 / 0.85 but better composition (B4 part count 0.50 with planner vs 0.00); native: 0.566 / 0.05. `auto` uses Shap-E for open-world prompts (rule D-029, written before the results). A Z-Image anchor LoRA was trained and not promoted (D-030) | `results/text3d/E-T3_openworld_cpu.report.md` |
+| Z-Image-Turbo → TripoSR (M5, D-006) | **works on a GPU** (Kaggle 2× T4, CUDA; not ROCm): hash-verified 30.6 GB weights, bf16 (fp16 gives NaN on T4), 768² anchors ~122 s, U²-Net segmentation, TripoSR mesh; 80/80 E-T3 units valid. Unavailable (with the reason) on a CPU host | `results/m5/E-A1_receipt.json`, `services/neural/berkelium_neural/text3d/zimage_triposr.py` |
+| Federated GPU runs | **works** — `scripts/kaggle_gpu_runner.py` ships a hashed code bundle (and hashed data) to a Kaggle GPU kernel and re-hashes every returned file before admitting it; stale or failed runs are refused | `results/kaggle/*/*/receipt.json`, `test_federated.py` |
 
 Generated geometry is labelled `normalized_object` / `model_output_unverified`: it is model output, not a CAD
 model or measured geometry. The text-to-3D model is small (362k parameters, trained on CPU) and its shapes are blobby.

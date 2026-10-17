@@ -1,0 +1,38 @@
+{
+  "status": "ok",
+  "anchor_prompt": {
+    "text": "a large white sphere stacked on a large cyan torus. A single complete object, centered, fully visible with empty margin around it, three-quarter view from slightly above, isolated on a plain solid bright magenta background, soft even studio lighting, no shadow, no text, no other objects",
+    "background": "bright magenta",
+    "background_rgb": [
+      255,
+      0,
+      255
+    ],
+    "named_colours": [
+      "white",
+      "cyan"
+    ],
+    "colour_margin": 0.945,
+    "template": "{prompt}. A single complete object, centered, fully visible with empty margin around it, three-quarter view from slightly above, isolated on a plain solid {bg} background, soft even studio lighting, no shadow, no text, no other objects"
+  },
+  "sampler": {
+    "steps": 9,
+    "guidance_scale": 0.0,
+    "height": 768,
+    "width": 768,
+    "noise": "seeded CPU generator"
+  },
+  "dtype": "bfloat16",
+  "device": "cuda",
+  "gpu": "Tesla T4",
+  "load_s": 97.2,
+  "seconds": 142.93,
+  "finite": true,
+  "std": 0.34384074807167053,
+  "peak_gpu_mib": 13835.0,
+  "anchor_sha256": "b40b2d3d0378488cd34bb40f940691b3adaf6b0329dce9b03f08df88e9fb6af8",
+  "lora": {
+    "path": "exports/zimage-anchor-lora-v1/adapter.safetensors",
+    "sha256": "0bde1ac0f975884607baf82a274eae92fa00550a2d42bb066ced6f91cd63df45"
+  }
+}

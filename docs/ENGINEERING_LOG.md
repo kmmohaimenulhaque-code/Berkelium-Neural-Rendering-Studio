@@ -256,3 +256,70 @@ termination (D-026). Studio has a generator selector (the GPU-gated option is di
 "plan 2 objects" toggle and a provenance card. `tests/e2e/test_openworld_api.py`: **2 passed** with real
 inference (chair through auto → Shap-E → valid 39,093-face mesh → 4,000 Gaussians → non-blank splat render →
 explicit-camera render, 938 s; plus a cancellation mid-sampling with the worker gone).
+
+## 2026-10-16 — Federated GPU (Kaggle), zimage-triposr, adapter replay, anchor LoRA
+
+Development host for this session: a cloud container, 4 vCPU, 15.7 GB RAM, no GPU, Python 3.13.16, torch 2.14.1+cpu.
+GPU work: Kaggle notebooks, 2× Tesla T4 (15 GB each), 4 vCPU, 31 GB RAM, Python 3.13.15, torch 2.11.0+cu128. All
+GPU results below are **CUDA (T4) evidence; none of them is ROCm/AMD evidence.**
+
+**Control plane (`scripts/kaggle_gpu_runner.py`, D-032).** A job spec names the code to ship, pinned installs, ordered
+steps and output globs. The code is a byte-reproducible tar.gz of the working tree embedded in the kernel source and
+hash-checked remotely before it runs; every returned file is re-hashed against the remote manifest before admission.
+Findings while bringing it up, each kept as a receipt under `results/kaggle/`:
+- `KAGGLE_USERNAME` held the display name, not the account handle; the token alone authenticates, so the handle is
+  read back from the API.
+- The Kaggle image has no `ensurepip`: a plain `python -m venv` failed. The TripoSR overlay venv is created with
+  `--without-pip` and filled by the system pip run from inside it.
+- diffusers 0.41 needs huggingface_hub ≥ 1.32 while TripoSR's transformers 4.57 needs < 1.0, so stage A (Z-Image) uses
+  the image's own pinned stack (diffusers 0.40.0, transformers 5.16.1) and stage B (TripoSR) runs in the overlay venv.
+
+**M5 attempt 1 (`results/m5/E-A1_receipt.attempt1_1024_oom.json`).** All 19 pinned Z-Image-Turbo files fetched and
+verified (30.6 GB, 235 s). The Qwen3 text encoder ran in bf16 on a T4 (finite embeddings, 40 s for 4 prompts). At the
+upstream 1024² the fp16 transformer (12.3 GB resident) ran out of memory in both precisions; the failed allocations
+(1.00 GiB fp16, 1.88 GiB bf16) equal one 30-head 4096² attention score matrix, i.e. the T4 fell back to the math
+attention kernel. Anchors are therefore 768² (2304 tokens), with VAE tiling and expandable CUDA segments.
+
+**Local environment fix.** CLIP pulled a PyPI torchvision whose ops do not register against torch+cpu
+(`operator torchvision::nms does not exist`); `setup_openworld.sh` now installs the matching CPU torchvision first.
+**Test fix.** `test_durable_jobs.py` left its uvicorn servers running when an assertion failed; it now kills them.
+
+**M5 completed (Kaggle T4; `results/m5/E-A1_receipt.json`).** 768², 9 steps, CFG 0. Precision study (recorded rule:
+fastest dtype whose image is finite and non-blank): fp16 anchor non-finite (NaN → black) on T4; bf16 finite
+(std 0.17) → bf16. ~122 s per anchor (bf16 is emulated on sm75), 13.8 GiB peak, same prompt and seed repeated
+bit-exactly (CPU-seeded noise).
+
+**Shap-E: the frozen E-T3 design is complete.** 54 GPU units (B1 seeds 0-2, B2, B4 single + planner parts) and,
+for a like-for-like B3 comparison, all 12 B3 prompts: 66/66 valid, ~98 s wall per unit with two workers on 4 vCPU.
+
+**zimage-triposr v1 (pre-registered colour key): 37/80.** The anchors are clean, but Z-Image paints studio
+backdrops with gradients and vignetting; a key against one median border colour rejected 33 as "background not
+uniform" and 10 as "touches the frame". **v2** replaces stage 3 with U²-Net salient-object segmentation (the
+network TripoSR's own preprocessing uses; onnx sha256-pinned), applied to the same bit-exact anchors: 80/80 valid.
+The change was made after seeing v1's rejections and before scoring any geometry; both are in the record. Known v2
+limit: U²-Net fills enclosed background (bicycle wheels, basket handle).
+
+**E-T3 scored (`results/text3d/E-T3_openworld_cpu.report.md`).** B1 (12 GSO scans, generous alignment): F@0.05
+(failures = 0) native 0.566, Shap-E 0.669, zimage v1 0.327, v2 0.603; mean Chamfer-L1 0.061 / 0.047 / 0.047 (6
+valid) / 0.055; v2 − Shap-E paired ΔCD +0.008 (95% CI [−0.001, +0.017]), ΔF −0.066 ([−0.157, +0.022]). B2 CLIP R@1
+(ViT-B/32 evaluator): native 0.05, Shap-E 0.95, v1 0.35, v2 0.85 (scans 1.00). B3 (procedural): native best (CD
+0.094, part count 0.42); Shap-E 0.185 / 0.00, v2 0.142 / 0.08. B4 part count single / planner: native 0.75 / 0.375,
+Shap-E 0.125 / 0.00, v2 0.375 / 0.50. Seed variance (B1, 3 seeds): within-object CD std Shap-E 0.0064, v2 0.0036.
+**D-029 applied:** v2 meets none of the three criteria → Shap-E first, zimage-triposr second.
+
+**E-T4 (`results/text3d/E-T4_capsule_replay.report.md`).** Capsule v2 (replay of the 1,032 base training assets +
+separation margin, CPU, 41 min): adapter_test part count 0.27 → 0.40 (base 0.53), Chamfer vs v1 +0.018 (CI
+[+0.007, +0.031]) → **not promoted** (D-031); exported as NOT PROMOTED for reproducibility.
+
+**Runner bug found and fixed.** Pushing a new version to a busy kernel does not start it; the previous (fp16)
+version's NaN output was pulled under the new run id. It was deleted before any commit; `pull` now refuses output
+whose run id or bundle hash differs from the push, and `run` refuses a busy kernel. Every other receipt was audited.
+
+**Anchor LoRA (Phase II.2).** Trained in bf16 on one T4 (400 steps, 2.5 h, loss 0.251 → 0.201); an fp16 attempt was
+NaN. E-T3 (`zimage-triposr-anchorlora`, 80/80 valid): B1 F@0.05 0.546, Chamfer 0.060, B2 R@1 0.25, seed std 0.014 —
+worse than the base anchors on every criterion except validity → **not promoted (D-030)**. The LoRA cleaned up
+backgrounds (held-out colour-key gate 4/4 vs 2/4) but pulled anchors toward the render style of its 36 training
+objects and away from the prompt.
+
+**MI300X.** The droplet at 165.245.133.213 was not reachable from the agent container (port 22 timed out; the SSH key
+secret arrived after the session started). No AMD run was made in this session.

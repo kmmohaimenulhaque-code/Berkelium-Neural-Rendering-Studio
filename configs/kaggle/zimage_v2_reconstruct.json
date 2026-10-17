@@ -1,0 +1,18 @@
+{
+  "name": "zimage-v2-reconstruct",
+  "title": "berkelium-zimage",
+  "slug": "berkelium-zimage",
+  "description": "zimage-triposr v2: the same 80 E-T3 anchor images (shipped as a hash-verified dataset), stage 3 = U²-Net segmentation (TripoSR's own preprocessing network) instead of v1 colour keying, then TripoSR on two T4s",
+  "accelerator": "t4x2",
+  "include": ["services/neural", "scripts", "benchmarks", "configs"],
+  "include_files": ["results/text3d/E-T3/units.jsonl"],
+  "data": ["results/text3d/E-T3/units/zimage-triposr/*/anchor.png", "results/text3d/E-T3/units/zimage-triposr/*/anchor.json"],
+  "steps": [
+    {"name": "venv_stage_b", "cmd": "python -m venv --system-site-packages --without-pip .venv-triposr-cuda && .venv-triposr-cuda/bin/python -m pip install -q -r configs/environments/triposr-cuda.txt"},
+    {"name": "fetch", "cmd": ".venv-triposr-cuda/bin/python scripts/zimage_triposr_batch.py fetch --what triposr,u2net"},
+    {"name": "reconstruct", "parallel": [
+      "CUDA_VISIBLE_DEVICES=0 .venv-triposr-cuda/bin/python scripts/zimage_triposr_batch.py reconstruct --gen zimage-triposr-v2 --anchors-from zimage-triposr --segment u2net --shard 0/2",
+      "CUDA_VISIBLE_DEVICES=1 .venv-triposr-cuda/bin/python scripts/zimage_triposr_batch.py reconstruct --gen zimage-triposr-v2 --anchors-from zimage-triposr --segment u2net --shard 1/2"]}
+  ],
+  "outputs": ["results/text3d/E-T3/units_zimage-triposr-v2_*.jsonl", "results/text3d/E-T3/units/zimage-triposr-v2/**"]
+}

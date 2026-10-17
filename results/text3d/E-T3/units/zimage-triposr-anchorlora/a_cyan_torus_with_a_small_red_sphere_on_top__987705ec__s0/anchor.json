@@ -1,0 +1,38 @@
+{
+  "status": "ok",
+  "anchor_prompt": {
+    "text": "a cyan torus with a small red sphere on top. A single complete object, centered, fully visible with empty margin around it, three-quarter view from slightly above, isolated on a plain solid bright magenta background, soft even studio lighting, no shadow, no text, no other objects",
+    "background": "bright magenta",
+    "background_rgb": [
+      255,
+      0,
+      255
+    ],
+    "named_colours": [
+      "cyan",
+      "red"
+    ],
+    "colour_margin": 0.916,
+    "template": "{prompt}. A single complete object, centered, fully visible with empty margin around it, three-quarter view from slightly above, isolated on a plain solid {bg} background, soft even studio lighting, no shadow, no text, no other objects"
+  },
+  "sampler": {
+    "steps": 9,
+    "guidance_scale": 0.0,
+    "height": 768,
+    "width": 768,
+    "noise": "seeded CPU generator"
+  },
+  "dtype": "bfloat16",
+  "device": "cuda",
+  "gpu": "Tesla T4",
+  "load_s": 97.2,
+  "seconds": 147.04,
+  "finite": true,
+  "std": 0.36262041330337524,
+  "peak_gpu_mib": 13835.0,
+  "anchor_sha256": "9700a97e6035bf274a3fd8b1f87d24a2666490a20f5945180ebc2a31a3b1b739",
+  "lora": {
+    "path": "exports/zimage-anchor-lora-v1/adapter.safetensors",
+    "sha256": "0bde1ac0f975884607baf82a274eae92fa00550a2d42bb066ced6f91cd63df45"
+  }
+}

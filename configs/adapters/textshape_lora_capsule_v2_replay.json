@@ -1,0 +1,36 @@
+{
+  "name": "textshape-lora-capsule-v2-replay",
+  "model_identity": "LoRA (r=8, alpha=16) on 10 nn.Linear layers + token-embedding delta for 'capsule', base frozen; trained with experience replay of the base training families and a signed-distance separation margin",
+  "fine_tuning_mechanism": "lora+token_embedding_delta (berkelium_neural.text3d.model.apply_adapter) + replay + separation-margin hinge (train.py)",
+  "motivation": "E-T1/E-T2: capsule-v1 improves capsule geometry (Chamfer 0.134 -> 0.081) but merges side-by-side parts (part-count accuracy 0.53 -> 0.27 on adapter_test)",
+  "kind": "lora",
+  "dataset": "data/procedural_shapes_v1",
+  "train_splits": ["adapter_train"],
+  "replay": {"splits": ["train"], "fraction": 0.5},
+  "separation_margin": {"weight": 1.0, "margin": 0.02, "points_per_asset": 256},
+  "base_checkpoint": "exports/textshape-base-v1/model.pt",
+  "lora_r": 8,
+  "lora_alpha": 16,
+  "new_tokens": ["capsule"],
+  "steps": 1500,
+  "batch_assets": 32,
+  "points_per_asset": 1024,
+  "lr": 0.002,
+  "grad_clip": 1.0,
+  "seed": 2,
+  "threads": 4,
+  "checkpoint_every": 100,
+  "log_every": 50,
+  "paraphrase_augment": true,
+  "promotion_rule": {
+    "written": "2026-10-16, before training",
+    "split": "adapter_test (held-out capsule families, never trained on)",
+    "promote_if_all": [
+      "part_count_accuracy >= 0.53 (the base model's accuracy on adapter_test)",
+      "paired chamfer_l1 delta vs capsule-v1: upper end of the 95% bootstrap CI <= +0.010 (non-inferior geometry)",
+      "paired chamfer_l1 delta vs the base model: upper end of the 95% bootstrap CI < 0 (the capsule gain is kept)"
+    ],
+    "otherwise": "capsule-v1 stays the routed adapter; v2 is reported with its numbers and not used"
+  },
+  "out_dir": "runs/textshape_lora_capsule_v2_replay"
+}

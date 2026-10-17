@@ -13,6 +13,8 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
+import pytest
+
 NEURAL = Path(__file__).resolve().parents[1]
 
 
@@ -30,6 +32,19 @@ def _req(url, body=None):
         return json.loads(resp.read())
 
 
+_STARTED: list = []          # every server this module started; killed at teardown even if an assertion failed
+
+
+@pytest.fixture(autouse=True)
+def _no_leaked_servers():
+    yield
+    while _STARTED:
+        p = _STARTED.pop()
+        if p.poll() is None:
+            p.kill()
+            p.wait(10)
+
+
 class Server:
     def __init__(self, home, models):
         self.port = _port()
@@ -40,6 +55,7 @@ class Server:
         self.p = subprocess.Popen([sys.executable, "-m", "uvicorn", "berkelium_neural.service.api:app", "--port",
                                    str(self.port)], cwd=NEURAL, env=self.env, stdout=subprocess.DEVNULL,
                                   stderr=subprocess.DEVNULL)
+        _STARTED.append(self.p)
         end = time.time() + 60
         while time.time() < end:
             try:

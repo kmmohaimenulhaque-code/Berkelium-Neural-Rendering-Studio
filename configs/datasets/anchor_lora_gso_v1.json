@@ -1,0 +1,201 @@
+{
+  "name": "anchor-lora-gso-v1",
+  "purpose": "Training images for the Z-Image canonical 3D-anchor LoRA (Phase II.2): renders of real scanned objects in the anchor template's canonical view (three-quarter, 20 deg elevation, centred with margin), uniform Lambert + ambient lighting, no cast shadow, solid chroma background chosen by zimage_triposr.anchor_prompt",
+  "source": "Google Scanned Objects (Google LLC), Gazebo Fuel GoogleResearch/<name>/1, CC-BY 4.0",
+  "contamination_rule": "no object whose category appears in E-T3 B1 (mug, teapot, pitcher, bowl, basket, boot, shoe, bus, airplane, teddy bear, clamp, elephant) or B2 (bicycle, ladder, hammer, watering can, vase/flower pot, cardboard box, bottle, trophy); ramekins and planters excluded as bowl/vase look-alikes; procedural shapes excluded (B3/B4)",
+  "views": {
+    "azimuths_deg": [
+      45,
+      135,
+      225,
+      315
+    ],
+    "elevation_deg": 20,
+    "radius": 3.2,
+    "fov_y_deg": 40,
+    "size": 512
+  },
+  "lighting": "albedo x (0.35 ambient + 0.65 Lambert, key light (0.3, 0.8, 0.5)); geometry.render_mesh shading",
+  "objects": [
+    {
+      "name": "Weisshai_Great_White_Shark",
+      "caption": "a toy great white shark",
+      "zip_sha256": "9519a3a960d07a04b3354482941bc0bf4d77ce65750d52b30d9267c3820a964a"
+    },
+    {
+      "name": "Vtech_Roll_Learn_Turtle",
+      "caption": "a colorful toy turtle",
+      "zip_sha256": "c37ce2d1fe39bedf54fadacee7c1b6d2cc4ad65dcb6dca80685ea2ff07996284"
+    },
+    {
+      "name": "Vtech_Cruise_Learn_Car_25_Years",
+      "caption": "a colorful toy car",
+      "zip_sha256": "44998b03e5133ce1ed73f8e149d95e2c0bd0d0af37921ebbc40aefa8cd32aad4"
+    },
+    {
+      "name": "TriStar_Products_PPC_Power_Pressure_Cooker_XL_in_Black",
+      "caption": "a black electric pressure cooker",
+      "zip_sha256": "83fe4a7e35b09df5cc746125f974287631bdc34f4bd557a935f46322e54514d7"
+    },
+    {
+      "name": "Threshold_Tray_Rectangle_Porcelain",
+      "caption": "a white rectangular porcelain tray",
+      "zip_sha256": "02d4670faedb0befcf875f0f57df185210d442f7025baaa6f1ab864bd6fcec57"
+    },
+    {
+      "name": "Threshold_Porcelain_Spoon_Rest_White",
+      "caption": "a white porcelain spoon rest",
+      "zip_sha256": "cba7f120b2e5f0487473e3b1e8b71dfb048262e252971a478d637671a427232c"
+    },
+    {
+      "name": "Threshold_Bistro_Ceramic_Dinner_Plate_Ruby_Ring",
+      "caption": "a ceramic dinner plate with a red ring",
+      "zip_sha256": "cfb92109cdda35983e853a5bc8de54fac9e4bc5d66d14c5ea2ab40f18d7105bf"
+    },
+    {
+      "name": "Squirrel",
+      "caption": "a squirrel figurine",
+      "zip_sha256": "f225b803009985c3490ad26a41b4d51b03b2ff28b75029e2fcea6ec6f1e81d2b"
+    },
+    {
+      "name": "Schleich_Spinosaurus_Action_Figure",
+      "caption": "a toy spinosaurus dinosaur",
+      "zip_sha256": "5250fb902e597fd02fd22e3f29c373ad5689b97e058cd62a9e4c544dae774e72"
+    },
+    {
+      "name": "Schleich_S_Bayala_Unicorn_70432",
+      "caption": "a toy unicorn",
+      "zip_sha256": "289ea88d4138c8aca1fa89f460440dc68364ea66b0f2ca3c986c69b08bf74fbe"
+    },
+    {
+      "name": "Schleich_Lion_Action_Figure",
+      "caption": "a toy lion",
+      "zip_sha256": "ae402d06517c83a4eea39f4e7351be13111e36759a9266b0fbb91b6843622ad9"
+    },
+    {
+      "name": "Schleich_Hereford_Bull",
+      "caption": "a toy bull",
+      "zip_sha256": "54fd2c88e507f4fbde3cb7eeec67d4156ff812e0df6ecf8bf64bd0c3fe352630"
+    },
+    {
+      "name": "Schleich_Bald_Eagle",
+      "caption": "a toy bald eagle",
+      "zip_sha256": "49b6a170e9211bcba9795fe09a527acae6d6bf6da2346aa68015d5515af94d04"
+    },
+    {
+      "name": "Schleich_Allosaurus",
+      "caption": "a toy allosaurus dinosaur",
+      "zip_sha256": "68dcd6ea31c50bdf922ca198082dbd954cbae9ca505d8f9f1f0d7fa766b9de29"
+    },
+    {
+      "name": "Schleich_African_Black_Rhino",
+      "caption": "a toy rhinoceros",
+      "zip_sha256": "8a8c4fc63f078c1f5e20aab1b226d18b6e29a7eb6371b6d35e3265d3ab1c3456"
+    },
+    {
+      "name": "SORTING_TRAIN",
+      "caption": "a wooden toy train",
+      "zip_sha256": "9cdd4873c629924d2c53faca256cee10a8eaabbbb27522962de4ca904a6e05eb"
+    },
+    {
+      "name": "Remington_TStudio_Hair_Dryer",
+      "caption": "a hair dryer",
+      "zip_sha256": "983739fe748a6fe54771b16286a5bd9230bc68aa177a45c5f02826b7433360c5"
+    },
+    {
+      "name": "Razer_Naga_MMO_Gaming_Mouse",
+      "caption": "a black computer mouse",
+      "zip_sha256": "a2764c076adc5c6dd9aad12187746273f95ab2308738be69a003b9bc85a3ef1f"
+    },
+    {
+      "name": "Razer_Kraken_Pro_headset_Full_size_Black",
+      "caption": "a black headset",
+      "zip_sha256": "7049473774cba491e4f52cf72a777b992055af103945c1e735907ddbd3b73713"
+    },
+    {
+      "name": "Razer_BlackWidow_Ultimate_2014_Mechanical_Gaming_Keyboard",
+      "caption": "a black computer keyboard",
+      "zip_sha256": "9614914e19a671bc152b0ca4978f2c6431c0e5c63a9f8f95f1c734a71e84e6bb"
+    },
+    {
+      "name": "Nordic_Ware_Original_Bundt_Pan",
+      "caption": "a bundt cake pan",
+      "zip_sha256": "1f6e25e11d08f80750c302a47da86e355dbce8c31d40d61ce947e2f4e61a1a87"
+    },
+    {
+      "name": "Great_Dinos_Triceratops_Toy",
+      "caption": "a toy triceratops",
+      "zip_sha256": "b64189f8a7b94965774cc7d97c2836063b01d01588ed2040c516b2e0a950ab5b"
+    },
+    {
+      "name": "Dog",
+      "caption": "a dog figurine",
+      "zip_sha256": "a73e995ea267d6b78ca3e3717cdeaf1d552c5bdda3eb4c32cf76cfd2b6cd8f86"
+    },
+    {
+      "name": "Crosley_Alarm_Clock_Vintage_Metal",
+      "caption": "a vintage metal alarm clock",
+      "zip_sha256": "92157e1c23a00b7f4fb3f41df07eeae146be94b3861caddad820e409fe4937be"
+    },
+    {
+      "name": "Chefmate_8_Frypan",
+      "caption": "a frying pan",
+      "zip_sha256": "1c7ab7e1bb44c51926828ed2527293a5003d4364faf991c4f113b2070d96e73b"
+    },
+    {
+      "name": "Breyer_Horse_Of_The_Year_2015",
+      "caption": "a toy horse",
+      "zip_sha256": "d1c1730f31821331aa894fbf7711ff2cf9a498df60e44c6b57a5b3adc51d839f"
+    },
+    {
+      "name": "BUILD_A_ROBOT",
+      "caption": "a toy robot",
+      "zip_sha256": "59b9c434608bc57d68b7b7ec164289fab040fb91aa45629cd0d7ca91b57bef80"
+    },
+    {
+      "name": "Android_Figure_Panda",
+      "caption": "a panda figure",
+      "zip_sha256": "ee0a06071695d2d3094840b979f3451ff35f77ce003deac04df1993b29c21b62"
+    },
+    {
+      "name": "3D_Dollhouse_Lamp",
+      "caption": "a small table lamp",
+      "zip_sha256": "8a3b44f87a83959e595fdd204a966fc867e05de66b26e70e5f9b0833d02ee170"
+    },
+    {
+      "name": "Transformers_Age_of_Extinction_Stomp_and_Chomp_Grimlock_Figure",
+      "caption": "a robot dinosaur action figure",
+      "zip_sha256": "2b2caf2179415306af7498cc807c21e62e02273a2839aaf6bc6c28788019f825"
+    },
+    {
+      "name": "Teenage_Mutant_Ninja_Turtles_Rahzar_Action_Figure",
+      "caption": "a wolf monster action figure",
+      "zip_sha256": "c125b974d67cb8bc3464cb545c5754b3e93c57eaf28da70d89a92e3f4b67b39e"
+    },
+    {
+      "name": "SpiderMan_Titan_Hero_12Inch_Action_Figure_oo1qph4wwiW",
+      "caption": "a spider-man action figure",
+      "zip_sha256": "7bd3a6b30b03294f948e9bae5a39dd9b2c156df4b01575b9cee47f574c10823f"
+    },
+    {
+      "name": "Sonicare_2_Series_Toothbrush_Plaque_Control",
+      "caption": "an electric toothbrush",
+      "zip_sha256": "7f5a8664685f308b000b4160afd6d97ab723a4cfb4f9e31d0a0c340be6be7a10"
+    },
+    {
+      "name": "Racoon",
+      "caption": "a raccoon figurine",
+      "zip_sha256": "1408b68f9eb7fd5f34c88130735331a761deb02220320cf82f51804f2c1f5dd7"
+    },
+    {
+      "name": "Circo_Fish_Toothbrush_Holder_14995988",
+      "caption": "a fish-shaped toothbrush holder",
+      "zip_sha256": "89626ada94098f9685f302ffc5d92eeb043b9ed70a6652cbd339a6e1885cccae"
+    },
+    {
+      "name": "Ocedar_Snap_On_Dust_Pan_And_Brush_1_ct",
+      "caption": "a dustpan and brush",
+      "zip_sha256": "a6d37f98f0941c5508ec5ff6f0eaef0636f580776f8412cc3c09d5b148852973"
+    }
+  ]
+}
