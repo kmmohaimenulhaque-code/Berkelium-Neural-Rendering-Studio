@@ -1,3 +1,9 @@
+## What's new
+
+- **AI chat works right after install.** The app now carries its own backend and starts it by itself. No Python, no terminal.
+- **Free AI out of the box.** Chat uses a free built-in Groq key. You can paste your own key for any provider in Settings.
+- PDF text reading works in the installed app.
+
 ## Download
 
 | System | File |
@@ -34,7 +40,9 @@ chmod +x Berkelium-*.AppImage
 
 ## Known limits in this build
 
-- AI chat and document reading need the Berkelium backend running on the same computer. It is not bundled yet. The editor, 3D viewport, shapes and model import work without it.
+- The free built-in AI key is one quota shared by everyone using this version, so it can run out for the day. If chat says the free quota is used up, add your own free key in **Settings > AI Providers** (a Groq key takes a minute at console.groq.com/keys).
+- Reading text from **images** (OCR) needs the Tesseract engine, which is not included yet. Reading **PDFs** works.
+- If something goes wrong, **Settings > About** shows what failed, and **Open logs** opens the backend log to attach to a bug report.
 
 ## Verify your download
 

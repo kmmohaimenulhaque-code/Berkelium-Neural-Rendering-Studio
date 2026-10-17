@@ -11,9 +11,18 @@
 //
 // Run after "npm run package":   npm run smoke:packaged
 // Linux without a screen:        xvfb-run -a npm run smoke:packaged
+//
+// Backend checks (the app ships its own Python backend):
+//   always               the built-in backend starts and answers, with its
+//                        private key, and refuses calls without it
+//   SMOKE_EXPECT_BUILTIN=1  the free built-in provider is ready and preselected
+//   SMOKE_REAL_CHAT=1       send ONE real chat message through the free
+//                           provider (Groq free tier, costs nothing) to prove
+//                           the shipped key works before anyone downloads it
 
 import { spawn } from "node:child_process";
-import { existsSync, readdirSync } from "node:fs";
+import { existsSync, mkdtempSync, readdirSync } from "node:fs";
+import { tmpdir } from "node:os";
 import path from "node:path";
 
 const RELEASE = path.resolve("release");
@@ -47,7 +56,9 @@ const exe = findExecutable();
 if (!existsSync(exe)) fail(`executable missing: ${exe}`);
 console.log(`[smoke:packaged] starting ${path.relative(process.cwd(), exe)}`);
 
+const userDataDir = mkdtempSync(path.join(tmpdir(), "berkelium-smoke-"));
 const args = [
+  `--user-data-dir=${userDataDir}`, // a fresh install: no leftover settings, no developer keys
   "--remote-debugging-port=0", // 0 = any free port. Chromium prints which one.
   "--ignore-gpu-blocklist", // allow software WebGL on runners without a GPU
   "--enable-unsafe-swiftshader",
@@ -126,6 +137,67 @@ const viewport = await waitFor(
   `document.querySelector(".scene__viewport canvas") ? "canvas" : document.querySelector(".scene__failure") ? "no-webgl" : null`
 );
 await waitFor("the starter cube in the hierarchy", `[...document.querySelectorAll(".scene-tree__name")].some((n) => n.textContent === "Cube")`);
+
+// ---- The bundled backend ---------------------------------------------------
+// First launch can be slow (macOS checks every file of a fresh app once), so
+// allow a full minute before calling the backend broken.
+const online = await evaluate(`(async () => {
+  const end = Date.now() + 60000;
+  while (Date.now() < end) {
+    const be = await window.electronAPI.backendInfo();
+    if (be.state === "ready") return be;
+    if (be.state === "failed") return be;
+    await new Promise((r) => setTimeout(r, 500));
+  }
+  return await window.electronAPI.backendInfo();
+})()`);
+if (!online?.managed) fail("the app did not start its built-in backend (running from source?)", child);
+if (online.state !== "ready") fail(`built-in backend is ${online.state}: ${online.error || "no reason given"}`, child);
+console.log(`[smoke:packaged] built-in backend ready at ${online.url}`);
+
+const api = await evaluate(`(async () => {
+  const be = await window.electronAPI.backendInfo();
+  const H = { "X-API-Key": be.key, "Content-Type": "application/json" };
+  const health = await fetch(be.url + "/health").then((r) => r.json());
+  const noKey = await fetch(be.url + "/providers").then((r) => r.status);
+  const prov = await fetch(be.url + "/providers", { headers: H }).then((r) => r.json());
+  const free = prov.providers.find((p) => p.id === prov.default) || null;
+  return { versions: health.versions, noKey, default: prov.default, free, chip: document.querySelector(".status-chip")?.textContent };
+})()`);
+if (api.noKey !== 401) fail(`backend answered without the private key (status ${api.noKey})`, child);
+for (const pkg of ["python", "fastapi", "litellm"]) {
+  if (!api.versions?.[pkg] || api.versions[pkg] === "not installed") fail(`bundled backend is missing ${pkg}: ${JSON.stringify(api.versions)}`, child);
+}
+await waitFor("the Backend online chip", `document.querySelector(".status-chip")?.textContent.includes("Backend online")`);
+console.log(`[smoke:packaged] backend versions ${JSON.stringify(api.versions)}, refuses calls without key`);
+
+if (process.env.SMOKE_EXPECT_BUILTIN === "1") {
+  if (!api.free?.builtin || !api.free.configured) fail(`expected a free built-in provider, got default=${api.default}`, child);
+  if (api.free.values?.api_key) fail("Settings would show part of the built-in key", child);
+  console.log(`[smoke:packaged] free built-in provider: ${api.free.label} (${api.free.model})`);
+}
+
+if (process.env.SMOKE_REAL_CHAT === "1") {
+  const chat = await evaluate(`(async () => {
+    const be = await window.electronAPI.backendInfo();
+    const r = await fetch(be.url + "/chat", {
+      method: "POST",
+      headers: { "X-API-Key": be.key, "Content-Type": "application/json" },
+      body: JSON.stringify({ message: "Reply with the single word OK.", provider: "${api.default}" }),
+    });
+    return { status: r.status, body: await r.json().catch(() => null) };
+  })()`);
+  if (chat.status === 200 && chat.body?.response?.trim()) {
+    console.log(`[smoke:packaged] real chat through ${chat.body.provider}/${chat.body.model}: ${JSON.stringify(chat.body.response.slice(0, 40))}`);
+  } else if (chat.status === 429) {
+    // The key was accepted; the shared free quota is just busy right now.
+    // Blocking a release on that would be wrong, so warn instead.
+    console.log(`::warning::free provider rate limited during the smoke test (${chat.body?.code}). The key itself was accepted.`);
+  } else {
+    fail(`real chat failed (${chat.status}): ${JSON.stringify(chat.body)}. Check the GROQ_API_KEY secret.`, child);
+  }
+}
+
 await sleep(1000);
 if (pageErrors.length) fail(`page errors: ${pageErrors.slice(0, 3).join(" | ")}`, child);
 
@@ -133,5 +205,5 @@ clearTimeout(timer);
 child.removeAllListeners("exit");
 child.kill();
 ws.close();
-console.log(`[smoke:packaged] PASS: installed app rendered from app.asar, logo loaded, viewport: ${viewport}`);
+console.log(`[smoke:packaged] PASS: installed app rendered from app.asar, logo loaded, viewport: ${viewport}, built-in backend online`);
 process.exit(0);

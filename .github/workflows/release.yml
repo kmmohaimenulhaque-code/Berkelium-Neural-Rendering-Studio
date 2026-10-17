@@ -2,6 +2,10 @@
 # Linux, tests each compiled app, and attaches the installers to a DRAFT
 # GitHub Release. Nothing is public until someone presses "Publish release".
 #
+# Each installer carries its own Python backend (frozen with PyInstaller on
+# that OS, since it cannot cross-compile) and a free built-in Groq key from the
+# GROQ_API_KEY secret, so AI chat works right after install.
+#
 # How to cut a release:
 #   1. Set "version" in apps/desktop/package.json (for example 0.2.0) and push.
 #   2. Tag that commit and push the tag:
@@ -30,7 +34,7 @@ jobs:
   build:
     name: Installer (${{ matrix.label }})
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 30
+    timeout-minutes: 40
     strategy:
       fail-fast: false
       matrix:
@@ -77,6 +81,50 @@ jobs:
       - name: Unit tests
         run: npm test
 
+      # ---- The backend that ships inside the app ----------------------------
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            services/backend/requirements.txt
+            services/backend/requirements-build.txt
+
+      - name: Backend tests
+        working-directory: services/backend
+        run: |
+          python -m pip install -r requirements-build.txt
+          python -m pytest -q
+
+      # The key comes from a GitHub secret and is never printed or committed.
+      # A tagged release without it would ship a chat that does not work out
+      # of the box, so that is an error. A trial run without it is allowed.
+      - name: Built-in free key
+        working-directory: services/backend
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GROQ_MODEL_ID: ${{ vars.GROQ_MODEL_ID }}
+        run: |
+          if [ -z "$GROQ_API_KEY" ] && [[ "$GITHUB_REF" == refs/tags/* ]]; then
+            echo "::error::The GROQ_API_KEY secret is missing. Add it in Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+          python tools/make_builtin.py builtin.json
+
+      - name: Build backend
+        working-directory: services/backend
+        run: python -m PyInstaller --noconfirm berkelium-backend.spec
+
+      # electron-builder only warns when a resource folder is missing, which
+      # would quietly ship an app with no backend. Fail loudly instead.
+      - name: Backend program exists
+        run: |
+          exe=../../services/backend/dist/berkelium-backend/berkelium-backend
+          if [ "$RUNNER_OS" = "Windows" ]; then exe="$exe.exe"; fi
+          test -f "$exe" || { echo "::error::The backend was not built ($exe missing)."; exit 1; }
+          rm -f ../../services/backend/builtin.json # baked into the build; no reason to keep it on disk
+          echo "OK: $exe"
+
       # No signing certificates yet. macOS gets an ad-hoc signature (mac.identity
       # "-" in package.json), which Apple Silicon requires for an app to start.
       - name: Build installer
@@ -86,12 +134,21 @@ jobs:
       # the 3D view opens. A broken installer never reaches the release.
       - name: Smoke test the compiled app (Linux)
         if: runner.os == 'Linux'
+        env:
+          # With a key: check the free provider is preselected, then send ONE
+          # real chat message (Groq free tier, no cost) to prove the shipped
+          # key works before anyone downloads the app.
+          SMOKE_EXPECT_BUILTIN: ${{ secrets.GROQ_API_KEY != '' && '1' || '0' }}
+          SMOKE_REAL_CHAT: ${{ secrets.GROQ_API_KEY != '' && '1' || '0' }}
         run: |
           command -v xvfb-run > /dev/null || (sudo apt-get update && sudo apt-get install -y xvfb)
           xvfb-run -a npm run smoke:packaged
 
       - name: Smoke test the compiled app
         if: runner.os != 'Linux'
+        env:
+          SMOKE_EXPECT_BUILTIN: ${{ secrets.GROQ_API_KEY != '' && '1' || '0' }}
+          SMOKE_REAL_CHAT: ${{ secrets.GROQ_API_KEY != '' && '1' || '0' }}
         run: npm run smoke:packaged
 
       - uses: actions/upload-artifact@v6
@@ -124,12 +181,26 @@ jobs:
           path: installers
           merge-multiple: true
 
+      # One installer per OS, or no release. A missing file means a build
+      # job failed in a way that still uploaded something.
+      - name: All three installers are here
+        working-directory: installers
+        run: |
+          ls -la
+          for pattern in '*-mac-arm64.dmg' '*-win-x64.exe' '*-linux-x86_64.AppImage'; do
+            compgen -G "$pattern" > /dev/null || { echo "::error::No installer matching $pattern"; exit 1; }
+          done
+
       # Checksums let anyone confirm a download was not corrupted or swapped.
       - name: Checksums
         working-directory: installers
         run: |
           sha256sum * > SHA256SUMS.txt
           cat SHA256SUMS.txt
+
+      # The notes file says <version> so it never goes stale. Fill it in.
+      - name: Release notes for this version
+        run: sed "s/<version>/${GITHUB_REF_NAME#v}/g" apps/desktop/resources/RELEASE_NOTES.md > release-notes.md
 
       - name: Create draft release
         env:
@@ -139,4 +210,4 @@ jobs:
             --repo "$GITHUB_REPOSITORY" \
             --draft \
             --title "Berkelium $GITHUB_REF_NAME" \
-            --notes-file apps/desktop/resources/RELEASE_NOTES.md
+            --notes-file release-notes.md

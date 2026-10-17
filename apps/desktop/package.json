@@ -116,6 +116,15 @@
       "category": "Graphics",
       "synopsis": "Neural rendering studio"
     },
-    "publish": null
+    "publish": null,
+    "extraResources": [
+      {
+        "from": "../../services/backend/dist/berkelium-backend",
+        "to": "backend",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ]
   }
 }
