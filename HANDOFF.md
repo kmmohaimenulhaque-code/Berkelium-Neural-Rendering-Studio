@@ -71,7 +71,7 @@ Status: ☐ todo · ◐ in progress · ☑ done (with evidence file)
   SHA-256).
 
 ### K3 — Evaluate on Kaggle
-- ◐ Zero-shot baseline `configs/kaggle/cad_eval_base.json` launched (kernel `berkelium-cad-eval-base`); the m2 eval spec follows the adapter. HF transformers, NF4 (same quantisation as training), greedy, one shard per T4.
+- ☐ One eval job `configs/kaggle/cad_eval.json` (kernel `berkelium-cad-eval`): zero-shot on GPU 0 and m2 on GPU 1 in parallel, then core scoring + D-033. (The separate baseline kernel sat in the T4 queue 75 min and was deleted unrun, 2026-10-17.) HF transformers, NF4 (same quantisation as training), greedy, one shard per T4.
   Generate for zero-shot Qwen3-8B and M2 on test + held-out families + gear test.
 - ☐ Score inside the kernel with the core: parse → schema → realise → requirements → voxel IoU. Repair loop
   (≤ 3 JSON-Patch rounds) is reported separately, as "with repair".

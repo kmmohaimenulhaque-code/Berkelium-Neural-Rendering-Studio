@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Place the outputs of earlier E-C1 kernels (attached as Kaggle kernel sources) into the work tree:
-the trained adapter + its run manifest, and the zero-shot generations + item list. Every file is checked against
+the trained adapter + its run manifest. Every file is checked against
 the producing kernel's own manifest.json (sha256), so a stale or partial output is refused."""
 import glob
 import hashlib
@@ -10,7 +10,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-WANT = {"exports/qwen3-8b-cad-v1/": "adapter", "results/cad/E-C1/": "baseline generations"}
+WANT = {"exports/qwen3-8b-cad-v1/": "adapter"}
 placed, bad = {}, []
 for man_path in glob.glob("/kaggle/input/**/out/manifest.json", recursive=True):
     base = Path(man_path).parent
@@ -27,6 +27,5 @@ for man_path in glob.glob("/kaggle/input/**/out/manifest.json", recursive=True):
         shutil.copy2(src, dst)
         placed[rel] = m["sha256"][:16]
 print(json.dumps({"placed": placed, "bad": bad}, indent=1))
-need = [p for p in ("exports/qwen3-8b-cad-v1/adapter/adapter_model.safetensors", "results/cad/E-C1/items.jsonl")
-        if not (ROOT / p).exists()]
+need = [p for p in ("exports/qwen3-8b-cad-v1/adapter/adapter_model.safetensors",) if not (ROOT / p).exists()]
 sys.exit(1 if bad or need else 0)
