@@ -9,7 +9,8 @@
 # Resume:  run the same command again. Finished stages are skipped (markers in ~/berkelium_run/markers/);
 #          training resumes from its last 30-min checkpoint. `rm ~/berkelium_run/markers/<stage>.done` redoes one.
 # Stop:    kill "$(cat ~/berkelium_run/run.pid)"     (or: pkill -f mi300x_oneshot.sh; then re-run to resume)
-# Knobs:   GEN_HOURS=2  RECODE_MAX=1000000  BRANCH=universal-cadquery  RUN=~/berkelium_run
+# Knobs:   TRAIN_ARGS="--model Qwen/Qwen3-14B --time-budget-h 6"  EVAL_ARGS="--per-source 100"  PUBLISH_ARGS=--public
+#          GEN_HOURS=2  RECODE_MAX=1000000  BRANCH=universal-cadquery  RUN=~/berkelium_run
 #          BERKELIUM_ALLOW_NO_UNSLOTH=1 (train with transformers+PEFT if Unsloth is missing)  BERKELIUM_GIT_PUSH=1
 set -euo pipefail
 
@@ -140,7 +141,7 @@ stage d034 d034_check
 
 train() {
   local rc=0
-  "$P" scripts/cq_train.py --data "$RUN/data/cq_v1" --out "$RUN/train" || rc=$?
+  "$P" scripts/cq_train.py --data "$RUN/data/cq_v1" --out "$RUN/train" ${TRAIN_ARGS:-} || rc=$?
   case $rc in
     0) ;;
     3) echo "training stopped on a NaN/inf loss (recorded in $RUN/train/*/status.json)"; return 3;;
@@ -155,11 +156,11 @@ evaluate() {
   local base adapter
   base=$("$P" -c "import json;print(json.load(open('$RUN/train/final.json'))['model'])")
   adapter=$("$P" -c "import json;print(json.load(open('$RUN/train/final.json'))['adapter'])")
-  "$P" scripts/cq_eval.py --data "$RUN/data/cq_v1" --base "$base" --adapter "$adapter" --results results/cadquery --items-dir "$RUN/eval"
+  "$P" scripts/cq_eval.py --data "$RUN/data/cq_v1" --base "$base" --adapter "$adapter" --results results/cadquery --items-dir "$RUN/eval" ${EVAL_ARGS:-}
 }
 stage eval evaluate
 
-stage publish "$P" scripts/cq_publish.py --train "$RUN/train" --results results/cadquery
+stage publish "$P" scripts/cq_publish.py --train "$RUN/train" --results results/cadquery ${PUBLISH_ARGS:-}
 
 # ---------------------------------------------------------------- summary
 "$P" - "$RUN" <<'EOF'

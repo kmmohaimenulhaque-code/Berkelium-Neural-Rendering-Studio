@@ -106,9 +106,12 @@ def load_model(model_id: str, revision: str, max_len: int, r: int, prefer_unslot
     if prefer_unsloth:
         try:
             from unsloth import FastLanguageModel
-            model, tok = FastLanguageModel.from_pretrained(model_name=model_id, revision=revision,
-                                                           max_seq_length=max_len, dtype=torch.bfloat16,
-                                                           load_in_4bit=False, full_finetuning=False)
+            kw = dict(model_name=model_id, revision=revision, max_seq_length=max_len, dtype=torch.bfloat16,
+                      load_in_4bit=False, full_finetuning=False)
+            try:   # keep the pinned Qwen revision (Unsloth otherwise swaps in unsloth/<name> and drops it)
+                model, tok = FastLanguageModel.from_pretrained(use_exact_model_name=True, **kw)
+            except TypeError:
+                model, tok = FastLanguageModel.from_pretrained(**kw)
             model = FastLanguageModel.get_peft_model(model, r=r, lora_alpha=r, lora_dropout=0.0, bias="none",
                                                      target_modules=TARGETS, use_gradient_checkpointing="unsloth",
                                                      random_state=0)
@@ -264,19 +267,22 @@ def train(a, model_id: str) -> int:
         return 3
     if st.get("state") == "switching":
         return 10
-    if trainer.state.global_step < max_steps:
+    partial = st.get("state") == "time_budget"
+    if trainer.state.global_step < max_steps and not partial:
         trainer._save_checkpoint(trainer.model, trial=None)
         save_status(state="stopped", step=trainer.state.global_step)
         return 4
     model.save_pretrained(str(run_dir / "adapter"))
     tok.save_pretrained(str(run_dir / "adapter"))
     adapter_hash = {p.name: sha256_file(p) for p in (run_dir / "adapter").iterdir() if p.is_file()}
-    manifest.update(adapter_sha256=adapter_hash, train_loss=res.training_loss, steps=trainer.state.global_step,
+    manifest.update(partial_epoch=partial, epoch_fraction=round(trainer.state.global_step / max_steps, 4),
+                    adapter_sha256=adapter_hash, train_loss=res.training_loss, steps=trainer.state.global_step,
                     hours=round((time.time() - t_start) / 3600, 3), log_tail=log[-5:])
     (run_dir / "run_manifest.json").write_text(json.dumps(manifest, indent=1, default=str))
     save_status(state="done", adapter=str(run_dir / "adapter"), steps=trainer.state.global_step,
-                train_loss=res.training_loss)
-    (out_root / "final.json").write_text(json.dumps({"model": model_id, "revision": rev,
+                max_steps=max_steps, partial_epoch=partial, train_loss=res.training_loss)
+    (out_root / "final.json").write_text(json.dumps({"model": model_id, "revision": rev, "steps": trainer.state.global_step,
+                                                     "max_steps": max_steps, "partial_epoch": partial,
                                                      "adapter": str(run_dir / "adapter")}, indent=1))
     return 0
 
