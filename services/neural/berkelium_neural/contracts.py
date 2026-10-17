@@ -160,7 +160,7 @@ class TextTo3DRequest(_Strict):
     gaussian_fit_steps: int = Field(default=0, ge=0, le=2000)  # differentiable refinement (0 = off)
     # text3d/generators.py: the native model (default), Shap-E (open-world, CPU), the GPU-gated image-prior path, or
     # auto (native iff no content word outside its vocabulary). ``model``/``adapter`` configure the native model.
-    generator: Literal["berkelium-textshape", "shap-e-text300m", "zimage-triposr", "cad", "auto"] = "berkelium-textshape"
+    generator: Literal["berkelium-textshape", "shap-e-text300m", "zimage-triposr", "cad", "cadquery", "auto"] = "berkelium-textshape"
     compose: bool = False                                      # two-object planner (text3d/planner.py)
     shap_e_steps: int = Field(default=16, ge=4, le=64)         # Karras steps (E-T3 P2 cost model: 16 on CPU)
 
