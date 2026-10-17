@@ -38,6 +38,12 @@ def sha256_file(p: Path) -> str:
     return h.hexdigest()
 
 
+NOT_EVALUATED = {"d034": {"verdict": "NOT EVALUATED", "criteria": [],
+                          "action": "ship as opt-in; E-C2 eval was skipped (owner decision, deadline), so D-034 was not applied"},
+                 "host": {"evidence": "no evaluation run"}, "generation_backend": "-", "finished_utc": "-",
+                 "tuned": {"metrics": {}}, "base": {"metrics": {}}}
+
+
 def card(base: str, res: dict, merged: bool, repo: str) -> str:
     rev = pins.MODELS[base]["revision"]
     d = res["d034"]
@@ -112,13 +118,15 @@ def main() -> int:
     size = base.split("-")[-1].lower()
     repo = pins.HF_ADAPTER.format(size=size)
     rd = Path(a.results)
-    res = json.loads((rd / "E-C2.json").read_text())
+    rd.mkdir(parents=True, exist_ok=True)
+    res = json.loads((rd / "E-C2.json").read_text()) if (rd / "E-C2.json").exists() else NOT_EVALUATED
     run_dir = adapter.parent
     (adapter / "README.md").write_text(card(base, res, False, repo))
     for f in ("run_manifest.json", "status.json"):
         if (run_dir / f).exists():
             (adapter / f).write_text((run_dir / f).read_text())
-    (adapter / "E-C2.json").write_text((rd / "E-C2.json").read_text())
+    if (rd / "E-C2.json").exists():
+        (adapter / "E-C2.json").write_text((rd / "E-C2.json").read_text())
     receipt = {"published_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "base": base,
                "base_revision": pins.MODELS[base]["revision"], "d034": res["d034"]["verdict"],
                "adapter_repo": repo, "adapter_files": {p.name: sha256_file(p) for p in adapter.iterdir() if p.is_file()}}

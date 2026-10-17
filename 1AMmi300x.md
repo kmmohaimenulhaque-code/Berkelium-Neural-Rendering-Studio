@@ -141,3 +141,8 @@ cat ~/berkelium_run/train/qwen3-32b/status.json
 tail -n 3 ~/berkelium_run/train/qwen3-32b/train_log.jsonl
 ls ~/berkelium_run/train/qwen3-32b/ | grep checkpoint
 ```
+
+## 8. Eval skipped (owner decision, deadline)
+The E-C2 eval stage is skipped (marker `eval.done` written by hand with `skipped by owner`). **D-034 is not applied**:
+the model is published as **opt-in, not evaluated**, and the model cards say so. No E-C2 number exists. Publish and
+GGUF run without `E-C2.json`.
