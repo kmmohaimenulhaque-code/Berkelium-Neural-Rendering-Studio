@@ -67,8 +67,10 @@ api.create_repo(repo, private=False, exist_ok=True)
 for r in (adapter, merged):                      # the teammate asked for public repos
     if r:
         api.update_repo_settings(r, private=False)
-res = json.loads(pathlib.Path("results/cadquery/E-C2.json").read_text())
-d = res["d034"]
+ec2 = pathlib.Path("results/cadquery/E-C2.json")
+res = json.loads(ec2.read_text()) if ec2.exists() else None
+d = res["d034"] if res else {"verdict": "NOT EVALUATED", "action": "opt-in only; the E-C2 eval was skipped (deadline), D-034 not applied"}
+final = json.loads(pathlib.Path(os.path.expanduser("~/berkelium_run/train/final.json")).read_text())
 sha = hashlib.sha256(q.read_bytes()).hexdigest()
 gb = q.stat().st_size / 1e9
 card = f"""---
@@ -86,8 +88,7 @@ ollama run hf.co/{repo}:{quant}
 The repo's `system` file sets the trained system prompt (thinking off). Output: one JSON header line, then one
 ```python CadQuery block ending `result = ...`. Run the script in the Berkelium sandbox, never as plain Python.
 
-E-C2 (held-out, bf16 model, before quantization) D-034 verdict: **{d['verdict']}**. Full table in the merged
-repo's card. Quantization to {quant} has **not** been evaluated. Licence: trained partly on CAD-Recode
+E-C2 / D-034 verdict: **{d['verdict']}** ({d['action']}). Quantization to {quant} has **not** been evaluated. Licence: trained partly on CAD-Recode
 (CC-BY-NC-4.0) → **non-commercial**.
 """
 (out / "README.md").write_text(card)
@@ -95,17 +96,16 @@ for f in (q, out / "system", out / "params", out / "README.md"):
     api.upload_file(path_or_fileobj=str(f), path_in_repo=f.name, repo_id=repo)
 size_merged = sum(p.stat().st_size for p in pathlib.Path(os.path.expanduser(
     f"~/berkelium_run/train/merged-{base.split('-')[-1].lower()}")).glob("*.safetensors")) / 1e9
-size_adapter = sum(p.stat().st_size for p in pathlib.Path(res["tuned"]["adapter"]).glob("*.safetensors")) / 1e9
+size_adapter = sum(p.stat().st_size for p in pathlib.Path(final["adapter"]).glob("*.safetensors")) / 1e9
 msg = f"""# BerkeliumGPT (local): hand-off
 
 - **Ollama (GGUF {quant}, {gb:.1f} GB):** https://huggingface.co/{repo}  ->  `ollama run hf.co/{repo}:{quant}`
 - **Full merged weights (bf16 safetensors, {size_merged:.1f} GB):** https://huggingface.co/{merged}
 - **LoRA adapter only ({size_adapter:.2f} GB):** https://huggingface.co/{adapter}
-- **Base model:** `{base}` @ `{res['base']['revision']}`
+- **Base model:** `{base}` @ `{final['revision']}`; trained {final.get('steps')} / {final.get('max_steps')} steps
 - **Type:** the GGUF and `-merged` repos are full weights (base + LoRA merged); the adapter repo is LoRA only.
 - **GGUF sha256:** `{sha}`
-- **Eval (E-C2, held-out, bf16):** D-034 **{d['verdict']}**: {d['action']}. Numbers: `results/cadquery/E-C2.report.md`.
-  The {quant} GGUF itself was not evaluated.
+- **Eval:** D-034 **{d['verdict']}**: {d['action']}. The {quant} GGUF itself was not evaluated.
 - **Use:** system prompt is in the repo (`system`); temperature 0; run the returned script in a sandbox.
 - **Licence:** non-commercial (CAD-Recode CC-BY-NC-4.0 in the training data).
 """
