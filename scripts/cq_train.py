@@ -249,7 +249,8 @@ def train(a, model_id: str) -> int:
 
     targs = TrainingArguments(
         output_dir=str(run_dir), per_device_train_batch_size=a.batch, gradient_accumulation_steps=a.grad_accum,
-        learning_rate=a.lr, lr_scheduler_type="cosine", warmup_ratio=0.03, num_train_epochs=1, max_steps=max_steps,
+        learning_rate=a.lr, lr_scheduler_type="cosine", warmup_steps=max(1, round(0.03 * max_steps)), num_train_epochs=1,
+        max_steps=max_steps,
         bf16=True, logging_steps=1 if a.smoke else 10, save_strategy="no", save_total_limit=2, report_to=[],
         seed=a.seed, dataloader_num_workers=2, remove_unused_columns=False, optim="adamw_torch_fused",
         weight_decay=0.0, max_grad_norm=1.0, gradient_checkpointing=backend != "unsloth")
