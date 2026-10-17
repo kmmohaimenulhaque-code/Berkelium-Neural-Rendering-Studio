@@ -1,20 +1,20 @@
 {
   "job": "cad-gguf",
-  "run_id": "20261017T200900Z",
+  "run_id": "20261017T201729Z",
   "kernel": "kmmohaimenulhaque/berkelium-cad-gguf",
   "accelerator": "NvidiaTeslaT4",
   "spec": "configs/kaggle/cad_gguf.json",
   "spec_sha256": "fe3f0a5963b1989d3659cdfd5f276d6bb07eaa1c8f8bd112df842ef1afd54a13",
-  "bundle_sha256": "4d512cfaf3738bfbab698cc6c61d790531550d657fcec05a5ab341fab1563343",
-  "bundle_bytes": 1795,
+  "bundle_sha256": "b27cbf6c319f2cdef7f5b2ecb326e6885adb8a326c95fa93b37343aa332ae4c4",
+  "bundle_bytes": 1852,
   "bundle_files": 3,
   "data": null,
   "git": {
-    "commit": "fecc73abf0d55585b2202b0e3cfc77d6f74395da",
+    "commit": "a42cc37cb3ace1e794233843fde811af286737e2",
     "branch": "Berkelium-Neural-Rendering-Studio-neural-v1",
-    "dirty_files": 8
+    "dirty_files": 0
   },
-  "pushed_at": "2026-10-17T20:09:04Z",
+  "pushed_at": "2026-10-17T20:17:34Z",
   "status": "pushed",
-  "push_response": "Kernel version 1 successfully pushed.  Please check progress at https://www.kaggle.com/code/kmmohaimenulhaque/berkelium-cad-gguf"
+  "push_response": "Kernel version 2 successfully pushed.  Please check progress at https://www.kaggle.com/code/kmmohaimenulhaque/berkelium-cad-gguf"
 }
