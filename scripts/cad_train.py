@@ -140,8 +140,8 @@ def main() -> int:
     targs = TrainingArguments(
         output_dir=str(out / "trainer"), per_device_train_batch_size=a.bsz, per_device_eval_batch_size=a.bsz,
         gradient_accumulation_steps=a.grad_accum, num_train_epochs=a.epochs, learning_rate=a.lr,
-        lr_scheduler_type="cosine", warmup_ratio=0.03, weight_decay=0.0, max_grad_norm=1.0, fp16=True,
-        logging_steps=10, save_strategy="no", eval_strategy="no", report_to=[], group_by_length=True,
+        lr_scheduler_type="cosine", warmup_steps=0.03, weight_decay=0.0, max_grad_norm=1.0, fp16=True,
+        logging_steps=10, save_strategy="no", eval_strategy="no", report_to=[],
         ddp_find_unused_parameters=False, gradient_checkpointing=True,
         gradient_checkpointing_kwargs={"use_reentrant": False}, dataloader_num_workers=1, seed=a.seed,
         remove_unused_columns=False, optim="paged_adamw_8bit")

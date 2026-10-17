@@ -1,0 +1,106 @@
+{
+  "local": {
+    "job": "cad-train",
+    "run_id": "20261017T085724Z",
+    "kernel": "kmmohaimenulhaque/berkelium-cad-train-qwen3-8b",
+    "accelerator": "NvidiaTeslaT4",
+    "spec": "configs/kaggle/cad_train.json",
+    "spec_sha256": "08a5ef1a8259e84a53f392dcbb75f579daa2662361e8ea6d9a0f64d5a2b305f4",
+    "bundle_sha256": "7f2f8c4ff7baa929f57eb490b077c2d1c1a72912c9446ab88237798eadffafb2",
+    "bundle_bytes": 23926,
+    "bundle_files": 10,
+    "data": null,
+    "git": {
+      "commit": "702ff3a9b988197b5d02718e0e64a3c6d437e423",
+      "branch": "Berkelium-Neural-Rendering-Studio-neural-v1",
+      "dirty_files": 3
+    },
+    "pushed_at": "2026-10-17T08:57:28Z",
+    "status": "pushed",
+    "push_response": "Kernel version 1 successfully pushed.  Please check progress at https://www.kaggle.com/code/kmmohaimenulhaque/berkelium-cad-train-qwen3-8b",
+    "verification": {
+      "files": 0,
+      "verified": 0,
+      "problems": [],
+      "bytes": 0
+    }
+  },
+  "remote": {
+    "job": "cad-train",
+    "run_id": "20261017T085724Z",
+    "started_at": "2026-10-17T08:57:42Z",
+    "bundle_sha256_expected": "7f2f8c4ff7baa929f57eb490b077c2d1c1a72912c9446ab88237798eadffafb2",
+    "steps": [
+      {
+        "name": "deps",
+        "seconds": 48.2,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "pip install -q -r configs/environments/cad-train.txt -r configs/environments/berkelium-core.txt && python -c 'import torch,transformers,peft,bitsandbytes;print(torch.__version__,transformers.__version__,peft.__version__,bitsandbytes.__version__,torch.cuda.device_count())'",
+            "rc": 0,
+            "log": "logs/00_deps.log",
+            "tail": "   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 556.4/556.4 kB 24.6 MB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 43.1/43.1 MB 50.8 MB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 66.8/66.8 MB 16.6 MB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 1.4/1.4 MB 51.2 MB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 750.4/750.4 kB 37.0 MB/s eta 0:00:00\n2.11.0+cu128 5.16.1 0.18.0 0.50.2 2\n"
+          }
+        ]
+      },
+      {
+        "name": "data",
+        "seconds": 0.3,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "python scripts/cad_fetch_data.py",
+            "rc": 0,
+            "log": "logs/01_data.log",
+            "tail": "{\"source\": \"/kaggle/input/notebooks/kmmohaimenulhaque/berkelium-cad-dataset/out/files/data/cad_v1\", \"files\": 6, \"bad\": []}\n"
+          }
+        ]
+      },
+      {
+        "name": "fetch",
+        "seconds": 86.3,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "python -c \"from huggingface_hub import snapshot_download as s; s('Qwen/Qwen3-8B', revision='b968826d9c46dd6066d109eabc6255188de91218'); s('Qwen/Qwen3-0.6B', revision='c1899de289a04d12100db370d81485cdf75e47ca')\"",
+            "rc": 0,
+            "log": "logs/02_fetch.log",
+            "tail": "\nFetching 15 files:   0%|          | 0/15 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.\n\nFetching 15 files:   7%|\u258b         | 1/15 [00:00<00:04,  3.37it/s]\nFetching 15 files:  40%|\u2588\u2588\u2588\u2588      | 6/15 [00:00<00:00, 11.86it/s]\nFetching 15 files:  53%|\u2588\u2588\u2588\u2588\u2588\u258e    | 8/15 [00:00<00:00, 10.24it/s]\nFetching 15 files:  67%|\u2588\u2588\u2588\u2588\u2588\u2588\u258b   | 10/15 [00:02<00:01,  3.67it/s]\nFetching 15 files:  73%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258e  | 11/15 [00:12<00:08,  2.21s/it]\nFetching 15 files:  80%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588  | 12/15 [00:49<00:28,  9.54s/it]\nFetching 15 files:  87%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258b | 13/15 [01:07<00:22, 11.47s/it]\nFetching 15 files:  93%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258e| 14/15 [01:07<00:08,  8.71s/it]\nFetching 15 files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 15/15 [01:07<00:00,  4.53s/it]\n\nFetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]\nFetching 10 files:  10%|\u2588         | 1/10 [00:00<00:02,  3.89it/s]\nFetching 10 files:  70%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588   | 7/10 [00:00<00:00, 16.05it/s]\nFetching 10 files:  90%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | 9/10 [00:10<00:01,  1.59s/it]\nFetching 10 files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 10/10 [00:10<00:00,  1.09s/it]\n"
+          }
+        ]
+      },
+      {
+        "name": "smoke_0p6b",
+        "seconds": 27.6,
+        "ok": false,
+        "commands": [
+          {
+            "cmd": "torchrun --nproc_per_node 2 scripts/cad_train.py --model Qwen/Qwen3-0.6B --revision c1899de289a04d12100db370d81485cdf75e47ca --max-rows 96 --out /tmp/smoke --time-budget-h 0.2",
+            "rc": 1,
+            "log": "logs/03_smoke_0p6b.log",
+            "tail": "_kwargs={\"use_reentrant\": False}, dataloader_num_workers=1, seed=a.seed,\n        remove_unused_columns=False, optim=\"paged_adamw_8bit\")\nTypeError: TrainingArguments.__init__() got an unexpected keyword argument 'warmup_ratio'\nTraceback (most recent call last):\n  File \"/tmp/berkelium/scripts/cad_train.py\", line 177, in <module>\n    sys.exit(main())\n             ~~~~^^\n  File \"/tmp/berkelium/scripts/cad_train.py\", line 140, in main\n    targs = TrainingArguments(\n        output_dir=str(out / \"trainer\"), per_device_train_batch_size=a.bsz, per_device_eval_batch_size=a.bsz,\n    ...<4 lines>...\n        gradient_checkpointing_kwargs={\"use_reentrant\": False}, dataloader_num_workers=1, seed=a.seed,\n        remove_unused_columns=False, optim=\"paged_adamw_8bit\")\nTypeError: TrainingArguments.__init__() got an unexpected keyword argument 'warmup_ratio'\nW1017 09:00:33.186000 288 torch/distributed/elastic/multiprocessing/api.py:1012] Sending process 294 closing signal SIGTERM\nE1017 09:00:33.187000 288 torch/distributed/elastic/multiprocessing/api.py:986] failed (exitcode: 1) local_rank: 1 (pid: 295) of binary: /usr/bin/python3\nTraceback (most recent call last):\n  File \"/usr/local/bin/torchrun\", line 10, in <module>\n    sys.exit(main())\n             ~~~~^^\n  File \"/usr/local/lib/python3.13/dist-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py\", line 362, in wrapper\n    return f(*args, **kwargs)\n  File \"/usr/local/lib/python3.13/dist-packages/torch/distributed/run.py\", line 990, in main\n    run(args)\n    ~~~^^^^^^\n  File \"/usr/local/lib/python3.13/dist-packages/torch/distributed/run.py\", line 981, in run\n    elastic_launch(\n    ~~~~~~~~~~~~~~~\n        config=config,\n        ~~~~~~~~~~~~~~\n        entrypoint=cmd,\n        ~~~~~~~~~~~~~~~\n    )(*cmd_args)\n    ~^^^^^^^^^^^\n  File \"/usr/local/lib/python3.13/dist-packages/torch/distributed/launcher/api.py\", line 170, in __call__\n    return launch_agent(self._config, self._entrypoint, list(args))\n  File \"/usr/local/lib/python3.13/dist-packages/torch/distributed/launcher/api.py\", line 317, in launch_agent\n    raise ChildFailedError(\n    ...<2 lines>...\n    )\ntorch.distributed.elastic.multiprocessing.errors.ChildFailedError: \n============================================================\nscripts/cad_train.py FAILED\n------------------------------------------------------------\nFailures:\n[1]:\n  time      : 2026-10-17_09:00:33\n  host      : 4befc2444e1b\n  rank      : 0 (local_rank: 0)\n  exitcode  : 1 (pid: 294)\n  error_file: <N/A>\n  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html\n------------------------------------------------------------\nRoot Cause (first observed failure):\n[0]:\n  time      : 2026-10-17_09:00:33\n  host      : 4befc2444e1b\n  rank      : 1 (local_rank: 1)\n  exitcode  : 1 (pid: 295)\n  error_file: <N/A>\n  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html\n============================================================\n"
+          }
+        ]
+      }
+    ],
+    "status": "failed",
+    "bundle_sha256": "7f2f8c4ff7baa929f57eb490b077c2d1c1a72912c9446ab88237798eadffafb2",
+    "environment": {
+      "python": "3.13.15",
+      "host": "4befc2444e1b",
+      "nvidia_smi": "Tesla T4, 15360 MiB, 580.178.04\nTesla T4, 15360 MiB, 580.178.04",
+      "torch": "2.11.0+cu128 12.8 2",
+      "disk_free_gb": {
+        "/kaggle/working": 20.9,
+        "/tmp": 1148.8
+      },
+      "mem_total_mib": 32099,
+      "cpu_count": 4
+    },
+    "failed_step": "smoke_0p6b",
+    "finished_at": "2026-10-17T09:00:33Z",
+    "outputs": 0
+  },
+  "manifest": {}
+}
