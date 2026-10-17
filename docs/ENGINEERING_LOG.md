@@ -314,3 +314,12 @@ separation margin, CPU, 41 min): adapter_test part count 0.27 → 0.40 (base 0.5
 **Runner bug found and fixed.** Pushing a new version to a busy kernel does not start it; the previous (fp16)
 version's NaN output was pulled under the new run id. It was deleted before any commit; `pull` now refuses output
 whose run id or bundle hash differs from the push, and `run` refuses a busy kernel. Every other receipt was audited.
+
+**Anchor LoRA (Phase II.2).** Trained in bf16 on one T4 (400 steps, 2.5 h, loss 0.251 → 0.201); an fp16 attempt was
+NaN. E-T3 (`zimage-triposr-anchorlora`, 80/80 valid): B1 F@0.05 0.546, Chamfer 0.060, B2 R@1 0.25, seed std 0.014 —
+worse than the base anchors on every criterion except validity → **not promoted (D-030)**. The LoRA cleaned up
+backgrounds (held-out colour-key gate 4/4 vs 2/4) but pulled anchors toward the render style of its 36 training
+objects and away from the prompt.
+
+**MI300X.** The droplet at 165.245.133.213 was not reachable from the agent container (port 22 timed out; the SSH key
+secret arrived after the session started). No AMD run was made in this session.

@@ -49,7 +49,7 @@
   "prompts_sha256": "42d1c2e8d5c445b68c1844c4b6952e0f72c96a4c911b8acf33b4d9c70c6d2655",
   "training_performed": "none for native/Shap-E/zimage-triposr; see the anchor-LoRA model card for zimage-triposr-anchorlora",
   "scoring_environment": {
-    "git_commit": "bbcbefbd624a1a970891dddba865d2b433b450bd",
+    "git_commit": "8760bd6de6adeebb59ea3a9a1b5d9ca2fc07e2a8+dirty",
     "python": "3.13.16",
     "platform": "Linux-6.18.44-fc-v139-x86_64-with-glibc2.39",
     "numpy": "2.5.3",
@@ -62,7 +62,8 @@
     "berkelium-textshape",
     "shap-e-text300m",
     "zimage-triposr",
-    "zimage-triposr-v2"
+    "zimage-triposr-v2",
+    "zimage-triposr-anchorlora"
   ],
   "router": "native iff every content word is in its vocabulary; otherwise the first available of shap-e-text300m > zimage-triposr (E-T3 evidence order, D-029)",
   "devices": [
@@ -71,7 +72,7 @@
   ],
   "hardware_note": "Shap-E CPU and GPU units use the same weights, 16 steps, fp32 sampling and the same initial noise (seeded CPU generator); they are not bitwise identical (different kernels). zimage-triposr runs only on a GPU. Every row records its device",
   "units": {
-    "done": 296,
+    "done": 376,
     "planned_full_design": 124,
     "duplicates": [],
     "excluded_infrastructure": [
@@ -100,7 +101,8 @@
   "omitted_units": [],
   "omitted_units_other_generators": {
     "zimage-triposr": [],
-    "zimage-triposr-v2": []
+    "zimage-triposr-v2": [],
+    "zimage-triposr-anchorlora": []
   },
   "completeness": "full",
   "B1": {
@@ -278,6 +280,46 @@
               0.017595,
               0.035184,
               0.020895
+            ]
+          }
+        },
+        "zimage-triposr-anchorlora": {
+          "status": "measured",
+          "valid": true,
+          "generator": "zimage-triposr-anchorlora",
+          "seconds": 215.19,
+          "device": "cuda",
+          "chamfer_l1": 0.04799924770327159,
+          "chamfer_l2": 0.005020056157130172,
+          "normal_consistency": 0.733648419380188,
+          "fscore@0.02": 0.3888101567518952,
+          "fscore@0.05": 0.6657312950825675,
+          "alignment": {
+            "units": "unit extent (largest bbox side = 1)",
+            "coarse_rotation_index": 1,
+            "coarse_chamfer": 0.05944,
+            "icp_chamfer": 0.0517,
+            "R": [
+              [
+                0.964723,
+                -0.025,
+                -0.262076
+              ],
+              [
+                0.036174,
+                -0.973452,
+                0.226017
+              ],
+              [
+                -0.260769,
+                -0.227524,
+                -0.938207
+              ]
+            ],
+            "t": [
+              0.013795,
+              0.010404,
+              -0.037448
             ]
           }
         },
@@ -467,6 +509,46 @@
             ]
           }
         },
+        "zimage-triposr-anchorlora": {
+          "status": "measured",
+          "valid": true,
+          "generator": "zimage-triposr-anchorlora",
+          "seconds": 162.48,
+          "device": "cuda",
+          "chamfer_l1": 0.0872084294131635,
+          "chamfer_l2": 0.011145198916977319,
+          "normal_consistency": 0.7431315183639526,
+          "fscore@0.02": 0.0988716533526991,
+          "fscore@0.05": 0.3402929003774122,
+          "alignment": {
+            "units": "unit extent (largest bbox side = 1)",
+            "coarse_rotation_index": 6,
+            "coarse_chamfer": 0.0933,
+            "icp_chamfer": 0.0889,
+            "R": [
+              [
+                -0.932346,
+                -0.354278,
+                -0.07224
+              ],
+              [
+                -0.120337,
+                0.11564,
+                0.985975
+              ],
+              [
+                -0.340956,
+                0.927962,
+                -0.150449
+              ]
+            ],
+            "t": [
+              0.000368,
+              -0.035684,
+              -0.038174
+            ]
+          }
+        },
         "auto": {
           "status": "measured",
           "valid": true,
@@ -653,6 +735,46 @@
             ]
           }
         },
+        "zimage-triposr-anchorlora": {
+          "status": "measured",
+          "valid": true,
+          "generator": "zimage-triposr-anchorlora",
+          "seconds": 196.51,
+          "device": "cuda",
+          "chamfer_l1": 0.05952012453212922,
+          "chamfer_l2": 0.005248722629317987,
+          "normal_consistency": 0.582176685333252,
+          "fscore@0.02": 0.19541786829938776,
+          "fscore@0.05": 0.4815594199917729,
+          "alignment": {
+            "units": "unit extent (largest bbox side = 1)",
+            "coarse_rotation_index": 0,
+            "coarse_chamfer": 0.06612,
+            "icp_chamfer": 0.06162,
+            "R": [
+              [
+                0.989534,
+                0.013915,
+                -0.143624
+              ],
+              [
+                -0.027091,
+                0.995555,
+                -0.090199
+              ],
+              [
+                0.141731,
+                0.093146,
+                0.985513
+              ]
+            ],
+            "t": [
+              -0.038672,
+              -0.039894,
+              0.005594
+            ]
+          }
+        },
         "auto": {
           "status": "measured",
           "valid": true,
@@ -836,6 +958,46 @@
               -0.02281,
               0.065593,
               -0.002817
+            ]
+          }
+        },
+        "zimage-triposr-anchorlora": {
+          "status": "measured",
+          "valid": true,
+          "generator": "zimage-triposr-anchorlora",
+          "seconds": 184.34,
+          "device": "cuda",
+          "chamfer_l1": 0.052704231406382,
+          "chamfer_l2": 0.006913129117745512,
+          "normal_consistency": 0.7496489882469177,
+          "fscore@0.02": 0.3788124838792881,
+          "fscore@0.05": 0.6868616073052716,
+          "alignment": {
+            "units": "unit extent (largest bbox side = 1)",
+            "coarse_rotation_index": 7,
+            "coarse_chamfer": 0.06288,
+            "icp_chamfer": 0.05519,
+            "R": [
+              [
+                -0.99985,
+                0.002504,
+                -0.017117
+              ],
+              [
+                0.017228,
+                0.233539,
+                -0.972195
+              ],
+              [
+                0.001563,
+                -0.972344,
+                -0.233547
+              ]
+            ],
+            "t": [
+              0.001829,
+              0.007899,
+              0.01285
             ]
           }
         },
@@ -1027,6 +1189,46 @@
             ]
           }
         },
+        "zimage-triposr-anchorlora": {
+          "status": "measured",
+          "valid": true,
+          "generator": "zimage-triposr-anchorlora",
+          "seconds": 194.06,
+          "device": "cuda",
+          "chamfer_l1": 0.08545952238512688,
+          "chamfer_l2": 0.013349094083583375,
+          "normal_consistency": 0.6033916473388672,
+          "fscore@0.02": 0.2079687448824424,
+          "fscore@0.05": 0.4382963502831193,
+          "alignment": {
+            "units": "unit extent (largest bbox side = 1)",
+            "coarse_rotation_index": 5,
+            "coarse_chamfer": 0.10871,
+            "icp_chamfer": 0.08671,
+            "R": [
+              [
+                0.999363,
+                0.02613,
+                0.024309
+              ],
+              [
+                0.026186,
+                -0.074083,
+                -0.996908
+              ],
+              [
+                -0.024248,
+                0.99691,
+                -0.07472
+              ]
+            ],
+            "t": [
+              0.005829,
+              -0.113299,
+              -0.016648
+            ]
+          }
+        },
         "auto": {
           "status": "measured",
           "valid": true,
@@ -1211,6 +1413,46 @@
               0.013518,
               -0.03486,
               -0.032916
+            ]
+          }
+        },
+        "zimage-triposr-anchorlora": {
+          "status": "measured",
+          "valid": true,
+          "generator": "zimage-triposr-anchorlora",
+          "seconds": 182.47,
+          "device": "cuda",
+          "chamfer_l1": 0.019347992347948165,
+          "chamfer_l2": 0.0005477572699751445,
+          "normal_consistency": 0.8641185164451599,
+          "fscore@0.02": 0.6028080046403713,
+          "fscore@0.05": 0.9729324564558394,
+          "alignment": {
+            "units": "unit extent (largest bbox side = 1)",
+            "coarse_rotation_index": 20,
+            "coarse_chamfer": 0.03949,
+            "icp_chamfer": 0.02215,
+            "R": [
+              [
+                -0.04369,
+                0.135532,
+                0.989809
+              ],
+              [
+                -0.126009,
+                0.982095,
+                -0.140037
+              ],
+              [
+                -0.991067,
+                -0.130843,
+                -0.025829
+              ]
+            ],
+            "t": [
+              0.044413,
+              -0.059454,
+              -0.019671
             ]
           }
         },
@@ -1431,6 +1673,46 @@
             ]
           }
         },
+        "zimage-triposr-anchorlora": {
+          "status": "measured",
+          "valid": true,
+          "generator": "zimage-triposr-anchorlora",
+          "seconds": 161.93,
+          "device": "cuda",
+          "chamfer_l1": 0.03489702683316768,
+          "chamfer_l2": 0.002042597731691676,
+          "normal_consistency": 0.6415767669677734,
+          "fscore@0.02": 0.3865863672716087,
+          "fscore@0.05": 0.7205995638990154,
+          "alignment": {
+            "units": "unit extent (largest bbox side = 1)",
+            "coarse_rotation_index": 20,
+            "coarse_chamfer": 0.04663,
+            "icp_chamfer": 0.03619,
+            "R": [
+              [
+                0.114737,
+                0.142506,
+                0.983121
+              ],
+              [
+                -0.107272,
+                0.985647,
+                -0.130353
+              ],
+              [
+                -0.987587,
+                -0.090505,
+                0.128377
+              ]
+            ],
+            "t": [
+              0.030352,
+              -0.036007,
+              -0.033156
+            ]
+          }
+        },
         "auto": {
           "status": "measured",
           "valid": true,
@@ -1645,6 +1927,46 @@
               0.015066,
               0.037738,
               -0.046552
+            ]
+          }
+        },
+        "zimage-triposr-anchorlora": {
+          "status": "measured",
+          "valid": true,
+          "generator": "zimage-triposr-anchorlora",
+          "seconds": 172.02,
+          "device": "cuda",
+          "chamfer_l1": 0.0664581206449954,
+          "chamfer_l2": 0.0066662963919879095,
+          "normal_consistency": 0.5995829105377197,
+          "fscore@0.02": 0.19593323833273957,
+          "fscore@0.05": 0.4196414946579404,
+          "alignment": {
+            "units": "unit extent (largest bbox side = 1)",
+            "coarse_rotation_index": 20,
+            "coarse_chamfer": 0.07096,
+            "icp_chamfer": 0.06729,
+            "R": [
+              [
+                0.137901,
+                -0.140376,
+                0.980448
+              ],
+              [
+                -0.058271,
+                0.987041,
+                0.149516
+              ],
+              [
+                -0.98873,
+                -0.077751,
+                0.127934
+              ]
+            ],
+            "t": [
+              0.054585,
+              0.01984,
+              -0.017958
             ]
           }
         },
@@ -1866,6 +2188,46 @@
             ]
           }
         },
+        "zimage-triposr-anchorlora": {
+          "status": "measured",
+          "valid": true,
+          "generator": "zimage-triposr-anchorlora",
+          "seconds": 166.76,
+          "device": "cuda",
+          "chamfer_l1": 0.09116997478402214,
+          "chamfer_l2": 0.014231311823122908,
+          "normal_consistency": 0.5224921703338623,
+          "fscore@0.02": 0.13483789573161128,
+          "fscore@0.05": 0.3476850084857627,
+          "alignment": {
+            "units": "unit extent (largest bbox side = 1)",
+            "coarse_rotation_index": 2,
+            "coarse_chamfer": 0.09666,
+            "icp_chamfer": 0.09327,
+            "R": [
+              [
+                -0.977105,
+                0.017981,
+                -0.211995
+              ],
+              [
+                0.055779,
+                0.983218,
+                -0.173697
+              ],
+              [
+                0.205314,
+                -0.181545,
+                -0.961711
+              ]
+            ],
+            "t": [
+              0.030085,
+              0.004335,
+              -0.020065
+            ]
+          }
+        },
         "auto": {
           "status": "measured",
           "valid": true,
@@ -2050,6 +2412,46 @@
               0.029287,
               0.047917,
               -0.053236
+            ]
+          }
+        },
+        "zimage-triposr-anchorlora": {
+          "status": "measured",
+          "valid": true,
+          "generator": "zimage-triposr-anchorlora",
+          "seconds": 203.54,
+          "device": "cuda",
+          "chamfer_l1": 0.060415808770293136,
+          "chamfer_l2": 0.005848525671464575,
+          "normal_consistency": 0.523236095905304,
+          "fscore@0.02": 0.21281333951977727,
+          "fscore@0.05": 0.511852308134797,
+          "alignment": {
+            "units": "unit extent (largest bbox side = 1)",
+            "coarse_rotation_index": 7,
+            "coarse_chamfer": 0.07419,
+            "icp_chamfer": 0.06405,
+            "R": [
+              [
+                -0.985513,
+                -0.017293,
+                0.168718
+              ],
+              [
+                -0.169073,
+                0.021737,
+                -0.985364
+              ],
+              [
+                0.013372,
+                -0.999614,
+                -0.024345
+              ]
+            ],
+            "t": [
+              0.067303,
+              -0.034836,
+              -0.002989
             ]
           }
         },
@@ -2270,6 +2672,46 @@
             ]
           }
         },
+        "zimage-triposr-anchorlora": {
+          "status": "measured",
+          "valid": true,
+          "generator": "zimage-triposr-anchorlora",
+          "seconds": 174.68,
+          "device": "cuda",
+          "chamfer_l1": 0.07015923099532405,
+          "chamfer_l2": 0.00694401690198364,
+          "normal_consistency": 0.5495423078536987,
+          "fscore@0.02": 0.12974877442273536,
+          "fscore@0.05": 0.35600600875187777,
+          "alignment": {
+            "units": "unit extent (largest bbox side = 1)",
+            "coarse_rotation_index": 7,
+            "coarse_chamfer": 0.08742,
+            "icp_chamfer": 0.07178,
+            "R": [
+              [
+                -0.959942,
+                -0.268528,
+                0.080022
+              ],
+              [
+                -0.087517,
+                0.016039,
+                -0.996034
+              ],
+              [
+                0.266179,
+                -0.963138,
+                -0.038897
+              ]
+            ],
+            "t": [
+              -0.002312,
+              -0.008078,
+              -0.111006
+            ]
+          }
+        },
         "auto": {
           "status": "measured",
           "valid": true,
@@ -2486,6 +2928,46 @@
             ]
           }
         },
+        "zimage-triposr-anchorlora": {
+          "status": "measured",
+          "valid": true,
+          "generator": "zimage-triposr-anchorlora",
+          "seconds": 194.7,
+          "device": "cuda",
+          "chamfer_l1": 0.04996956908034063,
+          "chamfer_l2": 0.004054711166522791,
+          "normal_consistency": 0.5856282711029053,
+          "fscore@0.02": 0.24693611503531784,
+          "fscore@0.05": 0.6095024274427935,
+          "alignment": {
+            "units": "unit extent (largest bbox side = 1)",
+            "coarse_rotation_index": 16,
+            "coarse_chamfer": 0.06566,
+            "icp_chamfer": 0.05187,
+            "R": [
+              [
+                -0.163216,
+                -0.064199,
+                0.984499
+              ],
+              [
+                0.986567,
+                -0.003706,
+                0.163317
+              ],
+              [
+                -0.006836,
+                0.99793,
+                0.063942
+              ]
+            ],
+            "t": [
+              0.012377,
+              -0.097729,
+              -0.042855
+            ]
+          }
+        },
         "auto": {
           "status": "measured",
           "valid": true,
@@ -2561,6 +3043,14 @@
         "fscore@0.02_mean": 0.34432983154366686,
         "fscore@0.05_with_failures_as_0": 0.603147868440338
       },
+      "zimage-triposr-anchorlora": {
+        "n": 12,
+        "valid_rate": 1.0,
+        "chamfer_l1_mean": 0.060442439908013706,
+        "fscore@0.05_mean": 0.5459134034056808,
+        "fscore@0.02_mean": 0.2649620535099895,
+        "fscore@0.05_with_failures_as_0": 0.5459134034056808
+      },
       "auto": {
         "n": 12,
         "valid_rate": 1.0,
@@ -2573,6 +3063,7 @@
         "shap-e-text300m_better_chamfer_than_native": "7/12",
         "zimage-triposr_better_chamfer_than_native": "4/6",
         "zimage-triposr-v2_better_chamfer_than_native": "6/12",
+        "zimage-triposr-anchorlora_better_chamfer_than_native": "5/12",
         "zimage-triposr_vs_shap_e": {
           "n_both_valid": 6,
           "better_chamfer": 3,
@@ -2610,6 +3101,26 @@
             "ci95": [
               -0.15670470111775722,
               0.022096948411896213
+            ]
+          }
+        },
+        "zimage-triposr-anchorlora_vs_shap_e": {
+          "n_both_valid": 12,
+          "better_chamfer": 3,
+          "paired_chamfer_delta": {
+            "n": 12,
+            "mean": 0.013747947502994927,
+            "ci95": [
+              0.0012592700624215916,
+              0.02511361905806053
+            ]
+          },
+          "paired_fscore@0.05_delta": {
+            "n": 12,
+            "mean": -0.12292242681375691,
+            "ci95": [
+              -0.22244104041492413,
+              -0.01690530880750588
             ]
           }
         }
@@ -4037,6 +4548,361 @@
         "objects_with_3_seeds": 12,
         "mean_within_object_std": 0.0035897288017142565,
         "seed_mean_chamfer_l1": 0.051999635225916975
+      },
+      "zimage-triposr-anchorlora": {
+        "rows": [
+          {
+            "prompt": "a blue coffee mug",
+            "seeds": [
+              {
+                "seed": 0,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.04799924770327159,
+                "fscore@0.05": 0.6657312950825675
+              },
+              {
+                "seed": 1,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.0476865698750769,
+                "fscore@0.05": 0.639296480525575
+              },
+              {
+                "seed": 2,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.0454847248928128,
+                "fscore@0.05": 0.703194944360489
+              }
+            ],
+            "n": 3,
+            "chamfer_l1_mean": 0.0470568474903871,
+            "chamfer_l1_std": 0.0011189634943148503
+          },
+          {
+            "prompt": "a white porcelain teapot",
+            "seeds": [
+              {
+                "seed": 0,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.0872084294131635,
+                "fscore@0.05": 0.3402929003774122
+              },
+              {
+                "seed": 1,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.05922310340554277,
+                "fscore@0.05": 0.5455424155903014
+              },
+              {
+                "seed": 2,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.07750170435018852,
+                "fscore@0.05": 0.3512947877114256
+              }
+            ],
+            "n": 3,
+            "chamfer_l1_mean": 0.0746444123896316,
+            "chamfer_l1_std": 0.011602232714700523
+          },
+          {
+            "prompt": "a white porcelain pitcher",
+            "seeds": [
+              {
+                "seed": 0,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.05952012453212922,
+                "fscore@0.05": 0.4815594199917729
+              },
+              {
+                "seed": 1,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.06452260285260371,
+                "fscore@0.05": 0.35627320080349106
+              },
+              {
+                "seed": 2,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.031031688699508304,
+                "fscore@0.05": 0.8368921859662691
+              }
+            ],
+            "n": 3,
+            "chamfer_l1_mean": 0.051691472028080415,
+            "chamfer_l1_std": 0.014750732924714032
+          },
+          {
+            "prompt": "a deep bowl",
+            "seeds": [
+              {
+                "seed": 0,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.052704231406382,
+                "fscore@0.05": 0.6868616073052716
+              },
+              {
+                "seed": 1,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.032923703918444173,
+                "fscore@0.05": 0.8242353071104387
+              },
+              {
+                "seed": 2,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.029745860937592836,
+                "fscore@0.05": 0.8482640009415365
+              }
+            ],
+            "n": 3,
+            "chamfer_l1_mean": 0.03845793208747301,
+            "chamfer_l1_std": 0.010156851701050438
+          },
+          {
+            "prompt": "a teal plastic easter basket",
+            "seeds": [
+              {
+                "seed": 0,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.08545952238512688,
+                "fscore@0.05": 0.4382963502831193
+              },
+              {
+                "seed": 1,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.05245046958403404,
+                "fscore@0.05": 0.6256127591579115
+              },
+              {
+                "seed": 2,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.0903969624672454,
+                "fscore@0.05": 0.3910005842011684
+              }
+            ],
+            "n": 3,
+            "chamfer_l1_mean": 0.07610231814546878,
+            "chamfer_l1_std": 0.016845415477628908
+          },
+          {
+            "prompt": "a men's boot",
+            "seeds": [
+              {
+                "seed": 0,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.019347992347948165,
+                "fscore@0.05": 0.9729324564558394
+              },
+              {
+                "seed": 1,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.04849063090999678,
+                "fscore@0.05": 0.5485782852999819
+              },
+              {
+                "seed": 2,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.040208961886927096,
+                "fscore@0.05": 0.7220369443393957
+              }
+            ],
+            "n": 3,
+            "chamfer_l1_mean": 0.036015861714957347,
+            "chamfer_l1_std": 0.012261318917057286
+          },
+          {
+            "prompt": "a boat shoe",
+            "seeds": [
+              {
+                "seed": 0,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.03489702683316768,
+                "fscore@0.05": 0.7205995638990154
+              },
+              {
+                "seed": 1,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.06628967781548764,
+                "fscore@0.05": 0.41673053250956166
+              },
+              {
+                "seed": 2,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.041741044168182376,
+                "fscore@0.05": 0.6491814354435251
+              }
+            ],
+            "n": 3,
+            "chamfer_l1_mean": 0.04764258293894589,
+            "chamfer_l1_std": 0.013478272733590098
+          },
+          {
+            "prompt": "a school bus",
+            "seeds": [
+              {
+                "seed": 0,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.0664581206449954,
+                "fscore@0.05": 0.4196414946579404
+              },
+              {
+                "seed": 1,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.0424562299212442,
+                "fscore@0.05": 0.6671708700048687
+              },
+              {
+                "seed": 2,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.14017022959182562,
+                "fscore@0.05": 0.12907945964669207
+              }
+            ],
+            "n": 3,
+            "chamfer_l1_mean": 0.08302819338602174,
+            "chamfer_l1_std": 0.04157669151409858
+          },
+          {
+            "prompt": "a turboprop airplane with a pilot",
+            "seeds": [
+              {
+                "seed": 0,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.09116997478402214,
+                "fscore@0.05": 0.3476850084857627
+              },
+              {
+                "seed": 1,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.09125425699392975,
+                "fscore@0.05": 0.3059295100028994
+              },
+              {
+                "seed": 2,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.08622837921390346,
+                "fscore@0.05": 0.34447958876301493
+              }
+            ],
+            "n": 3,
+            "chamfer_l1_mean": 0.08955087033061844,
+            "chamfer_l1_std": 0.0023496079514412965
+          },
+          {
+            "prompt": "a beige teddy bear",
+            "seeds": [
+              {
+                "seed": 0,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.060415808770293136,
+                "fscore@0.05": 0.511852308134797
+              },
+              {
+                "seed": 1,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.041983688976027445,
+                "fscore@0.05": 0.6596474886535552
+              },
+              {
+                "seed": 2,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.05715689354905154,
+                "fscore@0.05": 0.5244436201780415
+              }
+            ],
+            "n": 3,
+            "chamfer_l1_mean": 0.05318546376512404,
+            "chamfer_l1_std": 0.008031809714049095
+          },
+          {
+            "prompt": "a C-clamp",
+            "seeds": [
+              {
+                "seed": 0,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.07015923099532405,
+                "fscore@0.05": 0.35600600875187777
+              },
+              {
+                "seed": 1,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.13964349384135488,
+                "fscore@0.05": 0.13857805970149253
+              },
+              {
+                "seed": 2,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.09816350556448405,
+                "fscore@0.05": 0.26503930875917825
+              }
+            ],
+            "n": 3,
+            "chamfer_l1_mean": 0.102655410133721,
+            "chamfer_l1_std": 0.028544101560082125
+          },
+          {
+            "prompt": "an elephant",
+            "seeds": [
+              {
+                "seed": 0,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.04996956908034063,
+                "fscore@0.05": 0.6095024274427935
+              },
+              {
+                "seed": 1,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.06055480268754329,
+                "fscore@0.05": 0.5065587227641093
+              },
+              {
+                "seed": 2,
+                "status": "ok",
+                "device": "cuda",
+                "chamfer_l1": 0.0464971689038217,
+                "fscore@0.05": 0.6276918017121242
+              }
+            ],
+            "n": 3,
+            "chamfer_l1_mean": 0.05234051355723521,
+            "chamfer_l1_std": 0.005978868353554058
+          }
+        ],
+        "objects_with_3_seeds": 12,
+        "mean_within_object_std": 0.013891238921356774,
+        "seed_mean_chamfer_l1": 0.06269765649730538
       }
     }
   },
@@ -4644,6 +5510,134 @@
         ]
       },
       {
+        "candidate": "zimage-triposr-anchorlora",
+        "n": 20,
+        "r_at_1": 0.25,
+        "r_at_5": 0.6,
+        "per_prompt": [
+          {
+            "prompt": "a blue coffee mug",
+            "generator": "zimage-triposr-anchorlora",
+            "status": "ok",
+            "rank": 1
+          },
+          {
+            "prompt": "a white porcelain teapot",
+            "generator": "zimage-triposr-anchorlora",
+            "status": "ok",
+            "rank": 26
+          },
+          {
+            "prompt": "a white porcelain pitcher",
+            "generator": "zimage-triposr-anchorlora",
+            "status": "ok",
+            "rank": 13
+          },
+          {
+            "prompt": "a deep bowl",
+            "generator": "zimage-triposr-anchorlora",
+            "status": "ok",
+            "rank": 4
+          },
+          {
+            "prompt": "a teal plastic easter basket",
+            "generator": "zimage-triposr-anchorlora",
+            "status": "ok",
+            "rank": 22
+          },
+          {
+            "prompt": "a men's boot",
+            "generator": "zimage-triposr-anchorlora",
+            "status": "ok",
+            "rank": 1
+          },
+          {
+            "prompt": "a boat shoe",
+            "generator": "zimage-triposr-anchorlora",
+            "status": "ok",
+            "rank": 2
+          },
+          {
+            "prompt": "a school bus",
+            "generator": "zimage-triposr-anchorlora",
+            "status": "ok",
+            "rank": 11
+          },
+          {
+            "prompt": "a turboprop airplane with a pilot",
+            "generator": "zimage-triposr-anchorlora",
+            "status": "ok",
+            "rank": 17
+          },
+          {
+            "prompt": "a beige teddy bear",
+            "generator": "zimage-triposr-anchorlora",
+            "status": "ok",
+            "rank": 3
+          },
+          {
+            "prompt": "a C-clamp",
+            "generator": "zimage-triposr-anchorlora",
+            "status": "ok",
+            "rank": 4
+          },
+          {
+            "prompt": "an elephant",
+            "generator": "zimage-triposr-anchorlora",
+            "status": "ok",
+            "rank": 2
+          },
+          {
+            "prompt": "a bicycle",
+            "generator": "zimage-triposr-anchorlora",
+            "status": "ok",
+            "rank": 5
+          },
+          {
+            "prompt": "a ladder",
+            "generator": "zimage-triposr-anchorlora",
+            "status": "ok",
+            "rank": 11
+          },
+          {
+            "prompt": "a hammer",
+            "generator": "zimage-triposr-anchorlora",
+            "status": "ok",
+            "rank": 1
+          },
+          {
+            "prompt": "a watering can",
+            "generator": "zimage-triposr-anchorlora",
+            "status": "ok",
+            "rank": 1
+          },
+          {
+            "prompt": "a flower vase",
+            "generator": "zimage-triposr-anchorlora",
+            "status": "ok",
+            "rank": 1
+          },
+          {
+            "prompt": "an open cardboard box",
+            "generator": "zimage-triposr-anchorlora",
+            "status": "ok",
+            "rank": 21
+          },
+          {
+            "prompt": "a glass wine bottle",
+            "generator": "zimage-triposr-anchorlora",
+            "status": "ok",
+            "rank": 4
+          },
+          {
+            "prompt": "a shiny metal trophy",
+            "generator": "zimage-triposr-anchorlora",
+            "status": "ok",
+            "rank": 10
+          }
+        ]
+      },
+      {
         "candidate": "auto",
         "n": 20,
         "r_at_1": 0.95,
@@ -4923,6 +5917,34 @@
           "view_psnr": 11.512095020316808,
           "view_ssim": 0.5434327498078346,
           "lpips": null
+        },
+        "zimage-triposr-anchorlora": {
+          "asset_id": "next_to__box_box__000",
+          "family": "next_to:box+box",
+          "caption": "a blue box next to a small yellow box",
+          "generator": "zimage-triposr-anchorlora",
+          "seconds": 214.39,
+          "success": true,
+          "n_faces": 189314,
+          "components": 1,
+          "watertight": false,
+          "edge_manifold": true,
+          "degenerate_faces": 0,
+          "in_bounds": true,
+          "chamfer_l1": 0.18077253755407216,
+          "chamfer_l2": 0.04516367842718271,
+          "normal_consistency": 0.6503573656082153,
+          "status": "measured",
+          "fscore@0.02": 0.04367072480181201,
+          "fscore@0.05": 0.12256503623188404,
+          "gt_components": 2,
+          "part_count_correct": false,
+          "color_parts_correct": 0,
+          "color_parts_total": 2,
+          "color_mae": 0.36404275278250375,
+          "view_psnr": 10.93441040414656,
+          "view_ssim": 0.4788661301136017,
+          "lpips": null
         }
       },
       {
@@ -5071,6 +6093,34 @@
           "color_mae": 0.38902243832747146,
           "view_psnr": 13.154508207997782,
           "view_ssim": 0.6345952600240707,
+          "lpips": null
+        },
+        "zimage-triposr-anchorlora": {
+          "asset_id": "next_to__cylinder_cone__000",
+          "family": "next_to:cylinder+cone",
+          "caption": "a small yellow cylinder to the left of a small white cone",
+          "generator": "zimage-triposr-anchorlora",
+          "seconds": 179.71,
+          "success": true,
+          "n_faces": 74978,
+          "components": 2,
+          "watertight": false,
+          "edge_manifold": true,
+          "degenerate_faces": 0,
+          "in_bounds": true,
+          "chamfer_l1": 0.1667468679381782,
+          "chamfer_l2": 0.046873816350278125,
+          "normal_consistency": 0.7797461748123169,
+          "status": "measured",
+          "fscore@0.02": 0.10196895803183792,
+          "fscore@0.05": 0.25996654380493334,
+          "gt_components": 2,
+          "part_count_correct": true,
+          "color_parts_correct": 0,
+          "color_parts_total": 2,
+          "color_mae": 0.42868463059266415,
+          "view_psnr": 11.306801930249327,
+          "view_ssim": 0.6080864816904068,
           "lpips": null
         }
       },
@@ -5221,6 +6271,34 @@
           "view_psnr": 11.71161531035946,
           "view_ssim": 0.5791158229112625,
           "lpips": null
+        },
+        "zimage-triposr-anchorlora": {
+          "asset_id": "next_to__sphere_cone__000",
+          "family": "next_to:sphere+cone",
+          "caption": "a large green sphere next to a purple cone",
+          "generator": "zimage-triposr-anchorlora",
+          "seconds": 174.16,
+          "success": true,
+          "n_faces": 70802,
+          "components": 3,
+          "watertight": true,
+          "edge_manifold": true,
+          "degenerate_faces": 0,
+          "in_bounds": true,
+          "chamfer_l1": 0.23120996462342866,
+          "chamfer_l2": 0.07555968040711092,
+          "normal_consistency": 0.6733516454696655,
+          "status": "measured",
+          "fscore@0.02": 0.03901779846659365,
+          "fscore@0.05": 0.10732614139857447,
+          "gt_components": 2,
+          "part_count_correct": false,
+          "color_parts_correct": 2,
+          "color_parts_total": 2,
+          "color_mae": 0.22465589344501496,
+          "view_psnr": 8.623922231293896,
+          "view_ssim": 0.44753398001194,
+          "lpips": null
         }
       },
       {
@@ -5369,6 +6447,34 @@
           "color_mae": 0.29199314018090566,
           "view_psnr": 13.747262008317986,
           "view_ssim": 0.719684049487114,
+          "lpips": null
+        },
+        "zimage-triposr-anchorlora": {
+          "asset_id": "next_to__torus_torus__000",
+          "family": "next_to:torus+torus",
+          "caption": "a small cyan torus next to a purple torus",
+          "generator": "zimage-triposr-anchorlora",
+          "seconds": 174.12,
+          "success": true,
+          "n_faces": 58558,
+          "components": 8,
+          "watertight": true,
+          "edge_manifold": true,
+          "degenerate_faces": 0,
+          "in_bounds": true,
+          "chamfer_l1": 0.08786139707257051,
+          "chamfer_l2": 0.012338672154881035,
+          "normal_consistency": 0.5069429278373718,
+          "status": "measured",
+          "fscore@0.02": 0.1391522569134701,
+          "fscore@0.05": 0.3532501826099172,
+          "gt_components": 2,
+          "part_count_correct": false,
+          "color_parts_correct": 0,
+          "color_parts_total": 2,
+          "color_mae": 0.3181972543398539,
+          "view_psnr": 14.474878767776554,
+          "view_ssim": 0.7726646214723587,
           "lpips": null
         }
       },
@@ -5519,6 +6625,34 @@
           "view_psnr": 9.911903534998062,
           "view_ssim": 0.4672008529305458,
           "lpips": null
+        },
+        "zimage-triposr-anchorlora": {
+          "asset_id": "on_top_of__cylinder_sphere__000",
+          "family": "on_top_of:cylinder+sphere",
+          "caption": "a small cyan sphere with a green cylinder on top",
+          "generator": "zimage-triposr-anchorlora",
+          "seconds": 208.47,
+          "success": true,
+          "n_faces": 158695,
+          "components": 59,
+          "watertight": false,
+          "edge_manifold": true,
+          "degenerate_faces": 0,
+          "in_bounds": true,
+          "chamfer_l1": 0.14655894733912728,
+          "chamfer_l2": 0.028607194141489115,
+          "normal_consistency": 0.70888352394104,
+          "status": "measured",
+          "fscore@0.02": 0.03883791208791209,
+          "fscore@0.05": 0.13377720460090625,
+          "gt_components": 1,
+          "part_count_correct": false,
+          "color_parts_correct": 0,
+          "color_parts_total": 2,
+          "color_mae": 0.26366511831680933,
+          "view_psnr": 10.1200598913404,
+          "view_ssim": 0.5064451172947884,
+          "lpips": null
         }
       },
       {
@@ -5667,6 +6801,34 @@
           "color_mae": 0.20529837836821874,
           "view_psnr": 11.89665933087776,
           "view_ssim": 0.6366230398416519,
+          "lpips": null
+        },
+        "zimage-triposr-anchorlora": {
+          "asset_id": "on_top_of__sphere_sphere__000",
+          "family": "on_top_of:sphere+sphere",
+          "caption": "a small green sphere with a large red sphere on top",
+          "generator": "zimage-triposr-anchorlora",
+          "seconds": 189.18,
+          "success": true,
+          "n_faces": 101029,
+          "components": 1,
+          "watertight": false,
+          "edge_manifold": true,
+          "degenerate_faces": 0,
+          "in_bounds": true,
+          "chamfer_l1": 0.15286048354599457,
+          "chamfer_l2": 0.03529808728910764,
+          "normal_consistency": 0.6493677496910095,
+          "status": "measured",
+          "fscore@0.02": 0.07959384422110552,
+          "fscore@0.05": 0.20301921940408768,
+          "gt_components": 1,
+          "part_count_correct": true,
+          "color_parts_correct": 1,
+          "color_parts_total": 2,
+          "color_mae": 0.2116057840983073,
+          "view_psnr": 11.403409097379773,
+          "view_ssim": 0.6162764728069305,
           "lpips": null
         }
       },
@@ -5817,6 +6979,34 @@
           "view_psnr": 12.115393334086818,
           "view_ssim": 0.44563502073287964,
           "lpips": null
+        },
+        "zimage-triposr-anchorlora": {
+          "asset_id": "on_top_of__sphere_torus__000",
+          "family": "on_top_of:sphere+torus",
+          "caption": "a large white sphere stacked on a large cyan torus",
+          "generator": "zimage-triposr-anchorlora",
+          "seconds": 213.82,
+          "success": true,
+          "n_faces": 170195,
+          "components": 17,
+          "watertight": false,
+          "edge_manifold": true,
+          "degenerate_faces": 0,
+          "in_bounds": true,
+          "chamfer_l1": 0.12717426550497077,
+          "chamfer_l2": 0.029116073827971545,
+          "normal_consistency": 0.6503915786743164,
+          "status": "measured",
+          "fscore@0.02": 0.08762589743589744,
+          "fscore@0.05": 0.2409899191877331,
+          "gt_components": 2,
+          "part_count_correct": false,
+          "color_parts_correct": 0,
+          "color_parts_total": 2,
+          "color_mae": 0.3580314016342164,
+          "view_psnr": 11.519232911774774,
+          "view_ssim": 0.41780100762844086,
+          "lpips": null
         }
       },
       {
@@ -5965,6 +7155,34 @@
           "color_mae": 0.1781486709912618,
           "view_psnr": 10.109585243832829,
           "view_ssim": 0.45541778951883316,
+          "lpips": null
+        },
+        "zimage-triposr-anchorlora": {
+          "asset_id": "on_top_of__torus_sphere__000",
+          "family": "on_top_of:torus+sphere",
+          "caption": "a small purple sphere with a cyan torus on top",
+          "generator": "zimage-triposr-anchorlora",
+          "seconds": 192.88,
+          "success": true,
+          "n_faces": 109331,
+          "components": 1,
+          "watertight": false,
+          "edge_manifold": true,
+          "degenerate_faces": 0,
+          "in_bounds": true,
+          "chamfer_l1": 0.1677374771793,
+          "chamfer_l2": 0.0365074817214547,
+          "normal_consistency": 0.6475244760513306,
+          "status": "measured",
+          "fscore@0.02": 0.043673840870062965,
+          "fscore@0.05": 0.1193194479297365,
+          "gt_components": 2,
+          "part_count_correct": false,
+          "color_parts_correct": 0,
+          "color_parts_total": 2,
+          "color_mae": 0.2959690282742182,
+          "view_psnr": 9.915915222571417,
+          "view_ssim": 0.42209742963314056,
           "lpips": null
         }
       },
@@ -6115,6 +7333,34 @@
           "view_psnr": 11.063063866286376,
           "view_ssim": 0.5068106576800346,
           "lpips": null
+        },
+        "zimage-triposr-anchorlora": {
+          "asset_id": "next_to__box_box__001",
+          "family": "next_to:box+box",
+          "caption": "a large yellow box next to a small orange box",
+          "generator": "zimage-triposr-anchorlora",
+          "seconds": 203.25,
+          "success": true,
+          "n_faces": 161529,
+          "components": 1,
+          "watertight": false,
+          "edge_manifold": true,
+          "degenerate_faces": 0,
+          "in_bounds": true,
+          "chamfer_l1": 0.15945689245079997,
+          "chamfer_l2": 0.03659391861461696,
+          "normal_consistency": 0.5847773551940918,
+          "status": "measured",
+          "fscore@0.02": 0.05458723784024989,
+          "fscore@0.05": 0.1528192398675288,
+          "gt_components": 2,
+          "part_count_correct": false,
+          "color_parts_correct": 1,
+          "color_parts_total": 2,
+          "color_mae": 0.27369928975900015,
+          "view_psnr": 11.073308918985314,
+          "view_ssim": 0.5053577572107315,
+          "lpips": null
         }
       },
       {
@@ -6263,6 +7509,34 @@
           "color_mae": 0.13170889049768447,
           "view_psnr": 12.247364802584798,
           "view_ssim": 0.6294692158699036,
+          "lpips": null
+        },
+        "zimage-triposr-anchorlora": {
+          "asset_id": "next_to__sphere_cone__001",
+          "family": "next_to:sphere+cone",
+          "caption": "a blue sphere beside a large purple cone",
+          "generator": "zimage-triposr-anchorlora",
+          "seconds": 186.88,
+          "success": true,
+          "n_faces": 103558,
+          "components": 3,
+          "watertight": false,
+          "edge_manifold": true,
+          "degenerate_faces": 0,
+          "in_bounds": true,
+          "chamfer_l1": 0.12789323945136724,
+          "chamfer_l2": 0.023582456704813688,
+          "normal_consistency": 0.6317583322525024,
+          "status": "measured",
+          "fscore@0.02": 0.07692450758798838,
+          "fscore@0.05": 0.21024038665566425,
+          "gt_components": 2,
+          "part_count_correct": false,
+          "color_parts_correct": 0,
+          "color_parts_total": 2,
+          "color_mae": 0.24096492459376653,
+          "view_psnr": 11.552906233556875,
+          "view_ssim": 0.6283830851316452,
           "lpips": null
         }
       },
@@ -6413,6 +7687,34 @@
           "view_psnr": 11.292629190514095,
           "view_ssim": 0.4760777875781059,
           "lpips": null
+        },
+        "zimage-triposr-anchorlora": {
+          "asset_id": "on_top_of__cylinder_sphere__001",
+          "family": "on_top_of:cylinder+sphere",
+          "caption": "a yellow sphere with a white cylinder on top",
+          "generator": "zimage-triposr-anchorlora",
+          "seconds": 200.91,
+          "success": true,
+          "n_faces": 147413,
+          "components": 5,
+          "watertight": false,
+          "edge_manifold": true,
+          "degenerate_faces": 0,
+          "in_bounds": true,
+          "chamfer_l1": 0.22536792126374666,
+          "chamfer_l2": 0.06860009155406352,
+          "normal_consistency": 0.7587426900863647,
+          "status": "measured",
+          "fscore@0.02": 0.0441936274509804,
+          "fscore@0.05": 0.10866086956521738,
+          "gt_components": 1,
+          "part_count_correct": false,
+          "color_parts_correct": 0,
+          "color_parts_total": 2,
+          "color_mae": 0.43231500049432114,
+          "view_psnr": 10.31507538356054,
+          "view_ssim": 0.479355625808239,
+          "lpips": null
         }
       },
       {
@@ -6562,6 +7864,34 @@
           "view_psnr": 9.836583212848094,
           "view_ssim": 0.46851083636283875,
           "lpips": null
+        },
+        "zimage-triposr-anchorlora": {
+          "asset_id": "on_top_of__sphere_torus__001",
+          "family": "on_top_of:sphere+torus",
+          "caption": "a cyan torus with a small red sphere on top",
+          "generator": "zimage-triposr-anchorlora",
+          "seconds": 222.37,
+          "success": true,
+          "n_faces": 191001,
+          "components": 1,
+          "watertight": false,
+          "edge_manifold": true,
+          "degenerate_faces": 0,
+          "in_bounds": true,
+          "chamfer_l1": 0.19087027654441624,
+          "chamfer_l2": 0.04939579180140752,
+          "normal_consistency": 0.6913508176803589,
+          "status": "measured",
+          "fscore@0.02": 0.03823579359895493,
+          "fscore@0.05": 0.117,
+          "gt_components": 2,
+          "part_count_correct": false,
+          "color_parts_correct": 0,
+          "color_parts_total": 2,
+          "color_mae": 0.3890867494543393,
+          "view_psnr": 8.50164870454599,
+          "view_ssim": 0.330037884414196,
+          "lpips": null
         }
       }
     ],
@@ -6605,6 +7935,14 @@
         "fscore@0.05_mean": 0.19915864394103175,
         "part_count_accuracy": 0.08333333333333333,
         "color_accuracy": 0.4166666666666667
+      },
+      "zimage-triposr-anchorlora": {
+        "n": 12,
+        "success_rate": 1.0,
+        "chamfer_l1_mean": 0.16370918920566435,
+        "fscore@0.05_mean": 0.17741118260468194,
+        "part_count_accuracy": 0.16666666666666666,
+        "color_accuracy": 0.16666666666666666
       }
     }
   },
@@ -6888,6 +8226,72 @@
           "aligned_fscore@0.05": 0.5313069379793413,
           "touch_components": 2,
           "touch_part_count_correct": true
+        },
+        "zimage-triposr-anchorlora:single": {
+          "asset_id": "next_to__box_box__003",
+          "family": "next_to:box+box",
+          "caption": "a large green box to the left of a purple box",
+          "generator": "zimage-triposr-anchorlora:single",
+          "seconds": 185.63,
+          "success": true,
+          "n_faces": 102484,
+          "components": 1,
+          "watertight": true,
+          "edge_manifold": true,
+          "degenerate_faces": 0,
+          "in_bounds": true,
+          "chamfer_l1": 0.13787785917647932,
+          "chamfer_l2": 0.030777431339935997,
+          "normal_consistency": 0.5696243047714233,
+          "status": "measured",
+          "fscore@0.02": 0.08562377215925604,
+          "fscore@0.05": 0.23175994848679973,
+          "gt_components": 2,
+          "part_count_correct": false,
+          "color_parts_correct": 1,
+          "color_parts_total": 2,
+          "color_mae": 0.2428214172522227,
+          "view_psnr": 10.81174561665369,
+          "view_ssim": 0.567927673459053,
+          "lpips": null,
+          "device": "cuda",
+          "aligned_chamfer_l1": 0.05631375415815769,
+          "aligned_fscore@0.05": 0.5065881628834507,
+          "touch_components": 1,
+          "touch_part_count_correct": false
+        },
+        "zimage-triposr-anchorlora:planner": {
+          "asset_id": "next_to__box_box__003",
+          "family": "next_to:box+box",
+          "caption": "a large green box to the left of a purple box",
+          "generator": "zimage-triposr-anchorlora:planner",
+          "seconds": 416.7,
+          "success": true,
+          "n_faces": 335962,
+          "components": 2,
+          "watertight": false,
+          "edge_manifold": true,
+          "degenerate_faces": 0,
+          "in_bounds": true,
+          "chamfer_l1": 0.08768009262782078,
+          "chamfer_l2": 0.011785456756812805,
+          "normal_consistency": 0.720646321773529,
+          "status": "measured",
+          "fscore@0.02": 0.1230746218487395,
+          "fscore@0.05": 0.34032223943946643,
+          "gt_components": 2,
+          "part_count_correct": true,
+          "color_parts_correct": 2,
+          "color_parts_total": 2,
+          "color_mae": 0.1981558620929718,
+          "view_psnr": 12.123538869348286,
+          "view_ssim": 0.6532418727874756,
+          "lpips": null,
+          "device": "cuda",
+          "aligned_chamfer_l1": 0.053850972478449874,
+          "aligned_fscore@0.05": 0.5069438830897703,
+          "touch_components": 2,
+          "touch_part_count_correct": true
         }
       },
       {
@@ -7168,6 +8572,72 @@
           "aligned_fscore@0.05": 0.7542379955441976,
           "touch_components": 2,
           "touch_part_count_correct": true
+        },
+        "zimage-triposr-anchorlora:single": {
+          "asset_id": "next_to__cylinder_cone__003",
+          "family": "next_to:cylinder+cone",
+          "caption": "a small green cylinder beside a cyan cone",
+          "generator": "zimage-triposr-anchorlora:single",
+          "seconds": 178.63,
+          "success": true,
+          "n_faces": 79808,
+          "components": 4,
+          "watertight": true,
+          "edge_manifold": true,
+          "degenerate_faces": 0,
+          "in_bounds": true,
+          "chamfer_l1": 0.20017274976461405,
+          "chamfer_l2": 0.05778535164402941,
+          "normal_consistency": 0.45880770683288574,
+          "status": "measured",
+          "fscore@0.02": 0.055835496866606986,
+          "fscore@0.05": 0.14618960040983608,
+          "gt_components": 2,
+          "part_count_correct": false,
+          "color_parts_correct": 1,
+          "color_parts_total": 2,
+          "color_mae": 0.27622428685426714,
+          "view_psnr": 10.112887957626494,
+          "view_ssim": 0.5850170999765396,
+          "lpips": null,
+          "device": "cuda",
+          "aligned_chamfer_l1": 0.04289025747343919,
+          "aligned_fscore@0.05": 0.698048933199685,
+          "touch_components": 4,
+          "touch_part_count_correct": false
+        },
+        "zimage-triposr-anchorlora:planner": {
+          "asset_id": "next_to__cylinder_cone__003",
+          "family": "next_to:cylinder+cone",
+          "caption": "a small green cylinder beside a cyan cone",
+          "generator": "zimage-triposr-anchorlora:planner",
+          "seconds": 370.27,
+          "success": true,
+          "n_faces": 201598,
+          "components": 6,
+          "watertight": false,
+          "edge_manifold": true,
+          "degenerate_faces": 0,
+          "in_bounds": true,
+          "chamfer_l1": 0.07121864398960617,
+          "chamfer_l2": 0.00790989097803739,
+          "normal_consistency": 0.761810302734375,
+          "status": "measured",
+          "fscore@0.02": 0.18211804172916948,
+          "fscore@0.05": 0.43408033972225407,
+          "gt_components": 2,
+          "part_count_correct": false,
+          "color_parts_correct": 1,
+          "color_parts_total": 2,
+          "color_mae": 0.15974129885435107,
+          "view_psnr": 13.92375990530131,
+          "view_ssim": 0.7202712148427963,
+          "lpips": null,
+          "device": "cuda",
+          "aligned_chamfer_l1": 0.03483942685483566,
+          "aligned_fscore@0.05": 0.765972531740592,
+          "touch_components": 5,
+          "touch_part_count_correct": false
         }
       },
       {
@@ -7448,6 +8918,72 @@
           "aligned_fscore@0.05": 0.7511372516390987,
           "touch_components": 9,
           "touch_part_count_correct": false
+        },
+        "zimage-triposr-anchorlora:single": {
+          "asset_id": "next_to__sphere_cone__003",
+          "family": "next_to:sphere+cone",
+          "caption": "a blue sphere next to a small yellow cone",
+          "generator": "zimage-triposr-anchorlora:single",
+          "seconds": 209.26,
+          "success": true,
+          "n_faces": 166656,
+          "components": 24,
+          "watertight": false,
+          "edge_manifold": true,
+          "degenerate_faces": 0,
+          "in_bounds": true,
+          "chamfer_l1": 0.24062226761117522,
+          "chamfer_l2": 0.08342217850507427,
+          "normal_consistency": 0.721429705619812,
+          "status": "measured",
+          "fscore@0.02": 0.051508815088150875,
+          "fscore@0.05": 0.13844719570405728,
+          "gt_components": 2,
+          "part_count_correct": false,
+          "color_parts_correct": 1,
+          "color_parts_total": 2,
+          "color_mae": 0.4012588399648666,
+          "view_psnr": 8.443806155180486,
+          "view_ssim": 0.43416524678468704,
+          "lpips": null,
+          "device": "cuda",
+          "aligned_chamfer_l1": 0.14677077860973942,
+          "aligned_fscore@0.05": 0.18815452502070273,
+          "touch_components": 19,
+          "touch_part_count_correct": false
+        },
+        "zimage-triposr-anchorlora:planner": {
+          "asset_id": "next_to__sphere_cone__003",
+          "family": "next_to:sphere+cone",
+          "caption": "a blue sphere next to a small yellow cone",
+          "generator": "zimage-triposr-anchorlora:planner",
+          "seconds": 373.2,
+          "success": true,
+          "n_faces": 202982,
+          "components": 12,
+          "watertight": false,
+          "edge_manifold": true,
+          "degenerate_faces": 0,
+          "in_bounds": true,
+          "chamfer_l1": 0.06584746028170532,
+          "chamfer_l2": 0.0055574477404626895,
+          "normal_consistency": 0.8604040741920471,
+          "status": "measured",
+          "fscore@0.02": 0.11502180712423979,
+          "fscore@0.05": 0.3415244112915021,
+          "gt_components": 2,
+          "part_count_correct": false,
+          "color_parts_correct": 1,
+          "color_parts_total": 2,
+          "color_mae": 0.20289352506399155,
+          "view_psnr": 15.320473291740484,
+          "view_ssim": 0.7605514079332352,
+          "lpips": null,
+          "device": "cuda",
+          "aligned_chamfer_l1": 0.03104953237030438,
+          "aligned_fscore@0.05": 0.7781991775893087,
+          "touch_components": 8,
+          "touch_part_count_correct": false
         }
       },
       {
@@ -7726,6 +9262,72 @@
           "device": "cuda",
           "aligned_chamfer_l1": 0.05790915329202523,
           "aligned_fscore@0.05": 0.5286654374481423,
+          "touch_components": 2,
+          "touch_part_count_correct": true
+        },
+        "zimage-triposr-anchorlora:single": {
+          "asset_id": "next_to__torus_torus__003",
+          "family": "next_to:torus+torus",
+          "caption": "a large white torus next to a large cyan torus",
+          "generator": "zimage-triposr-anchorlora:single",
+          "seconds": 199.14,
+          "success": true,
+          "n_faces": 121831,
+          "components": 1,
+          "watertight": false,
+          "edge_manifold": true,
+          "degenerate_faces": 0,
+          "in_bounds": true,
+          "chamfer_l1": 0.34974329034250007,
+          "chamfer_l2": 0.15801207196204498,
+          "normal_consistency": 0.6351451277732849,
+          "status": "measured",
+          "fscore@0.02": 0.016183551847437423,
+          "fscore@0.05": 0.04278559724018974,
+          "gt_components": 2,
+          "part_count_correct": false,
+          "color_parts_correct": 0,
+          "color_parts_total": 2,
+          "color_mae": 0.43630066722631455,
+          "view_psnr": 8.021241722159266,
+          "view_ssim": 0.40497986972332,
+          "lpips": null,
+          "device": "cuda",
+          "aligned_chamfer_l1": 0.2118519770233417,
+          "aligned_fscore@0.05": 0.0933684306569343,
+          "touch_components": 1,
+          "touch_part_count_correct": false
+        },
+        "zimage-triposr-anchorlora:planner": {
+          "asset_id": "next_to__torus_torus__003",
+          "family": "next_to:torus+torus",
+          "caption": "a large white torus next to a large cyan torus",
+          "generator": "zimage-triposr-anchorlora:planner",
+          "seconds": 411.7,
+          "success": true,
+          "n_faces": 306281,
+          "components": 3,
+          "watertight": false,
+          "edge_manifold": true,
+          "degenerate_faces": 0,
+          "in_bounds": true,
+          "chamfer_l1": 0.1105260575540944,
+          "chamfer_l2": 0.019221906297139726,
+          "normal_consistency": 0.5681918859481812,
+          "status": "measured",
+          "fscore@0.02": 0.12269221484610743,
+          "fscore@0.05": 0.31008863527914743,
+          "gt_components": 2,
+          "part_count_correct": false,
+          "color_parts_correct": 0,
+          "color_parts_total": 2,
+          "color_mae": 0.3172150821487109,
+          "view_psnr": 14.47817728781604,
+          "view_ssim": 0.7432273477315903,
+          "lpips": null,
+          "device": "cuda",
+          "aligned_chamfer_l1": 0.037343064784211615,
+          "aligned_fscore@0.05": 0.7370784950215284,
           "touch_components": 2,
           "touch_part_count_correct": true
         }
@@ -8008,6 +9610,72 @@
           "aligned_fscore@0.05": 0.9349674355205131,
           "touch_components": 2,
           "touch_part_count_correct": false
+        },
+        "zimage-triposr-anchorlora:single": {
+          "asset_id": "on_top_of__cylinder_sphere__003",
+          "family": "on_top_of:cylinder+sphere",
+          "caption": "a large orange cylinder on top of a small yellow sphere",
+          "generator": "zimage-triposr-anchorlora:single",
+          "seconds": 199.72,
+          "success": true,
+          "n_faces": 139150,
+          "components": 2,
+          "watertight": false,
+          "edge_manifold": true,
+          "degenerate_faces": 0,
+          "in_bounds": true,
+          "chamfer_l1": 0.09897729362488701,
+          "chamfer_l2": 0.012723863312796603,
+          "normal_consistency": 0.8467487096786499,
+          "status": "measured",
+          "fscore@0.02": 0.0989219975031211,
+          "fscore@0.05": 0.24528861011549186,
+          "gt_components": 1,
+          "part_count_correct": false,
+          "color_parts_correct": 1,
+          "color_parts_total": 2,
+          "color_mae": 0.304842359026273,
+          "view_psnr": 13.027356810108595,
+          "view_ssim": 0.6237790435552597,
+          "lpips": null,
+          "device": "cuda",
+          "aligned_chamfer_l1": 0.05998903046444505,
+          "aligned_fscore@0.05": 0.37935846810712903,
+          "touch_components": 2,
+          "touch_part_count_correct": false
+        },
+        "zimage-triposr-anchorlora:planner": {
+          "asset_id": "on_top_of__cylinder_sphere__003",
+          "family": "on_top_of:cylinder+sphere",
+          "caption": "a large orange cylinder on top of a small yellow sphere",
+          "generator": "zimage-triposr-anchorlora:planner",
+          "seconds": 400.92,
+          "success": true,
+          "n_faces": 280881,
+          "components": 2,
+          "watertight": false,
+          "edge_manifold": true,
+          "degenerate_faces": 0,
+          "in_bounds": true,
+          "chamfer_l1": 0.05887799230996962,
+          "chamfer_l2": 0.0062214070070228935,
+          "normal_consistency": 0.8337814807891846,
+          "status": "measured",
+          "fscore@0.02": 0.2179608938547486,
+          "fscore@0.05": 0.6114446015110894,
+          "gt_components": 1,
+          "part_count_correct": false,
+          "color_parts_correct": 0,
+          "color_parts_total": 2,
+          "color_mae": 0.34689177195231113,
+          "view_psnr": 14.488607776178672,
+          "view_ssim": 0.7123812884092331,
+          "lpips": null,
+          "device": "cuda",
+          "aligned_chamfer_l1": 0.035462254250825234,
+          "aligned_fscore@0.05": 0.7547636459223237,
+          "touch_components": 1,
+          "touch_part_count_correct": true
         }
       },
       {
@@ -8288,6 +9956,72 @@
           "aligned_fscore@0.05": 0.8830020609217529,
           "touch_components": 14,
           "touch_part_count_correct": false
+        },
+        "zimage-triposr-anchorlora:single": {
+          "asset_id": "on_top_of__sphere_sphere__003",
+          "family": "on_top_of:sphere+sphere",
+          "caption": "a large red sphere on top of a large cyan sphere",
+          "generator": "zimage-triposr-anchorlora:single",
+          "seconds": 194.09,
+          "success": true,
+          "n_faces": 113338,
+          "components": 1,
+          "watertight": false,
+          "edge_manifold": true,
+          "degenerate_faces": 0,
+          "in_bounds": true,
+          "chamfer_l1": 0.09885134272460519,
+          "chamfer_l2": 0.012495744875343783,
+          "normal_consistency": 0.8699403405189514,
+          "status": "measured",
+          "fscore@0.02": 0.08828241944601468,
+          "fscore@0.05": 0.23149843682621818,
+          "gt_components": 1,
+          "part_count_correct": true,
+          "color_parts_correct": 0,
+          "color_parts_total": 2,
+          "color_mae": 0.2692537370324135,
+          "view_psnr": 13.101113738543855,
+          "view_ssim": 0.6775743663311005,
+          "lpips": null,
+          "device": "cuda",
+          "aligned_chamfer_l1": 0.05566762964166214,
+          "aligned_fscore@0.05": 0.3714908141403321,
+          "touch_components": 1,
+          "touch_part_count_correct": true
+        },
+        "zimage-triposr-anchorlora:planner": {
+          "asset_id": "on_top_of__sphere_sphere__003",
+          "family": "on_top_of:sphere+sphere",
+          "caption": "a large red sphere on top of a large cyan sphere",
+          "generator": "zimage-triposr-anchorlora:planner",
+          "seconds": 400.57,
+          "success": true,
+          "n_faces": 276622,
+          "components": 3,
+          "watertight": false,
+          "edge_manifold": true,
+          "degenerate_faces": 0,
+          "in_bounds": true,
+          "chamfer_l1": 0.028090108854319604,
+          "chamfer_l2": 0.001263301283161431,
+          "normal_consistency": 0.9494786262512207,
+          "status": "measured",
+          "fscore@0.02": 0.4429215487075291,
+          "fscore@0.05": 0.8597748364397663,
+          "gt_components": 1,
+          "part_count_correct": false,
+          "color_parts_correct": 0,
+          "color_parts_total": 2,
+          "color_mae": 0.27624072511990866,
+          "view_psnr": 17.405320234508412,
+          "view_ssim": 0.8352088183164597,
+          "lpips": null,
+          "device": "cuda",
+          "aligned_chamfer_l1": 0.017754493944184706,
+          "aligned_fscore@0.05": 0.9473220383712031,
+          "touch_components": 1,
+          "touch_part_count_correct": true
         }
       },
       {
@@ -8567,6 +10301,72 @@
           "aligned_chamfer_l1": 0.12034730275542567,
           "aligned_fscore@0.05": 0.2396418797512094,
           "touch_components": 1,
+          "touch_part_count_correct": false
+        },
+        "zimage-triposr-anchorlora:single": {
+          "asset_id": "on_top_of__sphere_torus__003",
+          "family": "on_top_of:sphere+torus",
+          "caption": "a large green sphere on top of a large yellow torus",
+          "generator": "zimage-triposr-anchorlora:single",
+          "seconds": 206.5,
+          "success": true,
+          "n_faces": 155614,
+          "components": 1,
+          "watertight": false,
+          "edge_manifold": true,
+          "degenerate_faces": 0,
+          "in_bounds": true,
+          "chamfer_l1": 0.12058221392119506,
+          "chamfer_l2": 0.020572626543762934,
+          "normal_consistency": 0.6935340166091919,
+          "status": "measured",
+          "fscore@0.02": 0.06989195278969958,
+          "fscore@0.05": 0.21470920409588087,
+          "gt_components": 2,
+          "part_count_correct": false,
+          "color_parts_correct": 1,
+          "color_parts_total": 2,
+          "color_mae": 0.2924267580111821,
+          "view_psnr": 10.896130208554759,
+          "view_ssim": 0.45995549857616425,
+          "lpips": null,
+          "device": "cuda",
+          "aligned_chamfer_l1": 0.06541751435541102,
+          "aligned_fscore@0.05": 0.41924010494305647,
+          "touch_components": 1,
+          "touch_part_count_correct": false
+        },
+        "zimage-triposr-anchorlora:planner": {
+          "asset_id": "on_top_of__sphere_torus__003",
+          "family": "on_top_of:sphere+torus",
+          "caption": "a large green sphere on top of a large yellow torus",
+          "generator": "zimage-triposr-anchorlora:planner",
+          "seconds": 416.79,
+          "success": true,
+          "n_faces": 329186,
+          "components": 7,
+          "watertight": false,
+          "edge_manifold": true,
+          "degenerate_faces": 0,
+          "in_bounds": true,
+          "chamfer_l1": 0.19669439724212756,
+          "chamfer_l2": 0.054425479978853865,
+          "normal_consistency": 0.695837676525116,
+          "status": "measured",
+          "fscore@0.02": 0.04465752082312592,
+          "fscore@0.05": 0.11950887154009934,
+          "gt_components": 2,
+          "part_count_correct": false,
+          "color_parts_correct": 1,
+          "color_parts_total": 2,
+          "color_mae": 0.33190030157566064,
+          "view_psnr": 9.194772103846557,
+          "view_ssim": 0.4572513699531555,
+          "lpips": null,
+          "device": "cuda",
+          "aligned_chamfer_l1": 0.11856425850349207,
+          "aligned_fscore@0.05": 0.24925076313348513,
+          "touch_components": 3,
           "touch_part_count_correct": false
         }
       },
@@ -8848,6 +10648,72 @@
           "aligned_fscore@0.05": 0.47255490609428896,
           "touch_components": 1,
           "touch_part_count_correct": false
+        },
+        "zimage-triposr-anchorlora:single": {
+          "asset_id": "on_top_of__torus_sphere__003",
+          "family": "on_top_of:torus+sphere",
+          "caption": "a small purple sphere with a white torus on top",
+          "generator": "zimage-triposr-anchorlora:single",
+          "seconds": 193.05,
+          "success": true,
+          "n_faces": 106410,
+          "components": 7,
+          "watertight": false,
+          "edge_manifold": true,
+          "degenerate_faces": 0,
+          "in_bounds": true,
+          "chamfer_l1": 0.16630345982512157,
+          "chamfer_l2": 0.045031458549501,
+          "normal_consistency": 0.6140562891960144,
+          "status": "measured",
+          "fscore@0.02": 0.05787346593313585,
+          "fscore@0.05": 0.19831225153595952,
+          "gt_components": 2,
+          "part_count_correct": false,
+          "color_parts_correct": 0,
+          "color_parts_total": 2,
+          "color_mae": 0.3758067812522253,
+          "view_psnr": 11.341763384474916,
+          "view_ssim": 0.39977652579545975,
+          "lpips": null,
+          "device": "cuda",
+          "aligned_chamfer_l1": 0.08603398523689253,
+          "aligned_fscore@0.05": 0.33174036511156185,
+          "touch_components": 5,
+          "touch_part_count_correct": false
+        },
+        "zimage-triposr-anchorlora:planner": {
+          "asset_id": "on_top_of__torus_sphere__003",
+          "family": "on_top_of:torus+sphere",
+          "caption": "a small purple sphere with a white torus on top",
+          "generator": "zimage-triposr-anchorlora:planner",
+          "seconds": 376.41,
+          "success": true,
+          "n_faces": 216991,
+          "components": 22,
+          "watertight": false,
+          "edge_manifold": true,
+          "degenerate_faces": 0,
+          "in_bounds": true,
+          "chamfer_l1": 0.19644321345767174,
+          "chamfer_l2": 0.05856578176326571,
+          "normal_consistency": 0.550499677658081,
+          "status": "measured",
+          "fscore@0.02": 0.049117311782220334,
+          "fscore@0.05": 0.12830091495425228,
+          "gt_components": 2,
+          "part_count_correct": false,
+          "color_parts_correct": 0,
+          "color_parts_total": 2,
+          "color_mae": 0.3702650990088781,
+          "view_psnr": 10.701646316204176,
+          "view_ssim": 0.41082943230867386,
+          "lpips": null,
+          "device": "cuda",
+          "aligned_chamfer_l1": 0.12294408208700858,
+          "aligned_fscore@0.05": 0.20590336016473232,
+          "touch_components": 3,
+          "touch_part_count_correct": false
         }
       }
     ],
@@ -8923,6 +10789,24 @@
         "chamfer_l1_mean": 0.09280738709368846,
         "aligned_chamfer_l1_mean": 0.05487267631042766,
         "color_accuracy": 0.375
+      },
+      "zimage-triposr-anchorlora:single": {
+        "n": 8,
+        "success_rate": 1.0,
+        "part_count_accuracy": 0.125,
+        "touch_part_count_accuracy": 0.125,
+        "chamfer_l1_mean": 0.17664130962382218,
+        "aligned_chamfer_l1_mean": 0.09061686587038609,
+        "color_accuracy": 0.3125
+      },
+      "zimage-triposr-anchorlora:planner": {
+        "n": 8,
+        "success_rate": 1.0,
+        "part_count_accuracy": 0.125,
+        "touch_part_count_accuracy": 0.5,
+        "chamfer_l1_mean": 0.10192224578966441,
+        "aligned_chamfer_l1_mean": 0.056476010659164015,
+        "color_accuracy": 0.3125
       }
     },
     "touch_tolerance": 0.02
@@ -8933,7 +10817,7 @@
     "b1_oracle_agreement": "5/12",
     "b1_oracle": {
       "a blue coffee mug": "shap-e-text300m",
-      "a white porcelain teapot": "berkelium-textshape",
+      "a white porcelain teapot": "zimage-triposr-anchorlora",
       "a white porcelain pitcher": "shap-e-text300m",
       "a deep bowl": "shap-e-text300m",
       "a teal plastic easter basket": "shap-e-text300m",
@@ -9388,6 +11272,32 @@
         "status_counts": {
           "ok": 80
         }
+      },
+      "zimage-triposr-anchorlora": {
+        "by_device": {
+          "cuda": {
+            "units": 80,
+            "valid": 80,
+            "seconds_mean": 191.837875,
+            "wall_s_mean": 191.837875,
+            "wall_hours_total": 4.26,
+            "peak_rss_mib_max": 0,
+            "gpu_peak_allocated_mib_max": 13835.0,
+            "hardware": {
+              "device": "cuda",
+              "gpu_name": "Tesla T4",
+              "host": "0438c6eb23c4",
+              "torch": "2.11.0+cu128",
+              "torch_cuda": "12.8",
+              "transformers": "4.57.6"
+            }
+          }
+        },
+        "units": 80,
+        "valid": 80,
+        "status_counts": {
+          "ok": 80
+        }
       }
     },
     "shap_e_by_device": {
@@ -9433,7 +11343,7 @@
     "native_seconds_mean": 1.7750535714285713,
     "status_counts": {
       "anchor_rejected": 43,
-      "ok": 253
+      "ok": 333
     }
   },
   "images": {
@@ -9458,7 +11368,11 @@
       "zimage-triposr-v2: a blue coffee mug",
       "zimage-triposr-v2: a white porcelain teapot",
       "zimage-triposr-v2: a white porcelain pitcher",
-      "zimage-triposr-v2: a deep bowl"
+      "zimage-triposr-v2: a deep bowl",
+      "zimage-triposr-anchorlora: a blue coffee mug",
+      "zimage-triposr-anchorlora: a white porcelain teapot",
+      "zimage-triposr-anchorlora: a white porcelain pitcher",
+      "zimage-triposr-anchorlora: a deep bowl"
     ]
   }
 }

@@ -64,5 +64,5 @@
     "adapter.safetensors": "0bde1ac0f975884607baf82a274eae92fa00550a2d42bb066ced6f91cd63df45"
   },
   "license": "Apache-2.0 (base model) adapter weights released with the repository",
-  "status": "trained; NOT promoted unless it wins E-T3 (NEURAL_RENDERING_DECISIONS.md D-030)"
+  "status": "NOT PROMOTED (D-030, E-T3 results/text3d/E-T3_openworld_cpu.json): vs base zimage-triposr-v2, B1 valid 1.00 vs 1.00 (pass), B1 F@0.05 0.546 vs 0.603 (fail), B1 Chamfer 0.060 vs 0.055 (fail), B2 R@1 0.25 vs 0.85 (fail). Cleaner backgrounds on held-out prompts (colour-key gate 4/4 vs 2/4) but much weaker prompt fidelity; seed std 0.014 vs 0.004. Kept for reproducibility; the anchor stage uses the base model."
 }

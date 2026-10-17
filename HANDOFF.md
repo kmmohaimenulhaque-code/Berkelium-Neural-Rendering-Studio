@@ -25,7 +25,7 @@ predated E-T3 P0-P5 and is superseded). Evidence for every number below is in th
 | M5 pass on CUDA (Kaggle T4): bf16 (fp16 NaN), 768², ~122 s/anchor | `results/m5/E-A1_receipt.json` |
 | zimage-triposr v1 (colour key) 37/80, v2 (U²-Net) 80/80 | `docs/ENGINEERING_LOG.md` (2026-10-16) |
 | E-T4: capsule adapter v2 (replay + separation margin) NOT promoted (part count 0.40 < 0.53) | `results/text3d/E-T4_capsule_replay.report.md` |
-| Anchor LoRA (Phase II.2): see section 4 | `configs/kaggle/zimage_anchor_lora.json` |
+| Anchor LoRA trained (bf16, 400 steps, T4) and NOT promoted (D-030: B2 R@1 0.25 vs 0.85, B1 F@0.05 0.546 vs 0.603) | `exports/zimage-anchor-lora-v1/MODEL_CARD.json` |
 
 Older results (E-R1 on MI300X, E-T1/E-T2, M6, M7) are unchanged; see `README.md`.
 
@@ -38,10 +38,11 @@ Older results (E-R1 on MI300X, E-T1/E-T2, M6, M7) are unchanged; see `README.md`
 
 ## 4. Open items
 
-1. Anchor LoRA: the bf16 job (`berkelium-anchorlora-bf16`) was running at the time of writing; when it has been
-   pulled, run `scripts/run_openworld_benchmark.py score` and `report` and apply D-030. An earlier fp16 attempt
-   produced NaN (fp16 is non-finite on T4) and its output was refused (`receipt.REJECTED_stale_run.json`).
+1. Anchor LoRA: done, not promoted. A next attempt should keep prompt fidelity (e.g. mix ordinary captioned images
+   into the training set, fewer steps) and must pass D-030 again.
 2. ROCm/MI300X: M5 and zimage-triposr have not run on AMD hardware (R5 in `docs/GPU_RUN_PLAN.md`).
 3. Capsule part merging remains (v1 0.27; v2 0.40 not promoted).
 4. U²-Net fills enclosed background (bicycle wheels); bf16 on T4 is slow (no native bf16).
-5. Pushing from the agent session needs the Claude GitHub App on `enigmahacker/Berkelium-Neural-Rendering-Studio`.
+5. MI300X droplet (165.245.133.213) was not reachable from the agent container (port 22 timed out); a new
+   session with the IP allowed in Network access and `MI300X_SSH_KEY` loaded is needed.
+6. Pushing from the agent session needs the Claude GitHub App on `enigmahacker/Berkelium-Neural-Rendering-Studio`.

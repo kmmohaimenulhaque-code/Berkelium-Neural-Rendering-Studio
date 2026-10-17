@@ -57,6 +57,13 @@ Evidence labels: `[O]` inspected implementation observation, `[F]` external sour
 | D-031 | `[D]` Capsule adapter v2 (experience replay of the base training families + a signed-distance separation margin, `configs/adapters/textshape_lora_capsule_v2_replay.json`) replaces capsule-v1 in adapter routing only under the promotion rule stored in that config (part-count accuracy ≥ 0.53 on adapter_test; Chamfer non-inferior to v1 within +0.010 at the CI upper bound; Chamfer gain over base kept). | Fixes the E-T1 part-merging regression without giving up the measured capsule geometry, or is reported as not fixing it. | — |
 | D-032 | `[D]` Heavy compute runs on Kaggle GPU kernels through `scripts/kaggle_gpu_runner.py`: the code shipped is a hashed bundle of this working tree, every returned file is re-hashed against the remote manifest before it is admitted, and failed remote steps stop the job (no retries). Kaggle T4 results are CUDA evidence only; they are never reported as ROCm/AMD evidence. Small CPU-feasible training (the 362k-parameter native adapter) stays on the CPU host, where it is bitwise reproducible. | One verifiable path for every GPU artifact; the dev host has no GPU. | An approved MI300X session (same runner pattern, ROCm image). |
 
+### Outcomes (applied 2026-10-16/17, numbers in results/)
+
+- **D-029:** zimage-triposr v2 vs Shap-E on E-T3: B1 F@0.05 0.603 vs 0.669, B1 Chamfer 0.055 vs 0.047, B2 R@1 0.85 vs 0.95 → none met; `OPEN_WORLD_RANKING = (shap-e-text300m, zimage-triposr)`. v2 is better on composition (B4 part count 0.50 with the planner vs 0.00) and B3 geometry.
+- **D-030:** anchor LoRA vs base v2: 1 of 4 criteria met (valid rate); F@0.05 0.546, Chamfer 0.060, B2 R@1 0.25 → not promoted.
+- **D-031:** capsule v2: part count 0.40 (< 0.53), Chamfer +0.018 vs v1 → not promoted; capsule-v1 stays.
+- zimage-triposr stage 3 changed from colour keying (v1, 37/80 valid) to U²-Net segmentation (v2, 80/80) after v1's rejections were seen and before any geometry was scored; both are scored separately.
+
 ## Rejected or deferred choices
 
 - `[D]` Do not use the original Graphdeco implementation as Berkelium source; its license is restrictive for the intended product posture.
