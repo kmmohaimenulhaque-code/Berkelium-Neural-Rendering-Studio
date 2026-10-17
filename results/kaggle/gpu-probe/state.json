@@ -1,0 +1,20 @@
+{
+  "job": "gpu-probe",
+  "run_id": "20261017T093727Z",
+  "kernel": "kmmohaimenulhaque/berkelium-gpu-probe",
+  "accelerator": "NvidiaTeslaP100",
+  "spec": "configs/kaggle/gpu_probe.json",
+  "spec_sha256": "9d849676987825689323bce7810fc6eea7874c2dafdb3d0595d39034874bf6ad",
+  "bundle_sha256": "6ee9abf0ea3a9424e2a23e391abc6020a90ab7e54d6f34ba017ea9dc4384a225",
+  "bundle_bytes": 331,
+  "bundle_files": 1,
+  "data": null,
+  "git": {
+    "commit": "0fa3816c9eef9e98200df6c65932ae0d4db49665",
+    "branch": "Berkelium-Neural-Rendering-Studio-neural-v1",
+    "dirty_files": 1
+  },
+  "pushed_at": "2026-10-17T09:37:32Z",
+  "status": "pushed",
+  "push_response": "Kernel version 1 successfully pushed.  Please check progress at https://www.kaggle.com/code/kmmohaimenulhaque/berkelium-gpu-probe"
+}
