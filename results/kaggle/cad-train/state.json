@@ -1,0 +1,20 @@
+{
+  "job": "cad-train",
+  "run_id": "20261017T085724Z",
+  "kernel": "kmmohaimenulhaque/berkelium-cad-train-qwen3-8b",
+  "accelerator": "NvidiaTeslaT4",
+  "spec": "configs/kaggle/cad_train.json",
+  "spec_sha256": "08a5ef1a8259e84a53f392dcbb75f579daa2662361e8ea6d9a0f64d5a2b305f4",
+  "bundle_sha256": "7f2f8c4ff7baa929f57eb490b077c2d1c1a72912c9446ab88237798eadffafb2",
+  "bundle_bytes": 23926,
+  "bundle_files": 10,
+  "data": null,
+  "git": {
+    "commit": "702ff3a9b988197b5d02718e0e64a3c6d437e423",
+    "branch": "Berkelium-Neural-Rendering-Studio-neural-v1",
+    "dirty_files": 3
+  },
+  "pushed_at": "2026-10-17T08:57:28Z",
+  "status": "pushed",
+  "push_response": "Kernel version 1 successfully pushed.  Please check progress at https://www.kaggle.com/code/kmmohaimenulhaque/berkelium-cad-train-qwen3-8b"
+}
