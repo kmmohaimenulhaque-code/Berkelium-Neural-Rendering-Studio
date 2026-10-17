@@ -93,7 +93,17 @@ setup_env() {
   [[ -x "$VENV/bin/python" ]] || "$PY" -m venv --system-site-packages "$VENV"
   local P="$VENV/bin/python"
   # never replace the image's ROCm torch / vllm / unsloth / transformers stack: freeze what is there
-  "$P" -m pip freeze | grep -iE '^(torch|torchvision|torchaudio|triton|pytorch-triton-rocm|vllm|unsloth|unsloth-zoo|transformers|peft|accelerate|numpy|bitsandbytes)==' > "$RUN/constraints.txt" || true
+  # (pip freeze prints ROCm wheels as "torch @ file://..." so read the installed versions directly)
+  "$P" - > "$RUN/constraints.txt" <<'PYC'
+import importlib.metadata as md
+for n in ("torch", "torchvision", "torchaudio", "triton", "pytorch-triton-rocm", "vllm", "unsloth", "unsloth-zoo",
+          "transformers", "peft", "accelerate", "numpy", "bitsandbytes"):
+    try:
+        print(f"{n}=={md.version(n)}")
+    except md.PackageNotFoundError:
+        pass
+PYC
+  cat "$RUN/constraints.txt"
   local extra=()
   for m in peft transformers accelerate huggingface_hub; do "$P" -c "import $m" 2>/dev/null || extra+=("$m"); done
   "$P" -m pip install -q -c "$RUN/constraints.txt" "cadquery==2.8.0" "$CORE_PIN" httpx trimesh pytest "${extra[@]}"
