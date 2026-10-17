@@ -1,0 +1,37 @@
+{
+  "status": "ok",
+  "anchor_prompt": {
+    "text": "a large red sphere. A single complete object, centered, fully visible with empty margin around it, three-quarter view from slightly above, isolated on a plain solid bright blue background, soft even studio lighting, no shadow, no text, no other objects",
+    "background": "bright blue",
+    "background_rgb": [
+      0,
+      71,
+      187
+    ],
+    "named_colours": [
+      "red"
+    ],
+    "colour_margin": 1.01,
+    "template": "{prompt}. A single complete object, centered, fully visible with empty margin around it, three-quarter view from slightly above, isolated on a plain solid {bg} background, soft even studio lighting, no shadow, no text, no other objects"
+  },
+  "sampler": {
+    "steps": 9,
+    "guidance_scale": 0.0,
+    "height": 768,
+    "width": 768,
+    "noise": "seeded CPU generator"
+  },
+  "dtype": "bfloat16",
+  "device": "cuda",
+  "gpu": "Tesla T4",
+  "load_s": 97.2,
+  "seconds": 140.29,
+  "finite": true,
+  "std": 0.31533119082450867,
+  "peak_gpu_mib": 13831.2,
+  "anchor_sha256": "12a54f53dbebaa9d99da978227911c3c96a83012bebea9b5abfbab9fd5a9bb29",
+  "lora": {
+    "path": "exports/zimage-anchor-lora-v1/adapter.safetensors",
+    "sha256": "0bde1ac0f975884607baf82a274eae92fa00550a2d42bb066ced6f91cd63df45"
+  }
+}

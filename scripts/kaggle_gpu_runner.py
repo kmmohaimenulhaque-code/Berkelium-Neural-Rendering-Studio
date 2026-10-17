@@ -340,7 +340,7 @@ def poll(ref: str, max_hours: float) -> str:
 
 
 # ---------------------------------------------------------------------------------------------- pull and verify
-def pull(spec: dict, st: dict, admit: bool) -> dict:
+def pull(spec: dict, st: dict, admit: bool, partial: bool = False) -> dict:
     run_dir = state_dir(spec) / st["run_id"]
     stage = run_dir / "remote"
     shutil.rmtree(stage, ignore_errors=True)
@@ -379,7 +379,7 @@ def pull(spec: dict, st: dict, admit: bool) -> dict:
               "bytes": sum(m["bytes"] for m in manifest.values())}
     (run_dir / "receipt.json").write_text(json.dumps({"local": {**st, "verification": verify}, "remote": receipt,
                                                       "manifest": manifest}, indent=2, default=str))
-    if receipt.get("status") != "completed":
+    if receipt.get("status") != "completed" and not (partial and receipt.get("failed_step")):
         failed = receipt.get("failed_step") or receipt.get("error")
         tail = next((c["tail"] for s in receipt.get("steps", []) if not s["ok"] for c in s["commands"]
                      if c["rc"] != 0), "")
@@ -401,7 +401,9 @@ def pull(spec: dict, st: dict, admit: bool) -> dict:
             if not dst.exists():
                 shutil.copy2(out / "files" / rel, dst)
                 admitted.append(rel)
-    st.update({"status": "pulled", "verified_files": verify["verified"], "admitted": len(admitted)})
+    st.update({"status": "pulled" if receipt.get("status") == "completed" else
+               f"pulled_partial (failed at {receipt.get('failed_step')})",
+               "verified_files": verify["verified"], "admitted": len(admitted)})
     write_state(spec, st)
     print(json.dumps({"job": spec["name"], "remote_status": receipt["status"], "verification": verify,
                       "admitted": len(admitted), "receipt": _rel(run_dir / "receipt.json")},
@@ -467,7 +469,7 @@ def cmd_pull(a) -> int:
     s = kernel_status(st["kernel"])
     if s not in ("complete", "error", "cancel"):
         raise RunnerError(f"{st['kernel']} is {s}; pull after it ends")
-    pull(spec, st, a.admit)
+    pull(spec, st, a.admit, getattr(a, "admit_partial", False))
     return 0
 
 
@@ -488,6 +490,8 @@ def main(argv=None) -> int:
         p.add_argument("spec")
         if name == "pull":
             p.add_argument("--admit", action="store_true")
+            p.add_argument("--admit-partial", action="store_true",
+                           help="also admit the verified outputs of a run whose LAST steps failed (recorded)")
     a = ap.parse_args(argv)
     try:
         return {"check": cmd_check, "run": cmd_run, "status": cmd_status, "pull": cmd_pull}[a.cmd](a)

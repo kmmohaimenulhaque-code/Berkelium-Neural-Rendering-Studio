@@ -341,10 +341,11 @@ def u2net_path(cache: Path | None = None) -> Path:
 def fetch_u2net(cache: Path | None = None) -> dict:
     import urllib.request
     p = u2net_path(cache)
-    if not p.exists():
+    if not p.exists():                        # unique temp name: parallel shards may fetch at the same time
         p.parent.mkdir(parents=True, exist_ok=True)
-        urllib.request.urlretrieve(U2NET["source"], p.with_suffix(".part"))
-        p.with_suffix(".part").rename(p)
+        tmp = p.with_suffix(f".part{os.getpid()}")
+        urllib.request.urlretrieve(U2NET["source"], tmp)
+        os.replace(tmp, p)
     try:
         return verify_file(p, "sha256", U2NET["sha256"], U2NET["bytes"])
     except ValueError:

@@ -15,6 +15,9 @@
     "dirty_files": 11
   },
   "pushed_at": "2026-10-16T18:25:34Z",
-  "status": "pushed",
-  "push_response": "Kernel version 1 successfully pushed.  Please check progress at https://www.kaggle.com/code/kmmohaimenulhaque/berkelium-anchorlora-bf16"
+  "status": "pulled_partial (failed at reconstruct)",
+  "push_response": "Kernel version 1 successfully pushed.  Please check progress at https://www.kaggle.com/code/kmmohaimenulhaque/berkelium-anchorlora-bf16",
+  "kernel_final_status": "complete",
+  "verified_files": 415,
+  "admitted": 414
 }
