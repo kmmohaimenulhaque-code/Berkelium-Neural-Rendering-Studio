@@ -64,7 +64,7 @@ Status: ☐ todo · ◐ in progress · ☑ done (with evidence file)
     (paired 95 % CI above 0);
   - gear test (core `berkelium eval` metrics): not worse than zero-shot Qwen3-8B;
   - 0 proposals that contain measurement or validation fields (schema `extra=forbid` rejects them).
-- ◐ `configs/kaggle/cad_train.json` launched 2026-10-17 (kernel `kmmohaimenulhaque/berkelium-cad-train-qwen3-8b`): Qwen3-0.6B smoke, then Qwen3-8B, 10 h budget. QLoRA: NF4 base, fp16 compute (the T4 has no bf16), LoRA r=32 on
+- ◐ `configs/kaggle/cad_train.json` launched 2026-10-17 (kernel `kmmohaimenulhaque/berkelium-qwen3-8b-cad-train`; the first kernel slug sat in the T4 queue 40 min and was deleted, 2026-10-17): Qwen3-0.6B smoke, then Qwen3-8B, 10 h budget. QLoRA: NF4 base, fp16 compute (the T4 has no bf16), LoRA r=32 on
   all linear layers, seq ≤ 3072, gradient checkpointing, checkpoint every 30 min, resume across 12 h sessions,
   NaN guard. Compact JSON targets (sorted keys, no spaces).
 - ☐ Adapter goes to HF `Mhaquehaque/berkelium-qwen3-8b-cad-v1` with a model card + run manifest (data/config

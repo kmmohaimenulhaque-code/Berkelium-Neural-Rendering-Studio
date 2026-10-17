@@ -1,19 +1,51 @@
 {
   "name": "cad-train",
-  "title": "berkelium-cad-train-qwen3-8b",
-  "slug": "berkelium-cad-train-qwen3-8b",
+  "title": "berkelium-qwen3-8b-cad-train",
+  "slug": "berkelium-qwen3-8b-cad-train",
   "description": "E-C1 K2: QLoRA Qwen3-8B design compiler on berkelium-cad-v1 (2x T4 DDP, NF4 + fp16, time-budgeted). Rule D-033 pre-registered in eb7764e.",
   "accelerator": "t4x2",
-  "kernel_sources": ["kmmohaimenulhaque/berkelium-cad-dataset"],
-  "include": ["services/neural/berkelium_neural/cad", "services/neural/berkelium_neural/__init__.py", "scripts/cad_train.py",
-              "scripts/cad_fetch_data.py", "configs/environments/berkelium-core.txt", "configs/environments/cad-train.txt",
-              "configs/datasets/cad_v1.sha256.json"],
-  "steps": [
-    {"name": "deps", "cmd": "pip install -q -r configs/environments/cad-train.txt -r configs/environments/berkelium-core.txt && python -c 'import torch,transformers,peft,bitsandbytes;print(torch.__version__,transformers.__version__,peft.__version__,bitsandbytes.__version__,torch.cuda.device_count())'"},
-    {"name": "data", "cmd": "python scripts/cad_fetch_data.py"},
-    {"name": "fetch", "cmd": "python -c \"from huggingface_hub import snapshot_download as s; s('Qwen/Qwen3-8B', revision='b968826d9c46dd6066d109eabc6255188de91218'); s('Qwen/Qwen3-0.6B', revision='c1899de289a04d12100db370d81485cdf75e47ca')\""},
-    {"name": "smoke_0p6b", "cmd": "torchrun --nproc_per_node 2 scripts/cad_train.py --model Qwen/Qwen3-0.6B --revision c1899de289a04d12100db370d81485cdf75e47ca --max-rows 96 --bsz 1 --grad-accum 8 --out /tmp/smoke --time-budget-h 0.2", "env": {"PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"}},
-    {"name": "train", "cmd": "torchrun --nproc_per_node 2 scripts/cad_train.py --out exports/qwen3-8b-cad-v1 --bsz 1 --grad-accum 8 --max-rows 12000 --time-budget-h 10.0", "env": {"PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"}}
+  "kernel_sources": [
+    "kmmohaimenulhaque/berkelium-cad-dataset"
   ],
-  "outputs": ["exports/qwen3-8b-cad-v1/adapter/**", "exports/qwen3-8b-cad-v1/run_manifest.json"]
+  "include": [
+    "services/neural/berkelium_neural/cad",
+    "services/neural/berkelium_neural/__init__.py",
+    "scripts/cad_train.py",
+    "scripts/cad_fetch_data.py",
+    "configs/environments/berkelium-core.txt",
+    "configs/environments/cad-train.txt",
+    "configs/datasets/cad_v1.sha256.json"
+  ],
+  "steps": [
+    {
+      "name": "deps",
+      "cmd": "pip install -q -r configs/environments/cad-train.txt -r configs/environments/berkelium-core.txt && python -c 'import torch,transformers,peft,bitsandbytes;print(torch.__version__,transformers.__version__,peft.__version__,bitsandbytes.__version__,torch.cuda.device_count())'"
+    },
+    {
+      "name": "data",
+      "cmd": "python scripts/cad_fetch_data.py"
+    },
+    {
+      "name": "fetch",
+      "cmd": "python -c \"from huggingface_hub import snapshot_download as s; s('Qwen/Qwen3-8B', revision='b968826d9c46dd6066d109eabc6255188de91218'); s('Qwen/Qwen3-0.6B', revision='c1899de289a04d12100db370d81485cdf75e47ca')\""
+    },
+    {
+      "name": "smoke_0p6b",
+      "cmd": "torchrun --nproc_per_node 2 scripts/cad_train.py --model Qwen/Qwen3-0.6B --revision c1899de289a04d12100db370d81485cdf75e47ca --max-rows 96 --bsz 1 --grad-accum 8 --out /tmp/smoke --time-budget-h 0.2",
+      "env": {
+        "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"
+      }
+    },
+    {
+      "name": "train",
+      "cmd": "torchrun --nproc_per_node 2 scripts/cad_train.py --out exports/qwen3-8b-cad-v1 --bsz 1 --grad-accum 8 --max-rows 12000 --time-budget-h 10.0",
+      "env": {
+        "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"
+      }
+    }
+  ],
+  "outputs": [
+    "exports/qwen3-8b-cad-v1/adapter/**",
+    "exports/qwen3-8b-cad-v1/run_manifest.json"
+  ]
 }

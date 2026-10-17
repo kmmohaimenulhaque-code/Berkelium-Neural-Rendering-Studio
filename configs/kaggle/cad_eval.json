@@ -6,7 +6,7 @@
   "accelerator": "t4x2",
   "kernel_sources": [
     "kmmohaimenulhaque/berkelium-cad-dataset",
-    "kmmohaimenulhaque/berkelium-cad-train-qwen3-8b"
+    "kmmohaimenulhaque/berkelium-qwen3-8b-cad-train"
   ],
   "include": [
     "services/neural/berkelium_neural/cad",
