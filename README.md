@@ -702,6 +702,7 @@ See **Quick start** above for the verified commands. Details:
   `configs/environments/zimage-rocm.txt` for M5.
 - `config.json` in the project root is optional (chat providers, backend API key, allowed origins); the neural
   service needs no credentials. Neural jobs/artifacts live in `$BERKELIUM_NEURAL_HOME` (default `~/.berkelium/neural`).
+- NVIDIA NIM is available in **Settings → AI Providers**. Get an API key from [NVIDIA Build](https://build.nvidia.com/settings/api-keys), save it under NVIDIA NIM, and choose one of the models listed by **Test connection**.
 - The desktop app: `cd apps/desktop && npm ci && npm run studio` (Electron + Vite), or `npm run dev` for the browser.
 - Reproducing results: `scripts/run_benchmarks.py --experiment configs/experiments/<id>.json` (renderer, text-to-3D),
   `scripts/fit_real_object.py` (M7), `.venv-triposr/bin/python scripts/m6_triposr_controls.py` (M6),

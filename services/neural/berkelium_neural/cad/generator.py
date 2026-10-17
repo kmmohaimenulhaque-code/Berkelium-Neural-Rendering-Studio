@@ -7,7 +7,9 @@ The compiler is the E-C1 model (Qwen3-8B + cad LoRA). It is reached through one 
    serving Qwen3-8B with the LoRA;
 3. a local CUDA GPU with the adapter at ``BERKELIUM_CAD_ADAPTER`` (NF4, as evaluated).
 
-A prompt that already *is* a DesignProposal JSON skips the model. The core is the only authority: the mesh, the
+``BERKELIUM_CAD_BACKEND=cadquery`` (or ``backend="cadquery"``) switches this generator to the E-C2 text → CadQuery
+backend (``cadquery_backend.py``: script → sandbox → STEP/GLB → core); the default ``ir`` backend is the E-C1 path
+below. A prompt that already *is* a DesignProposal JSON skips the model. The core is the only authority: the mesh, the
 measurements and the validation summary come from ``berkelium.pipeline.run``; nothing the model wrote is reported
 as measured. A proposal that fails is returned as a failure with the core's digest, never patched silently."""
 
@@ -83,9 +85,17 @@ def local_compiler(adapter: str) -> Callable[[str], str]:
 class CadGenerator:
     name = NAME
 
-    def __init__(self, compiler: Callable[[str], str] | None = None, artifacts_dir: str | None = None):
+    def __init__(self, compiler: Callable[[str], str] | None = None, artifacts_dir: str | None = None,
+                 backend: str | None = None, chat: Callable | None = None):
         self._compiler = compiler
         self.artifacts_dir = artifacts_dir
+        self.backend = backend or os.environ.get("BERKELIUM_CAD_BACKEND", "ir")
+        self._cq = None
+        if self.backend == "cadquery":
+            from .cadquery_backend import CadQueryGenerator
+            self._cq = CadQueryGenerator(chat=chat)
+        elif self.backend != "ir":
+            raise ValueError(f"unknown BERKELIUM_CAD_BACKEND {self.backend!r} (ir | cadquery)")
 
     def _resolve_compiler(self) -> tuple[Callable[[str], str] | None, str]:
         if self._compiler is not None:
@@ -105,6 +115,8 @@ class CadGenerator:
                       "LoRA) or BERKELIUM_CAD_ADAPTER on a CUDA host")
 
     def available(self) -> tuple[bool, str]:
+        if self._cq is not None:
+            return self._cq.available()
         ok, why = core_available()
         if not ok:
             return False, why
@@ -114,10 +126,14 @@ class CadGenerator:
 
     @property
     def identity(self) -> dict:
+        if self._cq is not None:
+            return {**self._cq.identity, "generator": NAME, "backend": "cadquery"}
         return {"generator": NAME, "prompt_version": PROMPT_VERSION, "core_commit": CORE_COMMIT,
                 "compiler": "Qwen/Qwen3-8B@b968826d + cad LoRA (E-C1)", "authority": "berkelium core"}
 
     def generate(self, prompt: str, seed: int = 0, cancel=None, progress=None) -> dict:
+        if self._cq is not None:
+            return self._cq.generate(prompt, seed, cancel=cancel, progress=progress)
         ok, why = core_available()
         if not ok:
             raise CadUnavailable(why)

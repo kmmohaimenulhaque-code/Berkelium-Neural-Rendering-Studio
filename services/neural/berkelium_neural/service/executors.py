@@ -28,7 +28,9 @@ PIPELINES = {"shap-e-text300m": "text->CLIP ViT-L/14->Shap-E latent->STF mesh",
              "zimage-triposr": "text->canonical anchor prompt->Z-Image-Turbo anchor->colour key->TripoSR->clean mesh",
              "berkelium-textshape": "text->SDF->marching_cubes",
              "cad": "text->Qwen3-8B design compiler->DesignProposal->Berkelium core (L0-L6 validation)->"
-                    "exact BREP (OCCT) / Manifold mesh"}
+                    "exact BREP (OCCT) / Manifold mesh",
+             "cadquery": "text->E-C2 compiler (Qwen3 + CadQuery LoRA)->CadQuery script->sandbox->STEP/GLB->"
+                         "Berkelium core validation (repair <= 2 rounds)->mesh"}
 SHAP_E_MIN_FREE_MIB = 2000          # E-T3: worker peak ~1.5 GB RSS (1.1 GB anonymous) + ~0.8 GB watchdog margin
 
 
@@ -397,8 +399,15 @@ def _open_world_mesh(req: TextTo3DRequest, ctx: JobContext, store: ArtifactStore
                 raise RuntimeError(f"GENERATION_FAILED: no valid surface for this prompt ({rep.get('reason', rep)})")
             v, f, col = out["vertices"], out["faces"], out["colors"]
             used[g.name] = g.identity
-            pipeline = PIPELINES.get(g.name, "text->SDF->marching_cubes")
-            if g.name == "cad":                          # the design itself and the core's verdict travel with the mesh
+            pipeline = PIPELINES.get("cadquery" if rep.get("backend") == "cadquery" else g.name, "text->SDF->marching_cubes")
+            if g.name == "cadquery" or rep.get("backend") == "cadquery":   # script + exact STEP + core verdict
+                files["script.py"] = ((rep.get("script") or "").encode(), "text/x-python")
+                if out.get("step"):
+                    files["result.step"] = (out["step"], "model/step")
+                files["core_validation.json"] = (json.dumps({k: rep[k] for k in ("validation", "measurements",
+                                                 "artifacts", "attempts", "scale_mm_per_unit")},
+                                                 indent=2, default=str).encode(), "application/json")
+            elif g.name == "cad":                        # the design itself and the core's verdict travel with the mesh
                 files["design_proposal.json"] = (json.dumps(rep["proposal"], indent=2).encode(), "application/json")
                 files["core_validation.json"] = (json.dumps({k: rep[k] for k in ("validation", "measurements",
                                                  "artifacts", "record_hash", "proposal_hash", "scale_mm_per_unit")},
@@ -410,7 +419,7 @@ def _open_world_mesh(req: TextTo3DRequest, ctx: JobContext, store: ArtifactStore
         ctx.check()
         raise
     ctx.check()
-    open_world = bool(set(used) - {"berkelium-textshape", "cad"})
+    open_world = bool(set(used) - {"berkelium-textshape", "cad", "cadquery"})
     decisions = None
     if req.generator == AUTO:
         vocab = native_vocab(req.model)
@@ -437,11 +446,14 @@ def _open_world_mesh(req: TextTo3DRequest, ctx: JobContext, store: ArtifactStore
               "confidence": "model_output_unverified"}
     if open_world:
         labels["provenance"] = OPEN_WORLD_LABEL
-    if set(used) == {"cad"}:                         # core-realised geometry: millimetres before normalisation
+    if set(used) in ({"cad"}, {"cadquery"}):           # core-realised geometry: millimetres before normalisation
         labels = {"units": f"normalized_object ({rep['scale_mm_per_unit']:.6g} mm per unit)",
                   "representation": "triangle_mesh (from Berkelium core geometry)",
                   "confidence": f"core validation {rep['validation']['summary']}",
-                  "provenance": "design proposed by the E-C1 compiler; geometry and measurements by the Berkelium core"}
+                  "provenance": ("script proposed by the E-C2 CadQuery compiler; executed in the sandbox; geometry "
+                                 "and measurements by OCCT through the Berkelium core") if "cadquery" in used or
+                                rep.get("backend") == "cadquery" else
+                                "design proposed by the E-C1 compiler; geometry and measurements by the Berkelium core"}
     mesh = store.create(ArtifactKind.TRIANGLE_MESH,
                         {"mesh.glb": (mesh_to_glb(v, f, col), "model/gltf-binary"),
                          "mesh.ply": (mesh_to_ply(v, f, col), "application/x-ply"),

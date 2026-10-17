@@ -224,7 +224,13 @@ CAD = "cad"   # E-C1 design compiler + Berkelium core (exact engineering geometr
 #              auto only if D-033 passes (NEURAL_RENDERING_DECISIONS.md).
 
 
+CADQUERY = "cadquery"   # E-C2 text -> CadQuery -> sandbox -> core; opt-in until D-034 passes.
+
+
 def get_generator(name: str, **kw) -> Generator:
+    if name == CADQUERY:
+        from ..cad.cadquery_backend import CadQueryGenerator
+        return CadQueryGenerator(**kw)
     if name == CAD:
         from ..cad.generator import CadGenerator
         return CadGenerator(**kw)
@@ -243,7 +249,7 @@ def get_generator(name: str, **kw) -> Generator:
 def generator_status() -> dict:
     """name -> {available, reason, identity} for /capabilities and the Studio selector. Loads no weights."""
     out = {}
-    for name in (NATIVE, SHAP_E, ZIMAGE_TRIPOSR, CAD):
+    for name in (NATIVE, SHAP_E, ZIMAGE_TRIPOSR, CAD, CADQUERY):
         g = get_generator(name)
         ok, why = g.available()
         out[name] = {"available": ok, "reason": why, "identity": g.identity}
