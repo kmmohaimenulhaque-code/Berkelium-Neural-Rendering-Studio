@@ -57,6 +57,18 @@ PRODUCT=$(rocm-smi --showproductname 2>&1 || true)   # capture first: `| grep -q
 [[ "${PRODUCT^^}" == *MI300* ]] || die "rocm-smi does not list an MI300X: $(echo "$PRODUCT" | head -8)"
 log "ok: rocm-smi sees an MI300X"
 PY=python3; command -v "$PY" >/dev/null || die "python3 not found"
+if ! "$PY" -c "import torch" 2>/dev/null; then
+  # bare ROCm host (no PyTorch image): put the official ROCm torch wheel in the venv instead
+  log "no torch in system python: installing ROCm PyTorch (${TORCH_INDEX:=https://download.pytorch.org/whl/rocm6.4}) into $VENV"
+  if ! "$PY" -m venv --help >/dev/null 2>&1 || ! "$PY" -c "import ensurepip" 2>/dev/null; then
+    [[ $(id -u) == 0 ]] && apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get install -y -qq python3-venv python3-pip python3-dev git >/dev/null
+  fi
+  [[ -x "$VENV/bin/python" ]] || "$PY" -m venv "$VENV" || die "cannot create venv (apt-get install python3-venv)"
+  "$VENV/bin/python" -m pip install -q -U pip
+  "$VENV/bin/python" -m pip install -q torch --index-url "$TORCH_INDEX" || die "ROCm torch install failed"
+  PY="$VENV/bin/python"
+  "$PY" -c "import unsloth" 2>/dev/null || { export BERKELIUM_ALLOW_NO_UNSLOTH=1; log "no Unsloth on a bare host: training uses transformers+PEFT (recorded)"; }
+fi
 "$PY" - <<'EOF' || die "PyTorch ROCm check failed (needs the image's ROCm torch; torch.version.hip must be set)"
 import torch, sys
 assert torch.cuda.is_available(), "torch.cuda.is_available() is False"
