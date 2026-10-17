@@ -1,20 +1,20 @@
 {
   "job": "cad-train",
-  "run_id": "20261017T094336Z",
+  "run_id": "20261017T095546Z",
   "kernel": "kmmohaimenulhaque/berkelium-qwen3-8b-cad-train",
   "accelerator": "NvidiaTeslaT4",
   "spec": "configs/kaggle/cad_train.json",
   "spec_sha256": "6cc434e2d45e0b4eb8ac78957ecb8fa83c452b80b990bd58cf95e856aa88af4f",
-  "bundle_sha256": "f14a55f37df9291edf51f9fe622e6303fd095bedd6c37a41ad708eeedbc63641",
-  "bundle_bytes": 23916,
+  "bundle_sha256": "a61eb42599842c14cfec004896e47a49504e7445225d11fef7d9d48820b8c1a3",
+  "bundle_bytes": 24040,
   "bundle_files": 10,
   "data": null,
   "git": {
-    "commit": "c13717691bc39c92fe351d4bd6858a2f89e0aede",
+    "commit": "6c2f5f04337b10666959b9ad3fa88b06888ed1ce",
     "branch": "Berkelium-Neural-Rendering-Studio-neural-v1",
-    "dirty_files": 2
+    "dirty_files": 0
   },
-  "pushed_at": "2026-10-17T09:43:41Z",
+  "pushed_at": "2026-10-17T09:55:50Z",
   "status": "pushed",
-  "push_response": "Kernel version 1 successfully pushed.  Please check progress at https://www.kaggle.com/code/kmmohaimenulhaque/berkelium-qwen3-8b-cad-train"
+  "push_response": "Kernel version 2 successfully pushed.  Please check progress at https://www.kaggle.com/code/kmmohaimenulhaque/berkelium-qwen3-8b-cad-train"
 }
