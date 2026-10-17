@@ -24,6 +24,8 @@ mkdir -p "$LOGS" "$MARK" "$RUN/data" "$RUN/train" "$RUN/eval" "$RUN/cache"
 
 # ---------------------------------------------------------------- detach (nohup + setsid; env incl. HF_TOKEN is inherited, never written)
 if [[ "${BERKELIUM_DETACHED:-0}" != 1 ]]; then
+  if [[ -f "$RUN/run.pid" ]] && kill -0 "$(cat "$RUN/run.pid")" 2>/dev/null; then
+    echo "already running (pid $(cat "$RUN/run.pid")). Watch: tail -f $LOGS/latest.log"; exit 0; fi
   [[ -n "${HF_TOKEN:-}" ]] || { echo "ERROR: HF_TOKEN is not set. Run: export HF_TOKEN=<your token>   (it is never printed or stored)"; exit 2; }
   SELF="$RUN/oneshot.sh"; [[ "$(readlink -f "$0")" == "$(readlink -f "$SELF")" ]] || cp "$0" "$SELF"
   LOG="$LOGS/oneshot_$(date -u +%Y%m%dT%H%M%SZ).log"; ln -sfn "$LOG" "$LOGS/latest.log"
@@ -51,7 +53,8 @@ log "Berkelium one-shot on $(hostname); run dir $RUN; branch $BRANCH"
 
 # ---------------------------------------------------------------- checks
 command -v rocm-smi >/dev/null || die "rocm-smi not found: this is not a ROCm host"
-rocm-smi --showproductname 2>/dev/null | grep -qi "MI300" || die "rocm-smi does not list an MI300X: $(rocm-smi --showproductname 2>&1 | head -5)"
+PRODUCT=$(rocm-smi --showproductname 2>&1 || true)   # capture first: `| grep -q` + pipefail fails on SIGPIPE
+[[ "${PRODUCT^^}" == *MI300* ]] || die "rocm-smi does not list an MI300X: $(echo "$PRODUCT" | head -8)"
 log "ok: rocm-smi sees an MI300X"
 PY=python3; command -v "$PY" >/dev/null || die "python3 not found"
 "$PY" - <<'EOF' || die "PyTorch ROCm check failed (needs the image's ROCm torch; torch.version.hip must be set)"
