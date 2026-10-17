@@ -1,0 +1,3 @@
+# Only for building the desktop installers. Not needed to run the backend.
+-r requirements.txt
+pyinstaller==6.22.3

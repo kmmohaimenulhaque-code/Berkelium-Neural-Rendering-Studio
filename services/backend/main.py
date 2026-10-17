@@ -42,7 +42,12 @@ class RequestIdFilter(logging.Filter):
         return True
 
 
-_log_path = os.path.join(os.path.dirname(__file__), "backend.log")
+# The installed app runs from a read-only folder (and on macOS, inside a
+# signed bundle that must not change), so it points logs at the user's app
+# data folder. Running from source keeps the old spot next to this file.
+_log_dir = os.environ.get("BERKELIUM_LOG_DIR") or os.path.dirname(os.path.abspath(__file__))
+os.makedirs(_log_dir, exist_ok=True)
+_log_path = os.path.join(_log_dir, "backend.log")
 _file_handler = logging.handlers.RotatingFileHandler(
     _log_path, maxBytes=10 * 1024 * 1024, backupCount=3
 )
@@ -79,6 +84,7 @@ _SHAPES = {
     "backend_api_key": str,
     "allowed_origins": list,
     "providers": dict,
+    "default_provider": str,
 }
 for _key, _expected in _SHAPES.items():
     if _key in config and not isinstance(config[_key], _expected):
@@ -330,6 +336,13 @@ async def ocr(request: Request, file: UploadFile = File(...)):
     contents = await _read_capped(file)
     try:
         text = await asyncio.to_thread(_run_image_ocr, contents)
+    except pytesseract.TesseractNotFoundError:
+        # The installers do not ship the Tesseract engine yet. Say that
+        # plainly instead of blaming the user's image.
+        log.warning("OCR requested but Tesseract is not installed")
+        return JSONResponse(status_code=503, content={
+            "detail": "Image OCR needs the Tesseract engine, which is not installed on this computer.",
+            "code": "ocr_unavailable"})
     except Exception as e:
         log.exception("OCR failed: %s", e)
         raise HTTPException(status_code=400, detail="could not process image")
@@ -386,7 +399,20 @@ def _extract_pdf_text(contents: bytes) -> str:
 # Multi-provider AI: LM Studio and cloud providers via LiteLLM, Ollama direct.
 # ---------------------------------------------------------------------------
 
-provider_store = prov.ProviderStore(CONFIG_PATH, config)
+# builtin.json only exists in release builds. See providers.py for why it is
+# kept apart from config.json.
+# BERKELIUM_BUILTIN lets tests point at a throwaway file.
+_builtin = prov.load_builtin(os.environ.get("BERKELIUM_BUILTIN") or os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), prov.BUILTIN_FILE))
+provider_store = prov.ProviderStore(CONFIG_PATH, config, _builtin)
+if _builtin:
+    log.info("built-in providers available: %s", ", ".join(sorted(_builtin)))
+
+# The provider the chat preselects on a fresh install. An explicit choice in
+# config.json wins; otherwise the shipped one, so chat works out of the box.
+DEFAULT_PROVIDER = config.get("default_provider") or next(iter(sorted(_builtin)), None)
+if DEFAULT_PROVIDER not in prov.PROVIDERS:
+    DEFAULT_PROVIDER = None
 
 
 @app.exception_handler(prov.ProviderError)
@@ -417,7 +443,8 @@ async def _chat_via_provider(payload: ChatRequest) -> dict:
 @app.get("/providers", dependencies=[Depends(require_api_key)])
 async def list_providers():
     return {"providers": [prov.public_view(p, provider_store.get(p.id))
-                          for p in prov.PROVIDERS.values()]}
+                          for p in prov.PROVIDERS.values()],
+            "default": DEFAULT_PROVIDER}
 
 
 class ProviderUpdate(BaseModel):

@@ -48,6 +48,8 @@ Thumbs.db
 /cache/
 *.sqlite
 config.json
+# Built-in key file written only by the release workflow. Never commit it.
+builtin.json
 
 # Python
 venv/

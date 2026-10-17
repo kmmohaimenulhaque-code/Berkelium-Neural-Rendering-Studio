@@ -147,6 +147,56 @@ class ProviderError(Exception):
 
 
 # ---------------------------------------------------------------------------
+# Built-in keys shipped inside the installer
+# ---------------------------------------------------------------------------
+# The release build writes builtin.json next to this file so chat works on a
+# fresh install with no setup. It lives outside config.json on purpose:
+#   * The user's own key always wins. Clearing it falls back to the built-in.
+#   * A new release rotates the built-in key without touching user settings.
+#   * The key is never copied into the user's config file on disk.
+# The key is XOR scrambled. That only stops automated key scanners from
+# matching it and revoking it. It does NOT stop a person who wants the key,
+# so only keys from accounts that cannot be billed may ever go in here.
+
+BUILTIN_FILE = "builtin.json"
+_SCRAMBLE = b"berkelium-builtin-v1"
+
+
+def scramble(text: str) -> str:
+    import base64
+    raw = text.encode("utf-8")
+    out = bytes(b ^ _SCRAMBLE[i % len(_SCRAMBLE)] for i, b in enumerate(raw))
+    return base64.b64encode(out).decode("ascii")
+
+
+def unscramble(blob: str) -> str:
+    import base64
+    raw = base64.b64decode(blob.encode("ascii"))
+    return bytes(b ^ _SCRAMBLE[i % len(_SCRAMBLE)] for i, b in enumerate(raw)).decode("utf-8")
+
+
+def load_builtin(path: str) -> dict:
+    """{provider_id: {"api_key": ..., "model": ...}}. A missing or broken file
+    means no built-in keys. That is the normal case in development."""
+    try:
+        with open(path, "r") as f:
+            raw = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
+    out = {}
+    for pid, entry in (raw.get("providers") or {}).items():
+        if pid not in PROVIDERS or not isinstance(entry, dict):
+            continue
+        try:
+            key = unscramble(entry.get("k", ""))
+        except Exception:  # noqa: BLE001 (a corrupt entry is skipped, not fatal)
+            continue
+        if key:
+            out[pid] = {"api_key": key, "model": str(entry.get("model", ""))}
+    return out
+
+
+# ---------------------------------------------------------------------------
 # Config storage
 # ---------------------------------------------------------------------------
 
@@ -157,10 +207,11 @@ class ProviderStore:
     leave config.json half written. Other top-level keys are preserved.
     """
 
-    def __init__(self, config_path: str, legacy_config: dict):
+    def __init__(self, config_path: str, legacy_config: dict, builtin: Optional[dict] = None):
         self.path = config_path
         self._lock = threading.Lock()
         self._legacy = legacy_config
+        self.builtin = builtin or {}
 
     def _read(self) -> dict:
         try:
@@ -177,6 +228,18 @@ class ProviderStore:
         if provider_id == "fireworks":
             data.setdefault("api_key", self._legacy.get("fireworks_api_key", ""))
             data.setdefault("model", self._legacy.get("model_id", ""))
+        # Fall back to the shipped key only when the user has none of their
+        # own. "_builtin" is internal: public_view turns it into a flag and it
+        # is never written to disk, because update() starts from the raw file.
+        shipped = self.builtin.get(provider_id)
+        if shipped:
+            # The shipped model is a sensible default even for a user who
+            # pasted their own key but never picked a model.
+            if not data.get("model") and shipped["model"]:
+                data["model"] = shipped["model"]
+            if not data.get("api_key"):
+                data["api_key"] = shipped["api_key"]
+                data["_builtin"] = True
         return data
 
     def update(self, provider_id: str, changes: dict) -> dict:
@@ -232,6 +295,8 @@ def public_view(p: Provider, data: dict) -> dict:
         "configured": is_configured(p, data),
         "can_list_models": bool(p.models_shape),
         "docs_url": p.docs_url,
+        # True while the shipped free key is in use, so Settings can say so.
+        "builtin": bool(data.get("_builtin")),
     }
 
 
@@ -372,6 +437,11 @@ async def call_litellm(p: Provider, data: dict, model: str, messages: list[dict]
         code = "not_running" if p.kind == "local" else "unreachable"
         raise ProviderError(code, f"Could not reach {p.label}", 503)
     except litellm.BadRequestError as e:
+        # Groq (and some others) answer a bad key with 400, not 401. Without
+        # this the user would see a raw provider message instead of "fix
+        # your key in Settings".
+        if "invalid_api_key" in str(e) or "Invalid API Key" in str(e):
+            raise ProviderError("key_rejected", f"{p.label} rejected the API key", 502)
         raise ProviderError("bad_request", f"{p.label} rejected the request: {e}", 400)
     except Exception as e:  # noqa: BLE001 (map anything else to a clean 502)
         raise ProviderError("upstream_error", f"{p.label} failed: {e}", 502)
@@ -389,4 +459,18 @@ async def chat(p: Provider, data: dict, model: str, messages: list[dict],
         raise ProviderError("no_model", f"Pick a model for {p.label}", 400)
     if p.id == "ollama":
         return await call_ollama(p, data, model, messages, timeout)
-    return await call_litellm(p, data, model, messages, timeout)
+    try:
+        return await call_litellm(p, data, model, messages, timeout)
+    except ProviderError as e:
+        # The shipped key is one free quota shared by every install. When it
+        # runs dry the fix is the user's own key, not "wait a minute", so the
+        # frontend needs a different code to say that.
+        if data.get("_builtin") and e.code == "upstream_rate_limit":
+            raise ProviderError("builtin_rate_limit",
+                                f"The free {p.label} quota is used up for now", 429) from e
+        # A revoked or blocked shipped key: the user did nothing wrong, so
+        # do not tell them "your key" was rejected.
+        if data.get("_builtin") and e.code == "key_rejected":
+            raise ProviderError("builtin_unavailable",
+                                f"The free built-in {p.label} key no longer works", 502) from e
+        raise
