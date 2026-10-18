@@ -150,7 +150,8 @@ async def lifespan(app: FastAPI):
     else:
         log.info("Skipping Fireworks startup ping (key or model_id empty).")
     yield
-    NEURAL.close()
+    if NEURAL is not None:
+        NEURAL.close()
 
 
 limiter = Limiter(key_func=get_remote_address)
@@ -196,11 +197,17 @@ def require_api_key(x_api_key: Optional[str] = Header(default=None)) -> None:
 
 # Neural service (text-to-3D, Gaussian scenes, rendering, durable jobs) under /v1/neural, behind the same API key.
 # Jobs and artifacts persist under BERKELIUM_NEURAL_HOME (default ~/.berkelium/neural) and survive restarts.
+# Optional: the packaged desktop backend (PyInstaller) ships chat only, without the neural package and its heavy
+# dependencies. Chat must keep working there, so a missing neural service disables /v1/neural instead of crashing.
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "neural"))
-from berkelium_neural.service.api import NeuralService, create_router  # noqa: E402
-
-NEURAL = NeuralService()
-app.include_router(create_router(NEURAL), dependencies=[Depends(require_api_key)])
+try:
+    from berkelium_neural.service.api import NeuralService, create_router  # noqa: E402
+except ImportError as _neural_err:
+    NEURAL = None
+    logging.getLogger(__name__).warning("neural service unavailable (%s); /v1/neural is disabled", _neural_err)
+else:
+    NEURAL = NeuralService()
+    app.include_router(create_router(NEURAL), dependencies=[Depends(require_api_key)])
 
 
 MAX_HISTORY_MESSAGES = 20
