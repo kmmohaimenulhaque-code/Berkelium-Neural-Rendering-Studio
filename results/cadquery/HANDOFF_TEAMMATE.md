@@ -6,7 +6,7 @@
 - **Base model:** `Qwen/Qwen3-32B` @ `9216db5781bf21249d130ec9da846c4624c16137`; trained 2780 / 2780 steps
 - **Type:** the GGUF and `-merged` repos are full weights (base + LoRA merged); the adapter repo is LoRA only.
 - **GGUF sha256:** `e432ceb3922d6dc70d7890f1fefef5666528ec6278cb46f04c033f44ae2dc777`
-- **Eval:** D-034 **NOT EVALUATED**: opt-in only; the E-C2 eval was skipped (deadline), D-034 not applied. The Q4_K_M GGUF itself was not evaluated.
+- **Eval:** D-034 **PASS** (E-C2 finished 2026-10-18T11:18Z, `E-C2.json`): held-out exec+valid 0.863, IoU 0.442 vs base 0.000. The Q4_K_M GGUF itself was not evaluated.
 - **Use:** system prompt is in the repo (`system`); temperature 0; run the returned script in a sandbox.
 - **Licence:** non-commercial (CAD-Recode CC-BY-NC-4.0 in the training data).
 

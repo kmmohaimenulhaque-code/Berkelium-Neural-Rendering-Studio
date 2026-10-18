@@ -97,6 +97,9 @@ def section(res: dict, analysis: str, gguf: bool) -> str:
                         f"{b['first']['iou_mean']:.3f} | {t['first']['iou_mean']:.3f} | {t['with_repair']['execute_valid']:.3f} |")
     crit = "\n".join(f"| {c['name']} | {c['value']} | {c['threshold']} | {'PASS' if c['pass'] else 'FAIL'} |" for c in d["criteria"])
     note = "\n\n> These numbers are for the bf16 model. The Q4_K_M GGUF was not evaluated separately.\n" if gguf else "\n"
+    if not res["base"]["metrics"]["all_heldout"]["first"].get("format_ok", 1):
+        note += ("\n> The zero-shot base never produced a parseable script in the required format (format_ok 0.0), so its 0.000 "
+                 "measures format compliance, not CAD ability.\n")
     return f"""{BEGIN}
 ## E-C2 evaluation ({res['finished_utc']}, {res['host']['device']}, {res['generation_backend']}){note}
 Zero-shot `{res['base']['model']}` vs fine-tuned, same prompts, greedy, thinking off; {res['data']['n_items']} held-out prompts
@@ -130,11 +133,11 @@ def main() -> int:
     (rd / "E-C2.examples.md").write_text(analysis + "\n")
     rec = json.loads((rd / "publish_receipt.json").read_text())
     from huggingface_hub import HfApi, hf_hub_download
-    api = HfApi(token=os.environ["HF_TOKEN"])
+    api = HfApi(token=os.environ.get("HF_TOKEN"))   # None -> cached `hf auth login`
     for repo, gguf in ((rec["adapter_repo"], False), (rec.get("merged_repo"), False), (rec.get("gguf_repo"), True)):
         if not repo:
             continue
-        card = Path(hf_hub_download(repo, "README.md", token=os.environ["HF_TOKEN"])).read_text()
+        card = Path(hf_hub_download(repo, "README.md", token=os.environ.get("HF_TOKEN"))).read_text()
         card = re.sub(re.escape(BEGIN) + ".*?" + re.escape(END) + "\n?", "", card, flags=re.S)
         card = card.replace("NOT EVALUATED", f"see E-C2 below ({res['d034']['verdict']})")
         card = card.rstrip() + "\n\n" + section(res, analysis, gguf)
