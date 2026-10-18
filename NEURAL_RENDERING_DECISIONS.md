@@ -63,6 +63,14 @@ Evidence labels: `[O]` inspected implementation observation, `[F]` external sour
 
 ### Outcomes (applied 2026-10-16/17, numbers in results/)
 
+- **D-033 (E-C1, applied 2026-10-18, `results/cad/E-C1/E-C1.report.md`):** m2 (Qwen3-8B + cad LoRA, 601 steps) on test
+  (451, unseen seeds of trained families): schema 1.00, realise 0.998, req 0.997, IoU 0.936; zero-shot Qwen3-8B: schema
+  0.00 on every set (it never writes a valid DesignProposal). Held-out families (354: pipe_elbow, chair, knob,
+  hinge_leaf): m2 schema 0.63, **realise 0.49 (< 0.60) → FAIL**, req 0.15, IoU 0.056 (paired diff vs base +0.056,
+  CI [0.042, 0.071]). Gear 14/14. 5 of 6 checks pass; **decision: not promoted**. m2 stays opt-in (`cad`); `auto` does
+  not route to it. Reading: it learned the trained families almost perfectly but does not generalise to unseen object
+  kinds (expected from template data). Weak in-distribution spots: rocket_nozzle IoU 0.25, honeycomb 0.50.
+
 - **D-029:** zimage-triposr v2 vs Shap-E on E-T3: B1 F@0.05 0.603 vs 0.669, B1 Chamfer 0.055 vs 0.047, B2 R@1 0.85 vs 0.95 → none met; `OPEN_WORLD_RANKING = (shap-e-text300m, zimage-triposr)`. v2 is better on composition (B4 part count 0.50 with the planner vs 0.00) and B3 geometry.
 - **D-030:** anchor LoRA vs base v2: 1 of 4 criteria met (valid rate); F@0.05 0.546, Chamfer 0.060, B2 R@1 0.25 → not promoted.
 - **D-031:** capsule v2: part count 0.40 (< 0.53), Chamfer +0.018 vs v1 → not promoted; capsule-v1 stays.
