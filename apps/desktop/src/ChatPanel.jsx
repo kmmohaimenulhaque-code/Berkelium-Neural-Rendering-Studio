@@ -44,6 +44,9 @@ function describeError(err, provider) {
             return { text: err.message };
         case "unreachable":
             return { text: `Could not reach ${name}. Check your internet connection.` };
+        case "timeout":
+            // Local models load into memory on first use, which can take minutes.
+            return { text: `${name} took too long to answer. A big model can need a few minutes to load the first time. Try again.` };
         default:
             break;
     }

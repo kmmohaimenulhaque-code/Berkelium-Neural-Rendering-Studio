@@ -393,14 +393,18 @@ async def check_provider(p: Provider, data: dict, timeout: float = 8.0) -> dict:
 # ---------------------------------------------------------------------------
 
 async def call_ollama(p: Provider, data: dict, model: str, messages: list[dict],
-                      timeout: float) -> str:
+                      timeout: float, extra: Optional[dict] = None) -> str:
     url = f"{_base_url(p, data)}/api/chat"
     body = {"model": model, "messages": messages, "stream": False}
+    # Per-model settings (think, options, keep_alive). The core fields above win.
+    body = {**(extra or {}), **body}
     try:
         async with httpx.AsyncClient(timeout=timeout) as client:
             r = await client.post(url, json=body)
     except httpx.ConnectError:
         raise ProviderError("not_running", "Ollama is not running", 503)
+    except httpx.TimeoutException:
+        raise ProviderError("timeout", "The model took too long to answer", 504)
     except httpx.RequestError as e:
         raise ProviderError("unreachable", f"Ollama request failed: {e}", 502)
     if r.status_code == 404:
@@ -464,13 +468,13 @@ async def call_litellm(p: Provider, data: dict, model: str, messages: list[dict]
 
 
 async def chat(p: Provider, data: dict, model: str, messages: list[dict],
-               timeout: float = 60.0) -> str:
+               timeout: float = 60.0, ollama_extra: Optional[dict] = None) -> str:
     if not is_configured(p, data):
         raise ProviderError("not_configured", f"{p.label} is not set up yet", 400)
     if not model:
         raise ProviderError("no_model", f"Pick a model for {p.label}", 400)
     if p.id == "ollama":
-        return await call_ollama(p, data, model, messages, timeout)
+        return await call_ollama(p, data, model, messages, timeout, ollama_extra)
     # Providers retire models. For the shipped key, a vanished model falls back
     # to the backups the release build tested, so users never see the error.
     tries = [model]

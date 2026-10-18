@@ -28,6 +28,7 @@ from PIL import Image
 from pydantic import BaseModel, Field, field_validator
 from pypdf import PdfReader
 
+import cad_models
 import providers as prov
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
@@ -111,6 +112,9 @@ if not BACKEND_API_KEY:
 MAX_PROMPT_CHARS = 4000
 MAX_UPLOAD_BYTES = 10 * 1024 * 1024
 FIREWORKS_TIMEOUT_SECONDS = 60.0
+# Models on your own hardware can be slow: a big one needs time to load into
+# memory and then writes a long answer. Cloud providers keep the short limit.
+LOCAL_TIMEOUT_SECONDS = 600.0
 FIREWORKS_MAX_RETRIES = 3
 STARTUP_PING_TIMEOUT = 10.0
 HEALTH_PING_TIMEOUT = 5.0
@@ -450,15 +454,30 @@ def _get_provider(provider_id: str) -> prov.Provider:
     return p
 
 
+def cad_ollama_extra(cad) -> Optional[dict]:
+    if not cad:
+        return None
+    return {"think": False, "options": dict(cad_models.OLLAMA_OPTIONS),
+            "keep_alive": cad_models.OLLAMA_KEEP_ALIVE}
+
+
 async def _chat_via_provider(payload: ChatRequest) -> dict:
     p = _get_provider(payload.provider)
     data = provider_store.get(p.id)
     model = (payload.model or data.get("model") or p.default_model).strip()
-    messages = [{"role": "system", "content": SYSTEM_PROMPT}]
-    messages += [{"role": h.role, "content": h.content} for h in payload.history]
-    messages.append({"role": "user", "content": payload.message})
-    log.info("chat via %s model=%s history=%s", p.id, model, len(payload.history))
-    text = await prov.chat(p, data, model, messages, timeout=FIREWORKS_TIMEOUT_SECONDS)
+    cad = cad_models.find(model)
+    if cad:
+        # Our CAD models only work with the prompt they were trained on.
+        messages = cad_models.build_messages(cad, payload.message)
+    else:
+        messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+        messages += [{"role": h.role, "content": h.content} for h in payload.history]
+        messages.append({"role": "user", "content": payload.message})
+    timeout = LOCAL_TIMEOUT_SECONDS if p.kind == "local" else FIREWORKS_TIMEOUT_SECONDS
+    log.info("chat via %s model=%s history=%s cad=%s", p.id, model, len(payload.history),
+             cad.label if cad else "no")
+    text = await prov.chat(p, data, model, messages, timeout=timeout,
+                           ollama_extra=cad_ollama_extra(cad))
     return {"response": text, "provider": p.id, "model": model}
 
 
