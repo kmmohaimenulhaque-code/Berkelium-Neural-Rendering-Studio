@@ -23,5 +23,10 @@
   "tokenizer.json": "476870a1f2fb6f6a2759a6ede2383bf9d5d738f17844563b65c91965b722ae09",
   "tokenizer_config.json": "e39a9b4e9f0204148a3d0727a9d26c8b7bd8672a55722f389433c19984f03d84",
   "generation_config.json": "68ffa9373772ab6d2a5fbd62583e7a3e7bb49a9740f2a2ee32202ce06839dd4f"
- }
+ },
+ "gguf_repo": "Mhaquehaque/berkelium-qwen3-32b-cadquery-v1-GGUF",
+ "gguf_file": "berkelium-qwen3-32b-cadquery-v1-Q4_K_M.gguf",
+ "gguf_sha256": "e432ceb3922d6dc70d7890f1fefef5666528ec6278cb46f04c033f44ae2dc777",
+ "gguf_bytes": 19762149536,
+ "public": true
 }
