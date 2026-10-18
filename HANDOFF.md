@@ -60,6 +60,26 @@ model. No E-C2 number exists until the owner's run writes `results/cadquery/E-C2
 **Licences:** CAD-Recode is **CC-BY-NC-4.0**, so the E-C2 model is treated as non-commercial; Text-to-CadQuery
 states no licence (derived from Text2CAD/DeepCAD). See `THIRD_PARTY_NOTICES.md`.
 
+### 0.1 Live run status (2026-10-17, ~22:00Z): see `1AMmi300x.md` for the full log
+- Data done (220 min): 121,575 train rows, 74.8M tokens. The D-034 gate passed.
+- **Training: Qwen3-32B + Unsloth, LoRA r=64, 2,780 steps, all of them** (owner kept 32B over the 10 h size rule:
+  `--no-size-switch`). Last reported: step 508/2780 after 2:13 h, 15.67 s/step, about 9.9 h left (tqdm estimate).
+- **Eval skipped (owner decision, deadline).** D-034 is not applied. The model ships **opt-in, "not evaluated"**, and
+  the cards say so. There are no E-C2 numbers.
+- **Automatic after training** (no laptop needed; the jobs run detached on the droplet):
+  1. `publish`: the merged bf16 model is built on CPU and uploaded (public, `PUBLISH_ARGS=--public`):
+     - `Mhaquehaque/berkelium-qwen3-32b-cadquery-v1`: LoRA adapter (~2 GB), run manifest, card
+     - `Mhaquehaque/berkelium-qwen3-32b-cadquery-v1-merged`: full bf16 safetensors (~65 GB)
+  2. `scripts/cq_gguf.sh` (already running, waiting for `publish.done`): llama.cpp `620d222` →
+     `Mhaquehaque/berkelium-qwen3-32b-cadquery-v1-GGUF` with `*-Q4_K_M.gguf` (~20 GB, estimate) plus Ollama
+     `system`/`params` files, for `ollama run hf.co/Mhaquehaque/berkelium-qwen3-32b-cadquery-v1-GGUF:Q4_K_M`.
+  3. `results/cadquery/HANDOFF_TEAMMATE.md` on the droplet: links, base model + revision, steps trained, measured
+     file sizes, full weights vs LoRA, GGUF sha256, licence (non-commercial, CAD-Recode CC-BY-NC-4.0).
+- No weights in git (teammate request = CLAUDE.md rule 7). Only small JSON/MD files are committed on the droplet.
+- Untested until it runs: the merge on CPU, the HF uploads, the llama.cpp convert of this model, and Ollama reading
+  `system`/`params` from the repo. If the GGUF fails, the `-merged` repo is the fallback for the teammate.
+- The pipeline's final summary step will crash after publish (no `E-C2.json`). This is expected and harmless.
+
 ## 1. Direction (owner decision, 2026-10-17)
 Go all in on **Qwen3-8B on Kaggle** as the text → design compiler. Never on the agent host's CPU, never MI300X.
 The pipeline is: any natural text → `DesignProposal` JSON (gear/beam CEM requirements, or procedural Geometry
