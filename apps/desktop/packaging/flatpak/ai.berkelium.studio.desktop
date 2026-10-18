@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Berkelium Studio
+Comment=Text to engineering CAD and Gaussian-splat rendering
+Exec=berkelium-studio %U
+Icon=ai.berkelium.studio
+Type=Application
+Categories=Graphics;3DGraphics;Engineering;
