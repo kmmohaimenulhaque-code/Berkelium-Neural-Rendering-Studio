@@ -25,6 +25,7 @@ const GENERATORS = [
   ["shap-e-text300m", "Shap-E text300M (open-world; CPU minutes, GPU ~1 min)"],
   ["zimage-triposr", "Z-Image → TripoSR (open-world, needs a GPU)"],
   ["cad", "Engineering CAD (Qwen3-8B design compiler → Berkelium core, exact geometry)"],
+  ["cadquery", "CadQuery (Qwen3-32B → sandboxed CadQuery → STEP → Berkelium core; opt-in, not evaluated)"],
 ];
 const short = (h) => (h ? String(h).slice(0, 10) : "?");
 const VIEW_RENDER_MAX_SIDE = 384;
