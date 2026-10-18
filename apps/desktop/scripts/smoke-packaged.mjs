@@ -194,7 +194,10 @@ if (process.env.SMOKE_REAL_CHAT === "1") {
     // Blocking a release on that would be wrong, so warn instead.
     console.log(`::warning::free provider rate limited during the smoke test (${chat.body?.code}). The key itself was accepted.`);
   } else {
-    fail(`real chat failed (${chat.status}): ${JSON.stringify(chat.body)}. Check the GROQ_API_KEY secret.`, child);
+    const hint = chat.body?.code === "builtin_unavailable" ? " Check the GROQ_API_KEY secret."
+      : chat.body?.code === "model_not_found" ? " The shipped model is not available to this key."
+      : "";
+    fail(`real chat failed (${chat.status}): ${JSON.stringify(chat.body)}.${hint}`, child);
   }
 }
 
