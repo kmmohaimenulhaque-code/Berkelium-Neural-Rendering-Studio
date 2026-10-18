@@ -76,7 +76,7 @@ def test_builtin_skips_unknown_providers_and_corrupt_entries(tmp_path):
         "made_up": {"k": providers.scramble("x")},
         "openai": {"k": providers.scramble("sk-good"), "model": "m"},
     }}))
-    assert providers.load_builtin(str(f)) == {"openai": {"api_key": "sk-good", "model": "m"}}
+    assert providers.load_builtin(str(f)) == {"openai": {"api_key": "sk-good", "model": "m", "fallbacks": []}}
 
 
 def test_builtin_makes_groq_ready_and_the_default(bundled):
@@ -174,23 +174,129 @@ def test_users_own_key_rate_limit_keeps_normal_code(bundled, monkeypatch):
 
 # ------------------------------------------------------------ release tool
 
-def test_make_builtin_skips_without_a_key():
+def _make_builtin():
     sys.path.insert(0, os.path.join(ROOT, "tools"))
     import make_builtin
-    assert make_builtin.build({}) == {}
-    assert make_builtin.build({"GROQ_API_KEY": "   "}) == {}
+    return make_builtin
+
+
+def fake_groq(listed, answers):
+    """A stand-in for Groq: lists `listed`, and only models in `answers` reply."""
+    import urllib.error
+    calls = []
+
+    def request(url, key, body=None, timeout=30):
+        calls.append(body["model"] if body else "LIST")
+        if body is None:
+            return {"data": [{"id": m} for m in listed]}
+        if body["model"] in answers:
+            return {"choices": [{"message": {"content": "OK"}}]}
+        raise urllib.error.HTTPError(url, 404, "model_not_found", {}, None)
+    return request, calls
+
+
+def test_make_builtin_skips_without_a_key():
+    mb = _make_builtin()
+    assert mb.build({}) == {}
+    assert mb.build({"GROQ_API_KEY": "   "}) == {}
 
 
 def test_make_builtin_output_loads_back(tmp_path):
-    sys.path.insert(0, os.path.join(ROOT, "tools"))
-    import make_builtin
+    mb = _make_builtin()
     import providers
-    data = make_builtin.build({"GROQ_API_KEY": FAKE_KEY})
+    req, _ = fake_groq(["llama-3.3-70b-versatile", "openai/gpt-oss-20b"], {"llama-3.3-70b-versatile", "openai/gpt-oss-20b"})
+    data = mb.build({"GROQ_API_KEY": FAKE_KEY}, request=req, log=lambda *_: None)
     f = tmp_path / "builtin.json"
     f.write_text(json.dumps(data))
     assert FAKE_KEY not in f.read_text()
     assert providers.load_builtin(str(f)) == {
-        "groq": {"api_key": FAKE_KEY, "model": make_builtin.DEFAULT_GROQ_MODEL}}
+        "groq": {"api_key": FAKE_KEY, "model": "llama-3.3-70b-versatile", "fallbacks": ["openai/gpt-oss-20b"]}}
+
+
+def test_make_builtin_skips_models_that_do_not_answer():
+    # The exact failure seen in release run 5: the account lists the model but cannot use it.
+    mb = _make_builtin()
+    req, calls = fake_groq(["llama-3.3-70b-versatile", "openai/gpt-oss-120b", "whisper-large-v3"],
+                           {"openai/gpt-oss-120b"})
+    model, backups = mb.pick_models(FAKE_KEY, request=req, log=lambda *_: None)
+    assert model == "openai/gpt-oss-120b"
+    assert backups == []
+    assert "whisper-large-v3" not in calls  # speech models are never tried as chat
+
+
+def test_make_builtin_never_tries_unlisted_models():
+    mb = _make_builtin()
+    req, calls = fake_groq(["some-new-chat-model"], {"some-new-chat-model"})
+    model, _ = mb.pick_models(FAKE_KEY, request=req, log=lambda *_: None)
+    assert model == "some-new-chat-model"
+    assert calls == ["LIST", "some-new-chat-model"]
+
+
+def test_make_builtin_explicit_model_goes_first():
+    mb = _make_builtin()
+    req, _ = fake_groq(["llama-3.3-70b-versatile", "llama-3.1-8b-instant"], {"llama-3.3-70b-versatile", "llama-3.1-8b-instant"})
+    model, backups = mb.pick_models(FAKE_KEY, "llama-3.1-8b-instant", request=req, log=lambda *_: None)
+    assert (model, backups) == ("llama-3.1-8b-instant", ["llama-3.3-70b-versatile"])
+
+
+def test_make_builtin_fails_loudly_when_nothing_answers():
+    mb = _make_builtin()
+    req, _ = fake_groq(["llama-3.3-70b-versatile"], set())
+    with pytest.raises(mb.BuildError, match="none of the 1 listed"):
+        mb.pick_models(FAKE_KEY, request=req, log=lambda *_: None)
+
+
+def test_make_builtin_bad_key_says_so():
+    import urllib.error
+    mb = _make_builtin()
+
+    def request(url, key, body=None, timeout=30):
+        raise urllib.error.HTTPError(url, 401, "Unauthorized", {}, None)
+    with pytest.raises(mb.BuildError, match="GROQ_API_KEY secret is wrong"):
+        mb.pick_models(FAKE_KEY, request=request, log=lambda *_: None)
+
+
+def test_retired_builtin_model_falls_back(tmp_path, monkeypatch):
+    import providers
+    cfg = tmp_path / "config.json"
+    cfg.write_text("{}")
+    builtin = tmp_path / "builtin.json"
+    builtin.write_text(json.dumps({"providers": {"groq": {
+        "k": providers.scramble(FAKE_KEY), "model": "old-model", "fallbacks": ["new-model"]}}}))
+    main, client = _fresh_import(monkeypatch, cfg, builtin)
+    tried = []
+
+    async def fake(p, data, model, messages, timeout, **kw):
+        tried.append(model)
+        if model == "old-model":
+            raise main.prov.ProviderError("model_not_found", "gone", 400)
+        return "reply from backup"
+    monkeypatch.setattr(main.prov, "call_litellm", fake)
+
+    r = client.post("/chat", json={"message": "hi", "provider": "groq"})
+    assert r.status_code == 200, r.text
+    assert r.json()["response"] == "reply from backup"
+    assert tried == ["old-model", "new-model"]
+
+
+def test_users_own_key_does_not_use_builtin_fallbacks(tmp_path, monkeypatch):
+    import providers
+    cfg = tmp_path / "config.json"
+    cfg.write_text(json.dumps({"providers": {"groq": {"api_key": "gsk_users_own_key_999", "model": "their-model"}}}))
+    builtin = tmp_path / "builtin.json"
+    builtin.write_text(json.dumps({"providers": {"groq": {
+        "k": providers.scramble(FAKE_KEY), "model": "old-model", "fallbacks": ["new-model"]}}}))
+    main, client = _fresh_import(monkeypatch, cfg, builtin)
+    tried = []
+
+    async def fake(p, data, model, messages, timeout, **kw):
+        tried.append(model)
+        raise main.prov.ProviderError("model_not_found", "gone", 400)
+    monkeypatch.setattr(main.prov, "call_litellm", fake)
+
+    r = client.post("/chat", json={"message": "hi", "provider": "groq"})
+    assert r.json()["code"] == "model_not_found"
+    assert tried == ["their-model"]  # their key, their model: no silent switching
 
 
 # ------------------------------------------------------------ launcher

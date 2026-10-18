@@ -192,7 +192,9 @@ def load_builtin(path: str) -> dict:
         except Exception:  # noqa: BLE001 (a corrupt entry is skipped, not fatal)
             continue
         if key:
-            out[pid] = {"api_key": key, "model": str(entry.get("model", ""))}
+            backups = entry.get("fallbacks")
+            out[pid] = {"api_key": key, "model": str(entry.get("model", "")),
+                        "fallbacks": [str(m) for m in backups] if isinstance(backups, list) else []}
     return out
 
 
@@ -240,6 +242,7 @@ class ProviderStore:
             if not data.get("api_key"):
                 data["api_key"] = shipped["api_key"]
                 data["_builtin"] = True
+                data["_fallbacks"] = list(shipped.get("fallbacks", []))
         return data
 
     def update(self, provider_id: str, changes: dict) -> dict:
@@ -463,8 +466,18 @@ async def chat(p: Provider, data: dict, model: str, messages: list[dict],
         raise ProviderError("no_model", f"Pick a model for {p.label}", 400)
     if p.id == "ollama":
         return await call_ollama(p, data, model, messages, timeout)
+    # Providers retire models. For the shipped key, a vanished model falls back
+    # to the backups the release build tested, so users never see the error.
+    tries = [model]
+    if data.get("_builtin"):
+        tries += [m for m in data.get("_fallbacks", []) if m != model]
     try:
-        return await call_litellm(p, data, model, messages, timeout)
+        for i, m in enumerate(tries):
+            try:
+                return await call_litellm(p, data, m, messages, timeout)
+            except ProviderError as e:
+                if e.code != "model_not_found" or i == len(tries) - 1:
+                    raise
     except ProviderError as e:
         # The shipped key is one free quota shared by every install. When it
         # runs dry the fix is the user's own key, not "wait a minute", so the
