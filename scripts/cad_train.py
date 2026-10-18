@@ -71,7 +71,7 @@ def main() -> int:
     a = ap.parse_args()
 
     import torch
-    from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
+    from peft import LoraConfig, get_peft_model
     from transformers import (AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, DataCollatorForSeq2Seq,
                               Trainer, TrainerCallback, TrainingArguments)
 
@@ -109,8 +109,10 @@ def main() -> int:
                                                  dtype=torch.float16, device_map={"": rank},
                                                  attn_implementation="sdpa")
     model.config.use_cache = False
-    model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=True,
-                                            gradient_checkpointing_kwargs={"use_reentrant": False})
+    # Not prepare_model_for_kbit_training: it upcasts every non-quantised weight to fp32, and Qwen3-8B's untied
+    # 152k-vocab embedding + lm_head alone become ~5 GB per GPU -> OOM on a 15 GB T4 (seen 2026-10-17).
+    model.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False})
+    model.enable_input_require_grads()
     lcfg = LoraConfig(r=a.rank, lora_alpha=a.alpha, lora_dropout=0.05, bias="none", task_type="CAUSAL_LM",
                       target_modules=["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"])
     model = get_peft_model(model, lcfg)

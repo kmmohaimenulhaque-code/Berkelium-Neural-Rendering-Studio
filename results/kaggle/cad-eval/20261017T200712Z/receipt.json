@@ -1,0 +1,149 @@
+{
+  "local": {
+    "job": "cad-eval",
+    "run_id": "20261017T200712Z",
+    "kernel": "kmmohaimenulhaque/berkelium-cad-eval",
+    "accelerator": "NvidiaTeslaT4",
+    "spec": "configs/kaggle/cad_eval.json",
+    "spec_sha256": "4eaed0dd86de659d936c2693030c0e0e0d002d79f973b2b697108bc590c3a2c9",
+    "bundle_sha256": "e248bb3a357ae2dd6227598f3277c2c95b1145c7acead24040af5a0019e2bf4c",
+    "bundle_bytes": 26479,
+    "bundle_files": 11,
+    "data": null,
+    "git": {
+      "commit": "fecc73abf0d55585b2202b0e3cfc77d6f74395da",
+      "branch": "Berkelium-Neural-Rendering-Studio-neural-v1",
+      "dirty_files": 2
+    },
+    "pushed_at": "2026-10-17T20:07:16Z",
+    "status": "pushed",
+    "push_response": "Kernel version 1 successfully pushed.  Please check progress at https://www.kaggle.com/code/kmmohaimenulhaque/berkelium-cad-eval",
+    "verification": {
+      "files": 6,
+      "verified": 6,
+      "problems": [],
+      "bytes": 4613105
+    }
+  },
+  "remote": {
+    "job": "cad-eval",
+    "run_id": "20261017T200712Z",
+    "started_at": "2026-10-17T20:46:47Z",
+    "bundle_sha256_expected": "e248bb3a357ae2dd6227598f3277c2c95b1145c7acead24040af5a0019e2bf4c",
+    "steps": [
+      {
+        "name": "deps",
+        "seconds": 21.4,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "pip install -q -r configs/environments/cad-train.txt -r configs/environments/berkelium-core.txt",
+            "rc": 0,
+            "log": "logs/00_deps.log",
+            "tail": "   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 556.4/556.4 kB 2.9 MB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 43.1/43.1 MB 50.1 MB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 66.8/66.8 MB 30.4 MB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 1.4/1.4 MB 57.5 MB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 750.4/750.4 kB 27.7 MB/s eta 0:00:00\n"
+          }
+        ]
+      },
+      {
+        "name": "inputs",
+        "seconds": 2.4,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "python scripts/cad_fetch_data.py && python scripts/cad_fetch_inputs.py && python scripts/cad_eval.py plan",
+            "rc": 0,
+            "log": "logs/01_inputs.log",
+            "tail": "{\"source\": \"/kaggle/input/notebooks/kmmohaimenulhaque/berkelium-cad-dataset/out/files/data/cad_v1\", \"files\": 6, \"bad\": []}\n{\n \"placed\": {\n  \"exports/qwen3-8b-cad-v1/adapter/README.md\": \"0e0823d2434cbad0\",\n  \"exports/qwen3-8b-cad-v1/adapter/adapter_config.json\": \"d8d0c7a25b7816fe\",\n  \"exports/qwen3-8b-cad-v1/adapter/adapter_model.safetensors\": \"c76b64ee3ab08fb5\",\n  \"exports/qwen3-8b-cad-v1/adapter/chat_template.jinja\": \"a55ee1b1660128b7\",\n  \"exports/qwen3-8b-cad-v1/adapter/tokenizer.json\": \"be75606093db2094\",\n  \"exports/qwen3-8b-cad-v1/adapter/tokenizer_config.json\": \"04b1682c59acbd05\",\n  \"exports/qwen3-8b-cad-v1/run_manifest.json\": \"1033e35caf859b89\"\n },\n \"bad\": []\n}\n805 items: test 451 (33 families), heldout 354\n"
+          }
+        ]
+      },
+      {
+        "name": "fetch",
+        "seconds": 82.3,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "python -c \"from huggingface_hub import snapshot_download as s; s('Qwen/Qwen3-8B', revision='b968826d9c46dd6066d109eabc6255188de91218')\"",
+            "rc": 0,
+            "log": "logs/02_fetch.log",
+            "tail": "\nFetching 15 files:   0%|          | 0/15 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.\n\nFetching 15 files:   7%|\u258b         | 1/15 [00:00<00:02,  4.69it/s]\nFetching 15 files:  47%|\u2588\u2588\u2588\u2588\u258b     | 7/15 [00:00<00:00, 16.05it/s]\nFetching 15 files:  60%|\u2588\u2588\u2588\u2588\u2588\u2588    | 9/15 [00:00<00:00, 12.81it/s]\nFetching 15 files:  67%|\u2588\u2588\u2588\u2588\u2588\u2588\u258b   | 10/15 [00:20<00:00, 12.81it/s]\nFetching 15 files:  73%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258e  | 11/15 [00:36<00:21,  5.43s/it]\nFetching 15 files:  80%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588  | 12/15 [00:50<00:20,  6.97s/it]\nFetching 15 files:  87%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258b | 13/15 [01:06<00:17,  8.67s/it]\nFetching 15 files:  93%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258e| 14/15 [01:07<00:06,  6.91s/it]\nFetching 15 files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 15/15 [01:13<00:00,  6.86s/it]\nFetching 15 files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 15/15 [01:13<00:00,  4.92s/it]\n"
+          }
+        ]
+      },
+      {
+        "name": "generate",
+        "seconds": 27154.3,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "CUDA_VISIBLE_DEVICES=0 python scripts/cad_eval.py generate --model base --shard 0/1",
+            "rc": 0,
+            "log": "logs/03_generate_0.log",
+            "tail": "eights:  88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a | 351/399 [00:36<00:06,  7.86it/s]\nLoading weights:  88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a | 353/399 [00:36<00:05,  8.76it/s]\nLoading weights:  89%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2589 | 356/399 [00:37<00:05,  7.92it/s]\nLoading weights:  90%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2589 | 358/399 [00:37<00:07,  5.27it/s]\nLoading weights:  91%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | 362/399 [00:37<00:04,  7.72it/s]\nLoading weights:  91%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | 364/399 [00:38<00:04,  8.74it/s]\nLoading weights:  92%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258f| 367/399 [00:38<00:04,  7.89it/s]\nLoading weights:  92%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258f| 369/399 [00:39<00:05,  5.22it/s]\nLoading weights:  93%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258e| 373/399 [00:39<00:03,  7.74it/s]\nLoading weights:  94%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258d| 375/399 [00:39<00:02,  8.70it/s]\nLoading weights:  95%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258d| 378/399 [00:40<00:02,  7.87it/s]\nLoading weights:  95%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c| 380/399 [00:40<00:03,  5.21it/s]\nLoading weights:  96%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c| 384/399 [00:41<00:01,  7.69it/s]\nLoading weights:  97%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258b| 386/399 [00:41<00:01,  8.64it/s]\nLoading weights:  97%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258b| 389/399 [00:41<00:01,  7.85it/s]\nLoading weights:  98%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a| 391/399 [00:42<00:01,  5.18it/s]\nLoading weights:  99%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2589| 395/399 [00:42<00:00,  7.76it/s]\nLoading weights:  99%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2589| 397/399 [00:42<00:00,  8.72it/s]\nLoading weights: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 399/399 [00:42<00:00,  9.33it/s]\n[base 0/1] 12/805 675s\n[base 0/1] 24/805 1345s\n[base 0/1] 36/805 1819s\n[base 0/1] 48/805 2494s\n[base 0/1] 60/805 3015s\n[base 0/1] 72/805 3392s\n[base 0/1] 84/805 3652s\n[base 0/1] 96/805 3892s\n[base 0/1] 108/805 4171s\n[base 0/1] 120/805 4847s\n[base 0/1] 132/805 5139s\n[base 0/1] 144/805 5817s\n[base 0/1] 156/805 6135s\n[base 0/1] 168/805 6486s\n[base 0/1] 180/805 6679s\n[base 0/1] 192/805 6885s\n[base 0/1] 204/805 7116s\n[base 0/1] 216/805 7394s\n[base 0/1] 228/805 7665s\n[base 0/1] 240/805 7912s\n[base 0/1] 252/805 8590s\n[base 0/1] 264/805 9181s\n[base 0/1] 276/805 9860s\n[base 0/1] 288/805 10080s\n[base 0/1] 300/805 10347s\n[base 0/1] 312/805 11024s\n[base 0/1] 324/805 11415s\n[base 0/1] 336/805 11648s\n[base 0/1] 348/805 12325s\n[base 0/1] 360/805 12548s\n[base 0/1] 372/805 12774s\n[base 0/1] 384/805 12999s\n[base 0/1] 396/805 13259s\n[base 0/1] 408/805 13510s\n[base 0/1] 420/805 13785s\n[base 0/1] 432/805 14087s\n[base 0/1] 444/805 14402s\n[base 0/1] 456/805 14630s\n[base 0/1] 468/805 14880s\n[base 0/1] 480/805 15141s\n[base 0/1] 492/805 15820s\n[base 0/1] 504/805 16069s\n[base 0/1] 516/805 16480s\n[base 0/1] 528/805 16735s\n[base 0/1] 540/805 17006s\n[base 0/1] 552/805 17220s\n[base 0/1] 564/805 17529s\n[base 0/1] 576/805 17798s\n[base 0/1] 588/805 18083s\n[base 0/1] 600/805 18761s\n[base 0/1] 612/805 19416s\n[base 0/1] 624/805 20091s\n[base 0/1] 636/805 20482s\n[base 0/1] 648/805 21161s\n[base 0/1] 660/805 21839s\n[base 0/1] 672/805 22521s\n[base 0/1] 684/805 22849s\n[base 0/1] 696/805 23146s\n[base 0/1] 708/805 23772s\n[base 0/1] 720/805 24250s\n[base 0/1] 732/805 24522s\n[base 0/1] 744/805 25064s\n[base 0/1] 756/805 25421s\n[base 0/1] 768/805 25850s\n[base 0/1] 780/805 26326s\n[base 0/1] 792/805 26756s\n[base 0/1] 804/805 27016s\n[base 0/1] 805/805 27079s\n"
+          },
+          {
+            "cmd": "CUDA_VISIBLE_DEVICES=1 python scripts/cad_eval.py generate --model m2 --shard 0/1",
+            "rc": 0,
+            "log": "logs/03_generate_1.log",
+            "tail": "\nLoading weights:  86%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258b | 345/399 [00:35<00:06,  8.04it/s]\nLoading weights:  87%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258b | 347/399 [00:36<00:09,  5.31it/s]\nLoading weights:  88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a | 351/399 [00:36<00:06,  7.85it/s]\nLoading weights:  88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a | 353/399 [00:36<00:05,  8.79it/s]\nLoading weights:  89%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2589 | 356/399 [00:37<00:05,  7.92it/s]\nLoading weights:  90%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2589 | 358/399 [00:37<00:07,  5.26it/s]\nLoading weights:  91%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | 362/399 [00:37<00:04,  7.71it/s]\nLoading weights:  91%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | 364/399 [00:38<00:04,  8.75it/s]\nLoading weights:  92%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258f| 367/399 [00:38<00:04,  7.89it/s]\nLoading weights:  92%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258f| 369/399 [00:39<00:05,  5.23it/s]\nLoading weights:  93%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258e| 373/399 [00:39<00:03,  7.76it/s]\nLoading weights:  94%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258d| 375/399 [00:39<00:02,  8.70it/s]\nLoading weights:  95%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258d| 378/399 [00:40<00:02,  7.87it/s]\nLoading weights:  95%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c| 380/399 [00:40<00:03,  5.21it/s]\nLoading weights:  96%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c| 384/399 [00:41<00:01,  7.69it/s]\nLoading weights:  97%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258b| 386/399 [00:41<00:01,  8.64it/s]\nLoading weights:  97%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258b| 389/399 [00:41<00:01,  7.85it/s]\nLoading weights:  98%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a| 391/399 [00:42<00:01,  5.18it/s]\nLoading weights:  99%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2589| 395/399 [00:42<00:00,  7.77it/s]\nLoading weights:  99%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2589| 397/399 [00:42<00:00,  8.72it/s]\nLoading weights: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 399/399 [00:42<00:00,  9.33it/s]\n[m2 0/1] 12/805 150s\n[m2 0/1] 24/805 350s\n[m2 0/1] 36/805 604s\n[m2 0/1] 48/805 723s\n[m2 0/1] 60/805 880s\n[m2 0/1] 72/805 1020s\n[m2 0/1] 84/805 1149s\n[m2 0/1] 96/805 1355s\n[m2 0/1] 108/805 2012s\n[m2 0/1] 120/805 2670s\n[m2 0/1] 132/805 3327s\n[m2 0/1] 144/805 3557s\n[m2 0/1] 156/805 4214s\n[m2 0/1] 168/805 4361s\n[m2 0/1] 180/805 5017s\n[m2 0/1] 192/805 5324s\n[m2 0/1] 204/805 5982s\n[m2 0/1] 216/805 6207s\n[m2 0/1] 228/805 6865s\n[m2 0/1] 240/805 7521s\n[m2 0/1] 252/805 8178s\n[m2 0/1] 264/805 8348s\n[m2 0/1] 276/805 8542s\n[m2 0/1] 288/805 8791s\n[m2 0/1] 300/805 8946s\n[m2 0/1] 312/805 9603s\n[m2 0/1] 324/805 9868s\n[m2 0/1] 336/805 10047s\n[m2 0/1] 348/805 10305s\n[m2 0/1] 360/805 10472s\n[m2 0/1] 372/805 10617s\n[m2 0/1] 384/805 10767s\n[m2 0/1] 396/805 11425s\n[m2 0/1] 408/805 11671s\n[m2 0/1] 420/805 11850s\n[m2 0/1] 432/805 11985s\n[m2 0/1] 444/805 12164s\n[m2 0/1] 456/805 12335s\n[m2 0/1] 468/805 12994s\n[m2 0/1] 480/805 13277s\n[m2 0/1] 492/805 13468s\n[m2 0/1] 504/805 14128s\n[m2 0/1] 516/805 14786s\n[m2 0/1] 528/805 15055s\n[m2 0/1] 540/805 15597s\n[m2 0/1] 552/805 16256s\n[m2 0/1] 564/805 16915s\n[m2 0/1] 576/805 17188s\n[m2 0/1] 588/805 17405s\n[m2 0/1] 600/805 18064s\n[m2 0/1] 612/805 18247s\n[m2 0/1] 624/805 18908s\n[m2 0/1] 636/805 19569s\n[m2 0/1] 648/805 19856s\n[m2 0/1] 660/805 20517s\n[m2 0/1] 672/805 20809s\n[m2 0/1] 684/805 21471s\n[m2 0/1] 696/805 21714s\n[m2 0/1] 708/805 22375s\n[m2 0/1] 720/805 22587s\n[m2 0/1] 732/805 22802s\n[m2 0/1] 744/805 23208s\n[m2 0/1] 756/805 23869s\n[m2 0/1] 768/805 24036s\n[m2 0/1] 780/805 24252s\n[m2 0/1] 792/805 24479s\n[m2 0/1] 804/805 24751s\n[m2 0/1] 805/805 24803s\n"
+          }
+        ]
+      },
+      {
+        "name": "score",
+        "seconds": 239.2,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "python scripts/cad_eval.py score --workers 4 && python scripts/cad_eval.py report",
+            "rc": 0,
+            "log": "logs/04_score.log",
+            "tail": "/usr/local/lib/python3.13/dist-packages/berkelium/geometry/curves.py:26: RuntimeWarning: invalid value encountered in divide\n  B[i] = 3 * ((P[i + 1] - P[i]) / h[i] - (P[i] - P[i - 1]) / h[i - 1])\n/usr/local/lib/python3.13/dist-packages/berkelium/geometry/curves.py:26: RuntimeWarning: invalid value encountered in divide\n  B[i] = 3 * ((P[i + 1] - P[i]) / h[i] - (P[i] - P[i - 1]) / h[i - 1])\nscored 1610 generations\n# E-C1: text -> DesignProposal compiler (Qwen3-8B, NF4 on Kaggle T4)\n\nScored by the Berkelium core (Manifold backend). Rule: D-033 (pre-registered).\n\n| model | set | n | parse | schema | realise | req | IoU | truncated |\n|---|---|---|---|---|---|---|---|---|\n| base | test | 451 | 1.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0111 |\n| base | heldout | 354 | 0.9972 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0367 |\n| base | test_gear | 14 | 1.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |\n| m2 | test | 451 | 1.0 | 1.0 | 0.9978 | 0.9971 | 0.9357 | 0.0 |\n| m2 | heldout | 354 | 0.9887 | 0.6299 | 0.4915 | 0.1494 | 0.0561 | 0.0678 |\n| m2 | test_gear | 14 | 1.0 | 1.0 | 1.0 | 1.0 | 1.0 | 0.0 |\n\nPaired IoU (m2 - base): {\"test\": {\"n\": 451, \"iou_diff_mean\": 0.9357, \"ci95\": [0.917, 0.9528]}, \"heldout\": {\"n\": 354, \"iou_diff_mean\": 0.0561, \"ci95\": [0.0423, 0.0705]}}\n\n## D-033\n"
+          }
+        ]
+      }
+    ],
+    "status": "completed",
+    "bundle_sha256": "e248bb3a357ae2dd6227598f3277c2c95b1145c7acead24040af5a0019e2bf4c",
+    "environment": {
+      "python": "3.13.15",
+      "host": "3e95569b4671",
+      "nvidia_smi": "Tesla T4, 15360 MiB, 580.178.04\nTesla T4, 15360 MiB, 580.178.04",
+      "torch": "2.11.0+cu128 12.8 2",
+      "disk_free_gb": {
+        "/kaggle/working": 20.9,
+        "/tmp": 1148.8
+      },
+      "mem_total_mib": 32099,
+      "cpu_count": 4
+    },
+    "finished_at": "2026-10-18T04:25:14Z",
+    "outputs": 6
+  },
+  "manifest": {
+    "results/cad/E-C1/E-C1.json": {
+      "sha256": "79075fb3f6ec76de29d62b97658af6bc910dc58db2bd4bba70929451755da0b6",
+      "bytes": 17511
+    },
+    "results/cad/E-C1/E-C1.report.md": {
+      "sha256": "3475af4f8f57c5196eda188720d6d3d272bdfcd67e4591845243b2a8f81b247e",
+      "bytes": 3080
+    },
+    "results/cad/E-C1/gen_base_0of1.jsonl": {
+      "sha256": "82c6a24b2a801be62dbda53c856aea230cc43170dfb86ea00f0eb99bc7f21633",
+      "bytes": 2343676
+    },
+    "results/cad/E-C1/gen_m2_0of1.jsonl": {
+      "sha256": "040c9f9907e6ab8150db4b46935762954f45f68366d794ebbf0acc2a61e6cd2c",
+      "bytes": 1744788
+    },
+    "results/cad/E-C1/items.jsonl": {
+      "sha256": "ae41749cc257636f3848f3225e036c4f5e641e9dff62dabc391a6bb53bbe0e91",
+      "bytes": 144436
+    },
+    "results/cad/E-C1/scores.jsonl": {
+      "sha256": "25aaf303456d4003569e8c73b667ed355bdd4a5084de370ade343cd31fc5f976",
+      "bytes": 359614
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "cad-gguf",
+  "title": "berkelium-cad-gguf",
+  "slug": "berkelium-cad-gguf",
+  "description": "Merge the E-C1 LoRA into Qwen3-8B on CPU and export GGUF Q4_K_M (llama.cpp pinned)",
+  "gpu": false,
+  "kernel_sources": ["kmmohaimenulhaque/berkelium-qwen3-8b-cad-train"],
+  "include": ["scripts/cad_gguf.sh", "scripts/cad_fetch_inputs.py", "configs/environments/cad-train.txt"],
+  "steps": [
+    {"name": "deps", "cmd": "pip install -q transformers==5.16.1 peft==0.18.0 accelerate==1.14.0 safetensors==0.8.0 huggingface_hub==1.29.0"},
+    {"name": "inputs", "cmd": "python scripts/cad_fetch_inputs.py"},
+    {"name": "gguf", "cmd": "bash scripts/cad_gguf.sh"}
+  ],
+  "outputs": ["exports/gguf/*.gguf"]
+}

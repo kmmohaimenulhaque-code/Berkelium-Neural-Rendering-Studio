@@ -1,6 +1,6 @@
 # CLAUDE.md — working rules for agents in this repo
 
-Read `HANDOFF.md` first. It holds the current state, checklist and next step.
+Read `README.md` (Achievements section) first, then `NEURAL_RENDERING_DECISIONS.md` and `docs/ENGINEERING_LOG.md`.
 
 ## Product target
 Natural-language text → **Qwen3-8B "intent compiler" (LoRA)** → `DesignProposal` JSON (CEM requirements or
