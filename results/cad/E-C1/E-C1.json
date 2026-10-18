@@ -1,0 +1,915 @@
+{
+  "models": {
+    "base": {
+      "test": {
+        "n": 451,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": 0.0,
+        "req_n": 342,
+        "iou": 0.0,
+        "truncated": 0.0111
+      },
+      "test_gear": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": 0.0,
+        "req_n": 14,
+        "iou": 0.0,
+        "truncated": 0.0
+      },
+      "heldout": {
+        "n": 354,
+        "parse": 0.9972,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": 0.0,
+        "req_n": 154,
+        "iou": 0.0,
+        "truncated": 0.0367
+      },
+      "heldout_gear": {}
+    },
+    "m2": {
+      "test": {
+        "n": 451,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 0.9978,
+        "req": 0.9971,
+        "req_n": 342,
+        "iou": 0.9357,
+        "truncated": 0.0
+      },
+      "test_gear": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 1.0,
+        "req": 1.0,
+        "req_n": 14,
+        "iou": 1.0,
+        "truncated": 0.0
+      },
+      "heldout": {
+        "n": 354,
+        "parse": 0.9887,
+        "schema": 0.6299,
+        "realise": 0.4915,
+        "req": 0.1494,
+        "req_n": 154,
+        "iou": 0.0561,
+        "truncated": 0.0678
+      },
+      "heldout_gear": {}
+    }
+  },
+  "families": {
+    "bottle": {
+      "base": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": 0.0,
+        "req_n": 10,
+        "iou": 0.0,
+        "truncated": 0.0
+      },
+      "m2": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 1.0,
+        "req": 1.0,
+        "req_n": 10,
+        "iou": 0.9301,
+        "truncated": 0.0
+      }
+    },
+    "bushing": {
+      "base": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": 0.0,
+        "req_n": 11,
+        "iou": 0.0,
+        "truncated": 0.0
+      },
+      "m2": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 1.0,
+        "req": 1.0,
+        "req_n": 11,
+        "iou": 0.9643,
+        "truncated": 0.0
+      }
+    },
+    "cantilever_beam": {
+      "base": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": 0.0,
+        "req_n": 14,
+        "iou": 0.0,
+        "truncated": 0.0
+      },
+      "m2": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 1.0,
+        "req": 1.0,
+        "req_n": 14,
+        "iou": 1.0,
+        "truncated": 0.0
+      }
+    },
+    "chair": {
+      "base": {
+        "n": 90,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": 0.0,
+        "req_n": 77,
+        "iou": 0.0,
+        "truncated": 0.0
+      },
+      "m2": {
+        "n": 90,
+        "parse": 1.0,
+        "schema": 0.5889,
+        "realise": 0.5222,
+        "req": 0.2468,
+        "req_n": 77,
+        "iou": 0.0255,
+        "truncated": 0.0333
+      }
+    },
+    "custom_part": {
+      "base": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": 0.0,
+        "req_n": 12,
+        "iou": 0.0,
+        "truncated": 0.0
+      },
+      "m2": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 1.0,
+        "req": 1.0,
+        "req_n": 12,
+        "iou": 0.9996,
+        "truncated": 0.0
+      }
+    },
+    "enclosure": {
+      "base": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": 0.0,
+        "req_n": 13,
+        "iou": 0.0,
+        "truncated": 0.0
+      },
+      "m2": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 1.0,
+        "req": 1.0,
+        "req_n": 13,
+        "iou": 1.0,
+        "truncated": 0.0
+      }
+    },
+    "flange": {
+      "base": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": 0.0,
+        "req_n": 11,
+        "iou": 0.0,
+        "truncated": 0.0
+      },
+      "m2": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 1.0,
+        "req": 1.0,
+        "req_n": 11,
+        "iou": 0.9777,
+        "truncated": 0.0
+      }
+    },
+    "funnel": {
+      "base": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": 0.0,
+        "req_n": 13,
+        "iou": 0.0,
+        "truncated": 0.0
+      },
+      "m2": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 1.0,
+        "req": 1.0,
+        "req_n": 13,
+        "iou": 0.984,
+        "truncated": 0.0
+      }
+    },
+    "gear_pair": {
+      "base": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": 0.0,
+        "req_n": 14,
+        "iou": 0.0,
+        "truncated": 0.0
+      },
+      "m2": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 1.0,
+        "req": 1.0,
+        "req_n": 14,
+        "iou": 1.0,
+        "truncated": 0.0
+      }
+    },
+    "heat_sink": {
+      "base": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": 0.0,
+        "req_n": 14,
+        "iou": 0.0,
+        "truncated": 0.0
+      },
+      "m2": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 1.0,
+        "req": 1.0,
+        "req_n": 14,
+        "iou": 0.8954,
+        "truncated": 0.0
+      }
+    },
+    "hex_bolt": {
+      "base": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": null,
+        "req_n": 0,
+        "iou": 0.0,
+        "truncated": 0.0
+      },
+      "m2": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 1.0,
+        "req": null,
+        "req_n": 0,
+        "iou": 0.9978,
+        "truncated": 0.0
+      }
+    },
+    "hex_nut": {
+      "base": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": 0.0,
+        "req_n": 13,
+        "iou": 0.0,
+        "truncated": 0.0714
+      },
+      "m2": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 1.0,
+        "req": 1.0,
+        "req_n": 13,
+        "iou": 0.9988,
+        "truncated": 0.0
+      }
+    },
+    "hinge_leaf": {
+      "base": {
+        "n": 90,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": 0.0,
+        "req_n": 77,
+        "iou": 0.0,
+        "truncated": 0.0778
+      },
+      "m2": {
+        "n": 90,
+        "parse": 1.0,
+        "schema": 0.6667,
+        "realise": 0.6333,
+        "req": 0.0519,
+        "req_n": 77,
+        "iou": 0.0246,
+        "truncated": 0.0222
+      }
+    },
+    "honeycomb_panel": {
+      "base": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": 0.0,
+        "req_n": 14,
+        "iou": 0.0,
+        "truncated": 0.0714
+      },
+      "m2": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 1.0,
+        "req": 1.0,
+        "req_n": 14,
+        "iou": 0.4997,
+        "truncated": 0.0
+      }
+    },
+    "i_beam": {
+      "base": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": 0.0,
+        "req_n": 13,
+        "iou": 0.0,
+        "truncated": 0.0
+      },
+      "m2": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 1.0,
+        "req": 1.0,
+        "req_n": 13,
+        "iou": 1.0,
+        "truncated": 0.0
+      }
+    },
+    "knob": {
+      "base": {
+        "n": 89,
+        "parse": 0.9888,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": null,
+        "req_n": 0,
+        "iou": 0.0,
+        "truncated": 0.0674
+      },
+      "m2": {
+        "n": 89,
+        "parse": 0.9551,
+        "schema": 0.5618,
+        "realise": 0.3258,
+        "req": null,
+        "req_n": 0,
+        "iou": 0.1235,
+        "truncated": 0.1685
+      }
+    },
+    "l_bracket": {
+      "base": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": 0.0,
+        "req_n": 13,
+        "iou": 0.0,
+        "truncated": 0.0
+      },
+      "m2": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 1.0,
+        "req": 1.0,
+        "req_n": 13,
+        "iou": 0.9998,
+        "truncated": 0.0
+      }
+    },
+    "ladder": {
+      "base": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": 0.0,
+        "req_n": 12,
+        "iou": 0.0,
+        "truncated": 0.0
+      },
+      "m2": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 1.0,
+        "req": 1.0,
+        "req_n": 12,
+        "iou": 0.9993,
+        "truncated": 0.0
+      }
+    },
+    "lantern": {
+      "base": {
+        "n": 3,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": null,
+        "req_n": 0,
+        "iou": 0.0,
+        "truncated": 0.0
+      },
+      "m2": {
+        "n": 3,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 1.0,
+        "req": null,
+        "req_n": 0,
+        "iou": 1.0,
+        "truncated": 0.0
+      }
+    },
+    "mug": {
+      "base": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": 0.0,
+        "req_n": 12,
+        "iou": 0.0,
+        "truncated": 0.0
+      },
+      "m2": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 1.0,
+        "req": 1.0,
+        "req_n": 12,
+        "iou": 0.9955,
+        "truncated": 0.0
+      }
+    },
+    "pillow_block": {
+      "base": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": null,
+        "req_n": 0,
+        "iou": 0.0,
+        "truncated": 0.0
+      },
+      "m2": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 1.0,
+        "req": null,
+        "req_n": 0,
+        "iou": 1.0,
+        "truncated": 0.0
+      }
+    },
+    "pipe_elbow": {
+      "base": {
+        "n": 85,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": null,
+        "req_n": 0,
+        "iou": 0.0,
+        "truncated": 0.0
+      },
+      "m2": {
+        "n": 85,
+        "parse": 1.0,
+        "schema": 0.7059,
+        "realise": 0.4824,
+        "req": null,
+        "req_n": 0,
+        "iou": 0.0511,
+        "truncated": 0.0471
+      }
+    },
+    "pipe_tee": {
+      "base": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": 0.0,
+        "req_n": 13,
+        "iou": 0.0,
+        "truncated": 0.0
+      },
+      "m2": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 1.0,
+        "req": 1.0,
+        "req_n": 13,
+        "iou": 0.9995,
+        "truncated": 0.0
+      }
+    },
+    "plate_holes": {
+      "base": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": 0.0,
+        "req_n": 11,
+        "iou": 0.0,
+        "truncated": 0.0714
+      },
+      "m2": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 1.0,
+        "req": 1.0,
+        "req_n": 11,
+        "iou": 0.9952,
+        "truncated": 0.0
+      }
+    },
+    "pressure_vessel": {
+      "base": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": 0.0,
+        "req_n": 10,
+        "iou": 0.0,
+        "truncated": 0.0
+      },
+      "m2": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 0.9286,
+        "req": 0.9,
+        "req_n": 10,
+        "iou": 0.7809,
+        "truncated": 0.0
+      }
+    },
+    "propeller": {
+      "base": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": 0.0,
+        "req_n": 8,
+        "iou": 0.0,
+        "truncated": 0.0
+      },
+      "m2": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 1.0,
+        "req": 1.0,
+        "req_n": 8,
+        "iou": 0.9655,
+        "truncated": 0.0
+      }
+    },
+    "pulley": {
+      "base": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": 0.0,
+        "req_n": 10,
+        "iou": 0.0,
+        "truncated": 0.0
+      },
+      "m2": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 1.0,
+        "req": 1.0,
+        "req_n": 10,
+        "iou": 0.9694,
+        "truncated": 0.0
+      }
+    },
+    "rocket_body": {
+      "base": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": null,
+        "req_n": 0,
+        "iou": 0.0,
+        "truncated": 0.0
+      },
+      "m2": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 1.0,
+        "req": null,
+        "req_n": 0,
+        "iou": 0.9901,
+        "truncated": 0.0
+      }
+    },
+    "rocket_nozzle": {
+      "base": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": null,
+        "req_n": 0,
+        "iou": 0.0,
+        "truncated": 0.0
+      },
+      "m2": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 1.0,
+        "req": null,
+        "req_n": 0,
+        "iou": 0.2479,
+        "truncated": 0.0
+      }
+    },
+    "spoked_wheel": {
+      "base": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": 0.0,
+        "req_n": 13,
+        "iou": 0.0,
+        "truncated": 0.1429
+      },
+      "m2": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 1.0,
+        "req": 1.0,
+        "req_n": 13,
+        "iou": 0.9995,
+        "truncated": 0.0
+      }
+    },
+    "sprocket": {
+      "base": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": 0.0,
+        "req_n": 13,
+        "iou": 0.0,
+        "truncated": 0.0
+      },
+      "m2": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 1.0,
+        "req": 1.0,
+        "req_n": 13,
+        "iou": 0.9905,
+        "truncated": 0.0
+      }
+    },
+    "stepped_shaft": {
+      "base": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": 0.0,
+        "req_n": 10,
+        "iou": 0.0,
+        "truncated": 0.0
+      },
+      "m2": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 1.0,
+        "req": 1.0,
+        "req_n": 10,
+        "iou": 1.0,
+        "truncated": 0.0
+      }
+    },
+    "table": {
+      "base": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": 0.0,
+        "req_n": 13,
+        "iou": 0.0,
+        "truncated": 0.0
+      },
+      "m2": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 1.0,
+        "req": 1.0,
+        "req_n": 13,
+        "iou": 0.9284,
+        "truncated": 0.0
+      }
+    },
+    "truss": {
+      "base": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": 0.0,
+        "req_n": 13,
+        "iou": 0.0,
+        "truncated": 0.0
+      },
+      "m2": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 1.0,
+        "req": 1.0,
+        "req_n": 13,
+        "iou": 0.8195,
+        "truncated": 0.0
+      }
+    },
+    "u_channel": {
+      "base": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": 0.0,
+        "req_n": 13,
+        "iou": 0.0,
+        "truncated": 0.0
+      },
+      "m2": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 1.0,
+        "req": 1.0,
+        "req_n": 13,
+        "iou": 1.0,
+        "truncated": 0.0
+      }
+    },
+    "vase": {
+      "base": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": 0.0,
+        "req_n": 13,
+        "iou": 0.0,
+        "truncated": 0.0
+      },
+      "m2": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 1.0,
+        "req": 1.0,
+        "req_n": 13,
+        "iou": 0.9994,
+        "truncated": 0.0
+      }
+    },
+    "washer": {
+      "base": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 0.0,
+        "realise": 0.0,
+        "req": 0.0,
+        "req_n": 13,
+        "iou": 0.0,
+        "truncated": 0.0
+      },
+      "m2": {
+        "n": 14,
+        "parse": 1.0,
+        "schema": 1.0,
+        "realise": 1.0,
+        "req": 1.0,
+        "req_n": 13,
+        "iou": 1.0,
+        "truncated": 0.0
+      }
+    }
+  },
+  "paired_iou_m2_minus_base": {
+    "test": {
+      "n": 451,
+      "iou_diff_mean": 0.9357,
+      "ci95": [
+        0.917,
+        0.9528
+      ]
+    },
+    "heldout": {
+      "n": 354,
+      "iou_diff_mean": 0.0561,
+      "ci95": [
+        0.0423,
+        0.0705
+      ]
+    }
+  },
+  "d033": {
+    "checks": {
+      "test schema >= 0.95": true,
+      "test realise >= 0.90": true,
+      "test req >= 0.85": true,
+      "heldout realise >= 0.60": false,
+      "heldout IoU beats base (paired CI > 0)": true,
+      "gear req not below base": true
+    },
+    "promote": false
+  }
+}

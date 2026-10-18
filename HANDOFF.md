@@ -132,7 +132,9 @@ Status: ☐ todo · ◐ in progress · ☑ done (with evidence file)
   Generate for zero-shot Qwen3-8B and M2 on test + held-out families + gear test.
 - ☐ Score inside the kernel with the core: parse → schema → realise → requirements → voxel IoU. Repair loop
   (≤ 3 JSON-Patch rounds) is reported separately, as "with repair".
-- ☐ `results/cad/E-C1_*.json` + `.report.md`. Apply D-033 and record the decision in `NEURAL_RENDERING_DECISIONS.md`.
+- ☑ **E-C1 done 2026-10-18** (`results/cad/E-C1/E-C1.report.md`): m2 test realise 0.998 / req 0.997 / IoU 0.936 (base 0.00);
+  held-out families realise 0.49 (needs ≥ 0.60) → **D-033 FAIL, not promoted; opt-in only.** Next: add more varied families
+  + paraphrased text, retrain (the 32B CadQuery run on the MI300X is the broader attempt).
 
 ### K4 — Studio integration
 - ☑ `cad` generator (`berkelium_neural/cad/generator.py`, tests `services/neural/tests/test_cad.py` 12 passed): text → M2 (Kaggle/HF endpoint or local GPU) → core `run()` → GLB → mesh → Gaussians → render.
