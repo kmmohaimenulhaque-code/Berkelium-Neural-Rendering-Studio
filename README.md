@@ -816,3 +816,11 @@ comes from deterministic code.
 
 Every promotion rule was pre-registered before training (`NEURAL_RENDERING_DECISIONS.md` D-029–D-034), and failed or
 not-promoted results stay on record.
+
+## ⬇️ Download: complete Linux build
+
+**[Berkelium-0.2.0-linux-x86_64.AppImage](https://huggingface.co/Mhaquehaque/berkelium-studio-linux/resolve/main/Berkelium-0.2.0-linux-x86_64.AppImage)** (240 MB) is the **complete** Linux desktop app,
+built from this `main` (neural/CAD merge + Team Berkelium CAD-model chat + backend start-up fix), smoke test passed.
+`chmod +x Berkelium-0.2.0-linux-x86_64.AppImage && ./Berkelium-0.2.0-linux-x86_64.AppImage`. sha256 `a141d8ae…865b95e`.
+Hosted on Hugging Face because GitHub caps files at 100 MB: [Mhaquehaque/berkelium-studio-linux](https://huggingface.co/Mhaquehaque/berkelium-studio-linux).
+Add your Groq key in Settings for chat. CAD generation with our 8B/32B models runs from source (see Achievements above).
