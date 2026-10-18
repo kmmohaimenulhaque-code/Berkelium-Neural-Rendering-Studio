@@ -1,0 +1,1224 @@
+{
+  "local": {
+    "job": "et3-shap-e-gpu",
+    "run_id": "20261016T144156Z",
+    "kernel": "kmmohaimenulhaque/berkelium-final",
+    "accelerator": "NvidiaTeslaT4",
+    "spec": "configs/kaggle/et3_shap_e_gpu.json",
+    "spec_sha256": "e5fbc2141e837e9c237d5d0ec1c3b917dd3a302fc931c7f8ff8085c5cb13760d",
+    "bundle_sha256": "2aaf060b25e792e5823b4f718448ce67036221930297eebfe0d1f58c7c386c40",
+    "bundle_bytes": 501571,
+    "bundle_files": 112,
+    "git": {
+      "commit": "1c64333aa7a924b96b3be154f6b3380cc19458f4",
+      "branch": "neural-v1",
+      "dirty_files": 4
+    },
+    "pushed_at": "2026-10-16T14:41:57Z",
+    "status": "pushed",
+    "push_response": "Kernel version 2 successfully pushed.  Please check progress at https://www.kaggle.com/code/kmmohaimenulhaque/berkelium-final",
+    "kernel_final_status": "complete",
+    "verification": {
+      "files": 278,
+      "verified": 278,
+      "problems": [],
+      "bytes": 250738909
+    }
+  },
+  "remote": {
+    "job": "et3-shap-e-gpu",
+    "run_id": "20261016T144156Z",
+    "started_at": "2026-10-16T14:42:06Z",
+    "bundle_sha256_expected": "2aaf060b25e792e5823b4f718448ce67036221930297eebfe0d1f58c7c386c40",
+    "steps": [
+      {
+        "name": "deps",
+        "seconds": 6.4,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "pip install -q trimesh==5.1.1 scikit-image==0.26.0 pydantic==2.13.5",
+            "rc": 0,
+            "log": "logs/00_deps.log",
+            "tail": "   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 750.4/750.4 kB 19.3 MB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 13.7/13.7 MB 93.5 MB/s eta 0:00:00\nERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.\ncucim-cu12 26.2.1 requires scikit-image<0.26.0,>=0.19.0, but you have scikit-image 0.26.0 which is incompatible.\n"
+          }
+        ]
+      },
+      {
+        "name": "setup_openworld",
+        "seconds": 725.9,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "PYTHON=python bash scripts/setup_openworld.sh",
+            "rc": 0,
+            "log": "logs/01_setup_openworld.log",
+            "tail": "     \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 40.6/40.6 kB 2.1 MB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 44.8/44.8 kB 1.9 MB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 807.9/807.9 kB 28.5 MB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 98.9/98.9 kB 6.4 MB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 115.9/115.9 kB 7.6 MB/s eta 0:00:00\ntext_cond.pt: OK\nvector_decoder.pt: OK\nViT-L-14.pt: OK\ntext_cond_config.yaml: OK\nvector_decoder_config.yaml: OK\ndiffusion_config.yaml: OK\n{\n  \"file\": \"/tmp/berkelium/data/models/shap_e/clip_vit_l14_text.pt\",\n  \"sha256\": \"594bf8e64597a3a5e0879a25a86aea54f6306ba18ac9f1c6d0208aae0b4ddccd\",\n  \"tensors\": 150,\n  \"visual_tensors_dropped\": 296,\n  \"ignored_attributes\": [],\n  \"dtypes\": [\n    \"torch.float16\",\n    \"torch.float32\"\n  ],\n  \"params\": 123650305,\n  \"check\": {\n    \"probes\": [\n      \"a red mug\",\n      \"a red coffee cup\",\n      \"a yellow school bus\",\n      \"a wooden chair with four legs\",\n      \"a chair\"\n    ],\n    \"cos_mug_cup\": 0.9292,\n    \"cos_mug_bus\": 0.5822,\n    \"cos_chair4_chair\": 0.7796,\n    \"cos_chair4_bus\": 0.4956\n  },\n  \"peak_rss_mib\": 1785.8\n}\nnext: python scripts/openworld_generate.py 'a wooden chair with four legs' --steps 16   [--device cuda on a GPU]\n"
+          }
+        ]
+      },
+      {
+        "name": "gpu_smoke",
+        "seconds": 60.5,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "python scripts/run_openworld_benchmark.py gpu-smoke --device cuda --include-cpu-reserved",
+            "rc": 0,
+            "log": "logs/02_gpu_smoke.log",
+            "tail": "{\n  \"gate\": \"pass\",\n  \"prompt\": \"a wooden chair with four legs\",\n  \"seed\": 0,\n  \"steps\": 16,\n  \"sampling\": \"fp32, initial noise from the seeded CPU generator\",\n  \"run\": {\n    \"status\": \"ok\",\n    \"dir\": \"results/text3d/E-T3/gpu_smoke/f425e2a4ddd1_cuda/units/shap-e-text300m/a_wooden_chair_with_four_legs__7bfde254__s0\",\n    \"valid\": true,\n    \"rc\": 0,\n    \"wall_s\": 51.6,\n    \"seconds\": 31.2,\n    \"sample_s\": 23.8,\n    \"decode_s\": 5.9,\n    \"peak_rss_mib\": 2080,\n    \"log\": \"results/text3d/E-T3/gpu_smoke/f425e2a4ddd1_cuda/units/shap-e-text300m/a_wooden_chair_with_four_legs__7bfde254__s0.log\",\n    \"device\": \"cuda\",\n    \"hardware\": {\n      \"device\": \"cuda\",\n      \"host\": \"f425e2a4ddd1\",\n      \"cpu_count\": 4,\n      \"torch\": \"2.11.0+cu128\",\n      \"torch_hip\": null,\n      \"torch_cuda\": \"12.8\",\n      \"threads\": 2,\n      \"gpu_name\": \"Tesla T4\",\n      \"gpu_total_mib\": 14912,\n      \"gpu_count\": 2,\n      \"gpu_peak_allocated_mib\": 2047.4,\n      \"gpu_peak_reserved_mib\": 3732.0\n    }\n  },\n  \"report\": {\n    \"valid\": true,\n    \"n_faces\": 39095,\n    \"components\": 1,\n    \"sample_s\": 23.8,\n    \"decode_s\": 5.9,\n    \"seconds\": 31.2,\n    \"memory_mib\": {\n      \"peak_VmRSS\": 2080,\n      \"peak_RssAnon\": 1235,\n      \"peak_RssFile\": 1525\n    },\n    \"hardware\": {\n      \"device\": \"cuda\",\n      \"host\": \"f425e2a4ddd1\",\n      \"cpu_count\": 4,\n      \"torch\": \"2.11.0+cu128\",\n      \"torch_hip\": null,\n      \"torch_cuda\": \"12.8\",\n      \"threads\": 2,\n      \"gpu_name\": \"Tesla T4\",\n      \"gpu_total_mib\": 14912,\n      \"gpu_count\": 2,\n      \"gpu_peak_allocated_mib\": 2047.4,\n      \"gpu_peak_reserved_mib\": 3732.0\n    }\n  },\n  \"vs_cpu_same_draw\": {\n    \"reference\": \"results/e2e/openworld_api_mesh.glb\",\n    \"reference_faces\": 39093,\n    \"shared_frame_chamfer_l1\": 0.005511794712903788,\n    \"shared_frame_fscore@0.02\": 0.99995,\n    \"aligned_chamfer_l1_unit_extent\": 0.0034549192704614717,\n    \"bitwise_equal\": false\n  },\n  \"equivalent_to_cpu\": true,\n  \"estimate\": {\n    \"pending_units_for_groups\": 54,\n    \"groups\": [\n      \"B1\",\n      \"B4_single\",\n      \"B2\",\n      \"B4_planner\",\n      \"B1_seed1\",\n      \"B1_seed2\"\n    ],\n    \"seconds_per_unit\": 51.6,\n    \"hours_one_gpu\": 0.77,\n    \"note\": \"measured on this smoke run only; a warm page cache may make later units faster\"\n  }\n}\n"
+          }
+        ]
+      },
+      {
+        "name": "generate",
+        "seconds": 2674.1,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "CUDA_VISIBLE_DEVICES=0 python scripts/run_openworld_benchmark.py generate --device cuda --include-cpu-reserved --shard 0/2 --wall-hours 2.5",
+            "rc": 0,
+            "log": "logs/03_generate_0.log",
+            "tail": "27 pending Shap-E units for groups ['B1', 'B4_single', 'B2', 'B4_planner', 'B1_seed1', 'B1_seed2'] (shard 0/2) -> units_cuda_f425e2a4ddd1_shard0of2.jsonl\n[B1] shap-e-text300m 'an elephant': ok (91s)\n[B4_single] shap-e-text300m 'a large orange cylinder on top of a small yellow sphere': ok (176s)\n[B4_single] shap-e-text300m 'a large green sphere on top of a large yellow torus': ok (100s)\n[B2] shap-e-text300m 'a bicycle': ok (42s)\n[B2] shap-e-text300m 'a hammer': ok (45s)\n[B2] shap-e-text300m 'a flower vase': ok (57s)\n[B2] shap-e-text300m 'a glass wine bottle': ok (54s)\n[B4_planner] shap-e-text300m 'a large green box': ok (173s)\n[B4_planner] shap-e-text300m 'a small green cylinder': ok (101s)\n[B4_planner] shap-e-text300m 'a blue sphere': ok (169s)\n[B4_planner] shap-e-text300m 'a large white torus': ok (107s)\n[B4_planner] shap-e-text300m 'a large orange cylinder': ok (142s)\n[B4_planner] shap-e-text300m 'a large red sphere': ok (170s)\n[B4_planner] shap-e-text300m 'a large green sphere': ok (173s)\n[B4_planner] shap-e-text300m 'a white torus': ok (109s)\n[B1_seed1] shap-e-text300m 'a blue coffee mug': ok (115s)\n[B1_seed1] shap-e-text300m 'a white porcelain pitcher': ok (98s)\n[B1_seed1] shap-e-text300m 'a teal plastic easter basket': ok (113s)\n[B1_seed1] shap-e-text300m 'a boat shoe': ok (56s)\n[B1_seed1] shap-e-text300m 'a turboprop airplane with a pilot': ok (47s)\n[B1_seed1] shap-e-text300m 'a C-clamp': ok (48s)\n[B1_seed2] shap-e-text300m 'a blue coffee mug': ok (116s)\n[B1_seed2] shap-e-text300m 'a white porcelain pitcher': ok (117s)\n[B1_seed2] shap-e-text300m 'a teal plastic easter basket': ok (80s)\n[B1_seed2] shap-e-text300m 'a boat shoe': ok (56s)\n[B1_seed2] shap-e-text300m 'a turboprop airplane with a pilot': ok (46s)\n[B1_seed2] shap-e-text300m 'a C-clamp': ok (51s)\n"
+          },
+          {
+            "cmd": "CUDA_VISIBLE_DEVICES=1 python scripts/run_openworld_benchmark.py generate --device cuda --include-cpu-reserved --shard 1/2 --wall-hours 2.5",
+            "rc": 0,
+            "log": "logs/03_generate_1.log",
+            "tail": "27 pending Shap-E units for groups ['B1', 'B4_single', 'B2', 'B4_planner', 'B1_seed1', 'B1_seed2'] (shard 1/2) -> units_cuda_f425e2a4ddd1_shard1of2.jsonl\n[B4_single] shap-e-text300m 'a large white torus next to a large cyan torus': ok (87s)\n[B4_single] shap-e-text300m 'a large red sphere on top of a large cyan sphere': ok (167s)\n[B4_single] shap-e-text300m 'a small purple sphere with a white torus on top': ok (193s)\n[B2] shap-e-text300m 'a ladder': ok (44s)\n[B2] shap-e-text300m 'a watering can': ok (76s)\n[B2] shap-e-text300m 'an open cardboard box': ok (157s)\n[B2] shap-e-text300m 'a shiny metal trophy': ok (75s)\n[B4_planner] shap-e-text300m 'a purple box': ok (194s)\n[B4_planner] shap-e-text300m 'a cyan cone': ok (60s)\n[B4_planner] shap-e-text300m 'a small yellow cone': ok (60s)\n[B4_planner] shap-e-text300m 'a large cyan torus': ok (76s)\n[B4_planner] shap-e-text300m 'a small yellow sphere': ok (154s)\n[B4_planner] shap-e-text300m 'a large cyan sphere': ok (118s)\n[B4_planner] shap-e-text300m 'a large yellow torus': ok (77s)\n[B4_planner] shap-e-text300m 'a small purple sphere': ok (170s)\n[B1_seed1] shap-e-text300m 'a white porcelain teapot': ok (91s)\n[B1_seed1] shap-e-text300m 'a deep bowl': ok (93s)\n[B1_seed1] shap-e-text300m \"a men's boot\": ok (98s)\n[B1_seed1] shap-e-text300m 'a school bus': ok (62s)\n[B1_seed1] shap-e-text300m 'a beige teddy bear': ok (74s)\n[B1_seed1] shap-e-text300m 'an elephant': ok (80s)\n[B1_seed2] shap-e-text300m 'a white porcelain teapot': ok (84s)\n[B1_seed2] shap-e-text300m 'a deep bowl': ok (90s)\n[B1_seed2] shap-e-text300m \"a men's boot\": ok (72s)\n[B1_seed2] shap-e-text300m 'a school bus': ok (60s)\n[B1_seed2] shap-e-text300m 'a beige teddy bear': ok (75s)\n[B1_seed2] shap-e-text300m 'an elephant': ok (85s)\n"
+          }
+        ]
+      }
+    ],
+    "status": "completed",
+    "bundle_sha256": "2aaf060b25e792e5823b4f718448ce67036221930297eebfe0d1f58c7c386c40",
+    "environment": {
+      "python": "3.13.15",
+      "host": "f425e2a4ddd1",
+      "nvidia_smi": "Tesla T4, 15360 MiB, 580.178.04\nTesla T4, 15360 MiB, 580.178.04",
+      "torch": "2.11.0+cu128 12.8 2",
+      "disk_free_gb": {
+        "/kaggle/working": 20.9,
+        "/tmp": 1148.8
+      },
+      "mem_total_mib": 32099,
+      "cpu_count": 4
+    },
+    "finished_at": "2026-10-16T15:40:01Z",
+    "outputs": 278
+  },
+  "manifest": {
+    "results/text3d/E-T3/gpu_smoke/f425e2a4ddd1_cuda/smoke.json": {
+      "sha256": "cc286ddffaccaed5a7c153a43f42327a1c5d831b09e59ec46f8760d5998c1bc8",
+      "bytes": 2704
+    },
+    "results/text3d/E-T3/gpu_smoke/f425e2a4ddd1_cuda/units/shap-e-text300m/a_wooden_chair_with_four_legs__7bfde254__s0.log": {
+      "sha256": "b7e95d15c3fe24f516cb47ecd819dc53eba9c7c63c6906d380a025d7a72cda8b",
+      "bytes": 5368
+    },
+    "results/text3d/E-T3/gpu_smoke/f425e2a4ddd1_cuda/units/shap-e-text300m/a_wooden_chair_with_four_legs__7bfde254__s0/mesh.glb": {
+      "sha256": "8e4708968116b823e8abb019e71f32c34275a0a2199ebe581932eabad3b0b744",
+      "bytes": 782744
+    },
+    "results/text3d/E-T3/gpu_smoke/f425e2a4ddd1_cuda/units/shap-e-text300m/a_wooden_chair_with_four_legs__7bfde254__s0/mesh.npz": {
+      "sha256": "a8166ff80ed526bc06be482ec58d6efae985a22f8d34d05628195e1cebd55263",
+      "bytes": 478663
+    },
+    "results/text3d/E-T3/gpu_smoke/f425e2a4ddd1_cuda/units/shap-e-text300m/a_wooden_chair_with_four_legs__7bfde254__s0/preview.png": {
+      "sha256": "6aa6d207bad1868fe447bdc974ede1993bb423231c788ee5fda9fd820b6a85f9",
+      "bytes": 15289
+    },
+    "results/text3d/E-T3/gpu_smoke/f425e2a4ddd1_cuda/units/shap-e-text300m/a_wooden_chair_with_four_legs__7bfde254__s0/report.json": {
+      "sha256": "40497ec5a0f2c8113540546522a3ddf342bb6b1ee4e1da2d16c3e58d375341a6",
+      "bytes": 3595
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_beige_teddy_bear__fd99299a__s1.log": {
+      "sha256": "dddc50753a0b1488ab14f255ec3ecbf273a42296807f8c409dc4195ac4b660d1",
+      "bytes": 5484
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_beige_teddy_bear__fd99299a__s1/mesh.glb": {
+      "sha256": "b26b71b365adf218ea3f14148f4645a531eaea5708dd09c7b6e0d6f5b270968d",
+      "bytes": 1750892
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_beige_teddy_bear__fd99299a__s1/mesh.npz": {
+      "sha256": "a4cabcf4b73c525e93c28f3ffd638ea619f5de7f4703370722b89628473b5cec",
+      "bytes": 1092852
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_beige_teddy_bear__fd99299a__s1/preview.png": {
+      "sha256": "c5942790c759d7491591ce6e5db0db3958acada2a415b1f24b84c2043711e584",
+      "bytes": 51894
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_beige_teddy_bear__fd99299a__s1/report.json": {
+      "sha256": "d6a8aff9d4c8001ffc97b842080e00d5b53419e22f88c8f2bb6851421aad4fe8",
+      "bytes": 3467
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_beige_teddy_bear__fd99299a__s2.log": {
+      "sha256": "97c7ba212407dc8fa6c7cf58ced640777169adf76af56d4a3d5912b7c5f95783",
+      "bytes": 5492
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_beige_teddy_bear__fd99299a__s2/mesh.glb": {
+      "sha256": "a45c5ce50a0a2a06ce402770bd862371e9f183471e5f3e5b2b69989351dd60f9",
+      "bytes": 1798604
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_beige_teddy_bear__fd99299a__s2/mesh.npz": {
+      "sha256": "f0cd1cb5cf503a1df93cf987d47b670d246630a699a47ac347587c0ecb2e5e20",
+      "bytes": 1123370
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_beige_teddy_bear__fd99299a__s2/preview.png": {
+      "sha256": "2c5cca2c28fbb1f9266948269115078ff9d3473b97a9ebbff3f8ff3cc41d75a9",
+      "bytes": 42732
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_beige_teddy_bear__fd99299a__s2/report.json": {
+      "sha256": "95cbe420fda476c4b881004d3936afb54aa14c16ebf9fd9b52c3cd19f2692a23",
+      "bytes": 3475
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_bicycle__99511b74__s0.log": {
+      "sha256": "360a8667b88f13c727da9b47c1ae5ddd4adba317a3914195ec9bdffc6526f8ab",
+      "bytes": 5491
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_bicycle__99511b74__s0/mesh.glb": {
+      "sha256": "c7b37aa93befdd616a08e145697d6223ebc89db545b63d0ab23161b5aad5c4dc",
+      "bytes": 286068
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_bicycle__99511b74__s0/mesh.npz": {
+      "sha256": "958d7b35af5e126024d3de490173f899c16a18ad70325c223cae7142aca4538a",
+      "bytes": 182180
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_bicycle__99511b74__s0/preview.png": {
+      "sha256": "f99c1e949e70a7083855d245d79efa9cddcd85594c1b372f151e80dbec55f0a7",
+      "bytes": 11040
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_bicycle__99511b74__s0/report.json": {
+      "sha256": "f2736da7f423bceda29500155ba2b05684c657755cd3c93bd485f58b7988b09f",
+      "bytes": 3446
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_blue_coffee_mug__e1ffbc5b__s1.log": {
+      "sha256": "c821104918dcc44de9d0b71368b276702c4da5a8a98c36aeca602195d599eec8",
+      "bytes": 5483
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_blue_coffee_mug__e1ffbc5b__s1/mesh.glb": {
+      "sha256": "78e1e0b737126c7cee1718ddbde756e273ee6e97b6740573193635a7c7828e9f",
+      "bytes": 3453700
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_blue_coffee_mug__e1ffbc5b__s1/mesh.npz": {
+      "sha256": "2e249c0a286b025b9138a7106de4a0aedb514af9f7a2c015ef413c5526045249",
+      "bytes": 2159950
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_blue_coffee_mug__e1ffbc5b__s1/preview.png": {
+      "sha256": "d575ef27a799ffe0cdb44fe511d8ea1b6d5b4b5ad727a1437e3d0c6f0be15b3b",
+      "bytes": 32773
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_blue_coffee_mug__e1ffbc5b__s1/report.json": {
+      "sha256": "6943f4438e64afd7f929affb2488fbe51881390adf272fe1bd94661049f3beb6",
+      "bytes": 3463
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_blue_coffee_mug__e1ffbc5b__s2.log": {
+      "sha256": "77e0d13a906ee5d30b5b36987e7b11347d55bf5134eec5cc3da510bfe2546b77",
+      "bytes": 5485
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_blue_coffee_mug__e1ffbc5b__s2/mesh.glb": {
+      "sha256": "bcc8c70177caafa76bd7db453532b1d5ca711fd2d7069c651f1acfb3ce916b97",
+      "bytes": 3538216
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_blue_coffee_mug__e1ffbc5b__s2/mesh.npz": {
+      "sha256": "80d8f66d4e841a9b49f95e56a94134ba4f2921ec6d1b5dabafa98338a005bbdb",
+      "bytes": 2203266
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_blue_coffee_mug__e1ffbc5b__s2/preview.png": {
+      "sha256": "c4f061cc00c7434b958c85a8422eb07d192d4337edc4a2e8117906313317b1e0",
+      "bytes": 37396
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_blue_coffee_mug__e1ffbc5b__s2/report.json": {
+      "sha256": "6803e1321f14f87cda3f76d51c2998ee8a8993474a8ab9e2cfd8f9389bc9071a",
+      "bytes": 3465
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_blue_sphere__488d4f76__s0.log": {
+      "sha256": "ce38c885c844987a9dfefc3c8f674cb37b045e9e0d3834d385edac1767b12bcf",
+      "bytes": 5482
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_blue_sphere__488d4f76__s0/mesh.glb": {
+      "sha256": "b9d211110aec7adcc18b2c0d7d3a87b2545ff8f786417a9bf958137ea82e4b5d",
+      "bytes": 5825884
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_blue_sphere__488d4f76__s0/mesh.npz": {
+      "sha256": "2b70316caf05ae550ba3b97e565e97fd9761f4875e9928877156a602751638ac",
+      "bytes": 3711246
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_blue_sphere__488d4f76__s0/preview.png": {
+      "sha256": "7b837e0d51b61aa42d8c0b4a1f9c3f322f53e6fbb11abba62b1323cf8606d95b",
+      "bytes": 53713
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_blue_sphere__488d4f76__s0/report.json": {
+      "sha256": "cdf8d86a07ec0bcd62648fb26392c773ae9a1545ef15423ddc136e75883b8249",
+      "bytes": 3450
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_boat_shoe__bed3af68__s1.log": {
+      "sha256": "80e12df5ba5353364c6d051e51c3bdab37c16a9187d799463da23237ccfab56a",
+      "bytes": 5476
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_boat_shoe__bed3af68__s1/mesh.glb": {
+      "sha256": "1a14d73445bd5e6d2932f9699b611b0f0da2c567d048537bf60228e6b4d3d839",
+      "bytes": 934072
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_boat_shoe__bed3af68__s1/mesh.npz": {
+      "sha256": "81a386b8fb21e179420b3493107b352df80d478da49abd5484a4d56c5eebbed6",
+      "bytes": 587070
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_boat_shoe__bed3af68__s1/preview.png": {
+      "sha256": "afec15da233bb88101ca5dd9843de25192c8b953e1643a3fbcc090b8a337ec86",
+      "bytes": 14984
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_boat_shoe__bed3af68__s1/report.json": {
+      "sha256": "d9f2dcce42fbdb2340f715aea40f92b41d110ca2eba4d5753f2caad6eda6675f",
+      "bytes": 3438
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_boat_shoe__bed3af68__s2.log": {
+      "sha256": "bd76dc97181ab079f3339e1604bfacf49319fa1dd26190be9a2d7fe4a89cd1d3",
+      "bytes": 5477
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_boat_shoe__bed3af68__s2/mesh.glb": {
+      "sha256": "7b27001f0c9f6dadef7c92063bc1fb11d8035765ba029c24e6ef4dcd2607aad9",
+      "bytes": 919164
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_boat_shoe__bed3af68__s2/mesh.npz": {
+      "sha256": "47c86136952c899e66de036b0af4773a2368c115225153828c314c0aa9960052",
+      "bytes": 576401
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_boat_shoe__bed3af68__s2/preview.png": {
+      "sha256": "18654f4992fb6ec02e9604f45e3db99e4e1f2b4397395f852edc55caef6152e9",
+      "bytes": 17441
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_boat_shoe__bed3af68__s2/report.json": {
+      "sha256": "5570244fff58d3721854e27cff8ab6fc5e9ba572eac4ee5939c730f853fda39d",
+      "bytes": 3439
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_c_clamp__2b12cc4c__s1.log": {
+      "sha256": "6450c5bc46be85b0c1a96bc0845a16c403b4fb4a6350886e36506600cf88a6dc",
+      "bytes": 5478
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_c_clamp__2b12cc4c__s1/mesh.glb": {
+      "sha256": "a4b16b97db6f676e151366c607dcb656ffe80e015cd48f2d35c4f94d3b20db3d",
+      "bytes": 527452
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_c_clamp__2b12cc4c__s1/mesh.npz": {
+      "sha256": "17d06428cf485d85ca2b7e034d550620c47c9fd0dd2f57d60b34e0f11d3320bd",
+      "bytes": 314699
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_c_clamp__2b12cc4c__s1/preview.png": {
+      "sha256": "22a7fc57d24ffd4a793862d1d42423f54865915bd5e2b27a58033c691195d426",
+      "bytes": 18591
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_c_clamp__2b12cc4c__s1/report.json": {
+      "sha256": "6d20db534d440feb1d6799c36293154e6a99604eb1fe073f5a7f78baab397da9",
+      "bytes": 3434
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_c_clamp__2b12cc4c__s2.log": {
+      "sha256": "142ceeda314e20d2a911a6fe4d4cdb9cb3b4774801ff61a776d887c06c6c1fb7",
+      "bytes": 5490
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_c_clamp__2b12cc4c__s2/mesh.glb": {
+      "sha256": "029225872d263b67615e50b7b6f00847626e52adfb89dad520b225dbc13dca55",
+      "bytes": 707932
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_c_clamp__2b12cc4c__s2/mesh.npz": {
+      "sha256": "7e63d0c00b044f4841aa8072d38faa9bf36bb43790c8dee9cee45c587565d93a",
+      "bytes": 420452
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_c_clamp__2b12cc4c__s2/preview.png": {
+      "sha256": "b35b42d755086e2cafda028d9043e5244013d17b715a50c9de3583519fe1e82d",
+      "bytes": 17203
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_c_clamp__2b12cc4c__s2/report.json": {
+      "sha256": "d13a75b40706c51fa42c38a5c89df8f50cb47db36df98fa73a55af8a0d854205",
+      "bytes": 3446
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_cyan_cone__e5122c7e__s0.log": {
+      "sha256": "144c769e4e8178dd62edd4c74e2a083037f675dee04152b3b59c19f682688a3a",
+      "bytes": 5473
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_cyan_cone__e5122c7e__s0/mesh.glb": {
+      "sha256": "87d410d15b53f5fb2c5399e7cbeaa79735fbc49194933a0a89064c2e0d8a2850",
+      "bytes": 1154688
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_cyan_cone__e5122c7e__s0/mesh.npz": {
+      "sha256": "ed1d233e79b3ae48736e27dc61b45a7778dc82eb85205e7f213371c5f30fdd80",
+      "bytes": 728726
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_cyan_cone__e5122c7e__s0/preview.png": {
+      "sha256": "ca86fdf7fb19e6eaf35a9e3a405303e4777e39c8c4843c71e1a47b0812f3ee3b",
+      "bytes": 18789
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_cyan_cone__e5122c7e__s0/report.json": {
+      "sha256": "e3c029a44bc410c4e5674f60ec32d0d04dd9a293241d35594b89b50f7ed7902d",
+      "bytes": 3435
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_deep_bowl__06b038de__s1.log": {
+      "sha256": "a94b43994e9067855255609e22f30acd9b67879aabc840577e167b5b11ea87d7",
+      "bytes": 5481
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_deep_bowl__06b038de__s1/mesh.glb": {
+      "sha256": "10de09c9b2cdf0b692e55c14f78806244392c7703db06910a8159ee610e80284",
+      "bytes": 2657524
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_deep_bowl__06b038de__s1/mesh.npz": {
+      "sha256": "844328af23e16d78a781ba2e67e86578c2b194b1847ac8ea944cf69318b5988a",
+      "bytes": 1641247
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_deep_bowl__06b038de__s1/preview.png": {
+      "sha256": "2be726dc60e6db57a3f219a0facc1818abf47b3e1badb85ddd8fa2ba4cba38c1",
+      "bytes": 53168
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_deep_bowl__06b038de__s1/report.json": {
+      "sha256": "04be49db77fb9c0f5dfa8f1216ba5bd0dda45d9642fbdc60a003bd40840382cd",
+      "bytes": 3442
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_deep_bowl__06b038de__s2.log": {
+      "sha256": "614b1b65830ed0b1007b960f5b4293e160c05e180fd118cf953ee2db0a509f1e",
+      "bytes": 5493
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_deep_bowl__06b038de__s2/mesh.glb": {
+      "sha256": "0db6235ae5372528da7befa9d36c305d8ebf06241bfcf9260f07f65e6d6e2cf9",
+      "bytes": 2487648
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_deep_bowl__06b038de__s2/mesh.npz": {
+      "sha256": "271d98252ef627459318d67a322c11654e5b24e4065c12980c0416b546032e31",
+      "bytes": 1563832
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_deep_bowl__06b038de__s2/preview.png": {
+      "sha256": "26c6b549dee3a61e92cccb577afd266563f1d83a019899972fa5c5af9383fdac",
+      "bytes": 38032
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_deep_bowl__06b038de__s2/report.json": {
+      "sha256": "f23c23daafde9cf0dacd96f5516cd78c603fa51bffea165b3166e168cc4dc94d",
+      "bytes": 3454
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_flower_vase__45964fc0__s0.log": {
+      "sha256": "2a20baaf764c133071e9e8e303b474bf757ce1bf51f6cf89355b6a9836ccb73e",
+      "bytes": 5498
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_flower_vase__45964fc0__s0/mesh.glb": {
+      "sha256": "65f3ce9c5916e914bdcb4fa53f73b721bfa633477b140c90d2d312c0c87da49e",
+      "bytes": 1004208
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_flower_vase__45964fc0__s0/mesh.npz": {
+      "sha256": "6370febebdbe2a85ffd7a34946fb2fbaccf27fd798767bb46e00881bf65ff772",
+      "bytes": 628944
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_flower_vase__45964fc0__s0/preview.png": {
+      "sha256": "336037636dc0db9eb55cab22490248e5c8968aadf82195129cdab61f50f7b9eb",
+      "bytes": 31314
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_flower_vase__45964fc0__s0/report.json": {
+      "sha256": "f8a0f878662efaff5e55998bae7bd0f8b098f9b4f5f0ef5d69a7fa80aa1782b8",
+      "bytes": 3465
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_glass_wine_bottle__d36ed32a__s0.log": {
+      "sha256": "d1c61447e7461a78c3227c3e31fe7df95aedd4a161122d47eb0fdb02c1ba520a",
+      "bytes": 5486
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_glass_wine_bottle__d36ed32a__s0/mesh.glb": {
+      "sha256": "7b3001e8e3fb962ea4bf864e8bc9e7a41234dc2409a92b186bf03ca7f32a4bf7",
+      "bytes": 829480
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_glass_wine_bottle__d36ed32a__s0/mesh.npz": {
+      "sha256": "836d9c672334a99735712db46306ebd4e0692e85c1bddf233a24008e1c6e80f3",
+      "bytes": 513428
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_glass_wine_bottle__d36ed32a__s0/preview.png": {
+      "sha256": "bd42c31c90dda819851e3822436458e1bb8cbf0d3ae6623ed8c8f910ae70dd39",
+      "bytes": 9778
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_glass_wine_bottle__d36ed32a__s0/report.json": {
+      "sha256": "968fc4b3eb8c54d9a85b735350a156a32d9adb9646c80773664573cc79f4bfb8",
+      "bytes": 3472
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_hammer__9f722179__s0.log": {
+      "sha256": "e5f271032ddec9e29608a5bcbdc0dd28c0357163df4f8d0c37ba17f18d8e3578",
+      "bytes": 5489
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_hammer__9f722179__s0/mesh.glb": {
+      "sha256": "2bfd88430a4ec7b381137682c019a711d3e89bf0a050c13e9ef924380aa65e0f",
+      "bytes": 447720
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_hammer__9f722179__s0/mesh.npz": {
+      "sha256": "c204ec3819d4137f5d858c73e25dca90015a37fa5f9a20b03880f4abb1bb1e05",
+      "bytes": 267715
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_hammer__9f722179__s0/preview.png": {
+      "sha256": "d3797b1206448898555d7bd38e73789d433cda4140b2883a962b101c8c0e52f0",
+      "bytes": 11101
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_hammer__9f722179__s0/report.json": {
+      "sha256": "f5ed447ae02dc2065786f7447c443f9ecd90b99797d31caba52c46cf179eecdf",
+      "bytes": 3442
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_ladder__4ce1f5d5__s0.log": {
+      "sha256": "90e8724d7771b944aa0cc2d7ec27d4e533fae4c8e780012a234f00b647bbb402",
+      "bytes": 5493
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_ladder__4ce1f5d5__s0/mesh.glb": {
+      "sha256": "edf7db915e500e6d91168a69f2e485dc6f7952cb11dc1365582c39aef8e1e50e",
+      "bytes": 438008
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_ladder__4ce1f5d5__s0/mesh.npz": {
+      "sha256": "88f8cafe2a8714049b981b9725144e505cd39b7685e1ab9721042aeaabd7f012",
+      "bytes": 259091
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_ladder__4ce1f5d5__s0/preview.png": {
+      "sha256": "4cea033adad4cdc8abd572766fa377ea1801c78379a9ed9c1e42fa36a5536c38",
+      "bytes": 18682
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_ladder__4ce1f5d5__s0/report.json": {
+      "sha256": "78c7af065d53cdd8b9729bbe6e06b1fa5cecf56cb00d4e12b31f6fb50e7d72bd",
+      "bytes": 3446
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_cyan_sphere__649d14ab__s0.log": {
+      "sha256": "71d381ad7bad5a8609617b1891ef2a99db00b9107b4f1f2b215b4404f217af1e",
+      "bytes": 5487
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_cyan_sphere__649d14ab__s0/mesh.glb": {
+      "sha256": "48ff5622b584f4dc49fbbec3f0148e3c7f34de8df6b654bd24eeea1d0e5f1236",
+      "bytes": 3720400
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_cyan_sphere__649d14ab__s0/mesh.npz": {
+      "sha256": "07f7fa9e9ee6957886fcb772167a842ee2eca51323afcc078ea07e85f5559947",
+      "bytes": 2351569
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_cyan_sphere__649d14ab__s0/preview.png": {
+      "sha256": "d67f0256a33db067dd761bf1c617800a280d77865b5f60745d20c5860aefe31e",
+      "bytes": 48855
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_cyan_sphere__649d14ab__s0/report.json": {
+      "sha256": "4f8ca087e7c0617122c73b28a704042b17b080aeb9c5230573db95f4bf2a1942",
+      "bytes": 3472
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_cyan_torus__95bfe3e7__s0.log": {
+      "sha256": "73e67a82bf069fad04ddda2c5642c76ab57bcac78ed6177a7c1763888e4f0325",
+      "bytes": 5500
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_cyan_torus__95bfe3e7__s0/mesh.glb": {
+      "sha256": "ebcdc0c6440be45d2975d54357d8bd3b964f5708649faf9c981abdb5d64a33c1",
+      "bytes": 1856896
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_cyan_torus__95bfe3e7__s0/mesh.npz": {
+      "sha256": "54568995a50ae92d2d2dea8c0ce894ab3bc4b2aaa1884940f286467d167e9afd",
+      "bytes": 1163586
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_cyan_torus__95bfe3e7__s0/preview.png": {
+      "sha256": "d4c37353fc28d9ed56239f2860ac5c2a55528b586d6fa7a365a1ed74664b8dce",
+      "bytes": 41358
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_cyan_torus__95bfe3e7__s0/report.json": {
+      "sha256": "dc80c31399d9a0d8e2fc2d8ee0d59a6c652de710724040894de0c9314658fb87",
+      "bytes": 3482
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_green_box__72c55aa1__s0.log": {
+      "sha256": "18a5dcc3a95adaca11503f21f4c942928997e7c618d881310927e9345f785416",
+      "bytes": 5490
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_green_box__72c55aa1__s0/mesh.glb": {
+      "sha256": "a99cf23f7db6ff5ca9c539aa9ef88217ecac5b55b61efeb416e393ff2e90ac1e",
+      "bytes": 5993372
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_green_box__72c55aa1__s0/mesh.npz": {
+      "sha256": "26d0bf3374b29bac27846290f1e2ba4826c718959490d49351b2bb20d4d6ba07",
+      "bytes": 3670884
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_green_box__72c55aa1__s0/preview.png": {
+      "sha256": "87a792cb9e00315000bccc55cb42dd8355059e058a1bf1fcfe2664fa682b7cd0",
+      "bytes": 57312
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_green_box__72c55aa1__s0/report.json": {
+      "sha256": "f8e77bf9f1e15af799595528bb5349bb41d7d9ec5bfc3d6d27c768ead49bed9e",
+      "bytes": 3469
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_green_sphere__f2592e49__s0.log": {
+      "sha256": "201400396f990a98f15ffb0b6613372ad9acb881bc55b973ed1e2ff35d513b15",
+      "bytes": 5486
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_green_sphere__f2592e49__s0/mesh.glb": {
+      "sha256": "a602d87eea848172ca7c6fbf354e016e77a3c7086cb6060893d7aa399b5d875a",
+      "bytes": 6132536
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_green_sphere__f2592e49__s0/mesh.npz": {
+      "sha256": "31ae9be92597d68c2cc07b6e2e1fc84e53b611b8a3cc3b6351b37eb95c023f51",
+      "bytes": 3888194
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_green_sphere__f2592e49__s0/preview.png": {
+      "sha256": "4654c6f25b8785cac5e41ef5e04f52733eadaa5341c72fcedad6a1dae3ef9f11",
+      "bytes": 68119
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_green_sphere__f2592e49__s0/report.json": {
+      "sha256": "c7ba2aa3d0a60bad4983aa66734ad57a1f1e555f88606c8685b8764c6d8c4925",
+      "bytes": 3475
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_green_sphere_on_top_of_a_large_yellow_torus__c8653455__s0.log": {
+      "sha256": "03b460530852d056667963f872cad441533cc9b82ec924d4ad297c7a3491384a",
+      "bytes": 5520
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_green_sphere_on_top_of_a_large_yellow_torus__c8653455__s0/mesh.glb": {
+      "sha256": "8af539855da8e9f88d8f221441a8a1896b64675f8c78e18d13a1c913d46f14c6",
+      "bytes": 2889828
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_green_sphere_on_top_of_a_large_yellow_torus__c8653455__s0/mesh.npz": {
+      "sha256": "256940170fe77e19c25c85abe55b37b3fdfae154c13eb6f546be36d5e91d5590",
+      "bytes": 1835413
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_green_sphere_on_top_of_a_large_yellow_torus__c8653455__s0/preview.png": {
+      "sha256": "cd20a6581acae8bb260fee5f3c7c8ea1eddb9d2202377bc2736e837ebcca8ec6",
+      "bytes": 56062
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_green_sphere_on_top_of_a_large_yellow_torus__c8653455__s0/report.json": {
+      "sha256": "6474431b8626335e378a80c9a6a2639bc55bd856088a51560792654e716f1038",
+      "bytes": 3600
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_orange_cylinder__cc205499__s0.log": {
+      "sha256": "3924d1a94fcf6ee9062a0ee9258148d7a3cd798f4950545525d2e481ec303f93",
+      "bytes": 5506
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_orange_cylinder__cc205499__s0/mesh.glb": {
+      "sha256": "32b7923b83b370a5ad2c93577640a1dc8140db9c5bc4c8698874af3257a5c251",
+      "bytes": 4680880
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_orange_cylinder__cc205499__s0/mesh.npz": {
+      "sha256": "258d39cf619ab13ade4e49fb8e347a35e42c8cef9580750e324a4b2dff0f348c",
+      "bytes": 2916338
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_orange_cylinder__cc205499__s0/preview.png": {
+      "sha256": "2d9a31b53a36de1ee76cf186153670ec9705a7be9fb5770693b4f5607326d078",
+      "bytes": 53290
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_orange_cylinder__cc205499__s0/report.json": {
+      "sha256": "365da7827defe8387b480bff019e8acea3b80ab098cc1088ac976394600fbf41",
+      "bytes": 3504
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_orange_cylinder_on_top_of_a_small_yellow_sphere__c702bca6__s0.log": {
+      "sha256": "c743f066553ab1c6d946e9cd04b7e44aad3bb40ffad611a12633a1d235e39b1c",
+      "bytes": 5527
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_orange_cylinder_on_top_of_a_small_yellow_sphere__c702bca6__s0/mesh.glb": {
+      "sha256": "bc7b6c103d7eed1098c0e770c4d4dd9514d7f7fb67187b8138997761c990ae55",
+      "bytes": 6177820
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_orange_cylinder_on_top_of_a_small_yellow_sphere__c702bca6__s0/mesh.npz": {
+      "sha256": "789818f757135745e6e0d64d990df493972823a4ff82318d7b9d6f8e03dd2fbf",
+      "bytes": 3852329
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_orange_cylinder_on_top_of_a_small_yellow_sphere__c702bca6__s0/preview.png": {
+      "sha256": "5b6a7ed67545a3daac2f12acc952fa8151b9fbe25228f1168476409c8a6610c6",
+      "bytes": 86996
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_orange_cylinder_on_top_of_a_small_yellow_sphere__c702bca6__s0/report.json": {
+      "sha256": "57553ef4040b49e8cf585ab63157442046389513effd45d52ecf0e81ce9a0838",
+      "bytes": 3620
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_red_sphere__207690be__s0.log": {
+      "sha256": "0b15c1308540c628f1d77a678422b9666f8f205b91d913cfae2241495823bee5",
+      "bytes": 5486
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_red_sphere__207690be__s0/mesh.glb": {
+      "sha256": "e2d839d8b2edcd62e1efad63ddea608d98bc2eef40a5c5a64cf6b8ee9be6e7f4",
+      "bytes": 5926312
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_red_sphere__207690be__s0/mesh.npz": {
+      "sha256": "6bffc02e38a795aedf03dfa20d61f5c020e648ae26a320146d5fd839a33bcac3",
+      "bytes": 3779546
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_red_sphere__207690be__s0/preview.png": {
+      "sha256": "b64ce9d1794b2513ef19d28aa7d5ad731d0c5c1da46e4fe1b4cefa7ad633f670",
+      "bytes": 50902
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_red_sphere__207690be__s0/report.json": {
+      "sha256": "9aeedcd1fc9d8cfa4f1dae60187c71b16420350bb5a44aadac2ffe723057c3df",
+      "bytes": 3469
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_red_sphere_on_top_of_a_large_cyan_sphere__bd706091__s0.log": {
+      "sha256": "b469ca16abccaa40fe386a6ed14d9e3d8fc7c32a4885956815cc9e61b946fe3c",
+      "bytes": 5519
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_red_sphere_on_top_of_a_large_cyan_sphere__bd706091__s0/mesh.glb": {
+      "sha256": "99d4a2f4ce0e0f738f935d9c2ba42be4bb140a32f34291718fc3714728ad9464",
+      "bytes": 5975504
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_red_sphere_on_top_of_a_large_cyan_sphere__bd706091__s0/mesh.npz": {
+      "sha256": "5ec0d138c92d12353f3c1c7e298b03b1e2fe411d9833142de3eebd195aae80bd",
+      "bytes": 3841903
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_red_sphere_on_top_of_a_large_cyan_sphere__bd706091__s0/preview.png": {
+      "sha256": "9b464409809a75946f2dfabd1105586b2e68d2021bf2c9b31d0fdc36be8779f1",
+      "bytes": 75598
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_red_sphere_on_top_of_a_large_cyan_sphere__bd706091__s0/report.json": {
+      "sha256": "27a4b8709184387d84f428b60985b084fe6cbbf0c1e535be0112f6d23c05c4a0",
+      "bytes": 3592
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_white_torus__0746758e__s0.log": {
+      "sha256": "e79e43a137f0326eccf6853b14e5c8882d82d763f9a9a18ab479b920d663b64a",
+      "bytes": 5489
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_white_torus__0746758e__s0/mesh.glb": {
+      "sha256": "1109efcf5007c95cae7f502f67c84efca25d14237cb540afbcd5479cb3d966bb",
+      "bytes": 3339212
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_white_torus__0746758e__s0/mesh.npz": {
+      "sha256": "de332776c1741a450e1a7e85265d464c9e66ff188d2de06c4cc0c027bb581d54",
+      "bytes": 2063489
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_white_torus__0746758e__s0/preview.png": {
+      "sha256": "3123c63c1184cb7faa2a1bdedb4e3457c4c222a38a259e9fad8023678592f9fc",
+      "bytes": 56653
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_white_torus__0746758e__s0/report.json": {
+      "sha256": "35d514fa6d76f652f8b20fa72bff66ec380c2a458f5b8d31fdc1b6c5d9b12084",
+      "bytes": 3475
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_white_torus_next_to_a_large_cyan_torus__958d73ca__s0.log": {
+      "sha256": "591fc3ba4ef890a6887db413d9a208c12aadd79e27a2d06815ea2996521caab9",
+      "bytes": 5387
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_white_torus_next_to_a_large_cyan_torus__958d73ca__s0/mesh.glb": {
+      "sha256": "fa7be08caaff889ba48b07b4e1d33161d8feefab737addd2c268998179d7f779",
+      "bytes": 2374172
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_white_torus_next_to_a_large_cyan_torus__958d73ca__s0/mesh.npz": {
+      "sha256": "b8df0168a486753e55383b0f3faf140cb50b86cfd57155665e6b7e9f6ea64f23",
+      "bytes": 1483323
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_white_torus_next_to_a_large_cyan_torus__958d73ca__s0/preview.png": {
+      "sha256": "18f8853ccc36291c4d97b6a528ad637ce426361ebdc618e96722567735e02c05",
+      "bytes": 65201
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_white_torus_next_to_a_large_cyan_torus__958d73ca__s0/report.json": {
+      "sha256": "af31d21b9b1ed69801c98bcb33e39cea9f65064f5e31e990b73a5f245495959e",
+      "bytes": 3579
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_yellow_torus__7e43639f__s0.log": {
+      "sha256": "971994557f575fd8d2ece14d6df706bd3a94bf86d6e5102544e90e40763357a7",
+      "bytes": 5485
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_yellow_torus__7e43639f__s0/mesh.glb": {
+      "sha256": "a7c42ac37183587794f428c04ac40773b503955db0f2fe835831c70bad2e41b3",
+      "bytes": 1907352
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_yellow_torus__7e43639f__s0/mesh.npz": {
+      "sha256": "7d28628ffbd31a7e8427bfaba82d815d5a462182c5c277b9008ccde092e41d43",
+      "bytes": 1193680
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_yellow_torus__7e43639f__s0/preview.png": {
+      "sha256": "076ae1403d30ee7eb7135361725a0a0f58ff50a87a401500ddbf20b57a4919e0",
+      "bytes": 43332
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_yellow_torus__7e43639f__s0/report.json": {
+      "sha256": "73bda14f845ee3a1c432fe7b22a8863c97df79e31f623211bc421593f5491abc",
+      "bytes": 3474
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_men_s_boot__03bc0a78__s1.log": {
+      "sha256": "4238ff3a9e427b3fa38960c96e34de37d57539b2e5fe1e2e61db38124b01b9fb",
+      "bytes": 5479
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_men_s_boot__03bc0a78__s1/mesh.glb": {
+      "sha256": "59d5539f6b152ab8c2a966c405cab2fd36b0b289dd0ce63832995e5c30acbf81",
+      "bytes": 2747060
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_men_s_boot__03bc0a78__s1/mesh.npz": {
+      "sha256": "025daa06b56b336376de69522c8ab218176a8e0415eed5c4b176f3774ecedacf",
+      "bytes": 1664960
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_men_s_boot__03bc0a78__s1/preview.png": {
+      "sha256": "e29e2f7ded709ac609ef9120f1ad60c7964baa2a65979eed70c974ce9cb2a0c0",
+      "bytes": 47842
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_men_s_boot__03bc0a78__s1/report.json": {
+      "sha256": "c87f01091a8170afe1237b8463f7cebb3fed4a89b7562952754af7714dad3ec7",
+      "bytes": 3443
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_men_s_boot__03bc0a78__s2.log": {
+      "sha256": "35e089257a89d2bf01d51f3bc346ed6459947b40610ab25bcd6195d2892fb32f",
+      "bytes": 5475
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_men_s_boot__03bc0a78__s2/mesh.glb": {
+      "sha256": "04e81e47d41d2e0a0590ef625f37823af7515f4e85c8d7f858ff44d8b08f4bee",
+      "bytes": 1646268
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_men_s_boot__03bc0a78__s2/mesh.npz": {
+      "sha256": "8fb1dc5c83043e469e4c6f0aa65b8af32751796443ef8db66965b93e2999bf3d",
+      "bytes": 1031054
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_men_s_boot__03bc0a78__s2/preview.png": {
+      "sha256": "e87a40e5ca04bc5f8bd9f80878f51c60cf1ca5dca22ab0ccf69fd51331887a69",
+      "bytes": 14518
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_men_s_boot__03bc0a78__s2/report.json": {
+      "sha256": "467f43f60306cb562e50a48e59b379c7186b6301fd89ec7fdeb85c703659a3d4",
+      "bytes": 3440
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_purple_box__13d1f18f__s0.log": {
+      "sha256": "7d98524b90601866ee38a282315a4e67d1f853f48da046d8c203799f66a0ada4",
+      "bytes": 5484
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_purple_box__13d1f18f__s0/mesh.glb": {
+      "sha256": "56dbdf220d3dc05c8b3f4d8203c1e2b982b8ba5fb8ac6300ea01a13d18a2d740",
+      "bytes": 6937068
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_purple_box__13d1f18f__s0/mesh.npz": {
+      "sha256": "0d390c1ef9ca6b897bbc9815285bdb73a944a46c449467188683cdb0a49da660",
+      "bytes": 4261232
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_purple_box__13d1f18f__s0/preview.png": {
+      "sha256": "415fccedc66b2a2739250669caa99184e78aa33d3f4f558122884c6a7d6e06ae",
+      "bytes": 64021
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_purple_box__13d1f18f__s0/report.json": {
+      "sha256": "49e63bf9a1b21cd12766a4f6bc22ea13a6c72fd8c28e1e42915fa90bb88fb7f7",
+      "bytes": 3448
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_school_bus__d0912e5e__s1.log": {
+      "sha256": "8806d3da69d5b8cc42eae2bd8c6155a4e2c23931171239c9747ec2d1f7438689",
+      "bytes": 5496
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_school_bus__d0912e5e__s1/mesh.glb": {
+      "sha256": "cbbb9810a6452de245c82de6d044b01bf1ac0ff9cb1c5faff9fe27a19ecf0e5e",
+      "bytes": 1190928
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_school_bus__d0912e5e__s1/mesh.npz": {
+      "sha256": "daf90814898b73d1889010cb824554ab84b34d76464560c6de84abbbbe42417c",
+      "bytes": 724961
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_school_bus__d0912e5e__s1/preview.png": {
+      "sha256": "61ceeaf98a6369af9c85fc2752c830c70fc1f914a35ec82c56f6f66e37e0410b",
+      "bytes": 20416
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_school_bus__d0912e5e__s1/report.json": {
+      "sha256": "f2fd4e054b29563663ed6ffca0a1769f1bd4e43990ffe26e25c65445edab3773",
+      "bytes": 3461
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_school_bus__d0912e5e__s2.log": {
+      "sha256": "3f9061068fdd60131bf75a7b6752228620458554b6edbca2d0fe318ae6016aa6",
+      "bytes": 5481
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_school_bus__d0912e5e__s2/mesh.glb": {
+      "sha256": "cd20618158bdfddf19e4fa2785ce1359621abe2527793b5baecda20fd3143352",
+      "bytes": 1144536
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_school_bus__d0912e5e__s2/mesh.npz": {
+      "sha256": "0bb970d55f5034d5cc006e044f1044203d27e9de40025df4ca523ceab82f1659",
+      "bytes": 698088
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_school_bus__d0912e5e__s2/preview.png": {
+      "sha256": "1648ee584c7424ed6d8e93a8b21c21a61279a8498738ba6ce877f1b98d0fd59f",
+      "bytes": 18165
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_school_bus__d0912e5e__s2/report.json": {
+      "sha256": "6ab7011240e891d9033185ac7b25881e6653df61d3bed6c095dec35356bac603",
+      "bytes": 3446
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_shiny_metal_trophy__8a02ea4a__s0.log": {
+      "sha256": "645495e49e54e31e2e62a1e4d24c956f4c26bedda5d9b081b9a9ec4f1f376746",
+      "bytes": 5486
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_shiny_metal_trophy__8a02ea4a__s0/mesh.glb": {
+      "sha256": "b187b3a5cf2db0579944569ac28950f5a4f258d886c893ce4ece1238b5e0f56b",
+      "bytes": 1823188
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_shiny_metal_trophy__8a02ea4a__s0/mesh.npz": {
+      "sha256": "475a38b199dad28b13914da4b3ea5b7b4fee698a5012602c83425eb1bc5b3b33",
+      "bytes": 1141147
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_shiny_metal_trophy__8a02ea4a__s0/preview.png": {
+      "sha256": "b9016bc11bea77af9d9aafe531de37bb2e1162d468b23a69093f3733882fb17d",
+      "bytes": 40364
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_shiny_metal_trophy__8a02ea4a__s0/report.json": {
+      "sha256": "7346bdfadd515d52b85c8b3afe3d28e54890beab8c0ca049da48559dfc33be3e",
+      "bytes": 3474
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_green_cylinder__7eeacc61__s0.log": {
+      "sha256": "b6fa224373eecae2c4cc5bdd9d3c3f44ad7ed7cd730be73e48eab273873c17c0",
+      "bytes": 5493
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_green_cylinder__7eeacc61__s0/mesh.glb": {
+      "sha256": "95cc9e1dbdec2b08cc9fd309ae9e0e8902f1291791b876f911cd0afeee2dc19e",
+      "bytes": 2848900
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_green_cylinder__7eeacc61__s0/mesh.npz": {
+      "sha256": "aacb81c4096c0e985341fef9e7496a8a6485a5fc83466deb83251bd630059b0b",
+      "bytes": 1735112
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_green_cylinder__7eeacc61__s0/preview.png": {
+      "sha256": "e4b14eba9a5d9be8be4c4fda9eb4825168ee8e2c1c707e9ab3aa0b0d74198489",
+      "bytes": 21715
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_green_cylinder__7eeacc61__s0/report.json": {
+      "sha256": "92a2001a1e2e522050c598230504be60f3d3b5fd2304a83a9e832e22f8a414ab",
+      "bytes": 3487
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_purple_sphere__8fc9c2c2__s0.log": {
+      "sha256": "c7b4f0d25f71e3fcf37c21499f7c98c05b1b572f149a0f60c75c7f22f9fac997",
+      "bytes": 5491
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_purple_sphere__8fc9c2c2__s0/mesh.glb": {
+      "sha256": "1da8ae85f81f523820bdaa838de50a1281cf12d6aa5e06bc86c05097b6427d27",
+      "bytes": 5943856
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_purple_sphere__8fc9c2c2__s0/mesh.npz": {
+      "sha256": "f858efe5479996736f79887510dabf20a9667f22af788c09fa18705a4e07e095",
+      "bytes": 3735812
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_purple_sphere__8fc9c2c2__s0/preview.png": {
+      "sha256": "c4d2bdf4df2707b12d7aad673dea013bac96b88f47bd019039eb7dbe77416760",
+      "bytes": 57938
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_purple_sphere__8fc9c2c2__s0/report.json": {
+      "sha256": "6a3ba7fc41fe1e55c2d4348890dd65cebcfffc8fc83ce14d52a2b249938be381",
+      "bytes": 3483
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_purple_sphere_with_a_white_torus_on_top__d31d3ceb__s0.log": {
+      "sha256": "900ded210982130b691bb461795bc29744aeb25d8f0ff53455bab205c7280bc1",
+      "bytes": 5518
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_purple_sphere_with_a_white_torus_on_top__d31d3ceb__s0/mesh.glb": {
+      "sha256": "332cc258ac0d693b9ec4fa55d110e6bc72c1cad2563da7ab75febbaf689b1b6a",
+      "bytes": 7302724
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_purple_sphere_with_a_white_torus_on_top__d31d3ceb__s0/mesh.npz": {
+      "sha256": "c2aaa39c6dbf90299100993ec41c4eb82c58b49b3980a1a4c2a37558511d897f",
+      "bytes": 4675381
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_purple_sphere_with_a_white_torus_on_top__d31d3ceb__s0/preview.png": {
+      "sha256": "8b1e1b530b9717c7c9d932f578d4e24eb957d707273bdf807e72b88353a85f01",
+      "bytes": 63010
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_purple_sphere_with_a_white_torus_on_top__d31d3ceb__s0/report.json": {
+      "sha256": "36576e1dea3bb6823ed5e9a3f141c45279cbc37488df72c4b7c57b1d96c1d955",
+      "bytes": 3587
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_yellow_cone__88f4d8f5__s0.log": {
+      "sha256": "9544cabfc471ee80b8b9c713040b4f89202ff9faed8b99dc5c14ee94f3ca1351",
+      "bytes": 5501
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_yellow_cone__88f4d8f5__s0/mesh.glb": {
+      "sha256": "65729975ed72b0acd6f19850cfbaf4af3bf0f724d86ad2b3ebfadfc66fbd8b29",
+      "bytes": 1153524
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_yellow_cone__88f4d8f5__s0/mesh.npz": {
+      "sha256": "75bdc8da17dc007feb7f26ec468720c8cac45c657db3d0c93dcfc145e31d9ebb",
+      "bytes": 718504
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_yellow_cone__88f4d8f5__s0/preview.png": {
+      "sha256": "2800798169514ca6a423a1e0f55e8346df261792e0e1ee93bd5e9d098bcef0f0",
+      "bytes": 21071
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_yellow_cone__88f4d8f5__s0/report.json": {
+      "sha256": "539c174d3af57f40cc46fe907040a2b56a6218e35d30a2e84059a621046f9baa",
+      "bytes": 3487
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_yellow_sphere__fb6ff07f__s0.log": {
+      "sha256": "33c1f8f3ff74dda29ff5701107d80bb732e7f93b2b03f1ce17ae6780a2dd6f5f",
+      "bytes": 5492
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_yellow_sphere__fb6ff07f__s0/mesh.glb": {
+      "sha256": "127d8a981a79cf2e8f8cf78c84b7c88394ac73c0d5a44e919861d8f3cc234269",
+      "bytes": 5182628
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_yellow_sphere__fb6ff07f__s0/mesh.npz": {
+      "sha256": "ec16abd641c2838e25ac99281005773b8266739326b45a52f0ebcc4fbdad7b76",
+      "bytes": 3260536
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_yellow_sphere__fb6ff07f__s0/preview.png": {
+      "sha256": "a9429f4d21572aad5b26c82211b562e396cf9788b44386c7b9650a35d74a8a8d",
+      "bytes": 73853
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_yellow_sphere__fb6ff07f__s0/report.json": {
+      "sha256": "6448789f65b2ffdd9657a01ebb4e394085f695b3e050e2b229edde944137186d",
+      "bytes": 3483
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_teal_plastic_easter_basket__dd7d37c5__s1.log": {
+      "sha256": "3cb3b998cceeb67a37f43fd60dea2e5f25fa5195573f8fe3d981ee39912b273c",
+      "bytes": 5492
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_teal_plastic_easter_basket__dd7d37c5__s1/mesh.glb": {
+      "sha256": "d33f27a9cd87b83298eb28a21a0052b5f183f2296269c12c1e5f7cf041779db6",
+      "bytes": 3391408
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_teal_plastic_easter_basket__dd7d37c5__s1/mesh.npz": {
+      "sha256": "69469ca28ef458f340943d9bda9d63f6a931ec89119318d3abe2ec143659dc7a",
+      "bytes": 2108317
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_teal_plastic_easter_basket__dd7d37c5__s1/preview.png": {
+      "sha256": "a9702a5aa680e7ac04478eeea999c6dba1160327da022c989ce852123402133a",
+      "bytes": 60298
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_teal_plastic_easter_basket__dd7d37c5__s1/report.json": {
+      "sha256": "71e016f976ded7531b0b8dd997d64708a1d0701c8abe38aec60298ec7d3ed26d",
+      "bytes": 3505
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_teal_plastic_easter_basket__dd7d37c5__s2.log": {
+      "sha256": "bf1493944b2839d9218b410e00a29fc3dfb4b52620a455248ca69988e1934958",
+      "bytes": 5496
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_teal_plastic_easter_basket__dd7d37c5__s2/mesh.glb": {
+      "sha256": "a0ab55de22e0d0830b353c6e2ed7df2370be65b65e41057c5c885b78b7009556",
+      "bytes": 2062312
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_teal_plastic_easter_basket__dd7d37c5__s2/mesh.npz": {
+      "sha256": "6e7624f3f750af58d0af27ca2ba447493f67cb1b80532e64c2712cd891cd0f61",
+      "bytes": 1264201
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_teal_plastic_easter_basket__dd7d37c5__s2/preview.png": {
+      "sha256": "8608c5f0e949a1d5d5a95492aed19de78275459719cb7e387b6a2988b80ee574",
+      "bytes": 46529
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_teal_plastic_easter_basket__dd7d37c5__s2/report.json": {
+      "sha256": "1afa5ddb5d0bf401da1970a71d3451130c07951f8bc256cddf4935c59ce186b7",
+      "bytes": 3508
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_turboprop_airplane_with_a_pilot__112109e4__s1.log": {
+      "sha256": "e27be70666d715355e6375d84d3073ed098c8767a6868698337b612a35b54086",
+      "bytes": 5513
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_turboprop_airplane_with_a_pilot__112109e4__s1/mesh.glb": {
+      "sha256": "00741a89afb11fbd1acba8d30089b878d35109b01ec00d17fc29c4f2d159c2cc",
+      "bytes": 536968
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_turboprop_airplane_with_a_pilot__112109e4__s1/mesh.npz": {
+      "sha256": "fb876bbdde6e75e5a28cfa770a9223ea6d77ce29610e2cefaed9b66329619562",
+      "bytes": 333356
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_turboprop_airplane_with_a_pilot__112109e4__s1/preview.png": {
+      "sha256": "9dd8e789f2f7a4f19e4bc9d5d051e739c82a004055c2aaaae345df5e314af081",
+      "bytes": 21320
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_turboprop_airplane_with_a_pilot__112109e4__s1/report.json": {
+      "sha256": "7f08b0eb1287781ea6ebddbda421f06b50a4340cec2be30ec50c2f87c9d3ca89",
+      "bytes": 3541
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_turboprop_airplane_with_a_pilot__112109e4__s2.log": {
+      "sha256": "23d9e91888e2d18fb4c90cf76d51860a5a92251825b5cc230d75507e969b36d6",
+      "bytes": 5515
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_turboprop_airplane_with_a_pilot__112109e4__s2/mesh.glb": {
+      "sha256": "14677fb3623ae5117a0bf6606e38e09c479a332ea061b5d41216721d2db22aac",
+      "bytes": 535288
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_turboprop_airplane_with_a_pilot__112109e4__s2/mesh.npz": {
+      "sha256": "01ad1d69e7d6ae02ac2d27bfa46d91e596b8d67a43b579e91d028a0a3c6b8c55",
+      "bytes": 337681
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_turboprop_airplane_with_a_pilot__112109e4__s2/preview.png": {
+      "sha256": "93f82f8d4388272e31e0d5a01a6a7d8c6018c3951177c25082686e9a2b5c6515",
+      "bytes": 20413
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_turboprop_airplane_with_a_pilot__112109e4__s2/report.json": {
+      "sha256": "841904832c714c3d9056980be877503bcf456d36450d7d14316f57a73bec0fc1",
+      "bytes": 3543
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_watering_can__fbae5455__s0.log": {
+      "sha256": "8168d8d6d6701cbcde890b0e5385371d72648f6e1f886d76ef8403416e9c6932",
+      "bytes": 5481
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_watering_can__fbae5455__s0/mesh.glb": {
+      "sha256": "5467a9b7563a8b49cfbff39eca5641b61e341150fedec68ad5a3b00f75e40d3d",
+      "bytes": 1886860
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_watering_can__fbae5455__s0/mesh.npz": {
+      "sha256": "1ec8cdbcc6ae62d60f76a50ffc0adf97fbf3f85d90b38e4e58fbc8734ecb8a43",
+      "bytes": 1137151
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_watering_can__fbae5455__s0/preview.png": {
+      "sha256": "1a0f7010a3aa70f539c7b5d485b66f3fa4b9b6dbf7fbaf96ce128b5869b358d9",
+      "bytes": 36579
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_watering_can__fbae5455__s0/report.json": {
+      "sha256": "64a4ad5236a18c90de7d74caa4dbdaf22b8875f69ffbdd7dd74bb7af38932ac1",
+      "bytes": 3451
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_white_porcelain_pitcher__f2946541__s1.log": {
+      "sha256": "13e1a7895a8b0257b85fb1a35d9a232441ade5fd366585c59f0e58763d26302b",
+      "bytes": 5505
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_white_porcelain_pitcher__f2946541__s1/mesh.glb": {
+      "sha256": "9e3083ddce075a2f5082468cb8716d736ac2e6b8f5a5a3fbf6147949fe625504",
+      "bytes": 2748384
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_white_porcelain_pitcher__f2946541__s1/mesh.npz": {
+      "sha256": "7993d07bd5625502d5bfed0d5a25ec2190f653a3088376bd8a727f4e16353e97",
+      "bytes": 1700818
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_white_porcelain_pitcher__f2946541__s1/preview.png": {
+      "sha256": "c3edbfa447023cab6c9a163b8ae57bc74e8c8f2afb44558216cd0d3cea1bdc7f",
+      "bytes": 59083
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_white_porcelain_pitcher__f2946541__s1/report.json": {
+      "sha256": "956c3a96961ef6c112b5151efdd514a4ef52c5e8c4778bc135326f59375eae23",
+      "bytes": 3508
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_white_porcelain_pitcher__f2946541__s2.log": {
+      "sha256": "6949053dc083c47af68c70180ccd1746979e1a8d1b8c2242fcb8710991048798",
+      "bytes": 5490
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_white_porcelain_pitcher__f2946541__s2/mesh.glb": {
+      "sha256": "323c74951bed71b4f197b0ec73dc07facd67b523742c859ddde0c5470e4940d5",
+      "bytes": 3522788
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_white_porcelain_pitcher__f2946541__s2/mesh.npz": {
+      "sha256": "1ac7d408e467ed85e6b8f28aa518de669855beb6b64f1b7b123386f7471b8481",
+      "bytes": 2187279
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_white_porcelain_pitcher__f2946541__s2/preview.png": {
+      "sha256": "611e23a6e7a52f31bcf164d789928c9cfe5c4d45ac570043c24236be78efe5f5",
+      "bytes": 64909
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_white_porcelain_pitcher__f2946541__s2/report.json": {
+      "sha256": "30f478ad57cf6867182be103608b90d43680a39fb4f74f2153cfc6f3263c221c",
+      "bytes": 3494
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_white_porcelain_teapot__f8ddc092__s1.log": {
+      "sha256": "a8d70d1c109f3f41e797c8d8af6ebf5ca55c42ae8dcdf4004f02de87c29ee951",
+      "bytes": 5489
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_white_porcelain_teapot__f8ddc092__s1/mesh.glb": {
+      "sha256": "278cf0b07c39886a70e38266c64f6e2e4fe509a1561246dea56c81ff8168b773",
+      "bytes": 2488048
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_white_porcelain_teapot__f8ddc092__s1/mesh.npz": {
+      "sha256": "a743c733a6bb4d98157db4c45010c2022710b794401195ae4b508748f102e762",
+      "bytes": 1556454
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_white_porcelain_teapot__f8ddc092__s1/preview.png": {
+      "sha256": "cc841607b23c819e7c7212873dc1816ab7ed8718d1bbf6ed0b567b930cbf8f34",
+      "bytes": 51967
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_white_porcelain_teapot__f8ddc092__s1/report.json": {
+      "sha256": "101fb7e29b47e6f8811b2d996d1fc49cdfde3bd65e0e5d9021261cd252b00731",
+      "bytes": 3489
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_white_porcelain_teapot__f8ddc092__s2.log": {
+      "sha256": "cd2f0082f38d89d72eceb3a6d632a5710818a32f9876adddc66e04c3094d9c0d",
+      "bytes": 5494
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_white_porcelain_teapot__f8ddc092__s2/mesh.glb": {
+      "sha256": "4ae6bd8da4e4bf0db75c064bac301c18e53366feb731a6e8676a87ccb1a7331d",
+      "bytes": 2103896
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_white_porcelain_teapot__f8ddc092__s2/mesh.npz": {
+      "sha256": "c9194e6d620db8ac379291a448542cb7f1a4170a745dd277387859f0142d50b4",
+      "bytes": 1319435
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_white_porcelain_teapot__f8ddc092__s2/preview.png": {
+      "sha256": "a5db73863b24c9cddc38c9961957441aae452fd6badc97bd48c7a00df31229ca",
+      "bytes": 40632
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_white_porcelain_teapot__f8ddc092__s2/report.json": {
+      "sha256": "3966a4bb3f762454a50b642805ecb3d95e50a4b3ee9d49bb42fbcdc4631927e1",
+      "bytes": 3493
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_white_torus__ff46260d__s0.log": {
+      "sha256": "a1e7c902dfdfb05abad3e4dc46ac2682e25fb67c4f93cb217b8d377b9765d214",
+      "bytes": 5484
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_white_torus__ff46260d__s0/mesh.glb": {
+      "sha256": "e807c5977a50609ecd3022d3cc77a10ab8a52adfa2d35d39f3bd58a47e7b71bd",
+      "bytes": 3227596
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_white_torus__ff46260d__s0/mesh.npz": {
+      "sha256": "4a3b7666a4a5d6ef539fc0ff69f32d8521bd32206aa432e7504ddbeafd21f972",
+      "bytes": 1999690
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_white_torus__ff46260d__s0/preview.png": {
+      "sha256": "59fc418857477dc0c6f0e2c952c36d37c43e0a6ce9d045252b25b8abf31427ca",
+      "bytes": 60935
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_white_torus__ff46260d__s0/report.json": {
+      "sha256": "2061285f94407234c14b595370d555d152d296d2c09b0eab51163ac5e4ab2eec",
+      "bytes": 3451
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/an_elephant__8b94b960__s0.log": {
+      "sha256": "ecb68bf77f499758b13af96431b44c7bbeb95a1071fe1e20750988d2b7ecf218",
+      "bytes": 5479
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/an_elephant__8b94b960__s0/mesh.glb": {
+      "sha256": "67cf82041a79c1fe433f3ceb4fd6270ca338b32f93a8c4113bff144e0eabf52c",
+      "bytes": 2505204
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/an_elephant__8b94b960__s0/mesh.npz": {
+      "sha256": "b0f3deb7d0ca4a126f55a66efab29484b0b719002ec3bb2e87f7a63a4ec16a70",
+      "bytes": 1529557
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/an_elephant__8b94b960__s0/preview.png": {
+      "sha256": "b2c9cf0acd2bbbc2f47d38dd1a23c8a1f83ce1be1fb799e668acedff13cf2514",
+      "bytes": 24335
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/an_elephant__8b94b960__s0/report.json": {
+      "sha256": "2fd10cfad4e8bb87e86ed8bbfabcdf014932fe7b38d3d936b20757a6f86a601c",
+      "bytes": 3440
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/an_elephant__8b94b960__s1.log": {
+      "sha256": "8cec9c2ca09c6cec896f7c49435d99b4a83ae0f17b5246495ec6654e823fc100",
+      "bytes": 5476
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/an_elephant__8b94b960__s1/mesh.glb": {
+      "sha256": "fc32eebc2cdfa2748afc85bc66af77d76c555dff2f2003683342c3b42e62056e",
+      "bytes": 1935592
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/an_elephant__8b94b960__s1/mesh.npz": {
+      "sha256": "09062787e78fbd20f41227b90e0995ce5cb9384e72df1a528fdfc90e01f92aa1",
+      "bytes": 1175746
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/an_elephant__8b94b960__s1/preview.png": {
+      "sha256": "3984ca9a2cd3500b110ba32a6aa0eb1a7f40506ee51929dca36254422030ca0f",
+      "bytes": 45912
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/an_elephant__8b94b960__s1/report.json": {
+      "sha256": "adb6f149d752169ec219426979616b13a8de7f21ce68c95e7269501f08a6d850",
+      "bytes": 3437
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/an_elephant__8b94b960__s2.log": {
+      "sha256": "6c599085f71bb3a54ff02d97a389f6fbbb8b5994810fa225cdf936d136611461",
+      "bytes": 5480
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/an_elephant__8b94b960__s2/mesh.glb": {
+      "sha256": "83bbee56e7ae499135488cb291f784c04cd4bfbd1fcfa6ef756afe3fbedcd08a",
+      "bytes": 2264624
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/an_elephant__8b94b960__s2/mesh.npz": {
+      "sha256": "6ce92eb6c8612436401c83be8943a2af07cb1bd9fc747368496416120973ed4f",
+      "bytes": 1384015
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/an_elephant__8b94b960__s2/preview.png": {
+      "sha256": "b91763dc3d35ca7815c0d20c364b55d96f63a0eca5c71ac54b118fe2f80bab95",
+      "bytes": 27535
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/an_elephant__8b94b960__s2/report.json": {
+      "sha256": "689d6b058ee2ef811bb6ddd8fcd8605f6ca4d117fad4fb0bc658180b4468dc20",
+      "bytes": 3440
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/an_open_cardboard_box__8a55a27d__s0.log": {
+      "sha256": "65608ad2e3a9aed473e257ef76a31f7505e0181942a3cf6f3d8d077c636cd892",
+      "bytes": 5504
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/an_open_cardboard_box__8a55a27d__s0/mesh.glb": {
+      "sha256": "674be5429fec65b85ac00cc1a5e8fbc52c6f3debe51fbb972ebee8348c1d4d22",
+      "bytes": 5095940
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/an_open_cardboard_box__8a55a27d__s0/mesh.npz": {
+      "sha256": "cb35f508e6cce42edb12fc6ee384bb4afd83718b248865343b94db8de2aa542a",
+      "bytes": 3026466
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/an_open_cardboard_box__8a55a27d__s0/preview.png": {
+      "sha256": "6bbafa3c1b99c862052789f5d8f839bcb368c443a4a195872dfb18e65ebd8384",
+      "bytes": 55062
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/an_open_cardboard_box__8a55a27d__s0/report.json": {
+      "sha256": "63798f8777f6c81b8ab1f54fdcc71f80bff9593ecc3774abee164ad3416757ea",
+      "bytes": 3496
+    },
+    "results/text3d/E-T3/units_cuda_f425e2a4ddd1_shard0of2.jsonl": {
+      "sha256": "54dcc02908e2dbc1c15a593e8ff52c0c35adca4afd0c4c3caadf9c1a4de13be3",
+      "bytes": 21399
+    },
+    "results/text3d/E-T3/units_cuda_f425e2a4ddd1_shard1of2.jsonl": {
+      "sha256": "bb7d26e75f212e1d78f631d25aac245a0d10b3910bfda16f3387da1de5d9adf0",
+      "bytes": 21256
+    }
+  }
+}

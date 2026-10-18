@@ -1,0 +1,42 @@
+{
+  "name": "zimage-lora-reconstruct",
+  "title": "berkelium-zimage",
+  "slug": "berkelium-zimage",
+  "description": "zimage-triposr-anchorlora: reconstruction of the 80 LoRA anchors produced by the anchor-LoRA job (its last step failed on a download race), shipped as a hash-verified dataset; U\u00b2-Net fetched once before the two shards (the 40 units the surviving shard finished are in the shipped ledger and are skipped)",
+  "accelerator": "t4x2",
+  "include": [
+    "services/neural",
+    "scripts",
+    "benchmarks",
+    "configs"
+  ],
+  "include_files": [
+    "results/text3d/E-T3/units.jsonl",
+    "results/text3d/E-T3/units_zimage-triposr-anchorlora_*.jsonl"
+  ],
+  "data": [
+    "results/text3d/E-T3/units/zimage-triposr-anchorlora/*/anchor.png",
+    "results/text3d/E-T3/units/zimage-triposr-anchorlora/*/anchor.json"
+  ],
+  "steps": [
+    {
+      "name": "venv_stage_b",
+      "cmd": "python -m venv --system-site-packages --without-pip .venv-triposr-cuda && .venv-triposr-cuda/bin/python -m pip install -q -r configs/environments/triposr-cuda.txt"
+    },
+    {
+      "name": "fetch",
+      "cmd": ".venv-triposr-cuda/bin/python scripts/zimage_triposr_batch.py fetch --what triposr,u2net"
+    },
+    {
+      "name": "reconstruct",
+      "parallel": [
+        "CUDA_VISIBLE_DEVICES=0 .venv-triposr-cuda/bin/python scripts/zimage_triposr_batch.py reconstruct --gen zimage-triposr-anchorlora --segment u2net --shard 0/2",
+        "CUDA_VISIBLE_DEVICES=1 .venv-triposr-cuda/bin/python scripts/zimage_triposr_batch.py reconstruct --gen zimage-triposr-anchorlora --segment u2net --shard 1/2"
+      ]
+    }
+  ],
+  "outputs": [
+    "results/text3d/E-T3/units_zimage-triposr-anchorlora_*.jsonl",
+    "results/text3d/E-T3/units/zimage-triposr-anchorlora/**"
+  ]
+}

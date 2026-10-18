@@ -8,7 +8,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import {
-  Box, Grid3x3, RotateCcw, AlertTriangle, Focus, Move, Rotate3d, Undo2, Redo2, Upload, Loader2,
+  Box, Grid3x3, RotateCcw, AlertTriangle, Focus, Move, Rotate3d, Undo2, Redo2, Upload, Loader2, Sparkles,
 } from "lucide-react";
 import { usePrefs } from "./prefs.js";
 import { SceneEngine } from "./scene/SceneEngine.js";
@@ -18,6 +18,7 @@ import { shapeByKind } from "./scene/shapes.js";
 import AddShapeMenu from "./scene/AddShapeMenu.jsx";
 import { ACCEPT } from "./scene/importer.js";
 import PropertiesPanel from "./scene/PropertiesPanel.jsx";
+import GeneratePanel from "./scene/GeneratePanel.jsx";
 
 export const IMPORT_EVENT = "berkelium:import";
 const isMac = typeof navigator !== "undefined" && /Mac/i.test(navigator.platform || navigator.userAgent);
@@ -36,6 +37,7 @@ export default function ScenePanel() {
   const [dropping, setDropping] = useState(false);
   const [importing, setImporting] = useState(null); // file name while loading
   const [addOpen, setAddOpen] = useState(false);
+  const [genOpen, setGenOpen] = useState(true); // text-to-3D panel
   const { viewport: prefs } = usePrefs();
   const state = useSceneState();
   const gridOn = state.nodes.grid?.visible ?? true;
@@ -161,6 +163,16 @@ export default function ScenePanel() {
             onChange={(e) => { runImport([...e.target.files]); e.target.value = ""; }}
           />
           <AddShapeMenu open={addOpen} onOpenChange={setAddOpen} onPick={onAddShape} onClose={focusViewport} />
+          <button
+            className={`code__btn ${genOpen ? "scene__btn--on" : ""}`}
+            onClick={() => setGenOpen((v) => !v)}
+            aria-pressed={genOpen}
+            data-testid="generate-toggle"
+            title="Generate a 3D model from text"
+          >
+            <Sparkles size={14} />
+            <span>Generate</span>
+          </button>
           <span className="scene__sep" />
           <button
             className={`code__btn ${tool === "move" ? "scene__btn--on" : ""}`}
@@ -251,6 +263,7 @@ export default function ScenePanel() {
               </div>
             )}
             <PropertiesPanel />
+            {genOpen && <GeneratePanel engineRef={engineRef} onClose={() => setGenOpen(false)} />}
             <div ref={labelRef} className="scene__angle" style={{ display: "none" }} />
             <div className="scene__hint">
               {canEdit && tool === "move" && "Drag an arrow to move · "}

@@ -1,0 +1,8 @@
+# Kaggle / Colab T4 (CUDA) — experimental reference ONLY. A CUDA run does NOT validate the HIP port or the
+# Berkelium HIP kernel. Use the platform's preinstalled CUDA torch; do not install ROCm packages here.
+gsplat==1.5.3        # upstream nerfstudio gsplat (CUDA JIT build on first use)
+scikit-image>=0.22
+trimesh>=4.0
+pydantic>=2.6
+fastapi>=0.110
+pytest>=8

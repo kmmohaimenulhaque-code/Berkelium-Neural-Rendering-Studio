@@ -1937,6 +1937,204 @@
     outline: none;
 }
 
+/* ---------- Text to 3D panel (scene/GeneratePanel.jsx) ---------- */
+.gen {
+    position: absolute;
+    top: 40px;
+    left: 12px;
+    z-index: 2;
+    width: 292px;
+    max-height: calc(100% - 84px);
+    overflow-y: auto;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: var(--fs-sm);
+    color: var(--text-secondary);
+    background: rgba(14, 15, 17, 0.94);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-lg);
+    backdrop-filter: blur(6px);
+}
+
+.gen__head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-semibold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+}
+
+.gen__head svg { color: var(--accent); }
+
+.gen__close {
+    margin-left: auto;
+    display: inline-flex;
+    padding: 2px;
+    border: 0;
+    border-radius: var(--r-sm);
+    background: transparent;
+    color: var(--text-tertiary);
+    cursor: pointer;
+}
+
+.gen__close:hover { color: var(--text-primary); background: var(--bg-hover); }
+
+.gen__prompt,
+.gen__select {
+    width: 100%;
+    min-width: 0;
+    padding: 6px 8px;
+    font: inherit;
+    font-size: var(--fs-sm);
+    color: var(--text-primary);
+    background: var(--bg-app);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-md);
+    outline: none;
+}
+
+.gen__prompt:focus,
+.gen__select:focus { border-color: var(--accent-dim); }
+
+.gen__row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.gen__row .gen__select { flex: 1; }
+
+.gen__progress { display: flex; flex-direction: column; gap: 4px; }
+
+.gen__state {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    color: var(--text-primary);
+}
+
+.gen__pct { margin-left: auto; color: var(--text-tertiary); font-variant-numeric: tabular-nums; }
+
+.gen__bar {
+    height: 3px;
+    overflow: hidden;
+    background: var(--bg-hover);
+    border-radius: 2px;
+}
+
+.gen__bar > div {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.3s ease;
+}
+
+.gen__msg {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    font-size: var(--fs-xs);
+    line-height: 1.4;
+}
+
+.gen__msg svg { flex-shrink: 0; margin-top: 1px; }
+.gen__msg--err { color: var(--error); }
+.gen__msg--warn { color: var(--warning); }
+
+.gen__result {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding-top: 8px;
+    font-size: var(--fs-xs);
+    border-top: 1px solid var(--border);
+}
+
+.gen__title { color: var(--text-primary); font-size: var(--fs-sm); font-weight: var(--fw-medium); }
+
+.gen__id { font-family: var(--font-mono); color: var(--text-tertiary); }
+.gen__check { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text-secondary);
+  white-space: nowrap; }
+.gen__prov { display: flex; flex-direction: column; gap: 2px; padding: 4px 0; border-top: 1px solid var(--border-subtle, rgba(255,255,255,0.08)); }
+.gen__dim { color: var(--text-tertiary); font-size: 10.5px; overflow-wrap: anywhere; }
+.gen__label { color: var(--warning); font-size: 10.5px; }
+
+.gen__figure { margin: 6px 0 4px; }
+
+.gen__figure img {
+    display: block;
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    image-rendering: auto;
+}
+
+.gen__figure figcaption {
+    margin-top: 3px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-tertiary);
+}
+
+.gen__recent {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+}
+
+.gen__subhead {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 2px;
+    font-size: var(--fs-xs);
+    color: var(--text-tertiary);
+}
+
+.gen__job {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--fs-xs);
+}
+
+.gen__job-prompt {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: var(--text-secondary);
+}
+
+.gen__dot { width: 6px; height: 6px; flex-shrink: 0; border-radius: 50%; background: var(--text-tertiary); }
+.gen__dot--completed { background: var(--success); }
+.gen__dot--failed { background: var(--error); }
+.gen__dot--running, .gen__dot--resumed, .gen__dot--checkpointed, .gen__dot--pending { background: var(--warning); }
+
+.gen__link {
+    padding: 0 2px;
+    border: 0;
+    background: transparent;
+    font: inherit;
+    color: var(--accent);
+    cursor: pointer;
+}
+
+.gen__link:hover { text-decoration: underline; }
+
+@container (max-width: 560px) {
+    .gen { width: auto; right: 12px; }
+}
+
 /* ---------- Brand: BK logo in the top bar ---------- */
 .brand {
     display: inline-flex;

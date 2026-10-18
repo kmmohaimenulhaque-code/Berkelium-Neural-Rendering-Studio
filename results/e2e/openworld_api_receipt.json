@@ -1,0 +1,53 @@
+{
+  "prompt": "a wooden chair with four legs",
+  "job": "a9cf61c690c546cba1ad511042c57fda",
+  "wall_s": 938.4,
+  "stages_seen": [
+    "queued",
+    "loading",
+    "sampling",
+    "decoding",
+    "validating",
+    "write_mesh_artifact",
+    "done"
+  ],
+  "mesh": {
+    "id": "7107123d1e6b7738dbf464798046eec4283d1d222ea217d6f086e069f7d69276",
+    "n_faces": 39093,
+    "components": 1,
+    "watertight": false
+  },
+  "producer": {
+    "generator": "shap-e-text300m",
+    "requested_generator": "auto",
+    "seed": 0,
+    "seconds": 927.2,
+    "peak_rss_mib": 2358,
+    "routing": [
+      {
+        "prompt": "a wooden chair with four legs",
+        "generator": "shap-e-text300m",
+        "reason": "content words outside the native vocabulary: chair, four, legs, wooden",
+        "unknown_words": [
+          "chair",
+          "four",
+          "legs",
+          "wooden"
+        ]
+      }
+    ],
+    "pipeline": "text->CLIP ViT-L/14->Shap-E latent->STF mesh"
+  },
+  "gaussian_scene": {
+    "id": "5a42358138a6977292f5318f137a86ae9197fcecd5e073c8ebda74ce36ad72c0",
+    "n": 4000
+  },
+  "render": {
+    "image": "2b31546698c4c0158c763587542ace58f7176f00c0c7b6660754aa8978e33979",
+    "renderer": "reference_cpu",
+    "std": 70.66165924072266,
+    "explicit_camera_job": "b31fe349d40d491c9b9fc780ae066622"
+  },
+  "device": "cpu",
+  "training_performed": "none"
+}

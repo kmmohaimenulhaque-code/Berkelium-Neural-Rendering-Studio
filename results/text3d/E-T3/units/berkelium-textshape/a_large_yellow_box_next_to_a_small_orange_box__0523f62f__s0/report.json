@@ -1,0 +1,54 @@
+{
+  "n_vertices": 6112,
+  "n_faces": 12224,
+  "finite": true,
+  "in_bounds": true,
+  "degenerate_faces": 0,
+  "components": 1,
+  "watertight": true,
+  "winding_consistent": true,
+  "edge_manifold": true,
+  "euler_number": 0,
+  "surface_area": 7.8109249162229615,
+  "volume": 1.2453761331665578,
+  "bounds_min": [
+    -0.8435999751091003,
+    -0.5708000063896179,
+    -0.5918999910354614
+  ],
+  "bounds_max": [
+    0.8353999853134155,
+    0.5404999852180481,
+    0.6033999919891357
+  ],
+  "valid": true,
+  "prompt": "a large yellow box next to a small orange box",
+  "tokens": 10,
+  "unknown_words": [],
+  "resolution": 48,
+  "sdf_min": -0.031285133212804794,
+  "sdf_max": 3.9213483333587646,
+  "seconds": 1.774,
+  "artifact_kind": "triangle_mesh",
+  "units": "normalized_object",
+  "generator": "berkelium-textshape",
+  "seed": 0,
+  "adapter": null,
+  "base_checkpoint_sha256": "4989d90b206ae185a81aa33b22f7a5869470feb1f5e5c617cff56983a85e8504",
+  "train_version": "berkelium-textshape-train/1",
+  "adapter_routing": {
+    "requested": "auto",
+    "selected": null,
+    "reason": "no adapter concept in the prompt"
+  },
+  "identity": {
+    "generator": "berkelium-textshape",
+    "model": "BerkeliumTextShape (text->SDF->marching cubes)",
+    "checkpoint": "exports/textshape-base-v1/model.pt",
+    "license": "MIT (Berkelium-owned weights and data)",
+    "resolution": 48,
+    "adapter": "auto",
+    "device": "cpu"
+  },
+  "wall_s": 1.8
+}

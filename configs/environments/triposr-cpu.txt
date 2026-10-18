@@ -1,0 +1,16 @@
+# M6: TripoSR (image -> 3D prior) on CPU. Separate from .venv-cpu (TripoSR needs transformers < 5: transformers 5
+# renamed the ViT parameters stored in the pinned checkpoint). Exact versions verified 2026-10-15, Python 3.14.
+# torch: pip install --index-url https://download.pytorch.org/whl/cpu torch==2.14.1
+transformers==4.57.6
+tokenizers==0.22.2
+safetensors==0.8.0
+huggingface_hub==0.36.2
+omegaconf==2.3.0
+einops==0.8.2
+trimesh==5.1.1
+imageio==2.38.1
+scikit-image==0.26.0
+scipy==1.18.1
+pillow==12.3.0
+pydantic==2.14.1
+numpy==2.5.4

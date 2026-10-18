@@ -1,0 +1,80 @@
+{
+  "local": {
+    "job": "cad-dataset",
+    "run_id": "20261017T084341Z",
+    "kernel": "kmmohaimenulhaque/berkelium-cad-dataset",
+    "accelerator": "NvidiaTeslaT4",
+    "spec": "configs/kaggle/cad_dataset.json",
+    "spec_sha256": "9f6bd13468e29b234188c9a17faf34fbf417d3d40e7da397e75c6bb5b5e7477e",
+    "bundle_sha256": "cc883c9892427601b85732a5895b046bf64408f3cb8bd723bd36c7e9e81ca117",
+    "bundle_bytes": 21018,
+    "bundle_files": 6,
+    "data": null,
+    "git": {
+      "commit": "3df93ebe4ac2d1e573daf2b24a4884ab8e050a02",
+      "branch": "Berkelium-Neural-Rendering-Studio-neural-v1",
+      "dirty_files": 5
+    },
+    "pushed_at": "2026-10-17T08:43:45Z",
+    "status": "pushed",
+    "push_response": "Kernel version 1 successfully pushed.  Please check progress at https://www.kaggle.com/code/kmmohaimenulhaque/berkelium-cad-dataset",
+    "verification": {
+      "files": 0,
+      "verified": 0,
+      "problems": [],
+      "bytes": 0
+    }
+  },
+  "remote": {
+    "job": "cad-dataset",
+    "run_id": "20261017T084341Z",
+    "started_at": "2026-10-17T08:43:52Z",
+    "bundle_sha256_expected": "cc883c9892427601b85732a5895b046bf64408f3cb8bd723bd36c7e9e81ca117",
+    "steps": [
+      {
+        "name": "core",
+        "seconds": 22.9,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "pip install -q -r configs/environments/berkelium-core.txt && python -c 'import berkelium, OCP, manifold3d; print(berkelium.__file__)'",
+            "rc": 0,
+            "log": "logs/00_core.log",
+            "tail": "   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 66.8/66.8 MB 26.3 MB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 1.4/1.4 MB 31.1 MB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 750.4/750.4 kB 18.0 MB/s eta 0:00:00\n/usr/local/lib/python3.13/dist-packages/berkelium/__init__.py\n"
+          }
+        ]
+      },
+      {
+        "name": "smoke",
+        "seconds": 5.4,
+        "ok": false,
+        "commands": [
+          {
+            "cmd": "python scripts/cad_dataset.py smoke",
+            "rc": 1,
+            "log": "logs/01_smoke.log",
+            "tail": "plate_holes      vague=False OK  1.226 \nplate_holes      vague=True  OK  0.014 \nl_bracket        vague=False OK  0.014 \nl_bracket        vague=True  OK  0.012 \nu_channel        vague=False OK  0.006 \nu_channel        vague=True  OK  0.006 \ni_beam           vague=False OK  0.007 \ni_beam           vague=True  OK  0.006 \nflange           vague=False OK  0.036 \nflange           vague=True  OK  0.038 \nwasher           vague=False OK  0.008 \nwasher           vague=True  OK  0.009 \nbushing          vague=False OK  0.008 \nbushing          vague=True  OK  0.009 \nstepped_shaft    vague=False OK  0.01 \nstepped_shaft    vague=True  OK  0.009 \nhex_nut          vague=False OK  0.009 \nhex_nut          vague=True  OK  0.008 \nhex_bolt         vague=False OK  0.008 \nhex_bolt         vague=True  OK  0.008 \npulley           vague=False OK  0.008 \npulley           vague=True  OK  0.009 \nspoked_wheel     vague=False OK  0.056 \nspoked_wheel     vague=True  OK  0.045 \npillow_block     vague=False OK  0.018 \npillow_block     vague=True  OK  0.021 \nsprocket         vague=False OK  0.023 \nsprocket         vague=True  OK  0.022 \nheat_sink        vague=False OK  0.009 \nheat_sink        vague=True  OK  0.009 \nenclosure        vague=False OK  0.007 \nenclosure        vague=True  OK  0.006 \nhoneycomb_panel  vague=False OK  0.021 \nhoneycomb_panel  vague=True  OK  0.015 \npipe_tee         vague=False OK  0.018 \npipe_tee         vague=True  OK  0.027 \npipe_elbow       vague=False OK  0.086 \npipe_elbow       vague=True  OK  0.192 \npressure_vessel  vague=False REJ  generator constraint\npressure_vessel  vague=True  OK  0.686 \nfunnel           vague=False OK  0.009 \nfunnel           vague=True  OK  0.01 \nrocket_nozzle    vague=False OK  0.071 \nrocket_nozzle    vague=True  OK  0.101 \nrocket_body      vague=False OK  0.046 \nrocket_body      vague=True  OK  0.07 \npropeller        vague=False OK  0.015 \npropeller        vague=True  OK  0.015 \nmug              vague=False OK  0.039 \nmug              vague=True  OK  0.046 \nbottle           vague=False OK  0.035 \nbottle           vague=True  OK  0.049 \nvase             vague=False OK  0.063 \nvase             vague=True  OK  0.07 \ntable            vague=False OK  0.007 \ntable            vague=True  OK  0.007 \nchair            vague=False OK  0.008 \nchair            vague=True  OK  0.009 \nladder           vague=False OK  0.038 \nladder           vague=True  OK  0.029 \ntruss            vague=False OK  0.018 \ntruss            vague=True  OK  0.015 \nknob             vague=False OK  0.022 \nknob             vague=True  OK  0.025 \nhinge_leaf       vague=False OK  0.019 \nhinge_leaf       vague=True  OK  0.014 \ncustom_part      vague=False OK  0.011 \ncustom_part      vague=True  REJ  summary fail: ['L4 part.body: 2 solid(s), expected 1']\ngear             OK \nbeam             OK \nlantern          OK \n"
+          }
+        ]
+      }
+    ],
+    "status": "failed",
+    "bundle_sha256": "cc883c9892427601b85732a5895b046bf64408f3cb8bd723bd36c7e9e81ca117",
+    "environment": {
+      "python": "3.13.15",
+      "host": "42ec07987daf",
+      "nvidia_smi": "",
+      "torch": "2.11.0+cpu None 0",
+      "disk_free_gb": {
+        "/kaggle/working": 20.9,
+        "/tmp": 1148.8
+      },
+      "mem_total_mib": 32099,
+      "cpu_count": 4
+    },
+    "failed_step": "smoke",
+    "finished_at": "2026-10-17T08:44:27Z",
+    "outputs": 0
+  },
+  "manifest": {}
+}

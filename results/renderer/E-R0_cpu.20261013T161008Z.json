@@ -1,0 +1,1558 @@
+{
+  "experiment": {
+    "id": "E-R0",
+    "title": "Renderer correctness on CPU (reference + Berkelium HIP kernel under HIP-CPU)",
+    "benchmark": "renderer",
+    "protocol": "benchmarks/configs/renderer_cpu_v1.json",
+    "requires": [
+      "cpu"
+    ],
+    "approved": true,
+    "output": "results/renderer/E-R0_cpu.json"
+  },
+  "status": "completed",
+  "benchmark": "renderer",
+  "semantics": "All backends use profile gsplat_v1: alpha=min(0.999, o*exp(-sigma)); skip if sigma<0 or alpha<1/255; stop exclusively when T*(1-alpha)<=1e-4; eps2d=0.3; FOV-clipped Jacobian (1.3x); opacity-aware 3.33-sigma tile radius; depth-sorted per tile. Known differences: equal-depth ties are broken by Gaussian index in the reference and by sort stability in gsplat; the reference differentiates the forward with autograd (cumprod), while gsplat and Berkelium recover transmittance in backward by division (T /= 1-alpha); gsplat accumulates cross-tile gradients with float atomicAdd, Berkelium with fixed-order per-intersection reductions.",
+  "config_hash": "a2bd3d8b3dbf981bf7f9789d785ce13ff593247a2859c993095c0207a778bd9e",
+  "config": {
+    "protocol_id": "renderer-cpu-v1",
+    "description": "CPU correctness gates for the Berkelium reference and the Berkelium HIP backward kernel executed under HIP-CPU. gsplat is listed so its absence is recorded (not_run) rather than silently dropped.",
+    "backends": [
+      "reference_cpu",
+      "berkelium_hipcpu",
+      "gsplat"
+    ],
+    "baseline_backend": "reference_cpu",
+    "candidate_backend": "berkelium_hipcpu",
+    "cases": [
+      {
+        "n": 200,
+        "res": 64,
+        "seed": 1
+      },
+      {
+        "n": 1000,
+        "res": 96,
+        "seed": 2
+      },
+      {
+        "n": 3000,
+        "res": 128,
+        "seed": 3
+      }
+    ],
+    "protocol": {
+      "warmup": 2,
+      "repeats": 8,
+      "repeat_determinism": 5,
+      "fit": {
+        "n": 300,
+        "res": 48,
+        "views": 4,
+        "iters": 60,
+        "lr": 0.01
+      }
+    }
+  },
+  "method": "benchmarks/renderer/bench_renderer.py",
+  "started_at": "2026-10-13T16:10:11Z",
+  "environment": {
+    "git_commit": "d525d20dc33935f60663769d9599b9ed6c4d975d+dirty",
+    "python": "3.13.16",
+    "platform": "Linux-6.18.44-fc-v114-x86_64-with-glibc2.39",
+    "numpy": "2.5.3",
+    "torch": "2.14.1+cu130",
+    "torch_hip": null,
+    "torch_cuda": "13.0",
+    "gpu_visible": false
+  },
+  "correctness_global": [
+    {
+      "name": "oracle_fd_gradcheck_fp64",
+      "value": 1.0,
+      "unit": "",
+      "status": "measured",
+      "reason": "",
+      "group": "correctness",
+      "passed": true,
+      "method": "torch.autograd.gradcheck central differences eps=1e-6 atol=1e-6 rtol=1e-4, 5 families"
+    }
+  ],
+  "cases": [
+    {
+      "case": {
+        "n": 200,
+        "res": 64,
+        "seed": 1
+      },
+      "scene_sha256": "6a07a1d7de040171ab6bf18ba6cfb1bbf3742db9d6a5a4c02fdd38f730e4863f",
+      "backends": {
+        "reference_cpu": {
+          "status": "measured",
+          "renderer": "reference_cpu",
+          "device": "cpu",
+          "dtype": "torch.float32",
+          "measurements": [
+            {
+              "name": "forward_rgb_max_abs_err",
+              "value": 7.531117962034095e-07,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": 0.0002,
+              "passed": true
+            },
+            {
+              "name": "forward_alpha_max_abs_err",
+              "value": 8.747681148335573e-07,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": 0.0002,
+              "passed": true
+            },
+            {
+              "name": "forward_depth_max_abs_err_alpha>0.5",
+              "value": 1.196212142673403e-06,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness"
+            },
+            {
+              "name": "grad_means_max_abs_err",
+              "value": 7.033756482854869e-05,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": "2e-05+0.002|ref|",
+              "violations": 0,
+              "entries": 600,
+              "ref_max_abs": 52.86132322863671,
+              "max_rel_to_ref_max": 1.3306054508761244e-06,
+              "passed": true
+            },
+            {
+              "name": "grad_log_scales_max_abs_err",
+              "value": 4.260329231620119e-06,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": "2e-05+0.002|ref|",
+              "violations": 0,
+              "entries": 600,
+              "ref_max_abs": 8.428862659369093,
+              "max_rel_to_ref_max": 5.054453256376831e-07,
+              "passed": true
+            },
+            {
+              "name": "grad_quats_max_abs_err",
+              "value": 1.1415416445670346e-05,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": "2e-05+0.002|ref|",
+              "violations": 0,
+              "entries": 800,
+              "ref_max_abs": 2.449186528661734,
+              "max_rel_to_ref_max": 4.660901206209015e-06,
+              "passed": true
+            },
+            {
+              "name": "grad_opacity_logits_max_abs_err",
+              "value": 1.5394809257385234e-06,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": "2e-05+0.002|ref|",
+              "violations": 0,
+              "entries": 200,
+              "ref_max_abs": 0.970484587273344,
+              "max_rel_to_ref_max": 1.5863012622012075e-06,
+              "passed": true
+            },
+            {
+              "name": "grad_color_logits_max_abs_err",
+              "value": 1.2738893255814787e-06,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": "2e-05+0.002|ref|",
+              "violations": 0,
+              "entries": 600,
+              "ref_max_abs": 1.5489447490980401,
+              "max_rel_to_ref_max": 8.224239930593213e-07,
+              "passed": true
+            },
+            {
+              "name": "gradient_bitwise_repeatable",
+              "value": 1.0,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "unique_hashes": 1,
+              "repeats": 5
+            },
+            {
+              "name": "n_gaussians",
+              "value": 200,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "workload"
+            },
+            {
+              "name": "n_visible",
+              "value": 200,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "workload"
+            },
+            {
+              "name": "n_pairs",
+              "value": 509,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "workload"
+            },
+            {
+              "name": "max_pairs_per_tile",
+              "value": 95,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "workload"
+            },
+            {
+              "name": "forward_latency",
+              "value": 30.154662499626284,
+              "unit": "ms",
+              "status": "measured",
+              "reason": "",
+              "group": "performance",
+              "n": 8,
+              "median_ms": 30.154662499626284,
+              "p95_ms": 35.95488499922794,
+              "min_ms": 21.832418999110814,
+              "max_ms": 35.95488499922794,
+              "runs_ms": [
+                21.8324,
+                23.1528,
+                29.3595,
+                33.7775,
+                30.2681,
+                32.0142,
+                35.9549,
+                30.0412
+              ]
+            },
+            {
+              "name": "backward_latency",
+              "value": 21.64981700025237,
+              "unit": "ms",
+              "status": "measured",
+              "reason": "",
+              "group": "performance",
+              "n": 8,
+              "median_ms": 21.64981700025237,
+              "p95_ms": 27.84902600069472,
+              "min_ms": 18.293933000677498,
+              "max_ms": 27.84902600069472,
+              "runs_ms": [
+                18.2939,
+                21.3707,
+                25.1399,
+                20.6907,
+                24.7296,
+                27.849,
+                20.3856,
+                21.9289
+              ]
+            },
+            {
+              "name": "iteration_latency",
+              "value": 55.51007350004511,
+              "unit": "ms",
+              "status": "measured",
+              "reason": "",
+              "group": "performance",
+              "n": 8,
+              "median_ms": 55.51007350004511,
+              "p95_ms": 61.18230299944116,
+              "min_ms": 40.91704900019977,
+              "max_ms": 61.18230299944116,
+              "runs_ms": [
+                40.917,
+                45.2098,
+                55.7171,
+                55.303,
+                56.1448,
+                61.1823,
+                57.5486,
+                53.2203
+              ]
+            },
+            {
+              "name": "peak_memory",
+              "value": 671.53515625,
+              "unit": "MiB",
+              "status": "measured",
+              "reason": "",
+              "group": "performance",
+              "method": "process peak RSS (cumulative, upper bound; not per-backend)"
+            }
+          ]
+        },
+        "berkelium_hipcpu": {
+          "status": "measured",
+          "renderer": "berkelium_hip[hipcpu]",
+          "device": "cpu",
+          "dtype": "torch.float32",
+          "measurements": [
+            {
+              "name": "forward_rgb_max_abs_err",
+              "value": 7.531117962034095e-07,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": 0.0002,
+              "passed": true
+            },
+            {
+              "name": "forward_alpha_max_abs_err",
+              "value": 8.747681148335573e-07,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": 0.0002,
+              "passed": true
+            },
+            {
+              "name": "forward_depth_max_abs_err_alpha>0.5",
+              "value": 1.196212142673403e-06,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness"
+            },
+            {
+              "name": "grad_means_max_abs_err",
+              "value": 0.00024884280763437516,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": "2e-05+0.002|ref|",
+              "violations": 0,
+              "entries": 600,
+              "ref_max_abs": 52.86132322863671,
+              "max_rel_to_ref_max": 4.7074645967161275e-06,
+              "passed": true
+            },
+            {
+              "name": "grad_log_scales_max_abs_err",
+              "value": 1.4607736993688114e-05,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": "2e-05+0.002|ref|",
+              "violations": 0,
+              "entries": 600,
+              "ref_max_abs": 8.428862659369093,
+              "max_rel_to_ref_max": 1.7330614560970335e-06,
+              "passed": true
+            },
+            {
+              "name": "grad_quats_max_abs_err",
+              "value": 1.1653835024771908e-05,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": "2e-05+0.002|ref|",
+              "violations": 0,
+              "entries": 800,
+              "ref_max_abs": 2.449186528661734,
+              "max_rel_to_ref_max": 4.758247233680363e-06,
+              "passed": true
+            },
+            {
+              "name": "grad_opacity_logits_max_abs_err",
+              "value": 1.4947774421569804e-06,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": "2e-05+0.002|ref|",
+              "violations": 0,
+              "entries": 200,
+              "ref_max_abs": 0.970484587273344,
+              "max_rel_to_ref_max": 1.5402382085806021e-06,
+              "passed": true
+            },
+            {
+              "name": "grad_color_logits_max_abs_err",
+              "value": 2.0337215438592793e-05,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": "2e-05+0.002|ref|",
+              "violations": 0,
+              "entries": 600,
+              "ref_max_abs": 1.5489447490980401,
+              "max_rel_to_ref_max": 1.3129722961671341e-05,
+              "passed": true
+            },
+            {
+              "name": "gradient_bitwise_repeatable",
+              "value": 1.0,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "unique_hashes": 1,
+              "repeats": 5
+            },
+            {
+              "name": "n_gaussians",
+              "value": 200,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "workload"
+            },
+            {
+              "name": "n_visible",
+              "value": 200,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "workload"
+            },
+            {
+              "name": "n_pairs",
+              "value": 509,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "workload"
+            },
+            {
+              "name": "max_pairs_per_tile",
+              "value": 95,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "workload"
+            },
+            {
+              "name": "forward_latency",
+              "value": null,
+              "unit": "",
+              "status": "not_applicable",
+              "reason": "HIP-CPU emulation: timing is not GPU performance",
+              "group": "performance"
+            },
+            {
+              "name": "backward_latency",
+              "value": null,
+              "unit": "",
+              "status": "not_applicable",
+              "reason": "HIP-CPU emulation: timing is not GPU performance",
+              "group": "performance"
+            },
+            {
+              "name": "iteration_latency",
+              "value": null,
+              "unit": "",
+              "status": "not_applicable",
+              "reason": "HIP-CPU emulation: timing is not GPU performance",
+              "group": "performance"
+            },
+            {
+              "name": "peak_memory",
+              "value": 676.1796875,
+              "unit": "MiB",
+              "status": "measured",
+              "reason": "",
+              "group": "performance",
+              "method": "process peak RSS (cumulative, upper bound; not per-backend)"
+            }
+          ]
+        },
+        "gsplat": {
+          "status": "not_run",
+          "reason": "DEVICE_UNAVAILABLE: DEVICE_UNAVAILABLE: gsplat not importable: ModuleNotFoundError: No module named 'gsplat'",
+          "measurements": [
+            {
+              "name": "forward_rgb_max_abs_err",
+              "value": null,
+              "unit": "",
+              "status": "not_run",
+              "reason": "DEVICE_UNAVAILABLE",
+              "group": "correctness"
+            },
+            {
+              "name": "grad_errors",
+              "value": null,
+              "unit": "",
+              "status": "not_run",
+              "reason": "DEVICE_UNAVAILABLE",
+              "group": "correctness"
+            },
+            {
+              "name": "gradient_bitwise_repeatable",
+              "value": null,
+              "unit": "",
+              "status": "not_run",
+              "reason": "DEVICE_UNAVAILABLE",
+              "group": "correctness"
+            },
+            {
+              "name": "forward_latency",
+              "value": null,
+              "unit": "",
+              "status": "not_run",
+              "reason": "DEVICE_UNAVAILABLE",
+              "group": "performance"
+            },
+            {
+              "name": "backward_latency",
+              "value": null,
+              "unit": "",
+              "status": "not_run",
+              "reason": "DEVICE_UNAVAILABLE",
+              "group": "performance"
+            },
+            {
+              "name": "iteration_latency",
+              "value": null,
+              "unit": "",
+              "status": "not_run",
+              "reason": "DEVICE_UNAVAILABLE",
+              "group": "performance"
+            },
+            {
+              "name": "peak_memory",
+              "value": null,
+              "unit": "",
+              "status": "not_run",
+              "reason": "DEVICE_UNAVAILABLE",
+              "group": "performance"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 96,
+        "seed": 2
+      },
+      "scene_sha256": "dffa37583bc885df53c3a0e632ec76e7abef5ed22ff2538e28f9f87114f86e14",
+      "backends": {
+        "reference_cpu": {
+          "status": "measured",
+          "renderer": "reference_cpu",
+          "device": "cpu",
+          "dtype": "torch.float32",
+          "measurements": [
+            {
+              "name": "forward_rgb_max_abs_err",
+              "value": 1.6080504944837593e-06,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": 0.0002,
+              "passed": true
+            },
+            {
+              "name": "forward_alpha_max_abs_err",
+              "value": 1.7512393851726316e-06,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": 0.0002,
+              "passed": true
+            },
+            {
+              "name": "forward_depth_max_abs_err_alpha>0.5",
+              "value": 1.777201418029506e-06,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness"
+            },
+            {
+              "name": "grad_means_max_abs_err",
+              "value": 0.0004871012835252486,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": "2e-05+0.002|ref|",
+              "violations": 0,
+              "entries": 3000,
+              "ref_max_abs": 112.2712661647564,
+              "max_rel_to_ref_max": 4.3386104046465e-06,
+              "passed": true
+            },
+            {
+              "name": "grad_log_scales_max_abs_err",
+              "value": 1.2560573111386475e-05,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": "2e-05+0.002|ref|",
+              "violations": 0,
+              "entries": 3000,
+              "ref_max_abs": 4.984018162998666,
+              "max_rel_to_ref_max": 2.5201700115453285e-06,
+              "passed": true
+            },
+            {
+              "name": "grad_quats_max_abs_err",
+              "value": 2.765905165064142e-05,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": "2e-05+0.002|ref|",
+              "violations": 0,
+              "entries": 4000,
+              "ref_max_abs": 6.262419585364232,
+              "max_rel_to_ref_max": 4.4166717470165685e-06,
+              "passed": true
+            },
+            {
+              "name": "grad_opacity_logits_max_abs_err",
+              "value": 3.116505107092493e-06,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": "2e-05+0.002|ref|",
+              "violations": 0,
+              "entries": 1000,
+              "ref_max_abs": 2.431652225920336,
+              "max_rel_to_ref_max": 1.2816409657071554e-06,
+              "passed": true
+            },
+            {
+              "name": "grad_color_logits_max_abs_err",
+              "value": 3.24972144694069e-06,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": "2e-05+0.002|ref|",
+              "violations": 0,
+              "entries": 3000,
+              "ref_max_abs": 1.351296655601677,
+              "max_rel_to_ref_max": 2.40489120835848e-06,
+              "passed": true
+            },
+            {
+              "name": "gradient_bitwise_repeatable",
+              "value": 1.0,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "unique_hashes": 1,
+              "repeats": 5
+            },
+            {
+              "name": "n_gaussians",
+              "value": 1000,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "workload"
+            },
+            {
+              "name": "n_visible",
+              "value": 1000,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "workload"
+            },
+            {
+              "name": "n_pairs",
+              "value": 2515,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "workload"
+            },
+            {
+              "name": "max_pairs_per_tile",
+              "value": 299,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "workload"
+            },
+            {
+              "name": "forward_latency",
+              "value": 284.7035645008873,
+              "unit": "ms",
+              "status": "measured",
+              "reason": "",
+              "group": "performance",
+              "n": 8,
+              "median_ms": 284.7035645008873,
+              "p95_ms": 1000.3748290000658,
+              "min_ms": 158.26556300089578,
+              "max_ms": 1000.3748290000658,
+              "runs_ms": [
+                256.0758,
+                280.5363,
+                158.2656,
+                194.8273,
+                331.3353,
+                298.7866,
+                288.8708,
+                1000.3748
+              ]
+            },
+            {
+              "name": "backward_latency",
+              "value": 226.67266949974874,
+              "unit": "ms",
+              "status": "measured",
+              "reason": "",
+              "group": "performance",
+              "n": 8,
+              "median_ms": 226.67266949974874,
+              "p95_ms": 326.2035959996865,
+              "min_ms": 105.04094600037206,
+              "max_ms": 326.2035959996865,
+              "runs_ms": [
+                105.0409,
+                245.5464,
+                326.2036,
+                292.5264,
+                106.4133,
+                143.8634,
+                216.5133,
+                236.8321
+              ]
+            },
+            {
+              "name": "iteration_latency",
+              "value": 502.3269644998436,
+              "unit": "ms",
+              "status": "measured",
+              "reason": "",
+              "group": "performance",
+              "n": 8,
+              "median_ms": 502.3269644998436,
+              "p95_ms": 1263.6323229999107,
+              "min_ms": 362.477669999862,
+              "max_ms": 1263.6323229999107,
+              "runs_ms": [
+                362.4777,
+                528.1326,
+                485.7458,
+                518.9081,
+                439.1103,
+                443.5041,
+                533.2609,
+                1263.6323
+              ]
+            },
+            {
+              "name": "peak_memory",
+              "value": 736.890625,
+              "unit": "MiB",
+              "status": "measured",
+              "reason": "",
+              "group": "performance",
+              "method": "process peak RSS (cumulative, upper bound; not per-backend)"
+            }
+          ]
+        },
+        "berkelium_hipcpu": {
+          "status": "measured",
+          "renderer": "berkelium_hip[hipcpu]",
+          "device": "cpu",
+          "dtype": "torch.float32",
+          "measurements": [
+            {
+              "name": "forward_rgb_max_abs_err",
+              "value": 1.6080504944837593e-06,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": 0.0002,
+              "passed": true
+            },
+            {
+              "name": "forward_alpha_max_abs_err",
+              "value": 1.7512393851726316e-06,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": 0.0002,
+              "passed": true
+            },
+            {
+              "name": "forward_depth_max_abs_err_alpha>0.5",
+              "value": 1.777201418029506e-06,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness"
+            },
+            {
+              "name": "grad_means_max_abs_err",
+              "value": 0.0007538066461005855,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": "2e-05+0.002|ref|",
+              "violations": 0,
+              "entries": 3000,
+              "ref_max_abs": 112.2712661647564,
+              "max_rel_to_ref_max": 6.7141546706562076e-06,
+              "passed": true
+            },
+            {
+              "name": "grad_log_scales_max_abs_err",
+              "value": 4.85357958041055e-05,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": "2e-05+0.002|ref|",
+              "violations": 0,
+              "entries": 3000,
+              "ref_max_abs": 4.984018162998666,
+              "max_rel_to_ref_max": 9.738286301690288e-06,
+              "passed": true
+            },
+            {
+              "name": "grad_quats_max_abs_err",
+              "value": 2.753984236109064e-05,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": "2e-05+0.002|ref|",
+              "violations": 0,
+              "entries": 4000,
+              "ref_max_abs": 6.262419585364232,
+              "max_rel_to_ref_max": 4.397636087088994e-06,
+              "passed": true
+            },
+            {
+              "name": "grad_opacity_logits_max_abs_err",
+              "value": 1.067154746373089e-05,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": "2e-05+0.002|ref|",
+              "violations": 0,
+              "entries": 1000,
+              "ref_max_abs": 2.431652225920336,
+              "max_rel_to_ref_max": 4.38859938521509e-06,
+              "passed": true
+            },
+            {
+              "name": "grad_color_logits_max_abs_err",
+              "value": 5.116912846392374e-05,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": "2e-05+0.002|ref|",
+              "violations": 0,
+              "entries": 3000,
+              "ref_max_abs": 1.351296655601677,
+              "max_rel_to_ref_max": 3.786668771198892e-05,
+              "passed": true
+            },
+            {
+              "name": "gradient_bitwise_repeatable",
+              "value": 1.0,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "unique_hashes": 1,
+              "repeats": 5
+            },
+            {
+              "name": "n_gaussians",
+              "value": 1000,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "workload"
+            },
+            {
+              "name": "n_visible",
+              "value": 1000,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "workload"
+            },
+            {
+              "name": "n_pairs",
+              "value": 2515,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "workload"
+            },
+            {
+              "name": "max_pairs_per_tile",
+              "value": 299,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "workload"
+            },
+            {
+              "name": "forward_latency",
+              "value": null,
+              "unit": "",
+              "status": "not_applicable",
+              "reason": "HIP-CPU emulation: timing is not GPU performance",
+              "group": "performance"
+            },
+            {
+              "name": "backward_latency",
+              "value": null,
+              "unit": "",
+              "status": "not_applicable",
+              "reason": "HIP-CPU emulation: timing is not GPU performance",
+              "group": "performance"
+            },
+            {
+              "name": "iteration_latency",
+              "value": null,
+              "unit": "",
+              "status": "not_applicable",
+              "reason": "HIP-CPU emulation: timing is not GPU performance",
+              "group": "performance"
+            },
+            {
+              "name": "peak_memory",
+              "value": 736.890625,
+              "unit": "MiB",
+              "status": "measured",
+              "reason": "",
+              "group": "performance",
+              "method": "process peak RSS (cumulative, upper bound; not per-backend)"
+            }
+          ]
+        },
+        "gsplat": {
+          "status": "not_run",
+          "reason": "DEVICE_UNAVAILABLE: DEVICE_UNAVAILABLE: gsplat not importable: ModuleNotFoundError: No module named 'gsplat'",
+          "measurements": [
+            {
+              "name": "forward_rgb_max_abs_err",
+              "value": null,
+              "unit": "",
+              "status": "not_run",
+              "reason": "DEVICE_UNAVAILABLE",
+              "group": "correctness"
+            },
+            {
+              "name": "grad_errors",
+              "value": null,
+              "unit": "",
+              "status": "not_run",
+              "reason": "DEVICE_UNAVAILABLE",
+              "group": "correctness"
+            },
+            {
+              "name": "gradient_bitwise_repeatable",
+              "value": null,
+              "unit": "",
+              "status": "not_run",
+              "reason": "DEVICE_UNAVAILABLE",
+              "group": "correctness"
+            },
+            {
+              "name": "forward_latency",
+              "value": null,
+              "unit": "",
+              "status": "not_run",
+              "reason": "DEVICE_UNAVAILABLE",
+              "group": "performance"
+            },
+            {
+              "name": "backward_latency",
+              "value": null,
+              "unit": "",
+              "status": "not_run",
+              "reason": "DEVICE_UNAVAILABLE",
+              "group": "performance"
+            },
+            {
+              "name": "iteration_latency",
+              "value": null,
+              "unit": "",
+              "status": "not_run",
+              "reason": "DEVICE_UNAVAILABLE",
+              "group": "performance"
+            },
+            {
+              "name": "peak_memory",
+              "value": null,
+              "unit": "",
+              "status": "not_run",
+              "reason": "DEVICE_UNAVAILABLE",
+              "group": "performance"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "case": {
+        "n": 3000,
+        "res": 128,
+        "seed": 3
+      },
+      "scene_sha256": "bfd0ce5ccc3c4ca6a2877df76f4a491a9d4438535c62e036b193c6ebb61a0b7f",
+      "backends": {
+        "reference_cpu": {
+          "status": "measured",
+          "renderer": "reference_cpu",
+          "device": "cpu",
+          "dtype": "torch.float32",
+          "measurements": [
+            {
+              "name": "forward_rgb_max_abs_err",
+              "value": 3.366272305571627e-06,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": 0.0002,
+              "passed": true
+            },
+            {
+              "name": "forward_alpha_max_abs_err",
+              "value": 3.829741059613312e-06,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": 0.0002,
+              "passed": true
+            },
+            {
+              "name": "forward_depth_max_abs_err_alpha>0.5",
+              "value": 2.6395655212674285e-06,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness"
+            },
+            {
+              "name": "grad_means_max_abs_err",
+              "value": 0.0003903488535641486,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": "2e-05+0.002|ref|",
+              "violations": 3,
+              "entries": 9000,
+              "ref_max_abs": 135.65270863821195,
+              "max_rel_to_ref_max": 2.877560333905426e-06,
+              "passed": false
+            },
+            {
+              "name": "grad_log_scales_max_abs_err",
+              "value": 1.1578822789071186e-05,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": "2e-05+0.002|ref|",
+              "violations": 0,
+              "entries": 9000,
+              "ref_max_abs": 4.68516645516953,
+              "max_rel_to_ref_max": 2.471379170807329e-06,
+              "passed": true
+            },
+            {
+              "name": "grad_quats_max_abs_err",
+              "value": 1.991322452332689e-05,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": "2e-05+0.002|ref|",
+              "violations": 0,
+              "entries": 12000,
+              "ref_max_abs": 3.223250643735796,
+              "max_rel_to_ref_max": 6.177994429948259e-06,
+              "passed": true
+            },
+            {
+              "name": "grad_opacity_logits_max_abs_err",
+              "value": 2.2538034856744993e-06,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": "2e-05+0.002|ref|",
+              "violations": 0,
+              "entries": 3000,
+              "ref_max_abs": 2.1128901942623495,
+              "max_rel_to_ref_max": 1.0666921981060853e-06,
+              "passed": true
+            },
+            {
+              "name": "grad_color_logits_max_abs_err",
+              "value": 3.276686464936951e-06,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": "2e-05+0.002|ref|",
+              "violations": 0,
+              "entries": 9000,
+              "ref_max_abs": 2.1139310584427653,
+              "max_rel_to_ref_max": 1.550044147300969e-06,
+              "passed": true
+            },
+            {
+              "name": "gradient_bitwise_repeatable",
+              "value": 1.0,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "unique_hashes": 1,
+              "repeats": 5
+            },
+            {
+              "name": "n_gaussians",
+              "value": 3000,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "workload"
+            },
+            {
+              "name": "n_visible",
+              "value": 3000,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "workload"
+            },
+            {
+              "name": "n_pairs",
+              "value": 6984,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "workload"
+            },
+            {
+              "name": "max_pairs_per_tile",
+              "value": 470,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "workload"
+            },
+            {
+              "name": "forward_latency",
+              "value": 298.4389055000065,
+              "unit": "ms",
+              "status": "measured",
+              "reason": "",
+              "group": "performance",
+              "n": 8,
+              "median_ms": 298.4389055000065,
+              "p95_ms": 520.880785999907,
+              "min_ms": 160.57228300087445,
+              "max_ms": 520.880785999907,
+              "runs_ms": [
+                283.214,
+                408.0662,
+                223.4041,
+                520.8808,
+                316.2278,
+                313.6638,
+                211.8536,
+                160.5723
+              ]
+            },
+            {
+              "name": "backward_latency",
+              "value": 217.11378200052422,
+              "unit": "ms",
+              "status": "measured",
+              "reason": "",
+              "group": "performance",
+              "n": 8,
+              "median_ms": 217.11378200052422,
+              "p95_ms": 538.7098949995561,
+              "min_ms": 166.32816799938155,
+              "max_ms": 538.7098949995561,
+              "runs_ms": [
+                219.0036,
+                538.7099,
+                261.2916,
+                197.6718,
+                239.3613,
+                215.224,
+                166.3282,
+                169.7443
+              ]
+            },
+            {
+              "name": "iteration_latency",
+              "value": 521.6037239997604,
+              "unit": "ms",
+              "status": "measured",
+              "reason": "",
+              "group": "performance",
+              "n": 8,
+              "median_ms": 521.6037239997604,
+              "p95_ms": 947.5429400008579,
+              "min_ms": 331.0997530006716,
+              "max_ms": 947.5429400008579,
+              "runs_ms": [
+                503.1899,
+                947.5429,
+                489.4733,
+                723.8839,
+                595.5065,
+                540.0176,
+                379.2324,
+                331.0998
+              ]
+            },
+            {
+              "name": "peak_memory",
+              "value": 845.4296875,
+              "unit": "MiB",
+              "status": "measured",
+              "reason": "",
+              "group": "performance",
+              "method": "process peak RSS (cumulative, upper bound; not per-backend)"
+            }
+          ]
+        },
+        "berkelium_hipcpu": {
+          "status": "measured",
+          "renderer": "berkelium_hip[hipcpu]",
+          "device": "cpu",
+          "dtype": "torch.float32",
+          "measurements": [
+            {
+              "name": "forward_rgb_max_abs_err",
+              "value": 3.366272305571627e-06,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": 0.0002,
+              "passed": true
+            },
+            {
+              "name": "forward_alpha_max_abs_err",
+              "value": 3.829741059613312e-06,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": 0.0002,
+              "passed": true
+            },
+            {
+              "name": "forward_depth_max_abs_err_alpha>0.5",
+              "value": 2.6395655212674285e-06,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness"
+            },
+            {
+              "name": "grad_means_max_abs_err",
+              "value": 0.009769236085636734,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": "2e-05+0.002|ref|",
+              "violations": 19,
+              "entries": 9000,
+              "ref_max_abs": 135.65270863821195,
+              "max_rel_to_ref_max": 7.201652059666167e-05,
+              "passed": false
+            },
+            {
+              "name": "grad_log_scales_max_abs_err",
+              "value": 8.95997260252912e-05,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": "2e-05+0.002|ref|",
+              "violations": 0,
+              "entries": 9000,
+              "ref_max_abs": 4.68516645516953,
+              "max_rel_to_ref_max": 1.9124128647858058e-05,
+              "passed": true
+            },
+            {
+              "name": "grad_quats_max_abs_err",
+              "value": 7.051507462585427e-05,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": "2e-05+0.002|ref|",
+              "violations": 0,
+              "entries": 12000,
+              "ref_max_abs": 3.223250643735796,
+              "max_rel_to_ref_max": 2.1877006295770482e-05,
+              "passed": true
+            },
+            {
+              "name": "grad_opacity_logits_max_abs_err",
+              "value": 5.7866252501120874e-05,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": "2e-05+0.002|ref|",
+              "violations": 0,
+              "entries": 3000,
+              "ref_max_abs": 2.1128901942623495,
+              "max_rel_to_ref_max": 2.7387250250041078e-05,
+              "passed": true
+            },
+            {
+              "name": "grad_color_logits_max_abs_err",
+              "value": 0.00013371611384344062,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "tolerance": "2e-05+0.002|ref|",
+              "violations": 0,
+              "entries": 9000,
+              "ref_max_abs": 2.1139310584427653,
+              "max_rel_to_ref_max": 6.325471841165107e-05,
+              "passed": true
+            },
+            {
+              "name": "gradient_bitwise_repeatable",
+              "value": 1.0,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "correctness",
+              "unique_hashes": 1,
+              "repeats": 5
+            },
+            {
+              "name": "n_gaussians",
+              "value": 3000,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "workload"
+            },
+            {
+              "name": "n_visible",
+              "value": 3000,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "workload"
+            },
+            {
+              "name": "n_pairs",
+              "value": 6984,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "workload"
+            },
+            {
+              "name": "max_pairs_per_tile",
+              "value": 470,
+              "unit": "",
+              "status": "measured",
+              "reason": "",
+              "group": "workload"
+            },
+            {
+              "name": "forward_latency",
+              "value": null,
+              "unit": "",
+              "status": "not_applicable",
+              "reason": "HIP-CPU emulation: timing is not GPU performance",
+              "group": "performance"
+            },
+            {
+              "name": "backward_latency",
+              "value": null,
+              "unit": "",
+              "status": "not_applicable",
+              "reason": "HIP-CPU emulation: timing is not GPU performance",
+              "group": "performance"
+            },
+            {
+              "name": "iteration_latency",
+              "value": null,
+              "unit": "",
+              "status": "not_applicable",
+              "reason": "HIP-CPU emulation: timing is not GPU performance",
+              "group": "performance"
+            },
+            {
+              "name": "peak_memory",
+              "value": 845.4296875,
+              "unit": "MiB",
+              "status": "measured",
+              "reason": "",
+              "group": "performance",
+              "method": "process peak RSS (cumulative, upper bound; not per-backend)"
+            }
+          ]
+        },
+        "gsplat": {
+          "status": "not_run",
+          "reason": "DEVICE_UNAVAILABLE: DEVICE_UNAVAILABLE: gsplat not importable: ModuleNotFoundError: No module named 'gsplat'",
+          "measurements": [
+            {
+              "name": "forward_rgb_max_abs_err",
+              "value": null,
+              "unit": "",
+              "status": "not_run",
+              "reason": "DEVICE_UNAVAILABLE",
+              "group": "correctness"
+            },
+            {
+              "name": "grad_errors",
+              "value": null,
+              "unit": "",
+              "status": "not_run",
+              "reason": "DEVICE_UNAVAILABLE",
+              "group": "correctness"
+            },
+            {
+              "name": "gradient_bitwise_repeatable",
+              "value": null,
+              "unit": "",
+              "status": "not_run",
+              "reason": "DEVICE_UNAVAILABLE",
+              "group": "correctness"
+            },
+            {
+              "name": "forward_latency",
+              "value": null,
+              "unit": "",
+              "status": "not_run",
+              "reason": "DEVICE_UNAVAILABLE",
+              "group": "performance"
+            },
+            {
+              "name": "backward_latency",
+              "value": null,
+              "unit": "",
+              "status": "not_run",
+              "reason": "DEVICE_UNAVAILABLE",
+              "group": "performance"
+            },
+            {
+              "name": "iteration_latency",
+              "value": null,
+              "unit": "",
+              "status": "not_run",
+              "reason": "DEVICE_UNAVAILABLE",
+              "group": "performance"
+            },
+            {
+              "name": "peak_memory",
+              "value": null,
+              "unit": "",
+              "status": "not_run",
+              "reason": "DEVICE_UNAVAILABLE",
+              "group": "performance"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "quality": {
+    "reference_cpu": {
+      "name": "heldout_view_psnr_after_fit",
+      "value": 21.65410417813955,
+      "unit": "dB",
+      "status": "measured",
+      "reason": "",
+      "group": "quality",
+      "iterations": 60,
+      "views": 4,
+      "n": 300,
+      "res": 48,
+      "wall_s": 4.85,
+      "note": "GT and fit rendered by the same backend; measures optimisation, not geometric ground truth"
+    },
+    "berkelium_hipcpu": {
+      "name": "heldout_view_psnr_after_fit",
+      "value": 21.639825049792915,
+      "unit": "dB",
+      "status": "measured",
+      "reason": "",
+      "group": "quality",
+      "iterations": 60,
+      "views": 4,
+      "n": 300,
+      "res": 48,
+      "wall_s": 4.4,
+      "note": "GT and fit rendered by the same backend; measures optimisation, not geometric ground truth"
+    },
+    "gsplat": {
+      "name": "heldout_view_psnr_after_fit",
+      "value": null,
+      "unit": "",
+      "status": "not_run",
+      "reason": "DEVICE_UNAVAILABLE",
+      "group": "quality"
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "status": "ok",
+  "anchor_prompt": {
+    "text": "a white porcelain pitcher. A single complete object, centered, fully visible with empty margin around it, three-quarter view from slightly above, isolated on a plain solid bright green background, soft even studio lighting, no shadow, no text, no other objects",
+    "background": "bright green",
+    "background_rgb": [
+      0,
+      177,
+      64
+    ],
+    "named_colours": [
+      "white"
+    ],
+    "colour_margin": 1.193,
+    "template": "{prompt}. A single complete object, centered, fully visible with empty margin around it, three-quarter view from slightly above, isolated on a plain solid {bg} background, soft even studio lighting, no shadow, no text, no other objects"
+  },
+  "sampler": {
+    "steps": 9,
+    "guidance_scale": 0.0,
+    "height": 768,
+    "width": 768,
+    "noise": "seeded CPU generator"
+  },
+  "dtype": "bfloat16",
+  "device": "cuda",
+  "gpu": "Tesla T4",
+  "load_s": 97.2,
+  "seconds": 143.26,
+  "finite": true,
+  "std": 0.244377002120018,
+  "peak_gpu_mib": 13831.2,
+  "anchor_sha256": "4d163e90485f3e96d7e1c4cfb285eff98681f2b0ddc35db9d0b2ceab6810c9df",
+  "lora": {
+    "path": "exports/zimage-anchor-lora-v1/adapter.safetensors",
+    "sha256": "0bde1ac0f975884607baf82a274eae92fa00550a2d42bb066ced6f91cd63df45"
+  }
+}

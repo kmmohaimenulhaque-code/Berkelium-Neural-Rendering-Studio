@@ -1,0 +1,57 @@
+{
+  "n_vertices": 3962,
+  "n_faces": 7920,
+  "finite": true,
+  "in_bounds": true,
+  "degenerate_faces": 0,
+  "components": 1,
+  "watertight": true,
+  "winding_consistent": true,
+  "edge_manifold": true,
+  "euler_number": 2,
+  "surface_area": 4.588419299244663,
+  "volume": 0.6124110623585124,
+  "bounds_min": [
+    -0.7879999876022339,
+    -0.5241000056266785,
+    -0.49050000309944153
+  ],
+  "bounds_max": [
+    0.8029999732971191,
+    0.42969998717308044,
+    0.490200012922287
+  ],
+  "valid": true,
+  "prompt": "a blue coffee mug",
+  "tokens": 4,
+  "unknown_words": [
+    "coffee",
+    "mug"
+  ],
+  "resolution": 48,
+  "sdf_min": -0.0722307413816452,
+  "sdf_max": 4.948536396026611,
+  "seconds": 2.634,
+  "artifact_kind": "triangle_mesh",
+  "units": "normalized_object",
+  "generator": "berkelium-textshape",
+  "seed": 0,
+  "adapter": null,
+  "base_checkpoint_sha256": "4989d90b206ae185a81aa33b22f7a5869470feb1f5e5c617cff56983a85e8504",
+  "train_version": "berkelium-textshape-train/1",
+  "adapter_routing": {
+    "requested": "auto",
+    "selected": null,
+    "reason": "no adapter concept in the prompt"
+  },
+  "identity": {
+    "generator": "berkelium-textshape",
+    "model": "BerkeliumTextShape (text->SDF->marching cubes)",
+    "checkpoint": "exports/textshape-base-v1/model.pt",
+    "license": "MIT (Berkelium-owned weights and data)",
+    "resolution": 48,
+    "adapter": "auto",
+    "device": "cpu"
+  },
+  "wall_s": 2.69
+}

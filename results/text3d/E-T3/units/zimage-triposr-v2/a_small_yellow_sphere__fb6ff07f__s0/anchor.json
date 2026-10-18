@@ -1,0 +1,33 @@
+{
+  "status": "ok",
+  "anchor_prompt": {
+    "text": "a small yellow sphere. A single complete object, centered, fully visible with empty margin around it, three-quarter view from slightly above, isolated on a plain solid bright blue background, soft even studio lighting, no shadow, no text, no other objects",
+    "background": "bright blue",
+    "background_rgb": [
+      0,
+      71,
+      187
+    ],
+    "named_colours": [
+      "yellow"
+    ],
+    "colour_margin": 1.267,
+    "template": "{prompt}. A single complete object, centered, fully visible with empty margin around it, three-quarter view from slightly above, isolated on a plain solid {bg} background, soft even studio lighting, no shadow, no text, no other objects"
+  },
+  "sampler": {
+    "steps": 9,
+    "guidance_scale": 0.0,
+    "height": 768,
+    "width": 768,
+    "noise": "seeded CPU generator"
+  },
+  "dtype": "bfloat16",
+  "device": "cuda",
+  "gpu": "Tesla T4",
+  "load_s": 93.9,
+  "seconds": 122.58,
+  "finite": true,
+  "std": 0.234811469912529,
+  "peak_gpu_mib": 13799.4,
+  "anchor_sha256": "76ae69ba9d7079fff1a17c3cb27af10c8484bf6bb9b8f8a8fd2ff5680733a858"
+}

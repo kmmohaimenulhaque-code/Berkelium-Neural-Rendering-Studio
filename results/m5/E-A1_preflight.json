@@ -1,0 +1,50 @@
+{
+  "experiment": "E-A1 (research E1) Z-Image-Turbo image-prior smoke",
+  "milestone": "M5",
+  "pins": {
+    "repo": "Tongyi-MAI/Z-Image-Turbo",
+    "revision": "f332072aa78be7aecdf3ee76d5c247082da564a6",
+    "license": "Apache-2.0 (model card; verify LICENSE)"
+  },
+  "config": {
+    "size": 1024,
+    "steps": 9,
+    "guidance_scale": 0.0,
+    "dtype": "bfloat16",
+    "prompts": [
+      "a red ceramic teapot on a plain light grey background, studio product photo, whole object visible",
+      "a small wooden toy car on a plain light grey background, studio product photo, whole object visible",
+      "a blue sneaker on a plain light grey background, studio product photo, whole object visible",
+      "a green potted cactus on a plain light grey background, studio product photo, whole object visible"
+    ],
+    "seed": 42
+  },
+  "geometry_generated": false,
+  "note": "text-to-image output only: no 3D geometry, no calibrated camera, no multi-view consistency",
+  "started_at": "2026-10-15T16:58:13Z",
+  "environment": {
+    "git_commit": "15bd38f463b123d69991384c843771690b6007ef+dirty",
+    "python": "3.14.2",
+    "platform": "Linux-6.8.0-1064-azure-x86_64-with-glibc2.39",
+    "numpy": "2.5.3",
+    "torch": "2.14.1+cpu",
+    "torch_hip": null,
+    "torch_cuda": null,
+    "gpu_visible": false
+  },
+  "preflight": {
+    "checks": {
+      "torch": "2.14.1+cpu",
+      "torch_hip": null,
+      "gpu_visible": false,
+      "disk_free_gb": 14.8
+    },
+    "blockers": [
+      "no GPU visible to PyTorch (a 6B diffusion transformer is not a CPU smoke test)",
+      "diffusers not installed (configs/environments/zimage-rocm.txt)",
+      "huggingface_hub not installed",
+      "14.8 GB free at /workspaces/Berkelium-Neural-Rendering-Studio/data/models; the pinned snapshot needs ~33 GB plus staging (require 40 GB)"
+    ]
+  },
+  "status": "blocked_environment"
+}

@@ -1,0 +1,23 @@
+{
+  "experiment": "E-T3",
+  "description": "Open-world text-to-3D on CPU: native vs Shap-E vs auto vs planner (frozen before any candidate run)",
+  "prompts": "benchmarks/configs/text3d_openworld_cpu_v1.prompts.json",
+  "seed": 0,
+  "shap_e": {"steps": 16, "guidance": 15.0, "threads": 2, "timeout_s": 2700},
+  "native": {"resolution": 48, "adapter": "auto"},
+  "budget": {
+    "cost_model": "results/text3d/E-T3/P2_COST_MODEL.md",
+    "seconds_per_generation_wall": 827,
+    "available_cpu_hours": 6.5,
+    "max_shap_e_generations": 28,
+    "wall_hours_shap_e": 7.5,
+    "omitted_by_design": ["B4_planner (Shap-E planner arm, 16 units)", "B1 seeds 1-2 (24 units)"]
+  },
+  "priority": ["native", "B1", "B4_single", "B2", "B4_planner", "B3_routed"],
+  "evaluator": {"model": "OpenAI CLIP ViT-B/32 (not ViT-L/14, which conditions Shap-E)",
+                "path": "data/models/clip_eval/ViT-B-32.pt",
+                "url": "https://openaipublic.azureedge.net/clip/models/40d365715913c9da98579312b702a82c18be219cc2a73407c4526f58eba950af/ViT-B-32.pt",
+                "sha256": "40d365715913c9da98579312b702a82c18be219cc2a73407c4526f58eba950af", "license": "MIT"},
+  "out": "results/text3d/E-T3",
+  "result_json": "results/text3d/E-T3_openworld_cpu.json"
+}

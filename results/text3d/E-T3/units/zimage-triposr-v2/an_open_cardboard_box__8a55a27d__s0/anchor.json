@@ -1,0 +1,31 @@
+{
+  "status": "ok",
+  "anchor_prompt": {
+    "text": "an open cardboard box. A single complete object, centered, fully visible with empty margin around it, three-quarter view from slightly above, isolated on a plain solid bright green background, soft even studio lighting, no shadow, no text, no other objects",
+    "background": "bright green",
+    "background_rgb": [
+      0,
+      177,
+      64
+    ],
+    "named_colours": [],
+    "colour_margin": Infinity,
+    "template": "{prompt}. A single complete object, centered, fully visible with empty margin around it, three-quarter view from slightly above, isolated on a plain solid {bg} background, soft even studio lighting, no shadow, no text, no other objects"
+  },
+  "sampler": {
+    "steps": 9,
+    "guidance_scale": 0.0,
+    "height": 768,
+    "width": 768,
+    "noise": "seeded CPU generator"
+  },
+  "dtype": "bfloat16",
+  "device": "cuda",
+  "gpu": "Tesla T4",
+  "load_s": 93.9,
+  "seconds": 123.3,
+  "finite": true,
+  "std": 0.1976568102836609,
+  "peak_gpu_mib": 13799.4,
+  "anchor_sha256": "71253ed5ee53a0acfcef28693f93340a50abacd473ba399be239e174f5a3d863"
+}

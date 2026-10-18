@@ -1,0 +1,68 @@
+{
+  "name": "zimage-anchor-lora-v1",
+  "base": {
+    "repo": "Tongyi-MAI/Z-Image-Turbo",
+    "revision": "f332072aa78be7aecdf3ee76d5c247082da564a6",
+    "license": "Apache-2.0 (model card metadata at the pinned revision)",
+    "files": {
+      "text_encoder/model-00001-of-00003.safetensors": {
+        "hash_kind": "sha256",
+        "hash": "328a91d3122359d5547f9d79521205bc0a46e1f79a792dfe650e99fc2d651223",
+        "bytes": 3957900840
+      },
+      "text_encoder/model-00002-of-00003.safetensors": {
+        "hash_kind": "sha256",
+        "hash": "6cd087b316306a68c562436b5492edbcf6e16c6dba3a1308279caa5a58e21ca5",
+        "bytes": 3987450520
+      },
+      "text_encoder/model-00003-of-00003.safetensors": {
+        "hash_kind": "sha256",
+        "hash": "7ca841ee75b9c61267c0c6148fd8d096d3d21b6d3e161256a9b878154f91fc52",
+        "bytes": 99630640
+      },
+      "transformer/diffusion_pytorch_model-00001-of-00003.safetensors": {
+        "hash_kind": "sha256",
+        "hash": "95facd593e2549e8252acb571c653d57f7ddb7f1060d4e81712f152555a88804",
+        "bytes": 9973693184
+      },
+      "transformer/diffusion_pytorch_model-00002-of-00003.safetensors": {
+        "hash_kind": "sha256",
+        "hash": "a4bbe43ee184a1fb5af4b412d27555f532893bdc3165b1149e304ed82b5d7015",
+        "bytes": 9973714824
+      },
+      "transformer/diffusion_pytorch_model-00003-of-00003.safetensors": {
+        "hash_kind": "sha256",
+        "hash": "aba4e37a590e63210878160a718d916d80398f4e1f78ab6c9b2b2a00d92769fa",
+        "bytes": 4672282880
+      },
+      "vae/diffusion_pytorch_model.safetensors": {
+        "hash_kind": "sha256",
+        "hash": "f5b59a26851551b67ae1fe58d32e76486e1e812def4696a4bea97f16604d40a3",
+        "bytes": 167666902
+      }
+    }
+  },
+  "kind": "LoRA (peft) on Z-Image-Turbo transformer attention (to_q, to_k, to_v, to_out.0), base frozen",
+  "rank": 16,
+  "alpha": 16,
+  "trainable_params": 16711680,
+  "data": {
+    "manifest_sha256": "ae5733652231e1196041e68f7e893f2084628cce034e23df74a7d8344820a25f",
+    "images": 144,
+    "config": "configs/datasets/anchor_lora_gso_v1.json",
+    "license": "CC-BY 4.0 (Google Scanned Objects); derived weights trained on renders"
+  },
+  "objective": "rectified-flow x0 - eps target at the 9 Turbo sigmas (training resolution shift mu 0.6300), MSE",
+  "steps": 400,
+  "lr": 0.0001,
+  "seed": 0,
+  "batch": 1,
+  "precision": "bfloat16 frozen base + fp32 LoRA, autocast bfloat16, grad clip 1.0",
+  "loss_first_10pct_mean": 0.2511029539629817,
+  "loss_last_10pct_mean": 0.20062551433220505,
+  "weights": {
+    "adapter.safetensors": "0bde1ac0f975884607baf82a274eae92fa00550a2d42bb066ced6f91cd63df45"
+  },
+  "license": "Apache-2.0 (base model) adapter weights released with the repository",
+  "status": "NOT PROMOTED (D-030, E-T3 results/text3d/E-T3_openworld_cpu.json): vs base zimage-triposr-v2, B1 valid 1.00 vs 1.00 (pass), B1 F@0.05 0.546 vs 0.603 (fail), B1 Chamfer 0.060 vs 0.055 (fail), B2 R@1 0.25 vs 0.85 (fail). Cleaner backgrounds on held-out prompts (colour-key gate 4/4 vs 2/4) but much weaker prompt fidelity; seed std 0.014 vs 0.004. Kept for reproducibility; the anchor stage uses the base model."
+}

@@ -1,0 +1,31 @@
+{
+  "status": "ok",
+  "anchor_prompt": {
+    "text": "a men's boot. A single complete object, centered, fully visible with empty margin around it, three-quarter view from slightly above, isolated on a plain solid bright green background, soft even studio lighting, no shadow, no text, no other objects",
+    "background": "bright green",
+    "background_rgb": [
+      0,
+      177,
+      64
+    ],
+    "named_colours": [],
+    "colour_margin": Infinity,
+    "template": "{prompt}. A single complete object, centered, fully visible with empty margin around it, three-quarter view from slightly above, isolated on a plain solid {bg} background, soft even studio lighting, no shadow, no text, no other objects"
+  },
+  "sampler": {
+    "steps": 9,
+    "guidance_scale": 0.0,
+    "height": 768,
+    "width": 768,
+    "noise": "seeded CPU generator"
+  },
+  "dtype": "bfloat16",
+  "device": "cuda",
+  "gpu": "Tesla T4",
+  "load_s": 93.9,
+  "seconds": 122.63,
+  "finite": true,
+  "std": 0.2084113359451294,
+  "peak_gpu_mib": 13799.4,
+  "anchor_sha256": "e4b80edbfb521dc860a60731ad27862ab297535ec22961f45f249cf7cb16f0e4"
+}

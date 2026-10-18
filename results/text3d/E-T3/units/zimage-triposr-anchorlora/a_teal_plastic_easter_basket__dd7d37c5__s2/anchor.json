@@ -1,0 +1,37 @@
+{
+  "status": "ok",
+  "anchor_prompt": {
+    "text": "a teal plastic easter basket. A single complete object, centered, fully visible with empty margin around it, three-quarter view from slightly above, isolated on a plain solid bright magenta background, soft even studio lighting, no shadow, no text, no other objects",
+    "background": "bright magenta",
+    "background_rgb": [
+      255,
+      0,
+      255
+    ],
+    "named_colours": [
+      "teal"
+    ],
+    "colour_margin": 1.225,
+    "template": "{prompt}. A single complete object, centered, fully visible with empty margin around it, three-quarter view from slightly above, isolated on a plain solid {bg} background, soft even studio lighting, no shadow, no text, no other objects"
+  },
+  "sampler": {
+    "steps": 9,
+    "guidance_scale": 0.0,
+    "height": 768,
+    "width": 768,
+    "noise": "seeded CPU generator"
+  },
+  "dtype": "bfloat16",
+  "device": "cuda",
+  "gpu": "Tesla T4",
+  "load_s": 97.2,
+  "seconds": 139.44,
+  "finite": true,
+  "std": 0.27503475546836853,
+  "peak_gpu_mib": 13831.2,
+  "anchor_sha256": "1ebc67dbd0e7cb0cc78cd9986f80afb15f38421a8d5c16423161816f8a323c29",
+  "lora": {
+    "path": "exports/zimage-anchor-lora-v1/adapter.safetensors",
+    "sha256": "0bde1ac0f975884607baf82a274eae92fa00550a2d42bb066ced6f91cd63df45"
+  }
+}

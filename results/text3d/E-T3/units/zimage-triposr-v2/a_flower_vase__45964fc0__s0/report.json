@@ -1,0 +1,170 @@
+{
+  "prompt": "a flower vase",
+  "seed": 0,
+  "generator": "zimage-triposr-v2",
+  "anchor": {
+    "status": "ok",
+    "anchor_prompt": {
+      "text": "a flower vase. A single complete object, centered, fully visible with empty margin around it, three-quarter view from slightly above, isolated on a plain solid bright green background, soft even studio lighting, no shadow, no text, no other objects",
+      "background": "bright green",
+      "background_rgb": [
+        0,
+        177,
+        64
+      ],
+      "named_colours": [],
+      "colour_margin": Infinity,
+      "template": "{prompt}. A single complete object, centered, fully visible with empty margin around it, three-quarter view from slightly above, isolated on a plain solid {bg} background, soft even studio lighting, no shadow, no text, no other objects"
+    },
+    "sampler": {
+      "steps": 9,
+      "guidance_scale": 0.0,
+      "height": 768,
+      "width": 768,
+      "noise": "seeded CPU generator"
+    },
+    "dtype": "bfloat16",
+    "device": "cuda",
+    "gpu": "Tesla T4",
+    "load_s": 93.9,
+    "seconds": 129.18,
+    "finite": true,
+    "std": 0.16126450896263123,
+    "peak_gpu_mib": 13799.4,
+    "anchor_sha256": "2ae77685b23ab72be7d1f0ce350ef1e0826f66e8f7e025820ddaf82c8e5620ca"
+  },
+  "segment": "u2net",
+  "anchors_from": "zimage-triposr",
+  "identity": {
+    "generator": "zimage-triposr",
+    "model": "Z-Image-Turbo (f332072a) -> keyed anchor -> TripoSR (5b521936)",
+    "pipeline": "anchor prompt template -> Z-Image-Turbo -> colour-key RGBA -> TripoSR -> clean mesh",
+    "sampler": {
+      "steps": 9,
+      "guidance_scale": 0.0,
+      "height": 768,
+      "width": 768,
+      "noise": "seeded CPU generator"
+    },
+    "dtype": "bfloat16",
+    "triposr": {
+      "input_size": 512,
+      "foreground_ratio": 0.85,
+      "mc_resolution": 256,
+      "chunk_size": 8192
+    },
+    "weights": {
+      "zimage": {
+        "repo": "Tongyi-MAI/Z-Image-Turbo",
+        "revision": "f332072aa78be7aecdf3ee76d5c247082da564a6",
+        "license": "Apache-2.0 (model card metadata at the pinned revision)",
+        "files": {
+          "text_encoder/model-00001-of-00003.safetensors": {
+            "hash_kind": "sha256",
+            "hash": "328a91d3122359d5547f9d79521205bc0a46e1f79a792dfe650e99fc2d651223",
+            "bytes": 3957900840
+          },
+          "text_encoder/model-00002-of-00003.safetensors": {
+            "hash_kind": "sha256",
+            "hash": "6cd087b316306a68c562436b5492edbcf6e16c6dba3a1308279caa5a58e21ca5",
+            "bytes": 3987450520
+          },
+          "text_encoder/model-00003-of-00003.safetensors": {
+            "hash_kind": "sha256",
+            "hash": "7ca841ee75b9c61267c0c6148fd8d096d3d21b6d3e161256a9b878154f91fc52",
+            "bytes": 99630640
+          },
+          "transformer/diffusion_pytorch_model-00001-of-00003.safetensors": {
+            "hash_kind": "sha256",
+            "hash": "95facd593e2549e8252acb571c653d57f7ddb7f1060d4e81712f152555a88804",
+            "bytes": 9973693184
+          },
+          "transformer/diffusion_pytorch_model-00002-of-00003.safetensors": {
+            "hash_kind": "sha256",
+            "hash": "a4bbe43ee184a1fb5af4b412d27555f532893bdc3165b1149e304ed82b5d7015",
+            "bytes": 9973714824
+          },
+          "transformer/diffusion_pytorch_model-00003-of-00003.safetensors": {
+            "hash_kind": "sha256",
+            "hash": "aba4e37a590e63210878160a718d916d80398f4e1f78ab6c9b2b2a00d92769fa",
+            "bytes": 4672282880
+          },
+          "vae/diffusion_pytorch_model.safetensors": {
+            "hash_kind": "sha256",
+            "hash": "f5b59a26851551b67ae1fe58d32e76486e1e812def4696a4bea97f16604d40a3",
+            "bytes": 167666902
+          }
+        }
+      },
+      "triposr": {
+        "code_commit": "107cefdc244c39106fa830359024f6a2f1c78871",
+        "weights_revision": "5b521936b01fbe1890f6f9baed0254ab6351c04a",
+        "model_ckpt_sha256": "429e2c6b22a0923967459de24d67f05962b235f79cde6b032aa7ed2ffcd970ee",
+        "license": "MIT (upstream statement for code and weights)"
+      }
+    },
+    "license": "Apache-2.0 (Z-Image-Turbo) + MIT (TripoSR)",
+    "device": "cuda"
+  },
+  "artifact_kind": "triangle_mesh",
+  "units": "normalized_object",
+  "frame": "TripoSR z-up -> +Y-up (to_gradio_3d_orientation), centred, max extent 1.6",
+  "labels": "model-generated, normalized units, not measured geometry",
+  "hardware": {
+    "device": "cuda",
+    "gpu_name": "Tesla T4",
+    "host": "87c9079386be",
+    "torch": "2.11.0+cu128",
+    "torch_cuda": "12.8",
+    "transformers": "4.57.6"
+  },
+  "keying": {
+    "method": "U\u00b2-Net salient object segmentation (rembg procedure), sha256 8d10d2f3bb75ae3b",
+    "foreground_fraction": 0.0976,
+    "touches_frame_fraction": 0.0
+  },
+  "triposr": {
+    "seconds": 3.3,
+    "mc_resolution": 256
+  },
+  "raw_vertices": 41592,
+  "raw_faces": 83172,
+  "n_vertices": 41592,
+  "n_faces": 83169,
+  "finite": true,
+  "in_bounds": true,
+  "degenerate_faces": 0,
+  "components": 5,
+  "watertight": false,
+  "winding_consistent": true,
+  "edge_manifold": true,
+  "euler_number": 4,
+  "surface_area": 3.889083963965506,
+  "volume": null,
+  "bounds_min": [
+    -0.42410001158714294,
+    -0.800000011920929,
+    -0.4796000123023987
+  ],
+  "bounds_max": [
+    0.42410001158714294,
+    0.800000011920929,
+    0.4796000123023987
+  ],
+  "valid": true,
+  "degenerate_faces_removed": 3,
+  "status": "ok",
+  "reconstruct_s": 35.92,
+  "seconds": 165.1,
+  "environment": {
+    "git_commit": null,
+    "python": "3.13.15",
+    "platform": "Linux-6.18.48+-x86_64-with-glibc2.39",
+    "numpy": "2.1.3",
+    "torch": "2.11.0+cu128",
+    "torch_hip": null,
+    "torch_cuda": "12.8",
+    "gpu_visible": true,
+    "gpu_name": "Tesla T4"
+  }
+}

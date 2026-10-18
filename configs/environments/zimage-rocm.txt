@@ -1,0 +1,13 @@
+# M5 / E-A1: Z-Image-Turbo image prior on ROCm (MI300X). Separate environment from the gsplat/Berkelium one
+# (TEXT_TO_3D_RESEARCH_PLAN.md: modern Diffusers pins differ from the renderer stack). NOT executed in this commit.
+# PyTorch: the AMD image rocm/pytorch:rocm7.0_ubuntu24.04_py3.12_pytorch_release_2.8.0 (do not pip-install torch).
+# Diffusers: a RELEASE that exposes ZImagePipeline (checked by scripts/m5_image_prior_smoke.py --check); record the
+# exact version in the receipt. Model: Tongyi-MAI/Z-Image-Turbo @ f332072aa78be7aecdf3ee76d5c247082da564a6 (~33 GB).
+diffusers>=0.36
+transformers>=4.51
+accelerate>=1.0
+huggingface_hub>=0.30
+safetensors>=0.4
+sentencepiece
+pillow>=10
+numpy<2.6

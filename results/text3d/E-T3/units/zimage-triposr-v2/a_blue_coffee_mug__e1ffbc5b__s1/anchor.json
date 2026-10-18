@@ -1,0 +1,33 @@
+{
+  "status": "ok",
+  "anchor_prompt": {
+    "text": "a blue coffee mug. A single complete object, centered, fully visible with empty margin around it, three-quarter view from slightly above, isolated on a plain solid bright magenta background, soft even studio lighting, no shadow, no text, no other objects",
+    "background": "bright magenta",
+    "background_rgb": [
+      255,
+      0,
+      255
+    ],
+    "named_colours": [
+      "blue"
+    ],
+    "colour_margin": 0.949,
+    "template": "{prompt}. A single complete object, centered, fully visible with empty margin around it, three-quarter view from slightly above, isolated on a plain solid {bg} background, soft even studio lighting, no shadow, no text, no other objects"
+  },
+  "sampler": {
+    "steps": 9,
+    "guidance_scale": 0.0,
+    "height": 768,
+    "width": 768,
+    "noise": "seeded CPU generator"
+  },
+  "dtype": "bfloat16",
+  "device": "cuda",
+  "gpu": "Tesla T4",
+  "load_s": 93.9,
+  "seconds": 129.1,
+  "finite": true,
+  "std": 0.33888930082321167,
+  "peak_gpu_mib": 13799.4,
+  "anchor_sha256": "162029b42e745ab6250962a01c4778e06e035167ce7562bbde9255200ec0e732"
+}

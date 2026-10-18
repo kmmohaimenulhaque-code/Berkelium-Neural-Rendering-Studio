@@ -1,0 +1,80 @@
+{
+  "local": {
+    "job": "zimage-triposr-et3",
+    "run_id": "20261016T145147Z",
+    "kernel": "kmmohaimenulhaque/berkelium-zimage",
+    "accelerator": "NvidiaTeslaT4",
+    "spec": "configs/kaggle/zimage_triposr_et3.json",
+    "spec_sha256": "0d6eb425cb076e8381dd0b9ce4335c342b7e5ca6f722bb1a55565f0c48864dea",
+    "bundle_sha256": "ecc98e34e6c689387c6a841e20be55cd14ed9e2e1f710a1c6ee404354ca25456",
+    "bundle_bytes": 228115,
+    "bundle_files": 115,
+    "git": {
+      "commit": "1c64333aa7a924b96b3be154f6b3380cc19458f4",
+      "branch": "neural-v1",
+      "dirty_files": 11
+    },
+    "pushed_at": "2026-10-16T14:51:48Z",
+    "status": "pushed",
+    "push_response": "Kernel version 1 successfully pushed.  Please check progress at https://www.kaggle.com/code/kmmohaimenulhaque/berkelium-zimage",
+    "kernel_final_status": "complete",
+    "verification": {
+      "files": 0,
+      "verified": 0,
+      "problems": [],
+      "bytes": 0
+    }
+  },
+  "remote": {
+    "job": "zimage-triposr-et3",
+    "run_id": "20261016T145147Z",
+    "started_at": "2026-10-16T14:51:55Z",
+    "bundle_sha256_expected": "ecc98e34e6c689387c6a841e20be55cd14ed9e2e1f710a1c6ee404354ca25456",
+    "steps": [
+      {
+        "name": "deps_stage_a",
+        "seconds": 8.3,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "pip install -q -r configs/environments/zimage-cuda.txt",
+            "rc": 0,
+            "log": "logs/00_deps_stage_a.log",
+            "tail": "   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 556.4/556.4 kB 15.0 MB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 750.4/750.4 kB 24.8 MB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 13.7/13.7 MB 105.5 MB/s eta 0:00:00\nERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.\ncucim-cu12 26.2.1 requires scikit-image<0.26.0,>=0.19.0, but you have scikit-image 0.26.0 which is incompatible.\n"
+          }
+        ]
+      },
+      {
+        "name": "venv_stage_b",
+        "seconds": 0.1,
+        "ok": false,
+        "commands": [
+          {
+            "cmd": "python -m venv --system-site-packages .venv-triposr-cuda && .venv-triposr-cuda/bin/pip install -q -r configs/environments/triposr-cuda.txt",
+            "rc": 1,
+            "log": "logs/01_venv_stage_b.log",
+            "tail": "Error: Command '['/tmp/berkelium/.venv-triposr-cuda/bin/python3', '-m', 'ensurepip', '--upgrade', '--default-pip']' returned non-zero exit status 1.\n"
+          }
+        ]
+      }
+    ],
+    "status": "failed",
+    "bundle_sha256": "ecc98e34e6c689387c6a841e20be55cd14ed9e2e1f710a1c6ee404354ca25456",
+    "environment": {
+      "python": "3.13.15",
+      "host": "6ef4379f35af",
+      "nvidia_smi": "Tesla T4, 15360 MiB, 580.178.04\nTesla T4, 15360 MiB, 580.178.04",
+      "torch": "2.11.0+cu128 12.8 2",
+      "disk_free_gb": {
+        "/kaggle/working": 20.9,
+        "/tmp": 1148.8
+      },
+      "mem_total_mib": 32099,
+      "cpu_count": 4
+    },
+    "failed_step": "venv_stage_b",
+    "finished_at": "2026-10-16T14:52:15Z",
+    "outputs": 0
+  },
+  "manifest": {}
+}

@@ -1,0 +1,34 @@
+{
+  "status": "ok",
+  "anchor_prompt": {
+    "text": "a small cyan sphere with a green cylinder on top. A single complete object, centered, fully visible with empty margin around it, three-quarter view from slightly above, isolated on a plain solid bright magenta background, soft even studio lighting, no shadow, no text, no other objects",
+    "background": "bright magenta",
+    "background_rgb": [
+      255,
+      0,
+      255
+    ],
+    "named_colours": [
+      "cyan",
+      "green"
+    ],
+    "colour_margin": 1.278,
+    "template": "{prompt}. A single complete object, centered, fully visible with empty margin around it, three-quarter view from slightly above, isolated on a plain solid {bg} background, soft even studio lighting, no shadow, no text, no other objects"
+  },
+  "sampler": {
+    "steps": 9,
+    "guidance_scale": 0.0,
+    "height": 768,
+    "width": 768,
+    "noise": "seeded CPU generator"
+  },
+  "dtype": "bfloat16",
+  "device": "cuda",
+  "gpu": "Tesla T4",
+  "load_s": 93.9,
+  "seconds": 133.08,
+  "finite": true,
+  "std": 0.1990916132926941,
+  "peak_gpu_mib": 13803.2,
+  "anchor_sha256": "8b016f7ee3566372f0f930c5afb4c4744081705aea61eb8b98c75d34e057f211"
+}

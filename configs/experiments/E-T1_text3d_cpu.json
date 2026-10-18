@@ -1,0 +1,3 @@
+{"id": "E-T1", "title": "Text-to-3D: base vs retrieval baseline; LoRA adapter vs pretrained base", "benchmark": "text3d",
+ "protocol": "benchmarks/configs/text3d_cpu_v1.json", "requires": ["cpu"], "approved": true,
+ "output": "results/text3d/E-T1_cpu.json"}

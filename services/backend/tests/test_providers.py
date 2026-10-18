@@ -61,11 +61,11 @@ def test_registry_has_all_agreed_providers(app_ctx):
     main, _, _ = app_ctx
     ids = set(main.prov.PROVIDERS)
     cloud = {"openai", "anthropic", "gemini", "fireworks", "together", "mistral", "groq",
-             "openrouter", "cohere", "deepseek", "perplexity", "xai", "huggingface",
+             "openrouter", "cohere", "deepseek", "perplexity", "xai", "nvidia_nim", "huggingface",
              "replicate", "bedrock"}
     assert cloud <= ids
     assert {"ollama", "lm_studio", "custom"} <= ids
-    assert len(cloud) == 15
+    assert len(cloud) == 16
 
 
 def test_every_litellm_prefix_is_supported(app_ctx):
@@ -153,6 +153,44 @@ def test_check_reports_rejected_key(app_ctx, monkeypatch):
     client.put("/providers/openai", json={"api_key": "sk-bad1234567890"})
     patch_httpx(monkeypatch, {("GET", "https://api.openai.com/v1/models"): (401, {})})
     assert client.post("/providers/openai/test").json()["detail"] == "key_rejected"
+
+
+def test_nvidia_nim_check_uses_bearer_auth_and_lists_models(app_ctx, monkeypatch):
+    _, client, _ = app_ctx
+    client.put("/providers/nvidia_nim", json={"api_key": "nvapi-test-secret"})
+    seen = {}
+
+    def handler(request):
+        seen["url"] = str(request.url)
+        seen["authorization"] = request.headers.get("Authorization")
+        return httpx.Response(200, json={"data": [{"id": "meta/llama-3.1-8b-instruct"}]})
+
+    real = httpx.AsyncClient
+    monkeypatch.setattr(
+        httpx,
+        "AsyncClient",
+        lambda *a, **k: real(*a, **{**k, "transport": httpx.MockTransport(handler)}),
+    )
+    assert client.post("/providers/nvidia_nim/test").json() == {
+        "ok": True,
+        "models": ["meta/llama-3.1-8b-instruct"],
+        "detail": "ok",
+    }
+    assert seen["url"] == "https://integrate.api.nvidia.com/v1/models"
+    assert seen["authorization"] == "Bearer nvapi-test-secret"
+
+
+def test_nvidia_nim_chat_uses_litellm_provider_and_endpoint(app_ctx):
+    main, _, _ = app_ctx
+    p = main.prov.PROVIDERS["nvidia_nim"]
+    kwargs = main.prov._litellm_kwargs(
+        p, {"api_key": "nvapi-test-secret"}, "meta/llama-3.1-8b-instruct"
+    )
+    assert kwargs == {
+        "model": "nvidia_nim/meta/llama-3.1-8b-instruct",
+        "api_key": "nvapi-test-secret",
+        "api_base": "https://integrate.api.nvidia.com/v1",
+    }
 
 
 @pytest.mark.parametrize("pid,url,key", [

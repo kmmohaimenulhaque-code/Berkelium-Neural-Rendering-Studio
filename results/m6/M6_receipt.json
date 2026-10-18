@@ -1,0 +1,282 @@
+{
+  "milestone": "M6",
+  "stage": "research stage C (TripoSR control assets)",
+  "pins": {
+    "code": "107cefdc244c39106fa830359024f6a2f1c78871",
+    "weights_revision": "5b521936b01fbe1890f6f9baed0254ab6351c04a",
+    "weights_sha256": "429e2c6b22a0923967459de24d67f05962b235f79cde6b032aa7ed2ffcd970ee",
+    "license": "MIT (upstream statement for code and weights)"
+  },
+  "compatibility": {
+    "torchmcubes": "replaced by skimage.measure.marching_cubes on CPU (shim)",
+    "rembg": "not used (exact alpha); stub raises if called",
+    "orientation": "tsr.utils.to_gradio_3d_orientation (TripoSR z-up -> y-up)",
+    "transformers": "4.57.6"
+  },
+  "loader": "TSR(cfg) + torch.load(mmap=True) + load_state_dict(assign=True) (same tensors as upstream)",
+  "device": "cpu",
+  "threads": 2,
+  "load_s": 11.1,
+  "mc_resolution": 128,
+  "controls": [
+    {
+      "asset_id": "on_top_of__cylinder_sphere__000",
+      "caption": "a small cyan sphere with a green cylinder on top",
+      "family": "on_top_of:cylinder+sphere",
+      "control_image": "results/m6/control_on_top_of__cylinder_sphere__000.png",
+      "gates": {
+        "finite": true,
+        "faces": 22388,
+        "valid": true,
+        "raw_valid": true,
+        "degenerate_faces_removed": 0,
+        "part_count": {
+          "reconstructed": 1,
+          "ground_truth": 1,
+          "correct": true
+        },
+        "components": 1,
+        "watertight": true,
+        "bounds": [
+          [
+            -0.2375,
+            -0.4982,
+            -0.318
+          ],
+          [
+            0.2386,
+            0.486,
+            0.2525
+          ]
+        ],
+        "units": "TripoSR canonical frame (radius 0.87); not metric",
+        "orbit24_rendered": true,
+        "infer_extract_s_cpu": 55.6,
+        "host_peak_rss_mib": 2626.5
+      },
+      "vs_ground_truth": {
+        "triposr_from_image": {
+          "chamfer_l1": 0.009304679632804395,
+          "frame": "similarity-aligned to GT (ICP, 24 starts)",
+          "units": "fraction of bbox diagonal",
+          "fscore@0.02": 0.9840303232361719,
+          "fscore@0.05": 0.9987484355444306
+        },
+        "berkelium_text_to_3d_from_caption": {
+          "chamfer_l1": 0.02167084705140978,
+          "frame": "similarity-aligned to GT (ICP, 24 starts)",
+          "units": "fraction of bbox diagonal",
+          "fscore@0.02": 0.5320133567662566,
+          "fscore@0.05": 0.9553943275388838
+        },
+        "berkelium_text_to_3d_native_frame": {
+          "chamfer_l1": 0.024592670398423618,
+          "frame": "native frame, bbox-normalised",
+          "units": "fraction of bbox diagonal",
+          "fscore@0.02": 0.49680354026427326,
+          "fscore@0.05": 0.8989517136117664
+        }
+      },
+      "gaussian_pipeline": {
+        "n": 4000,
+        "splat_render": "results/m6/triposr_on_top_of__cylinder_sphere__000_gaussians.png",
+        "finite": true,
+        "std": 0.2666902244091034,
+        "validate": {
+          "n": 4000,
+          "log_scale_clamped": 0,
+          "bounds_min": [
+            -0.30640318989753723,
+            -0.6358819603919983,
+            -0.3698982000350952
+          ],
+          "bounds_max": [
+            0.3076007664203644,
+            0.638288140296936,
+            0.36971592903137207
+          ]
+        }
+      },
+      "outputs": [
+        "results/m6/triposr_on_top_of__cylinder_sphere__000.glb",
+        "results/m6/triposr_on_top_of__cylinder_sphere__000_orbit24.png"
+      ]
+    },
+    {
+      "asset_id": "next_to__box_box__000",
+      "caption": "a blue box next to a small yellow box",
+      "family": "next_to:box+box",
+      "control_image": "results/m6/control_next_to__box_box__000.png",
+      "gates": {
+        "finite": true,
+        "faces": 34479,
+        "valid": true,
+        "raw_valid": false,
+        "degenerate_faces_removed": 1,
+        "part_count": {
+          "reconstructed": 1,
+          "ground_truth": 2,
+          "correct": false
+        },
+        "components": 1,
+        "watertight": false,
+        "bounds": [
+          [
+            -0.4946,
+            -0.2666,
+            -0.4997
+          ],
+          [
+            0.5685,
+            0.4174,
+            0.5632
+          ]
+        ],
+        "units": "TripoSR canonical frame (radius 0.87); not metric",
+        "orbit24_rendered": true,
+        "infer_extract_s_cpu": 48.7,
+        "host_peak_rss_mib": 2867.3
+      },
+      "vs_ground_truth": {
+        "triposr_from_image": {
+          "chamfer_l1": 0.02126478464523323,
+          "frame": "similarity-aligned to GT (ICP, 24 starts)",
+          "units": "fraction of bbox diagonal",
+          "fscore@0.02": 0.6234726328405913,
+          "fscore@0.05": 0.9253439058078426
+        },
+        "berkelium_text_to_3d_from_caption": {
+          "chamfer_l1": 0.035289720478938136,
+          "frame": "similarity-aligned to GT (ICP, 24 starts)",
+          "units": "fraction of bbox diagonal",
+          "fscore@0.02": 0.29474387151310233,
+          "fscore@0.05": 0.7450171298614588
+        },
+        "berkelium_text_to_3d_native_frame": {
+          "chamfer_l1": 0.039151261228043285,
+          "frame": "native frame, bbox-normalised",
+          "units": "fraction of bbox diagonal",
+          "fscore@0.02": 0.27339855399909624,
+          "fscore@0.05": 0.6990348468848996
+        }
+      },
+      "gaussian_pipeline": {
+        "n": 4000,
+        "splat_render": "results/m6/triposr_next_to__box_box__000_gaussians.png",
+        "finite": true,
+        "std": 0.22135435044765472,
+        "validate": {
+          "n": 4000,
+          "log_scale_clamped": 0,
+          "bounds_min": [
+            -0.5131411552429199,
+            -0.3308285176753998,
+            -0.514231264591217
+          ],
+          "bounds_max": [
+            0.5144582986831665,
+            0.32316359877586365,
+            0.504652202129364
+          ]
+        }
+      },
+      "outputs": [
+        "results/m6/triposr_next_to__box_box__000.glb",
+        "results/m6/triposr_next_to__box_box__000_orbit24.png"
+      ]
+    },
+    {
+      "asset_id": "next_to__torus_torus__000",
+      "caption": "a small cyan torus next to a purple torus",
+      "family": "next_to:torus+torus",
+      "control_image": "results/m6/control_next_to__torus_torus__000.png",
+      "gates": {
+        "finite": true,
+        "faces": 16787,
+        "valid": true,
+        "raw_valid": false,
+        "degenerate_faces_removed": 1,
+        "part_count": {
+          "reconstructed": 1,
+          "ground_truth": 2,
+          "correct": false
+        },
+        "components": 1,
+        "watertight": false,
+        "bounds": [
+          [
+            -0.4711,
+            -0.169,
+            -0.318
+          ],
+          [
+            0.4817,
+            0.2122,
+            0.2464
+          ]
+        ],
+        "units": "TripoSR canonical frame (radius 0.87); not metric",
+        "orbit24_rendered": true,
+        "infer_extract_s_cpu": 47.2,
+        "host_peak_rss_mib": 2877.2
+      },
+      "vs_ground_truth": {
+        "triposr_from_image": {
+          "chamfer_l1": 0.025890507152779657,
+          "frame": "similarity-aligned to GT (ICP, 24 starts)",
+          "units": "fraction of bbox diagonal",
+          "fscore@0.02": 0.6053275435522112,
+          "fscore@0.05": 0.8658506792208724
+        },
+        "berkelium_text_to_3d_from_caption": {
+          "chamfer_l1": 0.02653911013353487,
+          "frame": "similarity-aligned to GT (ICP, 24 starts)",
+          "units": "fraction of bbox diagonal",
+          "fscore@0.02": 0.5642189920336358,
+          "fscore@0.05": 0.8417510388839419
+        },
+        "berkelium_text_to_3d_native_frame": {
+          "chamfer_l1": 0.0257042175491215,
+          "frame": "native frame, bbox-normalised",
+          "units": "fraction of bbox diagonal",
+          "fscore@0.02": 0.581975837628866,
+          "fscore@0.05": 0.8501308902447989
+        }
+      },
+      "gaussian_pipeline": {
+        "n": 4000,
+        "splat_render": "results/m6/triposr_next_to__torus_torus__000_gaussians.png",
+        "finite": true,
+        "std": 0.15127235651016235,
+        "validate": {
+          "n": 4000,
+          "log_scale_clamped": 0,
+          "bounds_min": [
+            -0.650010347366333,
+            -0.2600538432598114,
+            -0.3844709098339081
+          ],
+          "bounds_max": [
+            0.6492978930473328,
+            0.2603445053100586,
+            0.38236987590789795
+          ]
+        }
+      },
+      "outputs": [
+        "results/m6/triposr_next_to__torus_torus__000.glb",
+        "results/m6/triposr_next_to__torus_torus__000_orbit24.png"
+      ]
+    }
+  ],
+  "environment": {
+    "git_commit": "6c20ac0e56ba4da8034009b7f4087a36608acc2a+dirty",
+    "python": "3.14.2",
+    "platform": "Linux-6.8.0-1064-azure-x86_64-with-glibc2.39",
+    "numpy": "2.5.4",
+    "torch": "2.14.1+cpu",
+    "torch_hip": null,
+    "torch_cuda": null,
+    "gpu_visible": false
+  }
+}

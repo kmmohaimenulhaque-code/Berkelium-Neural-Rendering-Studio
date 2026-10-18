@@ -1,0 +1,21 @@
+{
+  "gate": "fail",
+  "environment": {
+    "host": "codespaces-057718",
+    "python": "3.14.2",
+    "torch": "2.14.1+cpu",
+    "torch_hip": null,
+    "torch_cuda": null,
+    "cuda_available": false,
+    "device_count": 0,
+    "gpus": [],
+    "host_mem_total_mib": 7942,
+    "disk_free_gb": 6.2,
+    "cpu_count": 2
+  },
+  "prompt": "a wooden chair with four legs",
+  "seed": 0,
+  "steps": 16,
+  "sampling": "fp32, initial noise from the seeded CPU generator",
+  "blocker": "no GPU visible to PyTorch"
+}

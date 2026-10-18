@@ -1,0 +1,17 @@
+{
+  "name": "et3-shap-e-b3",
+  "title": "Berkelium-final",
+  "slug": "berkelium-final",
+  "description": "E-T3 extension: Shap-E on all 12 B3 procedural prompts (zimage-triposr has them too), so the open-world generators are compared on the same B3 rows; fp32, seeded CPU noise, two shards",
+  "accelerator": "t4x2",
+  "include": ["services/neural", "scripts", "benchmarks", "configs"],
+  "include_files": ["results/text3d/E-T3/units*.jsonl", "results/text3d/E-T3/excluded_units.jsonl"],
+  "steps": [
+    {"name": "deps", "cmd": "pip install -q trimesh==5.1.1 scikit-image==0.26.0 pydantic==2.13.5"},
+    {"name": "setup_openworld", "cmd": "PYTHON=python bash scripts/setup_openworld.sh"},
+    {"name": "generate", "parallel": [
+      "CUDA_VISIBLE_DEVICES=0 python scripts/run_openworld_benchmark.py generate --device cuda --groups B3_all --shard 0/2 --wall-hours 1",
+      "CUDA_VISIBLE_DEVICES=1 python scripts/run_openworld_benchmark.py generate --device cuda --groups B3_all --shard 1/2 --wall-hours 1"]}
+  ],
+  "outputs": ["results/text3d/E-T3/units_cuda_*.jsonl", "results/text3d/E-T3/units/shap-e-text300m/**"]
+}

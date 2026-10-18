@@ -1,0 +1,4 @@
+{"id": "E-A1", "title": "M5: Z-Image-Turbo image-prior smoke test (research E1) on one MI300X", "benchmark": "image_prior",
+ "script": "scripts/m5_image_prior_smoke.py", "requires": ["rocm", "diffusers.ZImagePipeline", "40 GB disk"],
+ "approved": false, "approval_note": "Downloads ~33 GB and consumes MI300X credit (estimate 1.0 GPU-h, COMPUTE_BUDGET_AND_EXPERIMENTS.md). Run with --i-approve-gpu-cost only after the owner approves.",
+ "output": "results/m5/E-A1_receipt.json"}

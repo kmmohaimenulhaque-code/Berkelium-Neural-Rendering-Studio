@@ -1,0 +1,39 @@
+15:02:20 {"event": "progress", "frac": 0.0, "stage": "loading", "rss_mib": {"VmRSS": 679, "RssAnon": 386, "RssFile": 293}}
+/tmp/berkelium/third_party/shap-e/shap_e/models/nn/checkpoint.py:31: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  @custom_fwd
+/tmp/berkelium/third_party/shap-e/shap_e/models/nn/checkpoint.py:43: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  @custom_bwd
+/tmp/berkelium/third_party/shap-e/shap_e/models/nn/checkpoint.py:61: FutureWarning: `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
+  @custom_fwd
+/tmp/berkelium/third_party/shap-e/shap_e/models/nn/checkpoint.py:86: FutureWarning: `torch.cuda.amp.custom_bwd(args...)` is deprecated. Please use `torch.amp.custom_bwd(args..., device_type='cuda')` instead.
+  @custom_bwd
+15:02:28 {"event": "progress", "frac": 0.0694, "stage": "sampling", "rss_mib": {"VmRSS": 1171, "RssAnon": 726, "RssFile": 430}}
+15:02:30 {"event": "progress", "frac": 0.1468, "stage": "sampling", "rss_mib": {"VmRSS": 1271, "RssAnon": 816, "RssFile": 440}}
+15:02:32 {"event": "progress", "frac": 0.2242, "stage": "sampling", "rss_mib": {"VmRSS": 1271, "RssAnon": 817, "RssFile": 440}}
+15:02:34 {"event": "progress", "frac": 0.3016, "stage": "sampling", "rss_mib": {"VmRSS": 1271, "RssAnon": 817, "RssFile": 440}}
+15:02:36 {"event": "progress", "frac": 0.379, "stage": "sampling", "rss_mib": {"VmRSS": 1271, "RssAnon": 817, "RssFile": 440}}
+15:02:39 {"event": "progress", "frac": 0.4565, "stage": "sampling", "rss_mib": {"VmRSS": 1271, "RssAnon": 817, "RssFile": 440}}
+15:02:41 {"event": "progress", "frac": 0.5339, "stage": "sampling", "rss_mib": {"VmRSS": 1271, "RssAnon": 817, "RssFile": 440}}
+15:02:43 {"event": "progress", "frac": 0.6113, "stage": "sampling", "rss_mib": {"VmRSS": 1271, "RssAnon": 817, "RssFile": 440}}
+15:02:45 {"event": "progress", "frac": 0.65, "stage": "decoding", "rss_mib": {"VmRSS": 1271, "RssAnon": 817, "RssFile": 440}}
+/tmp/berkelium/third_party/shap-e/shap_e/models/stf/renderer.py:286: UserWarning: exception rendering with PyTorch3D: No module named 'pytorch3d'
+  warnings.warn(f"exception rendering with PyTorch3D: {exc}")
+/tmp/berkelium/third_party/shap-e/shap_e/models/stf/renderer.py:287: UserWarning: falling back on native PyTorch renderer, which does not support full gradients
+  warnings.warn(
+15:02:50 {"event": "progress", "frac": 0.95, "stage": "validating", "rss_mib": {"VmRSS": 1519, "RssAnon": 1041, "RssFile": 463}}
+15:02:51 {"event": "done", "status": "ok", "report": {"prompt": "a hammer", "seed": 0, "generator": "shap-e-text300m", "denoiser_calls": 31, "sample_s": 24.8, "decode_s": 5.3, "peak_rss_mib": 2135.3, "artifact_kind": "triangle_mesh", "units": "normalized_object", "frame": "shap-e z-up -> berkelium +Y-up (x, z, -y), centred, max extent 1.6", "labels": "model-generated, normalized units, not measured geometry", "raw_vertices": 11170, "raw_faces": 22336, "n_vertices": 11170, "n_faces": 22336, "finite": true, "in_bounds": true, "degenerate_faces": 0, "components": 1, "watertight": true, "winding_consistent": true, "edge_manifold": true, "euler_number": 2, "surface_area": 1.467989721329759, "volume": 0.07526788823750676, "bounds_min": [-0.30970001220703125, -0.14429999887943268, -0.800000011920929], "bounds_max": [0.30970001220703125, 0.14429999887943268, 0.800000011920929], "valid": true, "degenerate_faces_removed": 0, "seconds": 30.6, "status": "ok", "identity": {"generator": "shap-e-text300m", "model": "Shap-E text300M + vector decoder (STF mesh)", "code": "openai/shap-e", "shap_e_commit": "50131012ee11c9d2617f3886c10f000d3c7a3b43", "clip_commit": "d05afc436d78f1c48dc0dbf8e5980a9d471f35f6", "weights_sha256": {"text_cond.pt": "e6b4fa599a7b3c3b16c222d5f5fe56f9db9289ff0b6575fbe5c11bc97106aad4", "vector_decoder.pt": "d7e7ebbfe3780499ae89b2da5e7c1354012dba5a6abfe295bed42f25c3be1b98", "ViT-L-14.pt": "b8cca3fd41ae0c99ba7e8951adf17d267cdb84cd88be6f7c2e0eca1737a03836"}, "conditioning": "CLIP ViT-L/14 text embedding (text tower only)", "license": "MIT (Shap-E code and weights); MIT (CLIP)", "sampler": {"karras_steps": 16, "guidance_scale": 15.0, "sigma_min": 0.001, "sigma_max": 160, "s_churn": 0, "clip_denoised": true, "use_fp16": false}, "decoder": {"rendering_mode": "stf", "grid_size": "checkpoint default"}, "clip_dtype": "float32", "device": "cuda", "initial_noise": "torch.randn on the seeded CPU generator, moved to the device", "gpu_path": "UNVERIFIED (never run on a GPU)", "labels": "model-generated, normalized units, not measured geometry"}, "threads": 2, "wall_s": 30.7, "seconds_per_step": 1.55, "memory_mib": {"peak_VmRSS": 2068, "peak_RssAnon": 1232, "peak_RssFile": 1432}, "rss_abort_mib": 25679, "mem_available_mib_at_start": 28527, "hardware": {"device": "cuda", "host": "f425e2a4ddd1", "cpu_count": 4, "torch": "2.11.0+cu128", "torch_hip": null, "torch_cuda": "12.8", "threads": 2, "gpu_name": "Tesla T4", "gpu_total_mib": 14912, "gpu_count": 1, "gpu_peak_allocated_mib": 2047.4, "gpu_peak_reserved_mib": 3732.0}}}
+{
+  "status": "ok",
+  "valid": true,
+  "n_faces": 22336,
+  "components": 1,
+  "sample_s": 24.8,
+  "decode_s": 5.3,
+  "seconds": 30.6,
+  "seconds_per_step": 1.55,
+  "memory_mib": {
+    "peak_VmRSS": 2068,
+    "peak_RssAnon": 1232,
+    "peak_RssFile": 1432
+  }
+}

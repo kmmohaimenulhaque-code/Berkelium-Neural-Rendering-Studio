@@ -88,6 +88,7 @@ export default function PropertiesPanel() {
             <dt>Meshes</dt><dd>{meta.meshes}</dd>
             <dt>Materials</dt><dd>{meta.materials}{meta.textures ? ` · ${meta.textures} textures` : ""}</dd>
             <dt>Size</dt><dd>{formatBytes(meta.bytes)}</dd>
+            {meta.source && <><dt>Source</dt><dd title={meta.source}>{meta.source}</dd></>}
           </dl>
         </>
       )}

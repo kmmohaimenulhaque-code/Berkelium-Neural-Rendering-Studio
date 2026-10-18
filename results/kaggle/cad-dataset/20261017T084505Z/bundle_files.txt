@@ -1,0 +1,6 @@
+configs/environments/berkelium-core.txt
+scripts/cad_dataset.py
+services/neural/berkelium_neural/__init__.py
+services/neural/berkelium_neural/cad/__init__.py
+services/neural/berkelium_neural/cad/families.py
+services/neural/berkelium_neural/cad/prompts.py
