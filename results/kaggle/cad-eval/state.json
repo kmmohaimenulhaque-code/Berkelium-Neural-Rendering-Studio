@@ -1,0 +1,22 @@
+{
+  "job": "cad-eval",
+  "run_id": "20261017T200712Z",
+  "kernel": "kmmohaimenulhaque/berkelium-cad-eval",
+  "accelerator": "NvidiaTeslaT4",
+  "spec": "configs/kaggle/cad_eval.json",
+  "spec_sha256": "4eaed0dd86de659d936c2693030c0e0e0d002d79f973b2b697108bc590c3a2c9",
+  "bundle_sha256": "e248bb3a357ae2dd6227598f3277c2c95b1145c7acead24040af5a0019e2bf4c",
+  "bundle_bytes": 26479,
+  "bundle_files": 11,
+  "data": null,
+  "git": {
+    "commit": "fecc73abf0d55585b2202b0e3cfc77d6f74395da",
+    "branch": "Berkelium-Neural-Rendering-Studio-neural-v1",
+    "dirty_files": 2
+  },
+  "pushed_at": "2026-10-17T20:07:16Z",
+  "status": "pulled",
+  "push_response": "Kernel version 1 successfully pushed.  Please check progress at https://www.kaggle.com/code/kmmohaimenulhaque/berkelium-cad-eval",
+  "verified_files": 6,
+  "admitted": 6
+}

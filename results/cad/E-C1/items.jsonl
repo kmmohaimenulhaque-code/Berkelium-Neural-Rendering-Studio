@@ -1,0 +1,805 @@
+{"id": "2cc372df791e7cf1f9ba", "set": "test", "family": "bottle", "vague": true, "text": "Build a small glass bottle with a narrow neck."}
+{"id": "c1e4193121bcaaf60a50", "set": "test", "family": "bottle", "vague": true, "text": "Make a water bottle with a narrow neck."}
+{"id": "697c1b7af0cf7b8c60b2", "set": "test", "family": "bottle", "vague": false, "text": "CAD model of a water bottle body radius 2.2 cm, 25.8 cm tall, with a narrow neck."}
+{"id": "cdf9f13afc418c30999b", "set": "test", "family": "bottle", "vague": true, "text": "Please model a heavy round bottle with a narrow neck."}
+{"id": "40ca9ee318f5c7bade94", "set": "test", "family": "bottle", "vague": false, "text": "I need a water bottle body radius 49 mm, with a narrow neck, 334 mm tall."}
+{"id": "0d81d54271c547388f29", "set": "test", "family": "bottle", "vague": false, "text": "Generate a bottle body radius 32 mm, with a narrow neck, 198 mm tall."}
+{"id": "536730aa937eba7d85fb", "set": "test", "family": "bottle", "vague": false, "text": "CAD model of a water bottle 178 mm tall, body radius 23 mm, with a narrow neck."}
+{"id": "dc3f58f8f59ca1a15523", "set": "test", "family": "bottle", "vague": true, "text": "Design a regular bottle with a narrow neck."}
+{"id": "d20bd0970287c01489c5", "set": "test", "family": "bottle", "vague": false, "text": "Draw up a water bottle with a narrow neck, body radius 2.3 cm, 21 cm tall."}
+{"id": "cf8a2bb08e13891cce0f", "set": "test", "family": "bottle", "vague": false, "text": "Model a glass bottle 101 mm tall, body radius 49 mm, with a narrow neck."}
+{"id": "f47711cf13af285c26b5", "set": "test", "family": "bottle", "vague": false, "text": "Draw up a round bottle 4.6 in tall, body radius 2.35 in, with a narrow neck."}
+{"id": "f90bec6dd3956601c8f5", "set": "test", "family": "bottle", "vague": false, "text": "I need a glass bottle 16.3 cm tall, with a narrow neck, body radius 3.3 cm."}
+{"id": "3e2eda7d747e3ec8d243", "set": "test", "family": "bottle", "vague": false, "text": "Make a bottle 122 mm tall, body radius 24 mm, with a narrow neck. All dimensions in mm."}
+{"id": "28d4473042423c12cbdb", "set": "test", "family": "bottle", "vague": false, "text": "Model a glass bottle body radius 47 mm, with a narrow neck, 303 mm tall."}
+{"id": "f034db97d8b3a193e424", "set": "test", "family": "bushing", "vague": false, "text": "Design a tubular spacer 163 mm long, 39 mm outside diameter, 4 mm inside diameter. All dimensions in mm."}
+{"id": "1eaf05a5e85388220542", "set": "test", "family": "bushing", "vague": false, "text": "Make a pipe section 6 mm inside diameter, 98 mm long, 25 mm outside diameter."}
+{"id": "1ab36701a62bbbc768f8", "set": "test", "family": "bushing", "vague": false, "text": "Make a pipe section 5.8 in long, 1.2 in inside diameter, 2.6 in outside diameter. Dimensions in inches."}
+{"id": "38c30510e1972daac69b", "set": "test", "family": "bushing", "vague": false, "text": "Build a spacer tube 29 mm outside diameter, 101 mm long, 18 mm inside diameter."}
+{"id": "1228ffc5e6d5010fefc2", "set": "test", "family": "bushing", "vague": false, "text": "Generate a sleeve 0.75 in outside diameter, 0.3 in inside diameter, 5.5 in long."}
+{"id": "f1c994d19f231d4366bd", "set": "test", "family": "bushing", "vague": true, "text": "CAD model of a little bushing."}
+{"id": "fac4d6b75f57df2326b1", "set": "test", "family": "bushing", "vague": true, "text": "Generate a medium pipe section."}
+{"id": "218581d918f03e18fa04", "set": "test", "family": "bushing", "vague": true, "text": "CAD model of a heavy bushing."}
+{"id": "2954402809c2e24443a2", "set": "test", "family": "bushing", "vague": false, "text": "Generate a sleeve 51 mm inside diameter, 139 mm long, 101 mm outside diameter."}
+{"id": "9d0b726c589a0b9a59bd", "set": "test", "family": "bushing", "vague": false, "text": "Model a spacer tube 65 mm long, 13.5 mm inside diameter, 36 mm outside diameter."}
+{"id": "b25b4d0087a56d271f5d", "set": "test", "family": "bushing", "vague": false, "text": "Generate a tubular spacer 10 mm outside diameter, 126 mm long, 7.5 mm inside diameter."}
+{"id": "ddca809c03e38d20a39f", "set": "test", "family": "bushing", "vague": false, "text": "Create a sleeve 4.1 in long, 1.75 in inside diameter, 3.85 in outside diameter."}
+{"id": "0393b1344fc53697fded", "set": "test", "family": "bushing", "vague": false, "text": "Generate a bushing 116 mm outside diameter, 33 mm inside diameter, 17.5 mm long. All dimensions in mm."}
+{"id": "b8838e06d2bda724644b", "set": "test", "family": "bushing", "vague": false, "text": "Generate a spacer tube 89 mm outside diameter, 26 mm inside diameter, 120 mm long."}
+{"id": "5e0a6b6fe95def82bb70", "set": "test", "family": "cantilever_beam", "vague": false, "text": "Design a rectangular cantilever in stainless steel (E = 193 GPa), 430 mm long, carrying 3100 N at the tip, with tip deflection at most 1.19 mm, stress below 128 MPa and a height/width ratio of 1."}
+{"id": "b34a08945722d808c8b9", "set": "test", "family": "cantilever_beam", "vague": false, "text": "I need a cantilever bracket arm in aluminium (E = 69 GPa), 1830 mm long, carrying 2440 N at the tip, with tip deflection at most 5.08 mm, stress below 116 MPa and a height/width ratio of 1.5."}
+{"id": "8f2c0b50f0354b261921", "set": "test", "family": "cantilever_beam", "vague": false, "text": "Size a rectangular bar fixed at one end in aluminum (E = 69 GPa), 1910 mm long, carrying 2430 N at the tip, with tip deflection at most 5.31 mm, stress below 103 MPa and a height/width ratio of 1.5."}
+{"id": "dc170666a33c0fdff513", "set": "test", "family": "cantilever_beam", "vague": false, "text": "Size a rectangular bar fixed at one end in titanium (E = 114 GPa), 1100 mm long, carrying 4570 N at the tip, with tip deflection at most 2.2 mm, stress below 130 MPa and a height/width ratio of 3."}
+{"id": "09abb983254d3eca416f", "set": "test", "family": "cantilever_beam", "vague": false, "text": "Size a rectangular bar fixed at one end in stainless steel (E = 193 GPa), 1630 mm long, carrying 3740 N at the tip, with tip deflection at most 16.3 mm, stress below 224 MPa and a height/width ratio of 1."}
+{"id": "460b6d354aed1d685bb2", "set": "test", "family": "cantilever_beam", "vague": false, "text": "Make a cantilever beam in structural steel (E = 200 GPa), 1310 mm long, carrying 2030 N at the tip, with tip deflection at most 6.55 mm, stress below 180 MPa and a height/width ratio of 3."}
+{"id": "4eb145dff38002a111d6", "set": "test", "family": "cantilever_beam", "vague": false, "text": "Design a rectangular cantilever in aluminum (E = 69 GPa), 1070 mm long, carrying 3580 N at the tip, with tip deflection at most 2.14 mm, stress below 91 MPa and a height/width ratio of 1."}
+{"id": "5aff9c1952c5a300599f", "set": "test", "family": "cantilever_beam", "vague": false, "text": "Size a cantilever beam in aluminum (E = 69 GPa), 540 mm long, carrying 3240 N at the tip, with tip deflection at most 5.4 mm, stress below 126 MPa and a height/width ratio of 2."}
+{"id": "8c51a18ec576352a0d2b", "set": "test", "family": "cantilever_beam", "vague": false, "text": "Size a cantilever beam in aluminum (E = 69 GPa), 1250 mm long, carrying 2740 N at the tip, with tip deflection at most 3.47 mm, stress below 127 MPa and a height/width ratio of 1."}
+{"id": "3abab1a7f64691fd12bf", "set": "test", "family": "cantilever_beam", "vague": false, "text": "Size a rectangular bar fixed at one end in structural steel (E = 200 GPa), 880 mm long, carrying 4870 N at the tip, with tip deflection at most 2.44 mm, stress below 129 MPa and a height/width ratio of 3."}
+{"id": "fd8f7320fdde19e5af5b", "set": "test", "family": "cantilever_beam", "vague": false, "text": "I need a cantilever bracket arm in stainless steel (E = 193 GPa), 990 mm long, carrying 620 N at the tip, with tip deflection at most 3.96 mm, stress below 80 MPa and a height/width ratio of 2."}
+{"id": "8a58f4db9fa08996afb5", "set": "test", "family": "cantilever_beam", "vague": false, "text": "Design a rectangular cantilever in structural steel (E = 200 GPa), 750 mm long, carrying 480 N at the tip, with tip deflection at most 2.08 mm, stress below 104 MPa and a height/width ratio of 2."}
+{"id": "ee99812c2fc5c5be93be", "set": "test", "family": "cantilever_beam", "vague": false, "text": "Size a rectangular bar fixed at one end in aluminum (E = 69 GPa), 1770 mm long, carrying 1640 N at the tip, with tip deflection at most 4.92 mm, stress below 118 MPa and a height/width ratio of 1."}
+{"id": "45f28f584e457facf0a8", "set": "test", "family": "cantilever_beam", "vague": false, "text": "Size a cantilever beam in steel (E = 200 GPa), 660 mm long, carrying 2440 N at the tip, with tip deflection at most 2.64 mm, stress below 209 MPa and a height/width ratio of 2."}
+{"id": "9387e5936fefa09ab294", "set": "test", "family": "custom_part", "vague": false, "text": "Build a rectangular block 189 mm x 160 mm, 29 mm high, with a hole near each corner and a round boss on top."}
+{"id": "2ae402718c3dec6e76ad", "set": "test", "family": "custom_part", "vague": true, "text": "Model a standard machined block with 6 holes on a bolt circle, a hole near each corner and a square pocket in the top."}
+{"id": "b9e84e3081e2a3a1be2b", "set": "test", "family": "custom_part", "vague": false, "text": "CAD model of a rectangular block 62 mm high, with a round boss on top and 4 holes on a bolt circle, 48 mm x 44 mm."}
+{"id": "dc743d05c2fb36268ea8", "set": "test", "family": "custom_part", "vague": false, "text": "A rectangular block 3.55 in x 2.2 in, 0.3 in high, with a hole near each corner."}
+{"id": "4124a75e3ab542173f14", "set": "test", "family": "custom_part", "vague": true, "text": "Make a compact plate with a square pocket in the top."}
+{"id": "6d3eb440c7b1d1e06a0a", "set": "test", "family": "custom_part", "vague": false, "text": "A plate 178 mm x 129 mm, 70 mm high, with a counterbored hole off-centre, a round boss on top, 3 holes on a bolt circle and a through hole in the centre."}
+{"id": "bcb8e20140c328fa6bc3", "set": "test", "family": "custom_part", "vague": false, "text": "Model a rectangular block with a hole near each corner, a square pocket in the top, a through slot along the length and a through hole in the centre, 292 mm x 120 mm, 12 mm high."}
+{"id": "2f29fb3ec7ab7d383c86", "set": "test", "family": "custom_part", "vague": false, "text": "Make a rectangular block with a counterbored hole off-centre, 3.1 cm high, 21.3 cm x 18 cm."}
+{"id": "92dc152dcce1c3e496f6", "set": "test", "family": "custom_part", "vague": false, "text": "Draw up a round blank 106 mm diameter, 43 mm thick, with a square pocket in the top."}
+{"id": "ffa123f7ecacc432b1ec", "set": "test", "family": "custom_part", "vague": false, "text": "Make a cylindrical block with a square pocket in the top and 8 holes on a bolt circle, 54 mm thick, 193 mm diameter."}
+{"id": "781fb467a96697096340", "set": "test", "family": "custom_part", "vague": false, "text": "Model a machined block 13 cm x 11.6 cm, 6.9 cm high, with a hole near each corner, 3 holes on a bolt circle, a counterbored hole off-centre and a square pocket in the top. All dimensions in cm."}
+{"id": "9a6cdceae953af614331", "set": "test", "family": "custom_part", "vague": false, "text": "Design a rectangular block 278 mm x 184 mm, 75 mm high, with a through slot along the length, a through hole in the centre and a hole near each corner. All dimensions in mm."}
+{"id": "78f24a5c08194e2ec241", "set": "test", "family": "custom_part", "vague": false, "text": "Build a base part 7.1 cm high, with a through slot along the length and a through hole in the centre, 18.7 cm x 15.5 cm."}
+{"id": "f40e0e1d85398d0b097c", "set": "test", "family": "custom_part", "vague": false, "text": "CAD model of a rectangular block 8.65 in x 2.55 in, 0.228 in high, with a through slot along the length and a round boss on top."}
+{"id": "d3e4e9f906552d00151b", "set": "test", "family": "enclosure", "vague": false, "text": "I need a rectangular tray 168 mm x 183 mm x 72 mm, with 4.5 mm walls."}
+{"id": "a79bb8e9137f5f082bd0", "set": "test", "family": "enclosure", "vague": false, "text": "Please model a project box without lid 51 mm x 76 mm x 84 mm, with 6 mm walls."}
+{"id": "a5343ccec8473264e1fc", "set": "test", "family": "enclosure", "vague": false, "text": "Create a rectangular tray 60 mm x 248 mm x 27 mm, with 5.5 mm walls."}
+{"id": "e79bcf1e7e7278944dbb", "set": "test", "family": "enclosure", "vague": false, "text": "Draw up a project box without lid 110 mm x 124 mm x 61 mm, with 4 mm walls."}
+{"id": "2b0b23383eff6fdb08b1", "set": "test", "family": "enclosure", "vague": false, "text": "CAD model of an open box 64 mm x 201 mm x 20 mm, with 4.5 mm walls."}
+{"id": "e0ad11c6a4d9602a836f", "set": "test", "family": "enclosure", "vague": false, "text": "Draw up an electronics enclosure base 11.2 cm x 4.8 cm x 14.1 cm, with 0.44 cm walls."}
+{"id": "f26428ff187468d22177", "set": "test", "family": "enclosure", "vague": true, "text": "Please model a compact electronics enclosure base."}
+{"id": "1f0da464df2158eb74b2", "set": "test", "family": "enclosure", "vague": false, "text": "Design an electronics enclosure base 252 mm x 34 mm x 112 mm, with 5.5 mm walls."}
+{"id": "42df129cd030f01a2867", "set": "test", "family": "enclosure", "vague": false, "text": "I need an electronics enclosure base 5.2 cm x 15.8 cm x 4.4 cm, with 0.25 cm walls."}
+{"id": "3cb6147aaed0f2675a2b", "set": "test", "family": "enclosure", "vague": false, "text": "Generate a rectangular tray 127 mm x 69 mm x 106 mm, with 2.8 mm walls."}
+{"id": "a5357a16ac4b43e56091", "set": "test", "family": "enclosure", "vague": false, "text": "Make a rectangular tray 9 cm x 15.9 cm x 5.8 cm, with 0.49 cm walls."}
+{"id": "8683eb16540e2c7778a0", "set": "test", "family": "enclosure", "vague": false, "text": "Make an electronics enclosure base 18.8 cm x 15.6 cm x 7.9 cm, with 0.3 cm walls."}
+{"id": "cf5b468d0b3cbb625fab", "set": "test", "family": "enclosure", "vague": false, "text": "Generate an open-top enclosure 69 mm x 231 mm x 32 mm, with 1.7 mm walls."}
+{"id": "636ef77c7bfabaa6527e", "set": "test", "family": "enclosure", "vague": false, "text": "Make an open-top enclosure 282 mm x 60 mm x 82 mm, with 2.2 mm walls."}
+{"id": "1d507883e890827b3ac1", "set": "test", "family": "flange", "vague": false, "text": "Make a pipe flange and 3 bolt holes, with a 53 mm bore, 290 mm outer diameter, 22 mm thick."}
+{"id": "ce39bfe41cc772b5daa6", "set": "test", "family": "flange", "vague": false, "text": "Draw up a flange 9 in outer diameter, 0.55 in thick, with a 1.9 in bore, and 12 bolt holes."}
+{"id": "d2b5d8ed6b5588225daf", "set": "test", "family": "flange", "vague": false, "text": "I need a flange with a 1.4 cm bore, 16.1 cm outer diameter, 1.1 cm thick, and 7 bolt holes, with a raised hub."}
+{"id": "c14cf2e4e4949250b4f1", "set": "test", "family": "flange", "vague": false, "text": "I need a bolted flange with a 2.6 cm bore, 13.7 cm outer diameter, 1.8 cm thick, and 10 bolt holes."}
+{"id": "eabcad2ae0aebb2b4340", "set": "test", "family": "flange", "vague": false, "text": "Generate a flange 76 mm outer diameter, and 6 bolt holes, with a 17.5 mm bore, 15 mm thick, with a raised hub."}
+{"id": "d3726dc0d3f0304b5ad4", "set": "test", "family": "flange", "vague": true, "text": "I need a heavy bolted flange with a raised hub."}
+{"id": "7327502557540b4a2228", "set": "test", "family": "flange", "vague": false, "text": "A bolted flange 74 mm outer diameter, 11 mm thick, with a 12 mm bore, and 12 bolt holes."}
+{"id": "6a06e03a20720e19a84b", "set": "test", "family": "flange", "vague": false, "text": "Design a pipe flange and 7 bolt holes, with a raised hub, 11.5 mm thick, with a 48 mm bore, 232 mm outer diameter. All dimensions in mm."}
+{"id": "b3115cd1f7654d21d255", "set": "test", "family": "flange", "vague": false, "text": "A flange 297 mm outer diameter, with a raised hub, with a 23 mm bore, 23 mm thick, and 8 bolt holes."}
+{"id": "81e91915afbab17455e8", "set": "test", "family": "flange", "vague": false, "text": "A pipe flange and 7 bolt holes, 24 mm thick, 137 mm outer diameter, with a raised hub, with a 45 mm bore."}
+{"id": "e7c25a3e7f859c081b68", "set": "test", "family": "flange", "vague": true, "text": "I need a big bolted flange with a raised hub."}
+{"id": "b1d8791d92b36517a62c", "set": "test", "family": "flange", "vague": false, "text": "I need a bolted flange 7.9 in outer diameter, and 7 bolt holes, with a 2.3 in bore, 0.5 in thick. Dimensions in inches."}
+{"id": "0adc0fc99defc7311334", "set": "test", "family": "flange", "vague": true, "text": "Build a heavy flange with a raised hub."}
+{"id": "1f45633c168d27fabd6d", "set": "test", "family": "flange", "vague": false, "text": "I need a flange with a 0.4 in bore, 0.5 in thick, and 10 bolt holes, with a raised hub, 3.35 in outer diameter."}
+{"id": "dec51a23285e9f91d582", "set": "test", "family": "funnel", "vague": false, "text": "CAD model of a hopper funnel 16.4 cm across the top, cone 7.9 cm tall, with a short spout."}
+{"id": "d30ef71d1f2aa434be4d", "set": "test", "family": "funnel", "vague": false, "text": "Please model a pouring funnel 392 mm across the top, cone 62 mm tall, with a short spout."}
+{"id": "c749f2c7569a0509778e", "set": "test", "family": "funnel", "vague": false, "text": "Make a hopper funnel with a short spout, cone 9.05 in tall, 3.7 in across the top. Dimensions in inches."}
+{"id": "d7bb94449e9dcd40b843", "set": "test", "family": "funnel", "vague": false, "text": "Generate a funnel with a short spout, cone 59 mm tall, 230 mm across the top."}
+{"id": "067a35d2bb4b99b90b21", "set": "test", "family": "funnel", "vague": true, "text": "Draw up a little hopper funnel with a short spout."}
+{"id": "2040e225aa4b36a262c3", "set": "test", "family": "funnel", "vague": false, "text": "Build a hopper funnel 86 mm across the top, cone 50 mm tall, with a short spout."}
+{"id": "a6eb2d1f772910633605", "set": "test", "family": "funnel", "vague": false, "text": "Design a conical funnel 12.4 in across the top, with a short spout, cone 5.1 in tall."}
+{"id": "5f6109abd551ff294e82", "set": "test", "family": "funnel", "vague": false, "text": "I need a funnel 224 mm across the top, cone 201 mm tall, with a short spout."}
+{"id": "d6ed5cc203e37c243560", "set": "test", "family": "funnel", "vague": false, "text": "A pouring funnel 370 mm across the top, with a short spout, cone 65 mm tall."}
+{"id": "f98efeb2a1ba835fe5c7", "set": "test", "family": "funnel", "vague": false, "text": "CAD model of a conical funnel 32.4 cm across the top, cone 11.7 cm tall, with a short spout."}
+{"id": "85fe0caf3aa0980b1513", "set": "test", "family": "funnel", "vague": false, "text": "A hopper funnel cone 175 mm tall, 202 mm across the top, with a short spout."}
+{"id": "fec50fce209ed675abdd", "set": "test", "family": "funnel", "vague": false, "text": "Draw up a hopper funnel 398 mm across the top, cone 117 mm tall, with a short spout."}
+{"id": "dc39267a46c5656a8526", "set": "test", "family": "funnel", "vague": false, "text": "Create a pouring funnel 12.6 in across the top, cone 1.5 in tall, with a short spout."}
+{"id": "58e49a56e0fd8c3a7e22", "set": "test", "family": "funnel", "vague": false, "text": "Create a funnel cone 3.45 in tall, 14.5 in across the top, with a short spout."}
+{"id": "97be0885e9742b52ec75", "set": "test", "family": "gear_pair", "vague": false, "text": "Please size a spur gear pair at 60.3464 mm centre distance, for a gear ratio of 3.36364, module 1.25 mm, 18.777 mm face width."}
+{"id": "1efd21c56e05eea4dfc8", "set": "test", "family": "gear_pair", "vague": false, "text": "Generate a spur gearset with a 2.47368:1 reduction, at 41.921 mm centre distance, 14.318 mm face width, using a 1.25 mm module."}
+{"id": "ce20ac34af2adcf0536c", "set": "test", "family": "gear_pair", "vague": false, "text": "Generate a spur gearset using a 2.5 mm module, reducing speed by a factor of 3.58065."}
+{"id": "1cf1cd034325adf4f43f", "set": "test", "family": "gear_pair", "vague": false, "text": "Generate a spur gearset module 2.5 mm, with a 3.22581:1 reduction."}
+{"id": "82e5b6774b57a505dfc7", "set": "test", "family": "gear_pair", "vague": false, "text": "I need a pair of spur gears at 185.393 mm centre distance, with a 2.68:1 reduction, using a 4 mm module."}
+{"id": "502390c18db3440bb8c9", "set": "test", "family": "gear_pair", "vague": false, "text": "I need a pair of spur gears for a gear ratio of 4.05405, using a 2.5 mm module, at 233.725 mm centre distance."}
+{"id": "7b7945aa44d018b5828c", "set": "test", "family": "gear_pair", "vague": false, "text": "Generate a spur gearset for a gear ratio of 1.14815, at 87 mm centre distance, using a 3 mm module."}
+{"id": "b0d5f44b4f1766692a84", "set": "test", "family": "gear_pair", "vague": false, "text": "Create a spur gear reduction with an allowable bending stress of 90 MPa, module 2.5 mm, for a gear ratio of 2.9697, transmitting 10.8974 N\u00b7m at 300 rpm on the pinion, at 163.75 mm centre distance."}
+{"id": "11e1bca16f0ea45e68d4", "set": "test", "family": "gear_pair", "vague": false, "text": "Make two meshing spur gears at 108.37 mm centre distance, 40.724 mm face width, transmitting 48.699 N\u00b7m at 900 rpm on the pinion, for a gear ratio of 1.18182, module 3 mm, with an allowable bending stress of 60 MPa."}
+{"id": "0a8ef0b132c8b351da38", "set": "test", "family": "gear_pair", "vague": false, "text": "Design a spur gear pair module 2 mm, 21.325 mm face width, at 53.2681 mm centre distance, transmitting 44.8865 N\u00b7m at 300 rpm on the pinion, reducing speed by a factor of 1, with an allowable bending stress of 120 MPa."}
+{"id": "f35b7e5fe042c1850887", "set": "test", "family": "gear_pair", "vague": false, "text": "Design a spur gear pair using a 1.25 mm module, for a gear ratio of 4.47368."}
+{"id": "3213ad450233f0b66451", "set": "test", "family": "gear_pair", "vague": false, "text": "Please size a spur gear pair reducing speed by a factor of 1.92308, 23.437 mm face width, at 76.4098 mm centre distance, module 2 mm."}
+{"id": "50cc962e6fbebece1d7d", "set": "test", "family": "gear_pair", "vague": false, "text": "Design a spur gear pair 55.197 mm face width, transmitting 9.2535 N\u00b7m at 1800 rpm on the pinion, with an allowable bending stress of 120 MPa, at 271.975 mm centre distance, reducing speed by a factor of 3.35484, using a 4 mm module."}
+{"id": "5d81b4ba8cb611be6ef5", "set": "test", "family": "gear_pair", "vague": false, "text": "I need a pair of spur gears reducing speed by a factor of 2, module 2 mm, 26.131 mm face width, allowing a pinion as small as 15 teeth, at 45.2694 mm centre distance."}
+{"id": "2d05961234746269bd72", "set": "test", "family": "heat_sink", "vague": false, "text": "Model an extruded heat sink 141 mm x 119 mm base, 16 fins 46 mm tall."}
+{"id": "251d231aa29dcf7d21cf", "set": "test", "family": "heat_sink", "vague": false, "text": "Please model an extruded heat sink 5.25 in x 1.85 in base, 19 fins 1.7 in tall."}
+{"id": "3e348f8df6f23532bd53", "set": "test", "family": "heat_sink", "vague": false, "text": "Draw up a cooling fin block 4.3 in x 3.9 in base, 14 fins 2 in tall."}
+{"id": "2f2d430729f776dbc8c1", "set": "test", "family": "heat_sink", "vague": false, "text": "Design an extruded heat sink 15.5 cm x 5.3 cm base, 7 fins 5.2 cm tall."}
+{"id": "721b907191c066d20efc", "set": "test", "family": "heat_sink", "vague": false, "text": "Model a heat sink 17.8 cm x 8 cm base, 10 fins 3.4 cm tall."}
+{"id": "dd3a9cd4b3463fc935e6", "set": "test", "family": "heat_sink", "vague": false, "text": "I need a cooling fin block 4.7 in x 4.65 in base, 6 fins 0.45 in tall."}
+{"id": "ad17f6dcb05688a9b338", "set": "test", "family": "heat_sink", "vague": false, "text": "Make a cooling fin block 70 mm x 62 mm base, 17 fins 12.5 mm tall."}
+{"id": "b313480c61e9ae956f17", "set": "test", "family": "heat_sink", "vague": false, "text": "I need a finned heatsink 86 mm x 200 mm base, 18 fins 54 mm tall."}
+{"id": "ca20c913343be2eae055", "set": "test", "family": "heat_sink", "vague": false, "text": "A finned heatsink 17.3 cm x 14.1 cm base, 8 fins 0.93 cm tall."}
+{"id": "d964151d13c4ac6df0f0", "set": "test", "family": "heat_sink", "vague": false, "text": "Design an extruded heat sink 149 mm x 87 mm base, 18 fins 35 mm tall. All dimensions in mm."}
+{"id": "1815d3fad68af2bede88", "set": "test", "family": "heat_sink", "vague": false, "text": "Model a finned heatsink 7.7 in x 4.6 in base, 20 fins 1.9 in tall."}
+{"id": "66a1eb008298bc9f030c", "set": "test", "family": "heat_sink", "vague": false, "text": "CAD model of an extruded heat sink 133 mm x 187 mm base, 16 fins 41 mm tall."}
+{"id": "dddfc6fc55d6ddd05146", "set": "test", "family": "heat_sink", "vague": false, "text": "CAD model of a cooling fin block 159 mm x 65 mm base, 12 fins 9 mm tall."}
+{"id": "bd8f9da69660db48d144", "set": "test", "family": "heat_sink", "vague": false, "text": "Model an extruded heat sink 1.85 in x 7.65 in base, 19 fins 0.8 in tall."}
+{"id": "4f630d48f6ebc73f4e12", "set": "test", "family": "hex_bolt", "vague": false, "text": "CAD model of a hex cap screw (unthreaded) 0.45 in diameter, 3.8 in long under the head."}
+{"id": "7fa1dead4cc592613b70", "set": "test", "family": "hex_bolt", "vague": false, "text": "Make a hex cap screw (unthreaded) 0.85 in diameter, 6.35 in long under the head. Dimensions in inches."}
+{"id": "d7d56c760b28e3946eee", "set": "test", "family": "hex_bolt", "vague": false, "text": "Model a hex cap screw (unthreaded) 15.5 mm diameter, 119 mm long under the head. All dimensions in mm."}
+{"id": "31dcc6d21e1007b8f9ae", "set": "test", "family": "hex_bolt", "vague": false, "text": "Make a bolt 2 cm diameter, 5.9 cm long under the head."}
+{"id": "0d675142b9f3c4f40192", "set": "test", "family": "hex_bolt", "vague": true, "text": "Draw up a regular hex head bolt."}
+{"id": "5b05cc7321a468d642e3", "set": "test", "family": "hex_bolt", "vague": false, "text": "Make a hex cap screw (unthreaded) 2.7 cm diameter, 1.8 cm long under the head."}
+{"id": "377fd8140cf4f5a421ae", "set": "test", "family": "hex_bolt", "vague": false, "text": "Design a hex head bolt 0.75 cm diameter, 16.4 cm long under the head."}
+{"id": "46f08e71b62c8b9bc3a8", "set": "test", "family": "hex_bolt", "vague": false, "text": "A bolt 0.25 in diameter, 6.5 in long under the head."}
+{"id": "118d2474c5813877b38e", "set": "test", "family": "hex_bolt", "vague": false, "text": "CAD model of a hex head bolt 30 mm diameter, 47 mm long under the head."}
+{"id": "03df157bea484f92a0c3", "set": "test", "family": "hex_bolt", "vague": false, "text": "Model a hex cap screw (unthreaded) 1.05 in diameter, 4.5 in long under the head."}
+{"id": "4a2d358b0d4c185f0788", "set": "test", "family": "hex_bolt", "vague": false, "text": "A bolt 23 mm diameter, 120 mm long under the head."}
+{"id": "2fb6beafbfcf203d2ebc", "set": "test", "family": "hex_bolt", "vague": true, "text": "Make a standard hex head bolt."}
+{"id": "5ee60b9b3049098f0695", "set": "test", "family": "hex_bolt", "vague": false, "text": "I need a bolt 1.05 in diameter, 3.35 in long under the head."}
+{"id": "298002435581b3308bf0", "set": "test", "family": "hex_bolt", "vague": false, "text": "A hex cap screw (unthreaded) 8 mm diameter, 31 mm long under the head."}
+{"id": "9870a3691683572023e0", "set": "test", "family": "hex_nut", "vague": false, "text": "A hex nut 0.35 in across flats, 1.2 in thick."}
+{"id": "5d2048c7e47d0cd9b031", "set": "test", "family": "hex_nut", "vague": false, "text": "Create a hexagon nut 2.1 cm across flats, 2.9 cm thick. All dimensions in cm."}
+{"id": "e22a7b538ffe8def1ec6", "set": "test", "family": "hex_nut", "vague": false, "text": "Please model a hexagon nut 4.2 cm across flats, 3.7 cm thick."}
+{"id": "82b925afd24fbd0e279f", "set": "test", "family": "hex_nut", "vague": false, "text": "Make a hex spacer nut 3.7 cm across flats, 2.1 cm thick. All dimensions in cm."}
+{"id": "ec4ccddb05d400e63c24", "set": "test", "family": "hex_nut", "vague": false, "text": "Model a hex nut 1.85 in across flats, 0.85 in thick."}
+{"id": "ecb7f991b9ea530a4592", "set": "test", "family": "hex_nut", "vague": false, "text": "Please model a hex spacer nut 2.1 in across flats, 0.55 in thick. Dimensions in inches."}
+{"id": "a74aee7d0bec28eb7f0b", "set": "test", "family": "hex_nut", "vague": false, "text": "A hexagon nut 3.8 cm across flats, 3.3 cm thick."}
+{"id": "26c97fe6109ed1d9a131", "set": "test", "family": "hex_nut", "vague": false, "text": "I need a nut 0.95 in across flats, 0.7 in thick."}
+{"id": "c16861e6b6b35d953510", "set": "test", "family": "hex_nut", "vague": false, "text": "Draw up a hex spacer nut 1.4 cm across flats, 2.3 cm thick."}
+{"id": "390a9804c3ed33055216", "set": "test", "family": "hex_nut", "vague": false, "text": "Design a nut 1.25 in across flats, 1.35 in thick."}
+{"id": "cc20be93dc5833d380f5", "set": "test", "family": "hex_nut", "vague": false, "text": "I need a hexagon nut 22 mm across flats, 23 mm thick."}
+{"id": "8e165aa838f53ddf22f1", "set": "test", "family": "hex_nut", "vague": true, "text": "Model a medium hexagon nut."}
+{"id": "54599f480315448aaab3", "set": "test", "family": "hex_nut", "vague": false, "text": "Create a hex nut 31 mm across flats, 5.5 mm thick."}
+{"id": "baed58699ae1c6e94850", "set": "test", "family": "hex_nut", "vague": false, "text": "Build a hex spacer nut 1.3 cm across flats, 3.5 cm thick. All dimensions in cm."}
+{"id": "0ae8d84dfc68fa5e88cf", "set": "test", "family": "honeycomb_panel", "vague": false, "text": "Please model a honeycomb panel 165 mm by 90 mm, 18.5 mm hex cells, 3.5 mm thick."}
+{"id": "ce5be49e2abab4dde8d7", "set": "test", "family": "honeycomb_panel", "vague": false, "text": "Build a lightweight honeycomb plate 197 mm by 245 mm, 3 mm thick, 27 mm hex cells."}
+{"id": "5645dc42be359cb2b5fc", "set": "test", "family": "honeycomb_panel", "vague": false, "text": "Draw up a plate with hexagonal cutouts 0.35 in thick, 5.6 in by 6.6 in, 0.95 in hex cells."}
+{"id": "222104d29a5e146d5d7e", "set": "test", "family": "honeycomb_panel", "vague": false, "text": "Build a honeycomb panel 22 mm hex cells, 13 mm thick, 224 mm by 200 mm."}
+{"id": "c381a6d043d511cd9d80", "set": "test", "family": "honeycomb_panel", "vague": false, "text": "CAD model of a lightweight honeycomb plate 0.54 cm thick, 19.7 cm by 13.5 cm, 1.7 cm hex cells."}
+{"id": "59d9d1343e52cc60aaf6", "set": "test", "family": "honeycomb_panel", "vague": false, "text": "Draw up a honeycomb panel 189 mm by 215 mm, 16 mm thick, 14.5 mm hex cells."}
+{"id": "88ca5a7c5aa692aaa2e2", "set": "test", "family": "honeycomb_panel", "vague": false, "text": "Model a hex-perforated plate 2 cm hex cells, 0.62 cm thick, 9.7 cm by 12.5 cm."}
+{"id": "d2e79280b02fbbcd03cd", "set": "test", "family": "honeycomb_panel", "vague": false, "text": "Design a hex-perforated plate 298 mm by 239 mm, 4 mm thick, 14 mm hex cells. All dimensions in mm."}
+{"id": "c6010112d72a03143e0d", "set": "test", "family": "honeycomb_panel", "vague": false, "text": "Create a honeycomb panel 167 mm by 233 mm, 16.5 mm thick, 21 mm hex cells."}
+{"id": "e680121d73ec15c06a7c", "set": "test", "family": "honeycomb_panel", "vague": false, "text": "Draw up a lightweight honeycomb plate 0.5 in hex cells, 7.9 in by 6.1 in, 0.148 in thick."}
+{"id": "ca917be04d28455cf1bd", "set": "test", "family": "honeycomb_panel", "vague": false, "text": "CAD model of a lightweight honeycomb plate 95 mm by 197 mm, 15.5 mm thick, 15 mm hex cells."}
+{"id": "05bae8f66b4d907003bb", "set": "test", "family": "honeycomb_panel", "vague": false, "text": "Draw up a hex-perforated plate 1.5 cm thick, 14 cm by 22.7 cm, 2.1 cm hex cells."}
+{"id": "65e342e9644f592c3f71", "set": "test", "family": "honeycomb_panel", "vague": false, "text": "Create a plate with hexagonal cutouts 220 mm by 217 mm, 21 mm hex cells, 14.5 mm thick."}
+{"id": "7641e2ca3e3f591c5b33", "set": "test", "family": "honeycomb_panel", "vague": false, "text": "Design a lightweight honeycomb plate 168 mm by 211 mm, 11 mm thick, 28 mm hex cells. All dimensions in mm."}
+{"id": "d672e7ffdfa86ec24a64", "set": "test", "family": "i_beam", "vague": false, "text": "Generate an I section beam 373 mm deep, with 43 mm flanges, flange thickness 6.5 mm, web 12.5 mm, 1236 mm long."}
+{"id": "65684b302f1b4006c77a", "set": "test", "family": "i_beam", "vague": true, "text": "Generate a small wide flange beam."}
+{"id": "7a4f8d5508b91f9366d9", "set": "test", "family": "i_beam", "vague": false, "text": "Design an H-beam 147 mm deep, with 141 mm flanges, flange thickness 15.5 mm, web 12 mm, 813 mm long."}
+{"id": "fa35ee8f171a959c273e", "set": "test", "family": "i_beam", "vague": false, "text": "Build an H-beam flange thickness 0.49 cm, 240.3 cm long, 16.5 cm deep, with 16.6 cm flanges, web 1 cm."}
+{"id": "02a7ce9c2bdc1c590742", "set": "test", "family": "i_beam", "vague": false, "text": "Make a wide flange beam 4.1 in deep, flange thickness 0.161 in, 108.15 in long, web 0.2 in, with 5.9 in flanges."}
+{"id": "f65125bca392575c7b14", "set": "test", "family": "i_beam", "vague": false, "text": "CAD model of an H-beam web 14 mm, with 50 mm flanges, 2233 mm long, flange thickness 4.5 mm, 257 mm deep."}
+{"id": "9a3f72774621d1782adc", "set": "test", "family": "i_beam", "vague": false, "text": "I need an H-beam 34.9 cm deep, with 5.6 cm flanges, flange thickness 0.93 cm, web 1.3 cm, 135.2 cm long."}
+{"id": "3a2d670ddfc337412ad9", "set": "test", "family": "i_beam", "vague": false, "text": "A wide flange beam 297 mm deep, with 199 mm flanges, flange thickness 15 mm, web 3.5 mm, 2005 mm long."}
+{"id": "501697f02a6730a50e97", "set": "test", "family": "i_beam", "vague": false, "text": "Model an H-beam 14.3 cm deep, with 7 cm flanges, flange thickness 0.75 cm, web 1.1 cm, 297.1 cm long."}
+{"id": "b1baec0dbadcd8f4a008", "set": "test", "family": "i_beam", "vague": false, "text": "Design a wide flange beam web 10 mm, 349 mm deep, flange thickness 17 mm, with 117 mm flanges, 2539 mm long."}
+{"id": "e53d2d09b7f4088f31af", "set": "test", "family": "i_beam", "vague": false, "text": "Please model a wide flange beam with 192 mm flanges, flange thickness 14 mm, web 4 mm, 2065 mm long, 347 mm deep. All dimensions in mm."}
+{"id": "6d768649eddde5d1ef42", "set": "test", "family": "i_beam", "vague": false, "text": "Please model an I-beam flange thickness 16 mm, web 5 mm, 261 mm long, with 44 mm flanges, 270 mm deep."}
+{"id": "54470d3c943662348a4f", "set": "test", "family": "i_beam", "vague": false, "text": "Please model an I section beam with 168 mm flanges, flange thickness 11.5 mm, 345 mm deep, 233 mm long, web 13.5 mm."}
+{"id": "0f2e4834f3d6867ee4e4", "set": "test", "family": "i_beam", "vague": false, "text": "Generate an I-beam 386 mm deep, with 56 mm flanges, flange thickness 18.5 mm, web 5 mm, 1959 mm long."}
+{"id": "78154312e22d1f9206be", "set": "test", "family": "l_bracket", "vague": false, "text": "Draw up an angle bracket with legs of 86 mm and 88 mm, 10.5 mm thick, 85 mm wide, with a mounting hole in each leg."}
+{"id": "d524197c4dd46e1a0c61", "set": "test", "family": "l_bracket", "vague": false, "text": "Design an angle bracket with legs of 5.45 in and 7.45 in, 0.45 in thick, 2.3 in wide, with a mounting hole in each leg. Dimensions in inches."}
+{"id": "cd18c1934cec1735e2b1", "set": "test", "family": "l_bracket", "vague": false, "text": "I need an L-shaped bracket with legs of 79 mm and 114 mm, 11.5 mm thick, 83 mm wide, with a mounting hole in each leg."}
+{"id": "bbd9cdfcdc70cf8192c5", "set": "test", "family": "l_bracket", "vague": false, "text": "Design a corner bracket with legs of 32 mm and 79 mm, 8 mm thick, 84 mm wide, with a mounting hole in each leg."}
+{"id": "6ca3cb375d54b043c10c", "set": "test", "family": "l_bracket", "vague": false, "text": "Generate an L bracket with legs of 135 mm and 198 mm, 24 mm wide, 6 mm thick."}
+{"id": "6ceb576a17b4b374c5bb", "set": "test", "family": "l_bracket", "vague": false, "text": "Draw up an angle bracket with legs of 191 mm and 101 mm, with a mounting hole in each leg, 6 mm thick, 32 mm wide. All dimensions in mm."}
+{"id": "0dabd7f5250419cdcbe5", "set": "test", "family": "l_bracket", "vague": false, "text": "Draw up a corner bracket with legs of 40 mm and 117 mm, 5 mm thick, 93 mm wide, with a mounting hole in each leg. All dimensions in mm."}
+{"id": "d0cb3f24f84f5010f1b3", "set": "test", "family": "l_bracket", "vague": false, "text": "An angle bracket 110 mm wide, with a mounting hole in each leg, 5 mm thick, with legs of 77 mm and 165 mm."}
+{"id": "5a0eddc1ac25ce294309", "set": "test", "family": "l_bracket", "vague": false, "text": "Generate a corner bracket with a mounting hole in each leg, 11 mm thick, with legs of 123 mm and 126 mm, 111 mm wide. All dimensions in mm."}
+{"id": "a5824ef6f7dc0967cb2c", "set": "test", "family": "l_bracket", "vague": false, "text": "Model an angle bracket with a mounting hole in each leg, 8 mm thick, 63 mm wide, with legs of 143 mm and 36 mm."}
+{"id": "28d30ac2bcbabb763b39", "set": "test", "family": "l_bracket", "vague": false, "text": "Make an L-shaped bracket with legs of 183 mm and 76 mm, with a mounting hole in each leg, 6.5 mm thick, 52 mm wide."}
+{"id": "f085ae398149e7ef2ea6", "set": "test", "family": "l_bracket", "vague": false, "text": "Model an L-shaped bracket with legs of 3.7 cm and 4.6 cm, 0.92 cm thick, 4.8 cm wide."}
+{"id": "9167a64174cb89833472", "set": "test", "family": "l_bracket", "vague": false, "text": "CAD model of an L-shaped bracket with legs of 37 mm and 108 mm, 11.5 mm thick, 69 mm wide, with a mounting hole in each leg. All dimensions in mm."}
+{"id": "47ecfc4f31791acabca8", "set": "test", "family": "l_bracket", "vague": true, "text": "Please model a standard corner bracket with a mounting hole in each leg."}
+{"id": "c76f1899c3a894bd67ca", "set": "test", "family": "ladder", "vague": false, "text": "A straight ladder 3794 mm tall, 9 round rungs, 514 mm wide."}
+{"id": "23b1263919de86ab43ea", "set": "test", "family": "ladder", "vague": false, "text": "Draw up a ladder 3247 mm tall, 13 round rungs, 493 mm wide."}
+{"id": "a0ca976d19e0fe082bbe", "set": "test", "family": "ladder", "vague": false, "text": "Generate a rung ladder 17 in wide, 10 round rungs, 100.15 in tall. Dimensions in inches."}
+{"id": "5844f62f01fc1d34f746", "set": "test", "family": "ladder", "vague": true, "text": "Design a ladder."}
+{"id": "e74e5b0858c886204aa8", "set": "test", "family": "ladder", "vague": false, "text": "I need a step ladder section 3721 mm tall, 353 mm wide, 6 round rungs."}
+{"id": "b935776b2f7a8b56637c", "set": "test", "family": "ladder", "vague": false, "text": "I need a step ladder section 246.8 cm tall, 11 round rungs, 54.3 cm wide."}
+{"id": "d2faa311e5c1222c9702", "set": "test", "family": "ladder", "vague": false, "text": "Make a step ladder section 956 mm tall, 453 mm wide, 8 round rungs. All dimensions in mm."}
+{"id": "b4eaa3142dde99b9e51d", "set": "test", "family": "ladder", "vague": false, "text": "Model a ladder 6 round rungs, 10.3 in wide, 40.5 in tall. Dimensions in inches."}
+{"id": "14a8430dbd11a6849f3d", "set": "test", "family": "ladder", "vague": false, "text": "Design a straight ladder 7 round rungs, 319.1 cm tall, 25.3 cm wide."}
+{"id": "277afc63e6a865976f14", "set": "test", "family": "ladder", "vague": true, "text": "Please model a small ladder."}
+{"id": "dee843e8f100ec252436", "set": "test", "family": "ladder", "vague": false, "text": "Generate a straight ladder 2993 mm tall, 306 mm wide, 6 round rungs."}
+{"id": "a894845ef616aedf6e2c", "set": "test", "family": "ladder", "vague": false, "text": "Please model a straight ladder 951 mm tall, 332 mm wide, 4 round rungs. All dimensions in mm."}
+{"id": "ab910a5f04ffda3c6d8a", "set": "test", "family": "ladder", "vague": false, "text": "A rung ladder 7 round rungs, 293.7 cm tall, 47.9 cm wide."}
+{"id": "d518e61f372b443d7121", "set": "test", "family": "ladder", "vague": false, "text": "Draw up a ladder 1492 mm tall, 543 mm wide, 4 round rungs."}
+{"id": "9477abc33295e39c4808", "set": "test", "family": "lantern", "vague": false, "text": "Make a 164 mm tall perforated lantern with a 56 mm radius, 23 slanted slots and a top ring, walls 2.2 mm."}
+{"id": "9428ca7a4690daac3b5b", "set": "test", "family": "lantern", "vague": false, "text": "Model a lantern-like vessel about 180 mm tall and 130 mm across with a 2.7 mm wall, a bulging profile, a ring of 21 tilted slots and a ring handle on top."}
+{"id": "5069d66d75489a1f4f07", "set": "test", "family": "lantern", "vague": false, "text": "Make a 200 mm tall perforated lantern with a 64 mm radius, 24 slanted slots and a top ring, walls 2.7 mm."}
+{"id": "006e5126d74dacbfe8bf", "set": "test", "family": "mug", "vague": false, "text": "CAD model of a tea mug 4.3 in tall, outer radius 2 in."}
+{"id": "93a90445345be6c63d5b", "set": "test", "family": "mug", "vague": false, "text": "Please model a mug 5.65 in tall, outer radius 1.75 in."}
+{"id": "a3eab93c595008647987", "set": "test", "family": "mug", "vague": false, "text": "Build a mug 121 mm tall, outer radius 60 mm."}
+{"id": "e2a69f35e8a20e950f2e", "set": "test", "family": "mug", "vague": true, "text": "Model a standard mug."}
+{"id": "cef485bf69f6de2c9b8a", "set": "test", "family": "mug", "vague": false, "text": "Draw up a tea mug 75 mm tall, outer radius 43 mm. All dimensions in mm."}
+{"id": "7478766164e0fc912a69", "set": "test", "family": "mug", "vague": false, "text": "CAD model of a tea mug 2.45 in tall, outer radius 2.05 in."}
+{"id": "5435b5795423b3ed7e66", "set": "test", "family": "mug", "vague": false, "text": "Please model a tea mug 112 mm tall, outer radius 46 mm. All dimensions in mm."}
+{"id": "abfdfcfcfc96e1310475", "set": "test", "family": "mug", "vague": true, "text": "Generate a regular mug."}
+{"id": "9acfe036bcba9778b1fb", "set": "test", "family": "mug", "vague": false, "text": "A tea mug 135 mm tall, outer radius 38 mm."}
+{"id": "6a0aa5ffa149c0c6a97a", "set": "test", "family": "mug", "vague": false, "text": "Please model a cup with a handle 11.5 cm tall, outer radius 4.2 cm."}
+{"id": "6f810fa9396c11489206", "set": "test", "family": "mug", "vague": false, "text": "CAD model of a cup with a handle 138 mm tall, outer radius 48 mm. All dimensions in mm."}
+{"id": "e28a4cbe670a94c67ae5", "set": "test", "family": "mug", "vague": false, "text": "A mug 88 mm tall, outer radius 38 mm."}
+{"id": "13f45ee34e16f7b93cfb", "set": "test", "family": "mug", "vague": false, "text": "A tea mug 10.6 cm tall, outer radius 3.3 cm."}
+{"id": "846aca8a9412cc803f1d", "set": "test", "family": "mug", "vague": false, "text": "Build a coffee mug 100 mm tall, outer radius 49 mm."}
+{"id": "900e22db903eb5748a1f", "set": "test", "family": "pillow_block", "vague": false, "text": "Please model a plummer block centre height 63 mm, for a 25 mm shaft, with two bolt holes in the base."}
+{"id": "f66bb96df56fdb36d7e4", "set": "test", "family": "pillow_block", "vague": false, "text": "Make a bearing housing for a 29 mm shaft, centre height 44 mm, with two bolt holes in the base."}
+{"id": "ca59bcef3ccd6aeae210", "set": "test", "family": "pillow_block", "vague": true, "text": "Make a small pillow block with two bolt holes in the base."}
+{"id": "e7c424ffe0346329ce68", "set": "test", "family": "pillow_block", "vague": false, "text": "Model a shaft support block for a 42 mm shaft, centre height 49 mm, with two bolt holes in the base."}
+{"id": "496deba97038f317b02a", "set": "test", "family": "pillow_block", "vague": false, "text": "Create a bearing housing for a 23 mm shaft, centre height 23 mm, with two bolt holes in the base."}
+{"id": "40c3d7c08bdbe6fd5ad2", "set": "test", "family": "pillow_block", "vague": false, "text": "Generate a pillow block for a 16 mm shaft, with two bolt holes in the base, centre height 70 mm."}
+{"id": "5e8304c886a03e72c7fe", "set": "test", "family": "pillow_block", "vague": false, "text": "Make a shaft support block centre height 69 mm, with two bolt holes in the base, for a 58 mm shaft. All dimensions in mm."}
+{"id": "bc774755e5a5caebb0de", "set": "test", "family": "pillow_block", "vague": true, "text": "CAD model of a standard pillow block with two bolt holes in the base."}
+{"id": "d16704ee7d6d7f5fd176", "set": "test", "family": "pillow_block", "vague": true, "text": "Make a regular pillow block with two bolt holes in the base."}
+{"id": "a690eea32b9dee675094", "set": "test", "family": "pillow_block", "vague": false, "text": "Create a plummer block for a 4 cm shaft, centre height 7.2 cm, with two bolt holes in the base."}
+{"id": "6b14e4f9d39701b8456b", "set": "test", "family": "pillow_block", "vague": false, "text": "Create a pillow block for a 54 mm shaft, centre height 103 mm, with two bolt holes in the base."}
+{"id": "06e5a10debde3593820c", "set": "test", "family": "pillow_block", "vague": false, "text": "Design a plummer block for a 42 mm shaft, centre height 101 mm, with two bolt holes in the base."}
+{"id": "59882e4340abf0d7d1db", "set": "test", "family": "pillow_block", "vague": false, "text": "Draw up a pillow block for a 14.5 mm shaft, centre height 34 mm, with two bolt holes in the base."}
+{"id": "9ef621bd546e2e1a963c", "set": "test", "family": "pillow_block", "vague": false, "text": "CAD model of a bearing housing for a 2.9 cm shaft, centre height 6.2 cm, with two bolt holes in the base."}
+{"id": "d492cb5a8d7b6286a841", "set": "test", "family": "pipe_tee", "vague": false, "text": "Model a T-fitting 18.6 cm OD, 7.3 cm ID, run length 60.6 cm, branch 25.4 cm from the centreline."}
+{"id": "7b2803a3ec2d08e9b99e", "set": "test", "family": "pipe_tee", "vague": false, "text": "Generate an equal tee 13.9 cm OD, 1.7 cm ID, run length 48.5 cm, branch 33.7 cm from the centreline."}
+{"id": "5453b3773a4263294b46", "set": "test", "family": "pipe_tee", "vague": false, "text": "Create a T-fitting branch 13.2 in from the centreline, 4.95 in OD, 2.9 in ID, run length 18.55 in."}
+{"id": "92b27feb1a344c7fd716", "set": "test", "family": "pipe_tee", "vague": false, "text": "Draw up a T-fitting 40 mm OD, 31 mm ID, branch 100 mm from the centreline, run length 94 mm."}
+{"id": "3a8c9724a4b1c7e4ba16", "set": "test", "family": "pipe_tee", "vague": false, "text": "Make a tee junction 113 mm OD, 55 mm ID, run length 432 mm, branch 190 mm from the centreline."}
+{"id": "9d56cc8fb5b26a219598", "set": "test", "family": "pipe_tee", "vague": false, "text": "Generate a T-fitting run length 15.25 in, 7.25 in OD, 0.55 in ID, branch 9.85 in from the centreline."}
+{"id": "59dee3ed7d745e74f4ae", "set": "test", "family": "pipe_tee", "vague": false, "text": "Generate an equal tee 4.8 in OD, 3.3 in ID, run length 23.75 in, branch 8.2 in from the centreline."}
+{"id": "7c4e3a79b33f664c5472", "set": "test", "family": "pipe_tee", "vague": false, "text": "Create an equal tee 130 mm OD, 72 mm ID, run length 485 mm, branch 213 mm from the centreline."}
+{"id": "6413987eb852429682c3", "set": "test", "family": "pipe_tee", "vague": false, "text": "Design a tee junction run length 59 mm, branch 59 mm from the centreline, 20 mm OD, 16 mm ID."}
+{"id": "c9b7578699c6290739a4", "set": "test", "family": "pipe_tee", "vague": false, "text": "An equal tee 17 mm OD, 11 mm ID, run length 82 mm, branch 35 mm from the centreline."}
+{"id": "4118f4a66f315de2b3f3", "set": "test", "family": "pipe_tee", "vague": false, "text": "Draw up an equal tee run length 43.6 cm, branch 38.6 cm from the centreline, 15.3 cm OD, 9.8 cm ID."}
+{"id": "dafe50b879418c0410f9", "set": "test", "family": "pipe_tee", "vague": false, "text": "Build an equal tee branch 106 mm from the centreline, run length 156 mm, 42 mm OD, 21 mm ID."}
+{"id": "ac175d8edf3e96e394d6", "set": "test", "family": "pipe_tee", "vague": true, "text": "I need a standard equal tee."}
+{"id": "ecc87870d83949d9f473", "set": "test", "family": "pipe_tee", "vague": false, "text": "CAD model of a T-fitting 9.1 cm OD, 2 cm ID, run length 27.9 cm, branch 12.6 cm from the centreline."}
+{"id": "872620c1f0505faabf93", "set": "test", "family": "plate_holes", "vague": false, "text": "Create an adapter plate 322 mm by 214 mm, 15 mm thick, with a 3 x 4 grid of 17 mm holes."}
+{"id": "288f017cedd47afd91af", "set": "test", "family": "plate_holes", "vague": false, "text": "Draw up a flat plate 15.5 mm thick, 167 mm by 157 mm, with a 5 x 3 grid of 12.5 mm holes."}
+{"id": "52263525f8cfb336f51b", "set": "test", "family": "plate_holes", "vague": false, "text": "An adapter plate 12.65 in by 9.05 in, 0.131 in thick, with a 4 x 2 grid of 0.85 in holes."}
+{"id": "e65593d734513c7ac154", "set": "test", "family": "plate_holes", "vague": false, "text": "Build a mounting plate 380 mm by 57 mm, 19.5 mm thick, with a 2 x 2 grid of 4 mm holes."}
+{"id": "10c56864db9b20c8d69c", "set": "test", "family": "plate_holes", "vague": false, "text": "Design a plate 37.5 cm by 23.1 cm, 1.1 cm thick, with a 4 x 4 grid of 0.98 cm holes."}
+{"id": "b1c688946366188d6e7a", "set": "test", "family": "plate_holes", "vague": false, "text": "Model an adapter plate 97 mm by 77 mm, 19.5 mm thick, with a 2 x 3 grid of 10.5 mm holes."}
+{"id": "2f0dd089ff23750c7ff4", "set": "test", "family": "plate_holes", "vague": false, "text": "Please model a flat plate 7 mm thick, with a 2 x 3 grid of 18 mm holes, 236 mm by 113 mm. All dimensions in mm."}
+{"id": "0a956d00662ffd7e02b1", "set": "test", "family": "plate_holes", "vague": false, "text": "Draw up a flat plate 26.3 cm by 10.4 cm, 0.37 cm thick, with a 5 x 4 grid of 1.7 cm holes."}
+{"id": "15bb81381251b90419d6", "set": "test", "family": "plate_holes", "vague": true, "text": "CAD model of a large mounting plate with a 2 x 2 hole pattern."}
+{"id": "7f2e21bb0aeba089389e", "set": "test", "family": "plate_holes", "vague": false, "text": "Generate a plate 239 mm by 213 mm, 19 mm thick, with a 2 x 4 grid of 17.5 mm holes."}
+{"id": "f70680a5ed3550496dc3", "set": "test", "family": "plate_holes", "vague": true, "text": "Model a heavy mounting plate with a 2 x 2 hole pattern."}
+{"id": "c6c7647c2019e8296433", "set": "test", "family": "plate_holes", "vague": false, "text": "Generate a mounting plate 0.3 in thick, 9.15 in by 5.5 in, with a 2 x 4 grid of 0.221 in holes."}
+{"id": "9fc56bb3d85fb23d3d8d", "set": "test", "family": "plate_holes", "vague": true, "text": "Design a little mounting plate with a 2 x 2 hole pattern."}
+{"id": "39f46faa3670a9fce52b", "set": "test", "family": "plate_holes", "vague": false, "text": "Design a flat plate 21 cm by 10.7 cm, 2 cm thick, with a 5 x 3 grid of 0.51 cm holes."}
+{"id": "8491121fed7cdb9cd284", "set": "test", "family": "pressure_vessel", "vague": true, "text": "Build a medium capsule-shaped pressure tank with a nozzle on top."}
+{"id": "d759a90fe2ae854677da", "set": "test", "family": "pressure_vessel", "vague": false, "text": "Make an air receiver tank 620 mm outside diameter, 988 mm of straight shell, 28 mm wall, with a nozzle on top."}
+{"id": "894257a0f9ee76aa8219", "set": "test", "family": "pressure_vessel", "vague": false, "text": "Design a pressure vessel 604 mm outside diameter, 377 mm of straight shell, 4.5 mm wall, with a nozzle on top."}
+{"id": "a47e9b882477561a9bef", "set": "test", "family": "pressure_vessel", "vague": false, "text": "Design a cylindrical tank with hemispherical heads 522 mm outside diameter, 1472 mm of straight shell, 25 mm wall, with a nozzle on top."}
+{"id": "18aa2cff159fb069d12c", "set": "test", "family": "pressure_vessel", "vague": false, "text": "Generate an air receiver tank 96.2 cm outside diameter, 42 cm of straight shell, 1.2 cm wall, with a nozzle on top."}
+{"id": "644cf5e98980f0da1ca6", "set": "test", "family": "pressure_vessel", "vague": false, "text": "Make an air receiver tank 102.6 cm outside diameter, 137.8 cm of straight shell, 1.6 cm wall, with a nozzle on top."}
+{"id": "586922124a7509c340ca", "set": "test", "family": "pressure_vessel", "vague": false, "text": "Design a cylindrical tank with hemispherical heads 182 mm outside diameter, with a nozzle on top, 1060 mm of straight shell, 21 mm wall."}
+{"id": "e9cc93b2ef729475ea10", "set": "test", "family": "pressure_vessel", "vague": true, "text": "Build a heavy pressure vessel with a nozzle on top."}
+{"id": "8b4f4b26555588505e9f", "set": "test", "family": "pressure_vessel", "vague": false, "text": "I need a cylindrical tank with hemispherical heads 462 mm outside diameter, 1256 mm of straight shell, 5.5 mm wall, with a nozzle on top. All dimensions in mm."}
+{"id": "8dd77b9ca0c476958b55", "set": "test", "family": "pressure_vessel", "vague": false, "text": "A capsule-shaped pressure tank 42.9 cm of straight shell, 23 cm outside diameter, 1.6 cm wall, with a nozzle on top."}
+{"id": "f0de93290541c4d49db4", "set": "test", "family": "pressure_vessel", "vague": true, "text": "A regular capsule-shaped pressure tank with a nozzle on top."}
+{"id": "3fafe4ce9ebcc09c15c7", "set": "test", "family": "pressure_vessel", "vague": false, "text": "Create a pressure vessel 6.9 in outside diameter, 9.35 in of straight shell, 0.143 in wall, with a nozzle on top."}
+{"id": "819688ff7b6974d06a38", "set": "test", "family": "pressure_vessel", "vague": true, "text": "Design a small pressure vessel with a nozzle on top."}
+{"id": "604605281e2ebf724a87", "set": "test", "family": "pressure_vessel", "vague": false, "text": "Build an air receiver tank 91 cm outside diameter, 28.7 cm of straight shell, 1.2 cm wall, with a nozzle on top."}
+{"id": "89bbe76db4d2c766d029", "set": "test", "family": "propeller", "vague": false, "text": "Create a boat propeller 2 blades, 30 degrees blade pitch, 528 mm diameter."}
+{"id": "92f8553e87e733b5b021", "set": "test", "family": "propeller", "vague": false, "text": "Build a boat propeller 26 degrees blade pitch, 49.7 cm diameter, 4 blades."}
+{"id": "fa85b8e32c7a34c218bb", "set": "test", "family": "propeller", "vague": true, "text": "Make a mini boat propeller 20 degrees blade pitch."}
+{"id": "0cbcb43fb023207aec47", "set": "test", "family": "propeller", "vague": true, "text": "Create a standard propeller 20 degrees blade pitch."}
+{"id": "a3b80b34a623c1968f2e", "set": "test", "family": "propeller", "vague": false, "text": "Generate a drone propeller 192 mm diameter, 4 blades, 11 degrees blade pitch."}
+{"id": "3aa6d4778338c866d76e", "set": "test", "family": "propeller", "vague": false, "text": "Make a drone propeller 5 blades, 54.3 cm diameter, 28 degrees blade pitch."}
+{"id": "3a808a45cf1495af58d1", "set": "test", "family": "propeller", "vague": false, "text": "Create a drone propeller 4 blades, 399 mm diameter, 26 degrees blade pitch. All dimensions in mm."}
+{"id": "186af25629914b0877ed", "set": "test", "family": "propeller", "vague": false, "text": "Create a fan rotor 5 blades, 16.75 in diameter, 14 degrees blade pitch."}
+{"id": "7a85f512bf622f6c9988", "set": "test", "family": "propeller", "vague": false, "text": "A boat propeller 6 blades, 226 mm diameter, 10 degrees blade pitch."}
+{"id": "b166bb332ad0773f3d4d", "set": "test", "family": "propeller", "vague": true, "text": "Create a drone propeller 20 degrees blade pitch."}
+{"id": "aea0a662046635055dd8", "set": "test", "family": "propeller", "vague": false, "text": "Design a drone propeller 2 blades, 541 mm diameter, 21 degrees blade pitch."}
+{"id": "35c257c1e8c2095fb544", "set": "test", "family": "propeller", "vague": false, "text": "Please model a drone propeller 13 degrees blade pitch, 2 blades, 152 mm diameter."}
+{"id": "5816e98608db533d1235", "set": "test", "family": "propeller", "vague": false, "text": "Make a fan rotor 3 blades, 294 mm diameter, 33 degrees blade pitch. All dimensions in mm."}
+{"id": "fdb5bd585260d1e0f994", "set": "test", "family": "propeller", "vague": false, "text": "Build a fan rotor 4 blades, 225 mm diameter, 17 degrees blade pitch."}
+{"id": "a06cf94cc7c83fc07786", "set": "test", "family": "pulley", "vague": true, "text": "Draw up a heavy belt sheave."}
+{"id": "8f66cd69faf9389119d5", "set": "test", "family": "pulley", "vague": false, "text": "Design a V-belt pulley 200 mm diameter, 37 mm bore, 8.5 mm wide."}
+{"id": "3e22cb2456bd11821c4a", "set": "test", "family": "pulley", "vague": true, "text": "Model a mini belt sheave."}
+{"id": "d79f95462c24a259d76e", "set": "test", "family": "pulley", "vague": false, "text": "I need a grooved pulley 39 mm wide, 9.5 mm bore, 34 mm diameter. All dimensions in mm."}
+{"id": "adfce69f9aee5ab0f94f", "set": "test", "family": "pulley", "vague": true, "text": "Model a small V-belt pulley."}
+{"id": "216c2e51ba9fde15f6e0", "set": "test", "family": "pulley", "vague": false, "text": "Draw up a V-belt pulley 23 mm bore, 50 mm wide, 173 mm diameter."}
+{"id": "7933dac5047ea896cdb6", "set": "test", "family": "pulley", "vague": false, "text": "Model a pulley 255 mm diameter, 15.5 mm wide, 86 mm bore."}
+{"id": "5b9c40174d2139c3cd7c", "set": "test", "family": "pulley", "vague": false, "text": "Create a belt sheave 1.7 cm bore, 1.6 cm wide, 11.6 cm diameter."}
+{"id": "0323e8f6963ba2b3840f", "set": "test", "family": "pulley", "vague": false, "text": "Please model a belt sheave 9 mm bore, 59 mm diameter, 29 mm wide."}
+{"id": "970b7a40b1321f7e173e", "set": "test", "family": "pulley", "vague": true, "text": "Design a small grooved pulley."}
+{"id": "642ca95d49bfc04683e9", "set": "test", "family": "pulley", "vague": false, "text": "Design a grooved pulley 28.6 cm diameter, 3.1 cm wide, 5.4 cm bore."}
+{"id": "4c44973e56572e82cae7", "set": "test", "family": "pulley", "vague": false, "text": "Create a grooved pulley 176 mm diameter, 46 mm wide, 45 mm bore."}
+{"id": "540414e05720666be76d", "set": "test", "family": "pulley", "vague": false, "text": "A grooved pulley 53 mm diameter, 56 mm wide, 18 mm bore."}
+{"id": "c6bb58d532197b8c0bd0", "set": "test", "family": "pulley", "vague": false, "text": "Make a grooved pulley 110 mm diameter, 26 mm wide, 19.5 mm bore."}
+{"id": "7b5623e6a2012cf1e5c9", "set": "test", "family": "rocket_body", "vague": false, "text": "CAD model of a rocket 126 mm body radius, 349 mm body tube, 4 fins, an ogive nose cone and an engine bell."}
+{"id": "39c7c8e2878e789ddedc", "set": "test", "family": "rocket_body", "vague": false, "text": "Design a sounding rocket airframe 3.25 in body radius, 17.55 in body tube, 4 fins, an ogive nose cone and an engine bell."}
+{"id": "54206993f124ee4bfff2", "set": "test", "family": "rocket_body", "vague": false, "text": "Generate a rocket 0.6 in body radius, 36.75 in body tube, 4 fins, an ogive nose cone and an engine bell. Dimensions in inches."}
+{"id": "33c91501daec4bab46f8", "set": "test", "family": "rocket_body", "vague": false, "text": "Create a rocket body with fins an ogive nose cone and an engine bell, 11.5 cm body radius, 3 fins, 9 cm body tube. All dimensions in cm."}
+{"id": "2d0e22325fb69a740137", "set": "test", "family": "rocket_body", "vague": true, "text": "Generate a regular rocket an ogive nose cone and an engine bell."}
+{"id": "880e8acb6c7ba29128d8", "set": "test", "family": "rocket_body", "vague": false, "text": "Build a sounding rocket airframe 125 mm body radius, 1200 mm body tube, 4 fins, an ogive nose cone and an engine bell."}
+{"id": "65fa5536093071e5a1b8", "set": "test", "family": "rocket_body", "vague": false, "text": "Generate a sounding rocket airframe 2.05 in body radius, 58.6 in body tube, 4 fins, an ogive nose cone and an engine bell."}
+{"id": "35ace329d183a5fbee5d", "set": "test", "family": "rocket_body", "vague": false, "text": "CAD model of a rocket body with fins an ogive nose cone and an engine bell, 4 fins, 39.45 in body tube, 5.9 in body radius."}
+{"id": "4a23969c30129960ccb4", "set": "test", "family": "rocket_body", "vague": false, "text": "Make a rocket 72 mm body radius, 1260 mm body tube, 3 fins, an ogive nose cone and an engine bell."}
+{"id": "17bf2c2a61aa6ff24a8b", "set": "test", "family": "rocket_body", "vague": false, "text": "I need a rocket body with fins 28 mm body radius, 511 mm body tube, 4 fins, an ogive nose cone and an engine bell. All dimensions in mm."}
+{"id": "f9d14940128359e83e83", "set": "test", "family": "rocket_body", "vague": false, "text": "Model a sounding rocket airframe 0.6 in body radius, 3.75 in body tube, 3 fins, an ogive nose cone and an engine bell."}
+{"id": "3dcd03a5116bc74bbb66", "set": "test", "family": "rocket_body", "vague": false, "text": "Generate a model rocket 109 mm body radius, 991 mm body tube, 3 fins, an ogive nose cone and an engine bell."}
+{"id": "2a3afb426e158e010b83", "set": "test", "family": "rocket_body", "vague": false, "text": "Create a model rocket 735 mm body tube, 3 fins, an ogive nose cone and an engine bell, 146 mm body radius."}
+{"id": "dd6681197fb2bddbb707", "set": "test", "family": "rocket_body", "vague": false, "text": "Make a rocket body with fins 4 fins, 373 mm body tube, an ogive nose cone and an engine bell, 59 mm body radius."}
+{"id": "b0dbbbf9d16966687e0e", "set": "test", "family": "rocket_nozzle", "vague": false, "text": "Build a rocket engine nozzle throat radius 1 in, expansion (area) ratio 23.5."}
+{"id": "e43a2f6d50ab990a76d7", "set": "test", "family": "rocket_nozzle", "vague": false, "text": "CAD model of a de Laval nozzle throat radius 26 mm, expansion (area) ratio 20.4."}
+{"id": "c0e1ffe97d82ed2d0ede", "set": "test", "family": "rocket_nozzle", "vague": false, "text": "Generate a rocket engine nozzle throat radius 4.1 cm, expansion (area) ratio 3.8."}
+{"id": "f03ff6a30f7cdc7807b7", "set": "test", "family": "rocket_nozzle", "vague": false, "text": "Draw up a convergent-divergent nozzle throat radius 37 mm, expansion (area) ratio 8.6."}
+{"id": "8ab7bef8cf1b99e2ec3e", "set": "test", "family": "rocket_nozzle", "vague": false, "text": "Model a convergent-divergent nozzle throat radius 3.3 cm, expansion (area) ratio 11.1."}
+{"id": "914f2d4481826f49322b", "set": "test", "family": "rocket_nozzle", "vague": true, "text": "A standard convergent-divergent nozzle."}
+{"id": "f44d7e1ea0bee9a047c6", "set": "test", "family": "rocket_nozzle", "vague": true, "text": "Design a regular convergent-divergent nozzle."}
+{"id": "7d4c43eee79863c22ba2", "set": "test", "family": "rocket_nozzle", "vague": false, "text": "I need a convergent-divergent nozzle throat radius 2.5 cm, expansion (area) ratio 15.7. All dimensions in cm."}
+{"id": "c9961cfd522fd2643f4a", "set": "test", "family": "rocket_nozzle", "vague": false, "text": "Draw up a rocket engine nozzle throat radius 14.5 mm, expansion (area) ratio 24.2."}
+{"id": "b4712fc81e93a128c8b5", "set": "test", "family": "rocket_nozzle", "vague": false, "text": "A rocket engine nozzle throat radius 59 mm, expansion (area) ratio 22.4. All dimensions in mm."}
+{"id": "1e75cbd3ffd92c038804", "set": "test", "family": "rocket_nozzle", "vague": false, "text": "Model a bell nozzle throat radius 33 mm, expansion (area) ratio 13.7."}
+{"id": "aef0607ee7c98669317a", "set": "test", "family": "rocket_nozzle", "vague": false, "text": "Model a bell nozzle throat radius 36 mm, expansion (area) ratio 8.4. All dimensions in mm."}
+{"id": "92fbb5f46fe6ec202d2f", "set": "test", "family": "rocket_nozzle", "vague": false, "text": "Draw up a de Laval nozzle throat radius 13.5 mm, expansion (area) ratio 9.9."}
+{"id": "5225404dc98e2098a41a", "set": "test", "family": "rocket_nozzle", "vague": false, "text": "I need a de Laval nozzle throat radius 0.35 in, expansion (area) ratio 15.5."}
+{"id": "f0cc676a7d02e738839a", "set": "test", "family": "spoked_wheel", "vague": false, "text": "Design a spoked wheel 153 mm across, 47 mm wide rim, 7 spokes."}
+{"id": "36010ed9429dd26f55b2", "set": "test", "family": "spoked_wheel", "vague": false, "text": "I need a wheel 22.5 cm across, 7.5 cm wide rim, 4 spokes."}
+{"id": "1a99497bdf089b08844d", "set": "test", "family": "spoked_wheel", "vague": false, "text": "Design a wheel 5.7 in across, 1.35 in wide rim, 8 spokes."}
+{"id": "cb51b0ee87847bcf9fcc", "set": "test", "family": "spoked_wheel", "vague": false, "text": "Create a handwheel 5.35 in across, 3 spokes, 0.75 in wide rim."}
+{"id": "ed166496e47398c4f460", "set": "test", "family": "spoked_wheel", "vague": false, "text": "Make a handwheel 7 spokes, 64 mm wide rim, 252 mm across."}
+{"id": "4df6326ab0240dc428ef", "set": "test", "family": "spoked_wheel", "vague": false, "text": "Create a handwheel 273 mm across, 30 mm wide rim, 6 spokes."}
+{"id": "17db880f17f603c5a82b", "set": "test", "family": "spoked_wheel", "vague": false, "text": "Design a wheel 9 spokes, 159 mm across, 62 mm wide rim."}
+{"id": "6a8a95c9b55c2e536470", "set": "test", "family": "spoked_wheel", "vague": false, "text": "Model a flywheel with spokes 3 spokes, 489 mm across, 53 mm wide rim."}
+{"id": "cae62b95bd543361f465", "set": "test", "family": "spoked_wheel", "vague": false, "text": "Design a flywheel with spokes 12 spokes, 2.85 in wide rim, 22.65 in across."}
+{"id": "546975635004c12fa32a", "set": "test", "family": "spoked_wheel", "vague": false, "text": "Build a flywheel with spokes 363 mm across, 62 mm wide rim, 3 spokes."}
+{"id": "c9c31a3d44616933dfb1", "set": "test", "family": "spoked_wheel", "vague": true, "text": "Build a mini wheel."}
+{"id": "497da658a263b1189e10", "set": "test", "family": "spoked_wheel", "vague": false, "text": "Please model a flywheel with spokes 4 spokes, 38 mm wide rim, 266 mm across."}
+{"id": "8dab9b3f1b9248cf83c2", "set": "test", "family": "spoked_wheel", "vague": false, "text": "Model a handwheel 226 mm across, 30 mm wide rim, 9 spokes."}
+{"id": "2f09c65b67728936aed9", "set": "test", "family": "spoked_wheel", "vague": false, "text": "I need a wheel 43 mm wide rim, 328 mm across, 9 spokes."}
+{"id": "40c813d22626062d68dd", "set": "test", "family": "sprocket", "vague": false, "text": "Design a sprocket-like toothed wheel 27 teeth, 114 mm root diameter, 10.5 mm thick. All dimensions in mm."}
+{"id": "994ac4fa202d113cbd88", "set": "test", "family": "sprocket", "vague": false, "text": "Generate a ratchet disc 47 teeth, 14.9 cm root diameter, 1.2 cm thick."}
+{"id": "b9126e178d17c76b8466", "set": "test", "family": "sprocket", "vague": false, "text": "Generate a sprocket-like toothed wheel 15 teeth, 209 mm root diameter, 7 mm thick."}
+{"id": "27faeaa9b6a39b723b9c", "set": "test", "family": "sprocket", "vague": false, "text": "Generate a toothed wheel 35 teeth, 196 mm root diameter, 8.5 mm thick."}
+{"id": "a296264e2ce26250c38f", "set": "test", "family": "sprocket", "vague": false, "text": "Model a sprocket-like toothed wheel 5.2 in root diameter, 0.4 in thick, 39 teeth."}
+{"id": "84e66fa68623fc3b29d0", "set": "test", "family": "sprocket", "vague": false, "text": "Draw up a ratchet disc 10 mm thick, 207 mm root diameter, 28 teeth."}
+{"id": "9e78ae8c5995ff0ef8bc", "set": "test", "family": "sprocket", "vague": false, "text": "A sprocket-like toothed wheel 22 teeth, 7.75 in root diameter, 0.75 in thick."}
+{"id": "1a274a4a78fcd4a6cff1", "set": "test", "family": "sprocket", "vague": false, "text": "Please model a toothed wheel 47 teeth, 292 mm root diameter, 5.5 mm thick."}
+{"id": "888c4244fe15e4ca194e", "set": "test", "family": "sprocket", "vague": false, "text": "A ratchet disc 0.54 cm thick, 17 cm root diameter, 15 teeth. All dimensions in cm."}
+{"id": "ecdb115913100deb7bca", "set": "test", "family": "sprocket", "vague": false, "text": "Make a sprocket-like toothed wheel 32 teeth, 94 mm root diameter, 10 mm thick."}
+{"id": "a8cc81b21ae2e7bc936c", "set": "test", "family": "sprocket", "vague": false, "text": "Create a toothed wheel 15.5 mm thick, 93 mm root diameter, 41 teeth."}
+{"id": "22e206ddb340f59762f2", "set": "test", "family": "sprocket", "vague": true, "text": "Design a regular sprocket-like toothed wheel."}
+{"id": "19f169e4d2d39a192598", "set": "test", "family": "sprocket", "vague": false, "text": "Design a sprocket-like toothed wheel 31 teeth, 61 mm root diameter, 9.5 mm thick."}
+{"id": "aa26bf590f259a327c11", "set": "test", "family": "sprocket", "vague": false, "text": "CAD model of a toothed wheel 144 mm root diameter, 40 teeth, 18.5 mm thick. All dimensions in mm."}
+{"id": "e476f2ac1d28dd7b6fa5", "set": "test", "family": "stepped_shaft", "vague": false, "text": "Make a stepped shaft with 4 sections: 47 mm diameter x 40 mm; 43 mm diameter x 94 mm; 32 mm diameter x 64 mm; 67 mm diameter x 117 mm."}
+{"id": "dcc77eec1028f3ae4848", "set": "test", "family": "stepped_shaft", "vague": false, "text": "Please model a stepped shaft with 4 sections: 5.5 cm diameter x 4.9 cm; 4.8 cm diameter x 13 cm; 3 cm diameter x 2.3 cm; 5.5 cm diameter x 8.3 cm."}
+{"id": "ce42c26c7f641fb7d6a1", "set": "test", "family": "stepped_shaft", "vague": false, "text": "CAD model of a turned shaft with 2 sections: 25 mm diameter x 61 mm; 22 mm diameter x 40 mm."}
+{"id": "ffbda3903105df7dfb33", "set": "test", "family": "stepped_shaft", "vague": false, "text": "Design a stepped shaft with 4 sections: 3.4 cm diameter x 10.7 cm; 7.1 cm diameter x 14.6 cm; 7.8 cm diameter x 5.3 cm; 2.5 cm diameter x 7.8 cm."}
+{"id": "fd2053cb11f77bb4c7f3", "set": "test", "family": "stepped_shaft", "vague": false, "text": "Model a turned shaft with 3 sections: 7.1 cm diameter x 2.9 cm; 2.8 cm diameter x 5 cm; 2.6 cm diameter x 5 cm."}
+{"id": "2468ea70c8f1a5e0ca3f", "set": "test", "family": "stepped_shaft", "vague": false, "text": "Design a shaft with 2 sections: 6.4 cm diameter x 9.1 cm; 4.4 cm diameter x 8.4 cm."}
+{"id": "27ee08e4eeb0cf6fdc21", "set": "test", "family": "stepped_shaft", "vague": true, "text": "Make a regular turned shaft with 3 sections."}
+{"id": "379a83c04c8030c41c84", "set": "test", "family": "stepped_shaft", "vague": false, "text": "Make a shaft with 4 sections: 49 mm diameter x 71 mm; 53 mm diameter x 54 mm; 36 mm diameter x 70 mm; 37 mm diameter x 125 mm."}
+{"id": "c3d7beade69ae06d4d9e", "set": "test", "family": "stepped_shaft", "vague": false, "text": "Model a turned shaft with 4 sections: 2.8 in diameter x 4.2 in; 1.65 in diameter x 4.65 in; 0.35 in diameter x 5.85 in; 2.25 in diameter x 0.85 in."}
+{"id": "acc5e6857509b2156e3c", "set": "test", "family": "stepped_shaft", "vague": false, "text": "Create a turned shaft with 2 sections: 0.8 in diameter x 1.4 in; 2.4 in diameter x 1.55 in. Dimensions in inches."}
+{"id": "c20344aaa5f7823540e9", "set": "test", "family": "stepped_shaft", "vague": true, "text": "Build an oversized shaft with 3 sections."}
+{"id": "4fc87178e94a29eb544e", "set": "test", "family": "stepped_shaft", "vague": true, "text": "Create a heavy stepped shaft with 3 sections."}
+{"id": "0da8c078d094e4d3762a", "set": "test", "family": "stepped_shaft", "vague": false, "text": "A spindle with 2 sections: 6 cm diameter x 13.6 cm; 2.8 cm diameter x 7.2 cm."}
+{"id": "749d07e4cfcdff38096d", "set": "test", "family": "stepped_shaft", "vague": true, "text": "I need a regular shaft with 3 sections."}
+{"id": "ee127631870f13dd0bf1", "set": "test", "family": "table", "vague": false, "text": "Create a desk 45.55 in x 19.95 in, 22.75 in high, with four square legs."}
+{"id": "07924b1fb187d3966fd3", "set": "test", "family": "table", "vague": false, "text": "Make a desk with four square legs, 950 mm high, 1964 mm x 957 mm."}
+{"id": "abefa8c316dd6779361b", "set": "test", "family": "table", "vague": false, "text": "Make a table 77.9 in x 39.6 in, 42.3 in high, with four square legs."}
+{"id": "89abe7908d16ff29a7f2", "set": "test", "family": "table", "vague": false, "text": "Make a dining table 1616 mm x 1198 mm, 471 mm high, with four square legs."}
+{"id": "9ddebb2f1de55e2eff1a", "set": "test", "family": "table", "vague": true, "text": "Model a medium work table with four square legs."}
+{"id": "29c62facb1f9d6ad3aea", "set": "test", "family": "table", "vague": false, "text": "Create a table with four square legs, 25.15 in high, 87 in x 39.4 in. Dimensions in inches."}
+{"id": "e80523307e16579cc71c", "set": "test", "family": "table", "vague": false, "text": "Build a desk 1614 mm x 819 mm, 362 mm high, with four square legs."}
+{"id": "ffc7c99854a10d42d8ce", "set": "test", "family": "table", "vague": false, "text": "Generate a work table 123.7 cm x 35.7 cm, 73.4 cm high, with four square legs. All dimensions in cm."}
+{"id": "7578a999254a6f12e6ae", "set": "test", "family": "table", "vague": false, "text": "Generate a work table 614 mm x 407 mm, 594 mm high, with four square legs."}
+{"id": "eb69b11f90d0fdea97ee", "set": "test", "family": "table", "vague": false, "text": "Create a dining table 43.85 in x 17.3 in, 36.45 in high, with four square legs."}
+{"id": "deeda6a20b40d1403704", "set": "test", "family": "table", "vague": false, "text": "Create a work table 80.3 cm high, with four square legs, 212.6 cm x 88.3 cm. All dimensions in cm."}
+{"id": "ce5b29de21e58b11d6d6", "set": "test", "family": "table", "vague": false, "text": "Create a desk 1443 mm x 971 mm, 454 mm high, with four square legs."}
+{"id": "62c433bd750d42767008", "set": "test", "family": "table", "vague": false, "text": "A table 1830 mm x 425 mm, 523 mm high, with four square legs."}
+{"id": "d69d73bef0579a089738", "set": "test", "family": "table", "vague": false, "text": "CAD model of a desk 55.25 in x 37.05 in, 23.65 in high, with four square legs."}
+{"id": "eadd6448ff79372459de", "set": "test", "family": "truss", "vague": false, "text": "Make a bridge truss with 4 panels, spanning 506 cm, 13.3 cm deep."}
+{"id": "8d586f6da8340679ff78", "set": "test", "family": "truss", "vague": false, "text": "Create a Pratt truss 32.25 in deep, spanning 62.75 in, with 5 panels."}
+{"id": "3794ffaf4f7ab395e6f9", "set": "test", "family": "truss", "vague": false, "text": "CAD model of a lattice girder spanning 5627 mm, 954 mm deep, with 6 panels."}
+{"id": "fb63a000da935136552d", "set": "test", "family": "truss", "vague": false, "text": "I need a bridge truss spanning 2532 mm, 1036 mm deep, with 6 panels."}
+{"id": "edfe88ddfc283fdb8465", "set": "test", "family": "truss", "vague": true, "text": "Please model a little Pratt truss."}
+{"id": "33cb2294f7bb06fce287", "set": "test", "family": "truss", "vague": false, "text": "Please model a lattice girder with 8 panels, spanning 5711 mm, 948 mm deep."}
+{"id": "bab0f5c58b3be77e98ce", "set": "test", "family": "truss", "vague": false, "text": "Create a bridge truss spanning 2651 mm, 592 mm deep, with 4 panels."}
+{"id": "091cb336212c96f7404e", "set": "test", "family": "truss", "vague": false, "text": "Design a bridge truss spanning 4431 mm, 268 mm deep, with 4 panels. All dimensions in mm."}
+{"id": "422167af407dc2d5725b", "set": "test", "family": "truss", "vague": false, "text": "CAD model of a planar truss spanning 230.65 in, 33.85 in deep, with 3 panels."}
+{"id": "9edabc3297b9194e4775", "set": "test", "family": "truss", "vague": false, "text": "Create a planar truss spanning 3457 mm, 1043 mm deep, with 7 panels."}
+{"id": "5b0ecea8d82c1b10ad5b", "set": "test", "family": "truss", "vague": false, "text": "Draw up a planar truss spanning 3705 mm, 192 mm deep, with 8 panels."}
+{"id": "042c4cd86b6e3dc515fb", "set": "test", "family": "truss", "vague": false, "text": "A planar truss spanning 423.9 cm, 54.8 cm deep, with 7 panels."}
+{"id": "2b81c7ec4c0d860cfef1", "set": "test", "family": "truss", "vague": false, "text": "Make a lattice girder spanning 1541 mm, 1064 mm deep, with 5 panels."}
+{"id": "210e37e711beb5ee027e", "set": "test", "family": "truss", "vague": false, "text": "Design a bridge truss spanning 73.5 in, 22.05 in deep, with 6 panels."}
+{"id": "507ce8270e57d7b30ada", "set": "test", "family": "u_channel", "vague": false, "text": "A channel section 122 mm wide and 80 mm tall, with 7.5 mm walls, 511 mm long."}
+{"id": "2e2050a6397d5056efc7", "set": "test", "family": "u_channel", "vague": false, "text": "Please model a channel section with 9.5 mm walls, 577 mm long, 81 mm wide and 38 mm tall."}
+{"id": "78d238cc4a2648c027ea", "set": "test", "family": "u_channel", "vague": false, "text": "Please model a C channel with 6 mm walls, 393 mm long, 111 mm wide and 83 mm tall."}
+{"id": "694e69ee13e6d443870d", "set": "test", "family": "u_channel", "vague": false, "text": "Generate a C channel with 5.5 mm walls, 37 mm wide and 17.5 mm tall, 709 mm long."}
+{"id": "9c2e295464db369eee00", "set": "test", "family": "u_channel", "vague": false, "text": "Please model a C channel 46 mm wide and 109 mm tall, with 9 mm walls, 237 mm long."}
+{"id": "4977ade0ba84ee8d4a4c", "set": "test", "family": "u_channel", "vague": false, "text": "Build a C channel with 0.9 cm walls, 7.9 cm wide and 10.5 cm tall, 61.3 cm long."}
+{"id": "1539ae760b00cbff8229", "set": "test", "family": "u_channel", "vague": false, "text": "Make a U channel 105 mm wide and 94 mm tall, with 2.4 mm walls, 434 mm long."}
+{"id": "677e742ae4b2068bdced", "set": "test", "family": "u_channel", "vague": false, "text": "Model a U-section profile with 4.5 mm walls, 138 mm wide and 115 mm tall, 330 mm long."}
+{"id": "6d0c5eb051767be2c39c", "set": "test", "family": "u_channel", "vague": false, "text": "Create a channel section 765 mm long, 114 mm wide and 92 mm tall, with 9.5 mm walls."}
+{"id": "ddd3ed1d01320072b54e", "set": "test", "family": "u_channel", "vague": false, "text": "I need a channel section 4.7 in wide and 3.8 in tall, with 0.3 in walls, 17.95 in long."}
+{"id": "57a2d8c029950d52cb07", "set": "test", "family": "u_channel", "vague": true, "text": "Model a regular U channel."}
+{"id": "45185855fe3da0d75be5", "set": "test", "family": "u_channel", "vague": false, "text": "Please model a C channel with 4.5 mm walls, 150 mm wide and 47 mm tall, 944 mm long. All dimensions in mm."}
+{"id": "ad96a5f4f2164281cf94", "set": "test", "family": "u_channel", "vague": false, "text": "Make a channel section 87 mm wide and 58 mm tall, with 6.5 mm walls, 322 mm long."}
+{"id": "3569570a1ee774fbec33", "set": "test", "family": "u_channel", "vague": false, "text": "I need a U-section profile 115 mm wide and 117 mm tall, with 9 mm walls, 920 mm long."}
+{"id": "c08cb7f00513f226b37f", "set": "test", "family": "vase", "vague": false, "text": "Build a decorative vase 379 mm tall, bulging to a 124 mm radius."}
+{"id": "07103bdc8e816651d9c7", "set": "test", "family": "vase", "vague": false, "text": "Generate a flower vase 7.5 in tall, bulging to a 3.75 in radius."}
+{"id": "da0ce5d58e6742bb022e", "set": "test", "family": "vase", "vague": false, "text": "Draw up a vase 336 mm tall, bulging to a 95 mm radius."}
+{"id": "9d9e0e92e78b7eba5cc0", "set": "test", "family": "vase", "vague": true, "text": "I need a large decorative vase."}
+{"id": "d745eeea87326e1ee218", "set": "test", "family": "vase", "vague": false, "text": "Design a flower vase 266 mm tall, bulging to a 34 mm radius."}
+{"id": "02656efe2d4385b2369e", "set": "test", "family": "vase", "vague": false, "text": "I need a vase 179 mm tall, bulging to a 39 mm radius."}
+{"id": "715f38b7d2abf6ad1225", "set": "test", "family": "vase", "vague": false, "text": "Please model a bulbous vase 173 mm tall, bulging to a 32 mm radius."}
+{"id": "c59c5c7e428db59cdae3", "set": "test", "family": "vase", "vague": false, "text": "Please model a vase 16.1 cm tall, bulging to a 5.8 cm radius."}
+{"id": "cf1ddf91ef067130fab6", "set": "test", "family": "vase", "vague": false, "text": "CAD model of a vase 167 mm tall, bulging to a 146 mm radius."}
+{"id": "b7143ee697d7b291b55b", "set": "test", "family": "vase", "vague": false, "text": "Please model a decorative vase 29.5 cm tall, bulging to a 11.7 cm radius."}
+{"id": "e530ab8670adff4c3bb8", "set": "test", "family": "vase", "vague": false, "text": "I need a vase 123 mm tall, bulging to a 125 mm radius."}
+{"id": "7bf9540bfa133877fcc6", "set": "test", "family": "vase", "vague": false, "text": "Build a bulbous vase 136 mm tall, bulging to a 134 mm radius."}
+{"id": "154a09820543be8a46c2", "set": "test", "family": "vase", "vague": false, "text": "Build a flower vase 80 mm tall, bulging to a 64 mm radius. All dimensions in mm."}
+{"id": "82cdbc49b42b46af057a", "set": "test", "family": "vase", "vague": false, "text": "Create a decorative vase 137 mm tall, bulging to a 109 mm radius."}
+{"id": "0be38a08921213a7b7d1", "set": "test", "family": "washer", "vague": false, "text": "Make a shim ring 3.45 in OD, 1.4 in ID, 0.025 in thick."}
+{"id": "08aea188150feb7390cd", "set": "test", "family": "washer", "vague": false, "text": "Model a washer 98 mm OD, 66 mm ID, 4 mm thick."}
+{"id": "755ba31b1188c39618ca", "set": "test", "family": "washer", "vague": false, "text": "Draw up a shim ring 82 mm OD, 13.5 mm ID, 4 mm thick."}
+{"id": "7ebfc2613f2bc866773e", "set": "test", "family": "washer", "vague": false, "text": "Model a flat washer 4.2 in OD, 0.195 in ID, 0.226 in thick. Dimensions in inches."}
+{"id": "0ff5f01e9de4c4d38c69", "set": "test", "family": "washer", "vague": false, "text": "Create a ring washer 87 mm OD, 12.5 mm ID, 1 mm thick."}
+{"id": "88252a61e010e76ebd7b", "set": "test", "family": "washer", "vague": false, "text": "Make a flat washer 0.32 cm ID, 6.4 cm OD, 0.27 cm thick."}
+{"id": "8c6b2836adfe9aeb02ab", "set": "test", "family": "washer", "vague": false, "text": "Generate a ring washer 48 mm ID, 2.7 mm thick, 79 mm OD."}
+{"id": "49334f11608f3c1c60f7", "set": "test", "family": "washer", "vague": false, "text": "Build a washer 9.7 cm OD, 1.2 cm ID, 0.1 cm thick."}
+{"id": "f04d92950da886bd9849", "set": "test", "family": "washer", "vague": false, "text": "Build a ring washer 88 mm OD, 52 mm ID, 1.4 mm thick."}
+{"id": "ec2ab6bc760074ead1cd", "set": "test", "family": "washer", "vague": false, "text": "Make a washer 22 mm ID, 4.5 mm thick, 49 mm OD. All dimensions in mm."}
+{"id": "38cd00ce0fcfb03a865c", "set": "test", "family": "washer", "vague": false, "text": "Design a flat washer 2.7 in OD, 1.2 in ID, 0.173 in thick."}
+{"id": "f62587fcd245513fc6eb", "set": "test", "family": "washer", "vague": false, "text": "Model a washer 4 mm thick, 23 mm ID, 42 mm OD."}
+{"id": "3a9953320ed3dfd4bff7", "set": "test", "family": "washer", "vague": false, "text": "Draw up a washer 71 mm OD, 17 mm ID, 4 mm thick. All dimensions in mm."}
+{"id": "57158b29f90fd28e321f", "set": "test", "family": "washer", "vague": true, "text": "CAD model of a standard washer."}
+{"id": "e3d0e293208ab5c00286", "set": "heldout", "family": "chair", "vague": false, "text": "Design a chair 39.2 cm square seat, backrest 40.7 cm above the seat, seat height 37.2 cm."}
+{"id": "5fc871dbaceee8150463", "set": "heldout", "family": "chair", "vague": false, "text": "Build a dining chair 514 mm square seat, seat height 376 mm, backrest 364 mm above the seat."}
+{"id": "3ac728bb43510898c558", "set": "heldout", "family": "chair", "vague": false, "text": "Please model a chair 17 in square seat, seat height 15.9 in, backrest 13.2 in above the seat."}
+{"id": "3a4cc0b8d8e1f081a172", "set": "heldout", "family": "chair", "vague": true, "text": "I need a large wooden chair."}
+{"id": "a4f39e3960012d947eb7", "set": "heldout", "family": "chair", "vague": false, "text": "Generate a dining chair seat height 19.4 in, backrest 16.3 in above the seat, 14.2 in square seat. Dimensions in inches."}
+{"id": "e3aa089d7e831f5eadfc", "set": "heldout", "family": "chair", "vague": false, "text": "Generate a simple chair 377 mm square seat, seat height 361 mm, backrest 401 mm above the seat."}
+{"id": "2ab8e0c57c58ff91b83b", "set": "heldout", "family": "chair", "vague": false, "text": "Draw up a dining chair 53.7 cm square seat, seat height 41.5 cm, backrest 34.1 cm above the seat."}
+{"id": "8b327819b9196421909e", "set": "heldout", "family": "chair", "vague": false, "text": "Model a chair seat height 17.7 in, backrest 12.85 in above the seat, 16.5 in square seat."}
+{"id": "69a37b9709191f855b33", "set": "heldout", "family": "chair", "vague": false, "text": "Create a wooden chair 358 mm square seat, seat height 422 mm, backrest 441 mm above the seat."}
+{"id": "d3866560d281add40025", "set": "heldout", "family": "chair", "vague": false, "text": "Design a simple chair 42.8 cm square seat, backrest 39.4 cm above the seat, seat height 46.6 cm."}
+{"id": "4ec7a3890704585735e5", "set": "heldout", "family": "chair", "vague": true, "text": "Make a medium wooden chair."}
+{"id": "34d9f0c2a43666a918e9", "set": "heldout", "family": "chair", "vague": false, "text": "Generate a dining chair 374 mm square seat, seat height 388 mm, backrest 539 mm above the seat."}
+{"id": "abe06c4a0b8150b3ab3b", "set": "heldout", "family": "chair", "vague": false, "text": "CAD model of a chair 515 mm square seat, seat height 484 mm, backrest 481 mm above the seat."}
+{"id": "6a0bdbfdfd0774d34994", "set": "heldout", "family": "chair", "vague": false, "text": "Design a simple chair seat height 15 in, 17.95 in square seat, backrest 19.35 in above the seat. Dimensions in inches."}
+{"id": "cb983fd133b55daa3e7d", "set": "heldout", "family": "chair", "vague": false, "text": "Draw up a chair backrest 415 mm above the seat, seat height 355 mm, 515 mm square seat. All dimensions in mm."}
+{"id": "7548b7b67694a13ad4ee", "set": "heldout", "family": "chair", "vague": false, "text": "Please model a wooden chair backrest 29.4 cm above the seat, seat height 38.3 cm, 49.3 cm square seat."}
+{"id": "c5ff6824659355e6b780", "set": "heldout", "family": "chair", "vague": false, "text": "A simple chair seat height 39.6 cm, 38.8 cm square seat, backrest 38.5 cm above the seat."}
+{"id": "97b4276e617eac6eaf5c", "set": "heldout", "family": "chair", "vague": true, "text": "Create a compact wooden chair."}
+{"id": "c9be25e663a0317896e8", "set": "heldout", "family": "chair", "vague": false, "text": "Design a simple chair 35.6 cm square seat, seat height 37.8 cm, backrest 35.9 cm above the seat."}
+{"id": "e4c49406cac19263905c", "set": "heldout", "family": "chair", "vague": false, "text": "Please model a dining chair backrest 372 mm above the seat, 431 mm square seat, seat height 429 mm. All dimensions in mm."}
+{"id": "d3b004c238f64cee7ba1", "set": "heldout", "family": "chair", "vague": false, "text": "A simple chair backrest 45.4 cm above the seat, seat height 50.2 cm, 43.8 cm square seat."}
+{"id": "06dd58d75efac8e79a36", "set": "heldout", "family": "chair", "vague": false, "text": "Model a chair 49.3 cm square seat, seat height 41 cm, backrest 51 cm above the seat."}
+{"id": "560a857e7e7220ab8af0", "set": "heldout", "family": "chair", "vague": false, "text": "I need a wooden chair 36.9 cm square seat, seat height 43.8 cm, backrest 50.3 cm above the seat."}
+{"id": "22773592f80e8c0ab5b4", "set": "heldout", "family": "chair", "vague": false, "text": "Draw up a wooden chair seat height 44.3 cm, backrest 28.1 cm above the seat, 44.2 cm square seat."}
+{"id": "1fac24f913aafa514d85", "set": "heldout", "family": "chair", "vague": true, "text": "Design a dining chair."}
+{"id": "f6cde048a5528542bc1b", "set": "heldout", "family": "chair", "vague": false, "text": "Design a dining chair 478 mm square seat, seat height 382 mm, backrest 322 mm above the seat."}
+{"id": "8f47596038bd86ba51cc", "set": "heldout", "family": "chair", "vague": false, "text": "I need a wooden chair 18.8 in square seat, backrest 19.7 in above the seat, seat height 16.55 in. Dimensions in inches."}
+{"id": "53fbe603c973dea08d2c", "set": "heldout", "family": "chair", "vague": false, "text": "Model a simple chair backrest 537 mm above the seat, 432 mm square seat, seat height 410 mm."}
+{"id": "91fcad16de36f257ffa5", "set": "heldout", "family": "chair", "vague": false, "text": "I need a chair 361 mm square seat, seat height 434 mm, backrest 280 mm above the seat."}
+{"id": "48a74135deed2760513a", "set": "heldout", "family": "chair", "vague": false, "text": "CAD model of a simple chair 473 mm square seat, seat height 374 mm, backrest 336 mm above the seat."}
+{"id": "ee7bd186433f6e8f7cc8", "set": "heldout", "family": "chair", "vague": false, "text": "Please model a wooden chair 506 mm square seat, seat height 403 mm, backrest 407 mm above the seat. All dimensions in mm."}
+{"id": "c32eca738faf2e84bf27", "set": "heldout", "family": "chair", "vague": true, "text": "Please model an oversized dining chair."}
+{"id": "cfe845de20a2462caa5b", "set": "heldout", "family": "chair", "vague": false, "text": "Model a dining chair 21.55 in square seat, seat height 14.9 in, backrest 16.1 in above the seat."}
+{"id": "7f2cc8e457010b2a92a9", "set": "heldout", "family": "chair", "vague": false, "text": "Create a dining chair 433 mm square seat, seat height 362 mm, backrest 477 mm above the seat."}
+{"id": "26a08526494b83937e55", "set": "heldout", "family": "chair", "vague": false, "text": "Please model a wooden chair 547 mm square seat, seat height 397 mm, backrest 501 mm above the seat."}
+{"id": "f0a19aa9069c7cfd7c07", "set": "heldout", "family": "chair", "vague": false, "text": "Draw up a chair 39.3 cm square seat, backrest 50.4 cm above the seat, seat height 41.1 cm."}
+{"id": "bbe38054f7924c002233", "set": "heldout", "family": "chair", "vague": false, "text": "A dining chair 418 mm square seat, seat height 490 mm, backrest 470 mm above the seat. All dimensions in mm."}
+{"id": "3f1ae438fb97f8d7ce91", "set": "heldout", "family": "chair", "vague": false, "text": "Design a chair seat height 511 mm, 434 mm square seat, backrest 430 mm above the seat."}
+{"id": "007fae448b99fd0ad08e", "set": "heldout", "family": "chair", "vague": true, "text": "Model a small simple chair."}
+{"id": "389441b0f51bc066292a", "set": "heldout", "family": "chair", "vague": false, "text": "Generate a wooden chair seat height 45.7 cm, 42.1 cm square seat, backrest 53.6 cm above the seat."}
+{"id": "097968203a292961f709", "set": "heldout", "family": "chair", "vague": false, "text": "I need a wooden chair 15 in square seat, seat height 18.9 in, backrest 12.85 in above the seat."}
+{"id": "35e60548a6d2af8f7ba1", "set": "heldout", "family": "chair", "vague": false, "text": "Design a wooden chair 35.3 cm square seat, backrest 45.4 cm above the seat, seat height 37.7 cm. All dimensions in cm."}
+{"id": "0c195c28b2a284f213f6", "set": "heldout", "family": "chair", "vague": false, "text": "CAD model of a wooden chair seat height 487 mm, 432 mm square seat, backrest 310 mm above the seat."}
+{"id": "cb2e3ddd6c7340fd1948", "set": "heldout", "family": "chair", "vague": false, "text": "Draw up a chair 540 mm square seat, seat height 502 mm, backrest 387 mm above the seat."}
+{"id": "f3d8d665464c7c76b1a0", "set": "heldout", "family": "chair", "vague": false, "text": "Design a simple chair 515 mm square seat, seat height 430 mm, backrest 460 mm above the seat."}
+{"id": "21f4918e6a2c7373fc13", "set": "heldout", "family": "chair", "vague": true, "text": "Make a mini dining chair."}
+{"id": "54752c8c27485a1dd84b", "set": "heldout", "family": "chair", "vague": false, "text": "Please model a dining chair 544 mm square seat, seat height 378 mm, backrest 417 mm above the seat."}
+{"id": "dcaeab887762d2ea5fdf", "set": "heldout", "family": "chair", "vague": false, "text": "Generate a simple chair backrest 45.2 cm above the seat, seat height 51.8 cm, 51.9 cm square seat."}
+{"id": "9a918bf6372bf48aa609", "set": "heldout", "family": "chair", "vague": false, "text": "CAD model of a dining chair seat height 457 mm, 452 mm square seat, backrest 477 mm above the seat."}
+{"id": "2458e0336e286fe372c5", "set": "heldout", "family": "chair", "vague": false, "text": "Model a simple chair seat height 415 mm, 400 mm square seat, backrest 251 mm above the seat."}
+{"id": "a370c69e7ad0201ea427", "set": "heldout", "family": "chair", "vague": false, "text": "Model a simple chair seat height 37.7 cm, 38 cm square seat, backrest 38.2 cm above the seat."}
+{"id": "f792042dd7b3a60a9e4e", "set": "heldout", "family": "chair", "vague": false, "text": "Please model a dining chair seat height 459 mm, 497 mm square seat, backrest 413 mm above the seat."}
+{"id": "2ff9c2e1168c791d7088", "set": "heldout", "family": "chair", "vague": true, "text": "CAD model of a large chair."}
+{"id": "8ef0312272e0bf4492ff", "set": "heldout", "family": "chair", "vague": false, "text": "A chair backrest 41.8 cm above the seat, seat height 39.4 cm, 48.1 cm square seat. All dimensions in cm."}
+{"id": "412af44c19198b10fa00", "set": "heldout", "family": "chair", "vague": false, "text": "Create a chair 380 mm square seat, seat height 498 mm, backrest 285 mm above the seat."}
+{"id": "231873d51b43f9cb8e37", "set": "heldout", "family": "chair", "vague": false, "text": "Generate a chair seat height 398 mm, 507 mm square seat, backrest 519 mm above the seat."}
+{"id": "1cf5c6eb599a2ffbb708", "set": "heldout", "family": "chair", "vague": false, "text": "Create a chair 39.1 cm square seat, seat height 37.8 cm, backrest 48.4 cm above the seat. All dimensions in cm."}
+{"id": "c3f659672dd9590ce140", "set": "heldout", "family": "chair", "vague": false, "text": "Make a dining chair 458 mm square seat, seat height 467 mm, backrest 277 mm above the seat."}
+{"id": "8010a8e83fda43ac85ca", "set": "heldout", "family": "chair", "vague": false, "text": "Please model a simple chair 43.9 cm square seat, seat height 51 cm, backrest 30.8 cm above the seat."}
+{"id": "8a967c894145420d2be0", "set": "heldout", "family": "chair", "vague": true, "text": "Draw up a big simple chair."}
+{"id": "e0db34cb527259633d67", "set": "heldout", "family": "chair", "vague": false, "text": "Generate a simple chair 491 mm square seat, seat height 370 mm, backrest 469 mm above the seat."}
+{"id": "e9c578d778fd5110ac38", "set": "heldout", "family": "chair", "vague": false, "text": "Design a chair 377 mm square seat, seat height 449 mm, backrest 393 mm above the seat."}
+{"id": "c25a30d6a8563aed5559", "set": "heldout", "family": "chair", "vague": false, "text": "Draw up a dining chair 19.7 in square seat, seat height 17.15 in, backrest 16 in above the seat."}
+{"id": "3e8706255c9c84a27976", "set": "heldout", "family": "chair", "vague": false, "text": "Generate a wooden chair seat height 413 mm, backrest 404 mm above the seat, 468 mm square seat."}
+{"id": "61afd4cce8ebb4173e78", "set": "heldout", "family": "chair", "vague": false, "text": "I need a wooden chair 462 mm square seat, seat height 443 mm, backrest 514 mm above the seat."}
+{"id": "6ba866c7e642000ca83d", "set": "heldout", "family": "chair", "vague": false, "text": "Make a chair 529 mm square seat, seat height 447 mm, backrest 396 mm above the seat. All dimensions in mm."}
+{"id": "f3e208c3567c3b4088a0", "set": "heldout", "family": "chair", "vague": true, "text": "CAD model of a standard wooden chair."}
+{"id": "7c2818915bf4f286fb29", "set": "heldout", "family": "chair", "vague": false, "text": "Create a wooden chair seat height 47 cm, backrest 38.3 cm above the seat, 39.3 cm square seat."}
+{"id": "a0d903d02b07406a8e64", "set": "heldout", "family": "chair", "vague": false, "text": "Design a chair 20.3 in square seat, backrest 20.55 in above the seat, seat height 17.5 in. Dimensions in inches."}
+{"id": "b560e9df26f12841dee6", "set": "heldout", "family": "chair", "vague": false, "text": "Build a simple chair 384 mm square seat, seat height 378 mm, backrest 499 mm above the seat."}
+{"id": "3666d9eb2e3058262409", "set": "heldout", "family": "chair", "vague": false, "text": "Model a wooden chair 529 mm square seat, seat height 394 mm, backrest 510 mm above the seat."}
+{"id": "0fffefa77ad742436386", "set": "heldout", "family": "chair", "vague": false, "text": "Please model a chair 420 mm square seat, backrest 449 mm above the seat, seat height 474 mm."}
+{"id": "811fe7551387ab595900", "set": "heldout", "family": "chair", "vague": false, "text": "Please model a wooden chair backrest 383 mm above the seat, 387 mm square seat, seat height 478 mm."}
+{"id": "09cd19387266a386e7e5", "set": "heldout", "family": "chair", "vague": true, "text": "Create a big chair."}
+{"id": "1b584d6cf4d9b4ba5af8", "set": "heldout", "family": "chair", "vague": false, "text": "Draw up a dining chair 368 mm square seat, seat height 503 mm, backrest 277 mm above the seat."}
+{"id": "9aca615095f85b42e06f", "set": "heldout", "family": "chair", "vague": false, "text": "Draw up a simple chair 449 mm square seat, seat height 427 mm, backrest 421 mm above the seat."}
+{"id": "e468673f5b9620e32294", "set": "heldout", "family": "chair", "vague": false, "text": "Make a chair backrest 48.6 cm above the seat, seat height 47.8 cm, 44.4 cm square seat."}
+{"id": "e460d7caa57c9965bc6e", "set": "heldout", "family": "chair", "vague": false, "text": "I need a wooden chair 510 mm square seat, seat height 432 mm, backrest 399 mm above the seat."}
+{"id": "1098321b3465b58240e8", "set": "heldout", "family": "chair", "vague": false, "text": "I need a simple chair 413 mm square seat, seat height 403 mm, backrest 303 mm above the seat."}
+{"id": "b295aff2bfc64a692b4e", "set": "heldout", "family": "chair", "vague": false, "text": "Make a simple chair 501 mm square seat, backrest 518 mm above the seat, seat height 405 mm."}
+{"id": "94fadaf2239ee17ecf3c", "set": "heldout", "family": "chair", "vague": true, "text": "Make a compact wooden chair."}
+{"id": "075c9b667e13048a3eec", "set": "heldout", "family": "chair", "vague": false, "text": "Create a simple chair 42.5 cm square seat, seat height 51 cm, backrest 53.4 cm above the seat."}
+{"id": "5a90274600f94acee0e7", "set": "heldout", "family": "chair", "vague": false, "text": "Build a wooden chair 478 mm square seat, seat height 487 mm, backrest 391 mm above the seat."}
+{"id": "206325bbf67b2b7420d1", "set": "heldout", "family": "chair", "vague": false, "text": "Build a simple chair backrest 20 in above the seat, 15.1 in square seat, seat height 19.95 in."}
+{"id": "d4dea0c5f555f3710dee", "set": "heldout", "family": "chair", "vague": false, "text": "CAD model of a simple chair 18.45 in square seat, seat height 17.4 in, backrest 12.3 in above the seat."}
+{"id": "80736158d021f09faa14", "set": "heldout", "family": "chair", "vague": false, "text": "Model a dining chair backrest 287 mm above the seat, seat height 407 mm, 439 mm square seat."}
+{"id": "bc2ba8a61ed4cd0d81d7", "set": "heldout", "family": "chair", "vague": false, "text": "Generate a wooden chair backrest 441 mm above the seat, seat height 430 mm, 413 mm square seat."}
+{"id": "c02f8a105064e8877482", "set": "heldout", "family": "chair", "vague": true, "text": "Create an oversized dining chair."}
+{"id": "0b6da85a2672ba7cb9e4", "set": "heldout", "family": "chair", "vague": false, "text": "Design a simple chair 17.7 in square seat, backrest 11.45 in above the seat, seat height 13.9 in."}
+{"id": "d9e7c795cf600ffedbef", "set": "heldout", "family": "chair", "vague": false, "text": "CAD model of a chair 374 mm square seat, seat height 449 mm, backrest 278 mm above the seat."}
+{"id": "db9223b2913c55b01900", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Create a hinge plate 2 knuckles, 0.196 in thick, 2.85 in long, 2.6 in wide. Dimensions in inches."}
+{"id": "dee31bcc0ed342d549ed", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Generate a door hinge leaf 76 mm wide, 4 mm thick, 30 mm long, 2 knuckles."}
+{"id": "db6009f832d22fcf3c61", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Model a butt hinge half 1.15 in wide, 3 knuckles, 5.9 in long, 0.127 in thick. Dimensions in inches."}
+{"id": "3a0804e93ff943b0c690", "set": "heldout", "family": "hinge_leaf", "vague": true, "text": "Draw up a big hinge plate."}
+{"id": "737e9a522b5f44023297", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Build a door hinge leaf 3 knuckles, 4 mm thick, 114 mm long, 57 mm wide."}
+{"id": "952598fabd9cd9a0fbb3", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "I need a hinge leaf 0.95 in wide, 2 knuckles, 2.5 in long, 0.188 in thick."}
+{"id": "574ac2a2234e109b6cf9", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Design a door hinge leaf 62 mm long, 51 mm wide, 1.3 mm thick, 4 knuckles."}
+{"id": "099b05692a0f10f48fe8", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Generate a hinge plate 3.3 cm long, 1.5 cm wide, 0.49 cm thick, 4 knuckles."}
+{"id": "44dcbdb554fa6280dd2a", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "A butt hinge half 6.9 in long, 2.75 in wide, 0.134 in thick, 4 knuckles."}
+{"id": "c6d6377110be677e27c1", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Draw up a hinge leaf 69 mm wide, 3.5 mm thick, 166 mm long, 2 knuckles."}
+{"id": "43d1a3e58b36bd757372", "set": "heldout", "family": "hinge_leaf", "vague": true, "text": "Create a compact hinge leaf."}
+{"id": "44dddc7a70696e4a0419", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Design a hinge plate 60 mm long, 48 mm wide, 4 mm thick, 4 knuckles."}
+{"id": "1c97082b632c7efcbfd4", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "CAD model of a hinge plate 0.29 cm thick, 6.2 cm long, 7.1 cm wide, 2 knuckles."}
+{"id": "386e73b42c4eca1fe1c0", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Create a door hinge leaf 16 mm wide, 1.6 mm thick, 2 knuckles, 152 mm long."}
+{"id": "6a773a2a7c916588aad6", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Generate a hinge plate 197 mm long, 34 mm wide, 1.5 mm thick, 3 knuckles."}
+{"id": "fa9342d15b47c6a2f60b", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "I need a door hinge leaf 3.95 in long, 3.05 in wide, 0.065 in thick, 3 knuckles."}
+{"id": "e1bdd59766d51f23e3ec", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "CAD model of a hinge plate 181 mm long, 16 mm wide, 3 mm thick, 2 knuckles. All dimensions in mm."}
+{"id": "d1edd61552d1f8a1b439", "set": "heldout", "family": "hinge_leaf", "vague": true, "text": "Generate a little hinge leaf."}
+{"id": "aa1a0937a8c75f503bfa", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "I need a hinge plate 181 mm long, 74 mm wide, 3 mm thick, 3 knuckles."}
+{"id": "fd6352a8d5a0d63dfec4", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "A hinge plate 41 mm long, 42 mm wide, 4 mm thick, 3 knuckles. All dimensions in mm."}
+{"id": "f5d1e2732832d0e53e89", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Draw up a door hinge leaf 60 mm long, 60 mm wide, 2.2 mm thick, 2 knuckles. All dimensions in mm."}
+{"id": "cd349126eadd23baee29", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Design a butt hinge half 2 knuckles, 1.75 in wide, 5.9 in long, 0.182 in thick."}
+{"id": "83385ef18bf6528dd724", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "A hinge leaf 46 mm long, 31 mm wide, 4 mm thick, 4 knuckles."}
+{"id": "4e2f361c1f6c46e791bb", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "CAD model of a butt hinge half 53 mm long, 49 mm wide, 2.7 mm thick, 3 knuckles."}
+{"id": "92c7c8f88d64b7211803", "set": "heldout", "family": "hinge_leaf", "vague": true, "text": "Design a large door hinge leaf."}
+{"id": "f37e29633b4e746d6498", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Generate a hinge leaf 163 mm long, 40 mm wide, 2.9 mm thick, 2 knuckles. All dimensions in mm."}
+{"id": "bc078b9a8ff4192c55dd", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "CAD model of a door hinge leaf 3 knuckles, 68 mm long, 1.5 mm thick, 44 mm wide."}
+{"id": "562485db0d9189360ce6", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Create a door hinge leaf 99 mm long, 25 mm wide, 2.5 mm thick, 4 knuckles."}
+{"id": "c69f6b6451c211df81d3", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "I need a hinge leaf 7.3 in long, 0.084 in thick, 4 knuckles, 1.65 in wide. Dimensions in inches."}
+{"id": "8989d0f69df5f34e62ab", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Design a hinge leaf 5 mm thick, 4 knuckles, 61 mm long, 28 mm wide. All dimensions in mm."}
+{"id": "ff92c6241dd2527944eb", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Please model a hinge plate 0.32 cm thick, 4.3 cm wide, 2 knuckles, 9.2 cm long."}
+{"id": "45c14a25eafab43b1dc6", "set": "heldout", "family": "hinge_leaf", "vague": true, "text": "Draw up a mini hinge leaf."}
+{"id": "ce23626ca94b30fc47ac", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Create a butt hinge half 55 mm wide, 4 knuckles, 2.2 mm thick, 41 mm long."}
+{"id": "2f6177b270ff32fa7051", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Create a door hinge leaf 3.3 in long, 3.15 in wide, 0.057 in thick, 4 knuckles."}
+{"id": "f0a928f688c3b9696494", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Please model a hinge leaf 5.4 cm wide, 4 knuckles, 14.1 cm long, 0.31 cm thick."}
+{"id": "fc261384609d163c65d5", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Generate a door hinge leaf 4 knuckles, 0.119 in thick, 2.45 in long, 1.6 in wide."}
+{"id": "1f64ed186478c7a31410", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Create a hinge leaf 2 knuckles, 0.107 in thick, 3.5 in long, 1.75 in wide."}
+{"id": "365c8bb18e1419e78bed", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Create a door hinge leaf 145 mm long, 61 mm wide, 5 mm thick, 2 knuckles."}
+{"id": "884234ead7e58c6a2c11", "set": "heldout", "family": "hinge_leaf", "vague": true, "text": "CAD model of an oversized butt hinge half."}
+{"id": "46b67e882ab99c7b4ea3", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Make a butt hinge half 160 mm long, 65 mm wide, 4 mm thick, 3 knuckles."}
+{"id": "3146ae8e5a8698ffda29", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "I need a hinge leaf 5.1 cm long, 5.7 cm wide, 0.2 cm thick, 2 knuckles."}
+{"id": "fa541d2bd5c271aa8871", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Draw up a butt hinge half 1.3 mm thick, 16 mm wide, 114 mm long, 2 knuckles."}
+{"id": "aa2afe632def4dc5dc71", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Build a butt hinge half 3 knuckles, 2.6 mm thick, 53 mm wide, 109 mm long."}
+{"id": "811701994324d9f82762", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "A hinge leaf 3 in long, 3.1 in wide, 0.122 in thick, 2 knuckles."}
+{"id": "3eb18117223d98ae5ab1", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "A hinge leaf 4.7 in long, 1.1 in wide, 0.08 in thick, 3 knuckles."}
+{"id": "bcd1ee75f327210f7028", "set": "heldout", "family": "hinge_leaf", "vague": true, "text": "Build a mini door hinge leaf."}
+{"id": "1a75d8d9d1a488ab8ade", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Generate a hinge plate 170 mm long, 79 mm wide, 3 mm thick, 3 knuckles."}
+{"id": "1600192c16b0b49a6750", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Make a hinge plate 1.1 mm thick, 152 mm long, 2 knuckles, 80 mm wide."}
+{"id": "1f4d83bbef86b9b2b8b0", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Build a hinge plate 57 mm long, 55 mm wide, 2.7 mm thick, 4 knuckles. All dimensions in mm."}
+{"id": "cc7bebed7eb2629a2024", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Make a hinge leaf 198 mm long, 47 mm wide, 3 mm thick, 3 knuckles."}
+{"id": "7cda1d1671fad9582a0e", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "CAD model of a door hinge leaf 68 mm long, 30 mm wide, 3 mm thick, 4 knuckles."}
+{"id": "a82fcad3604cda8e7beb", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "A door hinge leaf 3.3 cm wide, 4 knuckles, 0.13 cm thick, 11.3 cm long."}
+{"id": "8d055c632a18a064315a", "set": "heldout", "family": "hinge_leaf", "vague": true, "text": "Build a hinge plate."}
+{"id": "f5e31bca6b79f77b504c", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Make a hinge leaf 58 mm long, 40 mm wide, 1.6 mm thick, 3 knuckles. All dimensions in mm."}
+{"id": "eceda52832dd966bc48b", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Generate a door hinge leaf 47 mm wide, 116 mm long, 2 knuckles, 3.5 mm thick."}
+{"id": "06089207ab38c47dc66b", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "A door hinge leaf 76 mm long, 4 knuckles, 3 mm thick, 28 mm wide."}
+{"id": "1c7c47f0fb3ce1beb5a8", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "CAD model of a hinge leaf 2 knuckles, 1.75 in wide, 0.075 in thick, 7.5 in long."}
+{"id": "fabebf8e09c6356d24a2", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Please model a butt hinge half 7.65 in long, 0.65 in wide, 0.116 in thick, 4 knuckles."}
+{"id": "f99d6293b1cd9b4e2959", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Generate a hinge leaf 127 mm long, 19 mm wide, 1.9 mm thick, 3 knuckles."}
+{"id": "5ce158529c6256090f45", "set": "heldout", "family": "hinge_leaf", "vague": true, "text": "Please model a big hinge plate."}
+{"id": "6cc9e9ce27be79facc67", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Build a hinge plate 0.156 in thick, 1.75 in long, 3 knuckles, 2.1 in wide."}
+{"id": "929fc186ba3f8445eb1d", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Model a door hinge leaf 70 mm long, 2 knuckles, 3.5 mm thick, 58 mm wide."}
+{"id": "11c15801a58e34cf801c", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Make a hinge leaf 46 mm wide, 3 knuckles, 4.5 mm thick, 35 mm long."}
+{"id": "9cf385264212c602c83b", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Draw up a hinge plate 13 cm long, 4 cm wide, 0.36 cm thick, 3 knuckles."}
+{"id": "eb8a58d844ba8ed93eac", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Make a hinge plate 112 mm long, 4 knuckles, 55 mm wide, 2.9 mm thick."}
+{"id": "b8524d3b385889e024b4", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Design a hinge leaf 170 mm long, 44 mm wide, 4 mm thick, 2 knuckles."}
+{"id": "4d95c82275bb370e395d", "set": "heldout", "family": "hinge_leaf", "vague": true, "text": "Make a butt hinge half."}
+{"id": "16c77d5c69b0d071f0f4", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Design a hinge plate 2 knuckles, 96 mm long, 63 mm wide, 4.5 mm thick."}
+{"id": "0f689d4e14521a6a6d19", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Make a hinge leaf 2 knuckles, 1.7 mm thick, 39 mm wide, 107 mm long."}
+{"id": "6075376140d13b59c93a", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Model a butt hinge half 1.4 mm thick, 73 mm wide, 4 knuckles, 125 mm long."}
+{"id": "316472a3919e018e85e9", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Generate a hinge leaf 73 mm long, 51 mm wide, 5 mm thick, 3 knuckles."}
+{"id": "d37a04cc669afd1322a0", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "CAD model of a hinge leaf 3.5 mm thick, 59 mm long, 18.5 mm wide, 4 knuckles."}
+{"id": "65124d18f9811e973ef7", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Build a butt hinge half 3 knuckles, 0.085 in thick, 2.35 in wide, 7.7 in long."}
+{"id": "4aeeafe12caacbaa6294", "set": "heldout", "family": "hinge_leaf", "vague": true, "text": "A large hinge leaf."}
+{"id": "c151c6048728ba326aaf", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Build a hinge leaf 66 mm long, 40 mm wide, 2.5 mm thick, 4 knuckles. All dimensions in mm."}
+{"id": "788b0f28843b7a18df50", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Build a butt hinge half 5.25 in long, 0.9 in wide, 0.164 in thick, 3 knuckles."}
+{"id": "720b009ca32bd93ca0f4", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Generate a hinge leaf 4.2 in long, 1.9 in wide, 0.07 in thick, 3 knuckles."}
+{"id": "7d0bbe0a05a9c9e9905c", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Make a hinge leaf 197 mm long, 28 mm wide, 3 mm thick, 4 knuckles."}
+{"id": "ca6cd486444ab9f9621a", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "I need a hinge leaf 196 mm long, 73 mm wide, 4 mm thick, 3 knuckles."}
+{"id": "2a72dffef1b62d3fb155", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Make a hinge leaf 4 knuckles, 179 mm long, 50 mm wide, 1.4 mm thick."}
+{"id": "f2afd6ae1a19ae492fe1", "set": "heldout", "family": "hinge_leaf", "vague": true, "text": "Model a heavy hinge leaf."}
+{"id": "c7b4c63d877dae48c7b7", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Generate a door hinge leaf 15.9 cm long, 7.8 cm wide, 0.21 cm thick, 2 knuckles."}
+{"id": "3a1f0dec90f1910b2373", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Generate a hinge leaf 139 mm long, 2.4 mm thick, 30 mm wide, 3 knuckles."}
+{"id": "d883eebc88c925754879", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Make a butt hinge half 151 mm long, 78 mm wide, 2.5 mm thick, 4 knuckles."}
+{"id": "cb235a6ccc1ac586af9e", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Model a door hinge leaf 0.111 in thick, 4 knuckles, 2.35 in wide, 1.8 in long."}
+{"id": "dc149ef5d31fbda1a630", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Create a butt hinge half 59 mm long, 4 knuckles, 3.5 mm thick, 16 mm wide."}
+{"id": "f07bd9a972514830d22b", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Create a hinge plate 56 mm wide, 2 knuckles, 116 mm long, 2.9 mm thick."}
+{"id": "c3745e026739290b089e", "set": "heldout", "family": "hinge_leaf", "vague": true, "text": "A medium door hinge leaf."}
+{"id": "61cfdaf38e5cea901104", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "Please model a hinge plate 92 mm long, 59 mm wide, 2.2 mm thick, 3 knuckles."}
+{"id": "202e9dffdbe43bd1a379", "set": "heldout", "family": "hinge_leaf", "vague": false, "text": "A butt hinge half 18.5 cm long, 3 knuckles, 7.7 cm wide, 0.29 cm thick."}
+{"id": "a2ae157b36e2130665d8", "set": "heldout", "family": "knob", "vague": false, "text": "Build a knurled knob 51 mm diameter, 34 mm tall, 14 grip grooves, domed top, with a shaft hole."}
+{"id": "4a7dec49e939776ada9e", "set": "heldout", "family": "knob", "vague": false, "text": "Please model a control knob 63 mm diameter, 34 mm tall, domed top, with a shaft hole, 26 grip grooves."}
+{"id": "2651e3eff7e873216ec8", "set": "heldout", "family": "knob", "vague": false, "text": "Please model a control knob 31 mm diameter, 43 mm tall, 14 grip grooves, domed top, with a shaft hole."}
+{"id": "7292e42ddde2425c02fb", "set": "heldout", "family": "knob", "vague": true, "text": "Generate a large volume knob domed top, with a shaft hole."}
+{"id": "5aaca0b4be5460bcaecd", "set": "heldout", "family": "knob", "vague": false, "text": "Draw up a knurled knob domed top, with a shaft hole, 41 mm tall, 46 mm diameter, 23 grip grooves."}
+{"id": "be4849456e92612209c2", "set": "heldout", "family": "knob", "vague": false, "text": "Build a control knob domed top, with a shaft hole, 31 mm tall, 21 grip grooves, 49 mm diameter."}
+{"id": "e6ed3578458fb8dacb0a", "set": "heldout", "family": "knob", "vague": false, "text": "Model a volume knob domed top, with a shaft hole, 1.1 cm tall, 7.9 cm diameter, 25 grip grooves."}
+{"id": "1462d0e9e968d3082ef9", "set": "heldout", "family": "knob", "vague": false, "text": "Model a knurled knob 0.95 in tall, domed top, with a shaft hole, 14 grip grooves, 2.45 in diameter."}
+{"id": "897fd6e7f7e52a0221b5", "set": "heldout", "family": "knob", "vague": false, "text": "Make a grip knob 33 mm diameter, 33 mm tall, 32 grip grooves, domed top, with a shaft hole."}
+{"id": "0aa4a60e44cb43c329d4", "set": "heldout", "family": "knob", "vague": false, "text": "Model a grip knob 26 grip grooves, domed top, with a shaft hole, 1.6 cm tall, 7.7 cm diameter."}
+{"id": "2555f4727170a8e61920", "set": "heldout", "family": "knob", "vague": true, "text": "Make an oversized knurled knob domed top, with a shaft hole."}
+{"id": "ed2e89f8e24f5b1cd062", "set": "heldout", "family": "knob", "vague": false, "text": "I need a grip knob 41 mm diameter, 39 mm tall, domed top, with a shaft hole, 36 grip grooves."}
+{"id": "7861895c4c510be25059", "set": "heldout", "family": "knob", "vague": false, "text": "I need a knurled knob domed top, with a shaft hole, 13 grip grooves, 1.2 in tall, 1.5 in diameter."}
+{"id": "d8ce710a942c525ba1f1", "set": "heldout", "family": "knob", "vague": false, "text": "Generate a volume knob 4 cm diameter, 2 cm tall, 17 grip grooves, domed top, with a shaft hole."}
+{"id": "a16a13b5cb3aa81a9266", "set": "heldout", "family": "knob", "vague": false, "text": "Design a volume knob 0.95 in diameter, 0.85 in tall, 13 grip grooves, domed top, with a shaft hole."}
+{"id": "c26aff4011ba35de6fe0", "set": "heldout", "family": "knob", "vague": false, "text": "Please model a volume knob 7 cm diameter, 1.1 cm tall, 23 grip grooves, domed top, with a shaft hole."}
+{"id": "c1992f7f0c8ee8ae26bc", "set": "heldout", "family": "knob", "vague": false, "text": "I need a control knob 35 mm diameter, 31 mm tall, 37 grip grooves, domed top, with a shaft hole."}
+{"id": "c99fc6b4607341830f57", "set": "heldout", "family": "knob", "vague": true, "text": "CAD model of a small volume knob domed top, with a shaft hole."}
+{"id": "bfa5ce9de97dd7c7955c", "set": "heldout", "family": "knob", "vague": false, "text": "Please model a control knob 1 in diameter, 18 grip grooves, domed top, with a shaft hole, 1.1 in tall."}
+{"id": "589bedde0ce64f1b36cf", "set": "heldout", "family": "knob", "vague": false, "text": "CAD model of a grip knob domed top, with a shaft hole, 3.6 cm diameter, 1.3 cm tall, 30 grip grooves."}
+{"id": "9fa6ecbf8a320b6250ec", "set": "heldout", "family": "knob", "vague": false, "text": "CAD model of a knurled knob 2.65 in diameter, 30 grip grooves, domed top, with a shaft hole, 0.65 in tall."}
+{"id": "be02e6f45274ccdfb8b0", "set": "heldout", "family": "knob", "vague": false, "text": "Please model a volume knob 15 mm tall, 26 grip grooves, domed top, with a shaft hole, 28 mm diameter."}
+{"id": "23001b40c8761163fb08", "set": "heldout", "family": "knob", "vague": false, "text": "Design a control knob 15 grip grooves, 71 mm diameter, 46 mm tall, domed top, with a shaft hole."}
+{"id": "2a8880f5d09dc4000b12", "set": "heldout", "family": "knob", "vague": false, "text": "CAD model of a grip knob 1 in diameter, domed top, with a shaft hole, 20 grip grooves, 0.8 in tall. Dimensions in inches."}
+{"id": "62b54972e0a054e7118e", "set": "heldout", "family": "knob", "vague": true, "text": "Draw up a mini grip knob domed top, with a shaft hole."}
+{"id": "266c27c2369cc0d71aed", "set": "heldout", "family": "knob", "vague": false, "text": "I need a grip knob domed top, with a shaft hole, 22 mm tall, 20 mm diameter, 33 grip grooves."}
+{"id": "f661b1675e5803a3a77e", "set": "heldout", "family": "knob", "vague": false, "text": "Please model a knurled knob 1.45 in diameter, 1.55 in tall, 35 grip grooves, domed top, with a shaft hole."}
+{"id": "4e7a5d1f0077d87d4c3a", "set": "heldout", "family": "knob", "vague": false, "text": "Model a grip knob 7.8 cm diameter, 3.5 cm tall, 36 grip grooves, domed top, with a shaft hole."}
+{"id": "0b0a1bd95f20fea71c31", "set": "heldout", "family": "knob", "vague": false, "text": "Make a control knob 57 mm diameter, 32 mm tall, 13 grip grooves, domed top, with a shaft hole."}
+{"id": "bc4e3c0a831f6e0de46c", "set": "heldout", "family": "knob", "vague": false, "text": "Create a knurled knob 31 grip grooves, 3.6 cm tall, 2.9 cm diameter, domed top, with a shaft hole. All dimensions in cm."}
+{"id": "e144373375311149e615", "set": "heldout", "family": "knob", "vague": false, "text": "Make a control knob 29 mm tall, domed top, with a shaft hole, 78 mm diameter, 20 grip grooves."}
+{"id": "8e7a887023ed11e475a8", "set": "heldout", "family": "knob", "vague": true, "text": "Create a standard control knob domed top, with a shaft hole."}
+{"id": "4e85fc792f667bcbc9dc", "set": "heldout", "family": "knob", "vague": false, "text": "Model a knurled knob 52 mm diameter, 24 mm tall, 23 grip grooves, domed top, with a shaft hole."}
+{"id": "5011b6755594fa926c9d", "set": "heldout", "family": "knob", "vague": false, "text": "Design a grip knob 79 mm diameter, 43 mm tall, 12 grip grooves, domed top, with a shaft hole."}
+{"id": "16f551ad5c79691fe536", "set": "heldout", "family": "knob", "vague": false, "text": "Design a volume knob 1.75 in tall, 3.1 in diameter, domed top, with a shaft hole, 21 grip grooves."}
+{"id": "209384b892f48c7c6d04", "set": "heldout", "family": "knob", "vague": false, "text": "Create a control knob 33 mm tall, 27 grip grooves, 47 mm diameter, domed top, with a shaft hole. All dimensions in mm."}
+{"id": "9f2ac86f6aa5d233a0bd", "set": "heldout", "family": "knob", "vague": false, "text": "I need a control knob 0.55 in tall, 1.55 in diameter, domed top, with a shaft hole, 14 grip grooves."}
+{"id": "7f31a70a23784aab5a29", "set": "heldout", "family": "knob", "vague": false, "text": "Draw up a knurled knob 31 mm diameter, 18.5 mm tall, 32 grip grooves, domed top, with a shaft hole."}
+{"id": "ef42b074f6db4172cdf6", "set": "heldout", "family": "knob", "vague": true, "text": "Model a big control knob domed top, with a shaft hole."}
+{"id": "8cd1ecb8cac06c0a60e3", "set": "heldout", "family": "knob", "vague": false, "text": "Please model a grip knob 27 mm tall, 29 grip grooves, 24 mm diameter, domed top, with a shaft hole."}
+{"id": "022c1d31f9f11bcacc81", "set": "heldout", "family": "knob", "vague": false, "text": "Create a knurled knob 75 mm diameter, 45 mm tall, 38 grip grooves, domed top, with a shaft hole."}
+{"id": "76d82f18890ba95026fb", "set": "heldout", "family": "knob", "vague": false, "text": "I need a control knob 7.7 cm diameter, 3 cm tall, 29 grip grooves, domed top, with a shaft hole."}
+{"id": "f40eec195282732a7dd0", "set": "heldout", "family": "knob", "vague": false, "text": "Draw up a control knob 21 mm diameter, 29 grip grooves, 12 mm tall, domed top, with a shaft hole."}
+{"id": "f56cb0500cd7843c5b89", "set": "heldout", "family": "knob", "vague": false, "text": "Create a knurled knob 45 mm tall, 63 mm diameter, domed top, with a shaft hole, 29 grip grooves."}
+{"id": "f726d5103729884a9048", "set": "heldout", "family": "knob", "vague": false, "text": "Build a grip knob 24 mm diameter, 15 mm tall, 28 grip grooves, domed top, with a shaft hole."}
+{"id": "2174db780345b1760d8f", "set": "heldout", "family": "knob", "vague": true, "text": "CAD model of an oversized grip knob domed top, with a shaft hole."}
+{"id": "f180c324d3fe667d4c88", "set": "heldout", "family": "knob", "vague": false, "text": "Model a volume knob 39 mm diameter, 13.5 mm tall, 31 grip grooves, domed top, with a shaft hole."}
+{"id": "c9fe971989c5cc85c224", "set": "heldout", "family": "knob", "vague": false, "text": "Make a knurled knob 1.15 in diameter, 0.75 in tall, domed top, with a shaft hole, 34 grip grooves."}
+{"id": "c34c7b77abca700e5d16", "set": "heldout", "family": "knob", "vague": false, "text": "I need a knurled knob 36 grip grooves, domed top, with a shaft hole, 22 mm tall, 30 mm diameter."}
+{"id": "e22d581bd26ed5a2d781", "set": "heldout", "family": "knob", "vague": false, "text": "A control knob 34 grip grooves, 55 mm diameter, domed top, with a shaft hole, 21 mm tall."}
+{"id": "fc95a5eefa7360f2d695", "set": "heldout", "family": "knob", "vague": false, "text": "Design a volume knob 56 mm diameter, 15.5 mm tall, 33 grip grooves, domed top, with a shaft hole."}
+{"id": "2bf7c55945dcb9e51b12", "set": "heldout", "family": "knob", "vague": false, "text": "CAD model of a grip knob 29 mm tall, 24 grip grooves, domed top, with a shaft hole, 64 mm diameter."}
+{"id": "368f357082910b611ac6", "set": "heldout", "family": "knob", "vague": true, "text": "An oversized knurled knob domed top, with a shaft hole."}
+{"id": "17b67e51fde843f7829c", "set": "heldout", "family": "knob", "vague": false, "text": "Design a knurled knob 1.2 in diameter, 1.75 in tall, 14 grip grooves, domed top, with a shaft hole."}
+{"id": "2348324d01cd74140f4d", "set": "heldout", "family": "knob", "vague": false, "text": "Design a volume knob 5.4 cm diameter, 1.7 cm tall, 37 grip grooves, domed top, with a shaft hole."}
+{"id": "3b3c0d58ab1fdd623183", "set": "heldout", "family": "knob", "vague": false, "text": "Create a knurled knob 25 mm diameter, 14 mm tall, 19 grip grooves, domed top, with a shaft hole."}
+{"id": "32d756b33368998b0185", "set": "heldout", "family": "knob", "vague": false, "text": "Generate a volume knob 23 grip grooves, 1.9 in tall, domed top, with a shaft hole, 1.5 in diameter."}
+{"id": "12998e9f0a45c3699093", "set": "heldout", "family": "knob", "vague": false, "text": "Model a knurled knob 34 grip grooves, 1.55 in tall, 1.95 in diameter, domed top, with a shaft hole."}
+{"id": "19b1d7bbf4631236bf77", "set": "heldout", "family": "knob", "vague": false, "text": "Draw up a grip knob 33 mm diameter, 28 mm tall, 32 grip grooves, domed top, with a shaft hole. All dimensions in mm."}
+{"id": "b1b45749a9e01980aa53", "set": "heldout", "family": "knob", "vague": true, "text": "Please model a standard control knob domed top, with a shaft hole."}
+{"id": "8ba43b2ff40f45a25dc7", "set": "heldout", "family": "knob", "vague": false, "text": "Model a control knob 50 mm diameter, 40 mm tall, 12 grip grooves, domed top, with a shaft hole."}
+{"id": "71e08ca1d957142f8ea4", "set": "heldout", "family": "knob", "vague": false, "text": "Design a knurled knob domed top, with a shaft hole, 32 grip grooves, 33 mm tall, 74 mm diameter."}
+{"id": "39f1edd7d52837e20c57", "set": "heldout", "family": "knob", "vague": false, "text": "CAD model of a control knob 7.4 cm diameter, 4.5 cm tall, 18 grip grooves, domed top, with a shaft hole."}
+{"id": "e299bc117ed6353ff1f3", "set": "heldout", "family": "knob", "vague": false, "text": "A volume knob domed top, with a shaft hole, 25 grip grooves, 54 mm diameter, 29 mm tall."}
+{"id": "3527bc0700708aa10ea4", "set": "heldout", "family": "knob", "vague": false, "text": "Build a volume knob 46 mm diameter, 45 mm tall, 23 grip grooves, domed top, with a shaft hole."}
+{"id": "a91ed855d66f701b3267", "set": "heldout", "family": "knob", "vague": false, "text": "Please model a volume knob 2.9 cm diameter, 3 cm tall, 31 grip grooves, domed top, with a shaft hole."}
+{"id": "ec077ea57910f74b41ba", "set": "heldout", "family": "knob", "vague": false, "text": "Draw up a volume knob 31 mm diameter, 29 mm tall, 39 grip grooves, domed top, with a shaft hole."}
+{"id": "dadfc271beb3399038b7", "set": "heldout", "family": "knob", "vague": false, "text": "A grip knob 2 cm diameter, 4.6 cm tall, 31 grip grooves, domed top, with a shaft hole."}
+{"id": "7b9b51e78f50b0539f30", "set": "heldout", "family": "knob", "vague": false, "text": "Generate a knurled knob domed top, with a shaft hole, 3.2 cm tall, 6.4 cm diameter, 23 grip grooves. All dimensions in cm."}
+{"id": "f94acc67db5130b761bb", "set": "heldout", "family": "knob", "vague": false, "text": "Draw up a knurled knob 0.65 in diameter, 25 grip grooves, domed top, with a shaft hole, 0.95 in tall."}
+{"id": "457bb9b144855f456a8c", "set": "heldout", "family": "knob", "vague": false, "text": "Make a grip knob 29 grip grooves, domed top, with a shaft hole, 19 mm diameter, 23 mm tall. All dimensions in mm."}
+{"id": "2a00a1be8ef0ad4a194b", "set": "heldout", "family": "knob", "vague": false, "text": "Create a grip knob 45 mm diameter, 38 mm tall, domed top, with a shaft hole, 29 grip grooves."}
+{"id": "76745c58ff4da6178e7a", "set": "heldout", "family": "knob", "vague": true, "text": "Make a little knurled knob domed top, with a shaft hole."}
+{"id": "ec9d73258ae9cd777f01", "set": "heldout", "family": "knob", "vague": false, "text": "Model a volume knob domed top, with a shaft hole, 43 mm tall, 54 mm diameter, 23 grip grooves."}
+{"id": "bc8d325a138787617a5d", "set": "heldout", "family": "knob", "vague": false, "text": "CAD model of a control knob domed top, with a shaft hole, 10.5 mm tall, 37 grip grooves, 70 mm diameter."}
+{"id": "62ab95d451ca02315e22", "set": "heldout", "family": "knob", "vague": false, "text": "Model a volume knob 1.85 in diameter, 1.9 in tall, 35 grip grooves, domed top, with a shaft hole."}
+{"id": "399fbb9309688c235759", "set": "heldout", "family": "knob", "vague": false, "text": "I need a grip knob 46 mm diameter, 16.5 mm tall, 40 grip grooves, domed top, with a shaft hole."}
+{"id": "9f43078e392c3dd97676", "set": "heldout", "family": "knob", "vague": false, "text": "Design a control knob 16 mm diameter, 50 mm tall, 28 grip grooves, domed top, with a shaft hole."}
+{"id": "8a2ca26bc3f0b7c2ecad", "set": "heldout", "family": "knob", "vague": false, "text": "A grip knob 23 mm diameter, 16 mm tall, 15 grip grooves, domed top, with a shaft hole."}
+{"id": "b032dae781993e501cd0", "set": "heldout", "family": "knob", "vague": true, "text": "Build a mini volume knob domed top, with a shaft hole."}
+{"id": "4319bb4920d62d6a36cd", "set": "heldout", "family": "knob", "vague": false, "text": "A grip knob 2.3 cm diameter, 2.2 cm tall, 30 grip grooves, domed top, with a shaft hole. All dimensions in cm."}
+{"id": "41f6fc1bceda9b00cc6a", "set": "heldout", "family": "knob", "vague": false, "text": "I need a knurled knob 3.6 cm diameter, 2.1 cm tall, 16 grip grooves, domed top, with a shaft hole."}
+{"id": "ec882bed5296609a399a", "set": "heldout", "family": "knob", "vague": false, "text": "Generate a grip knob 49 mm tall, domed top, with a shaft hole, 65 mm diameter, 31 grip grooves."}
+{"id": "186c2569c28aebe2b144", "set": "heldout", "family": "knob", "vague": false, "text": "CAD model of a control knob 26 grip grooves, 36 mm diameter, domed top, with a shaft hole, 23 mm tall."}
+{"id": "6feb25ace5533eba5817", "set": "heldout", "family": "knob", "vague": false, "text": "CAD model of a grip knob 0.75 in diameter, 1.45 in tall, 20 grip grooves, domed top, with a shaft hole. Dimensions in inches."}
+{"id": "4fccbf5dbe9df6e02a97", "set": "heldout", "family": "knob", "vague": false, "text": "A volume knob domed top, with a shaft hole, 28 grip grooves, 30 mm tall, 28 mm diameter."}
+{"id": "f6eb7c97b9cf38ea1a07", "set": "heldout", "family": "knob", "vague": true, "text": "Draw up a compact knurled knob domed top, with a shaft hole."}
+{"id": "5ce47e8cbd70db3ed39c", "set": "heldout", "family": "knob", "vague": false, "text": "Build a control knob 5.6 cm diameter, 3 cm tall, 25 grip grooves, domed top, with a shaft hole."}
+{"id": "7ba933fd5d302da6cd91", "set": "heldout", "family": "knob", "vague": false, "text": "Make a control knob 72 mm diameter, 25 mm tall, 30 grip grooves, domed top, with a shaft hole. All dimensions in mm."}
+{"id": "00fd4584621d00cf2aaf", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Make a quarter bend 9.8 cm OD, bend radius 25.8 cm, 6.3 cm ID."}
+{"id": "4bc19e101a2cf66b8e2e", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Design an elbow fitting 12 cm OD, bend radius 24.3 cm, 4.7 cm ID."}
+{"id": "9b5d543b44930d1c25c4", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "I need a 90 degree pipe elbow 126 mm OD, 87 mm ID, bend radius 282 mm."}
+{"id": "da24ed548b9ff49be893", "set": "heldout", "family": "pipe_elbow", "vague": true, "text": "Draw up a regular quarter bend."}
+{"id": "5ffe80e836aaa41c5fac", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Model a 90 degree pipe elbow bend radius 7 in, 4.25 in ID, 5.5 in OD. Dimensions in inches."}
+{"id": "7ddebbce900e94a6d861", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Generate a pipe bend bend radius 9.95 in, 0.5 in ID, 4.2 in OD."}
+{"id": "ef278b17d1fa31fa8c04", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Generate a 90 degree pipe elbow 16.5 mm ID, 31 mm OD, bend radius 51 mm."}
+{"id": "9ec7924f7dab2c49dcb7", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Create a 90 degree pipe elbow 2 in OD, 0.55 in ID, bend radius 5.7 in."}
+{"id": "871afbd1c692e669eb65", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Create an elbow fitting 80 mm OD, 31 mm ID, bend radius 166 mm."}
+{"id": "3c8d48724e81a4b9c09c", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "An elbow fitting 30 mm OD, 9.5 mm ID, bend radius 41 mm."}
+{"id": "5e62be3a513bf1189571", "set": "heldout", "family": "pipe_elbow", "vague": true, "text": "Generate a 90 degree pipe elbow."}
+{"id": "0224bfed7268e0b6455e", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Model a 90 degree pipe elbow 137 mm OD, 85 mm ID, bend radius 246 mm. All dimensions in mm."}
+{"id": "dda0b0c640fd51c22d36", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Please model a quarter bend 35 mm OD, 24 mm ID, bend radius 64 mm."}
+{"id": "5448762dd4fcc034888e", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Build an elbow fitting 14.5 cm OD, 4 cm ID, bend radius 42.5 cm."}
+{"id": "e303a3416cdb0e5d1044", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "CAD model of a quarter bend 101 mm OD, 30 mm ID, bend radius 226 mm."}
+{"id": "ed90c554893150ce1561", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Please model a 90 degree pipe elbow 2.5 cm ID, bend radius 4.6 cm, 3 cm OD. All dimensions in cm."}
+{"id": "33a852d07f10477ae5b0", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Please model a 90 degree pipe elbow 54 mm ID, bend radius 209 mm, 74 mm OD."}
+{"id": "a0d9439cc2a1455aa488", "set": "heldout", "family": "pipe_elbow", "vague": true, "text": "Make a little pipe bend."}
+{"id": "fae4945df8141d4e7414", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "I need a quarter bend 20 mm OD, 11 mm ID, bend radius 24 mm."}
+{"id": "8d30b2ca276b30477ed0", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "CAD model of an elbow fitting 66 mm ID, 144 mm OD, bend radius 170 mm."}
+{"id": "7e635eba80869cc7a481", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Generate a pipe bend 1.6 in ID, bend radius 11.05 in, 3.85 in OD."}
+{"id": "54e8231e85cba1b2a1c5", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Draw up a quarter bend 6.7 cm OD, 5.2 cm ID, bend radius 13.6 cm."}
+{"id": "6c5b8ea9cb05fed371ea", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Build a pipe bend 127 mm OD, bend radius 156 mm, 85 mm ID."}
+{"id": "d85f682e220bbc090ade", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Create a pipe bend 100 mm OD, 8.5 mm ID, bend radius 236 mm."}
+{"id": "cff89781e39fd16bebf0", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Design an elbow fitting 10.8 cm OD, 8.3 cm ID, bend radius 15.2 cm."}
+{"id": "d35a7d428f88dc4fd203", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "A quarter bend 5.15 in OD, 2.3 in ID, bend radius 9.2 in."}
+{"id": "ed4a7e80836d358745de", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Build a pipe bend 47 mm OD, 14.5 mm ID, bend radius 83 mm."}
+{"id": "065beb9d970f2614cf07", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "I need a quarter bend 101 mm OD, 45 mm ID, bend radius 146 mm."}
+{"id": "a0f007348bc88a826e55", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "A 90 degree pipe elbow 0.8 cm ID, 8.2 cm OD, bend radius 12.8 cm."}
+{"id": "6a5e048bfc06fd800af2", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Generate a quarter bend 116 mm OD, 83 mm ID, bend radius 124 mm."}
+{"id": "b3de562757eb1898c3bd", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Build a quarter bend 35 mm OD, bend radius 36 mm, 27 mm ID."}
+{"id": "cba9a41768c7007f5b70", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "CAD model of an elbow fitting 98 mm OD, 22 mm ID, bend radius 214 mm."}
+{"id": "5aae157e62918b9b03c6", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Please model a quarter bend 65 mm OD, 34 mm ID, bend radius 108 mm."}
+{"id": "305079f688937740c7ff", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Build a pipe bend 69 mm OD, 32 mm ID, bend radius 197 mm. All dimensions in mm."}
+{"id": "41aa20f9e59f88fe5ba2", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Build an elbow fitting 13.6 cm OD, 2.1 cm ID, bend radius 22.3 cm."}
+{"id": "81a903338f7400c445b6", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "CAD model of a 90 degree pipe elbow bend radius 68 mm, 29 mm OD, 24 mm ID. All dimensions in mm."}
+{"id": "4e78f2b7bf2f124a253d", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "I need a 90 degree pipe elbow 3.3 cm OD, 1.5 cm ID, bend radius 3.4 cm."}
+{"id": "81ce50dd6cefee257b30", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Design a pipe bend 34 mm OD, 14 mm ID, bend radius 39 mm. All dimensions in mm."}
+{"id": "f9d683eef1a29d254c47", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Draw up a pipe bend 34 mm OD, 12.5 mm ID, bend radius 71 mm."}
+{"id": "d6fc2dd5298983cddd99", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Draw up a pipe bend bend radius 19.9 cm, 2.8 cm ID, 13.7 cm OD."}
+{"id": "d3b5027d57e65f1ff26b", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Please model a 90 degree pipe elbow 45 mm ID, 57 mm OD, bend radius 98 mm."}
+{"id": "4df1b51e1225424639f2", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Generate a 90 degree pipe elbow bend radius 135 mm, 28 mm ID, 82 mm OD. All dimensions in mm."}
+{"id": "c31c300bd8837a083d05", "set": "heldout", "family": "pipe_elbow", "vague": true, "text": "Model a mini elbow fitting."}
+{"id": "af9da661f6c5c84175be", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Model a quarter bend bend radius 35 mm, 16 mm ID, 21 mm OD."}
+{"id": "c4791ed5c5e712e5b76e", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Draw up a pipe bend 80 mm OD, 53 mm ID, bend radius 138 mm."}
+{"id": "79cd925c5eb900b58d7c", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Create a quarter bend 7.6 cm OD, bend radius 13.5 cm, 1.9 cm ID."}
+{"id": "4364db0b8cea39e189c3", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Please model a pipe bend 1.45 in ID, bend radius 3.8 in, 2.7 in OD."}
+{"id": "5582514abd073ef32a1c", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Build a 90 degree pipe elbow bend radius 217 mm, 75 mm OD, 53 mm ID."}
+{"id": "a32357dabbb644a03afa", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Draw up an elbow fitting bend radius 46 mm, 41 mm OD, 32 mm ID."}
+{"id": "5d7b1654e5ebc709148b", "set": "heldout", "family": "pipe_elbow", "vague": true, "text": "Design a medium pipe bend."}
+{"id": "cbc23da1d4677617db2a", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Make a quarter bend 4.6 in OD, 0.8 in ID, bend radius 13.75 in."}
+{"id": "fec798a483f4f5d34472", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Create a pipe bend 108 mm OD, 47 mm ID, bend radius 265 mm."}
+{"id": "b51e2438c4fdec171bcc", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "I need a 90 degree pipe elbow 14.1 cm OD, 8.1 cm ID, bend radius 28.4 cm."}
+{"id": "f9842a96f1c04a6ff59a", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Design a quarter bend 1 in OD, bend radius 1.85 in, 0.4 in ID."}
+{"id": "a7088a6f70eba7a07e37", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Model an elbow fitting 114 mm OD, 74 mm ID, bend radius 195 mm."}
+{"id": "509b68f7ec024eaf6648", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Design a 90 degree pipe elbow 4.45 in OD, 0.9 in ID, bend radius 12.6 in."}
+{"id": "9451513945c416f27152", "set": "heldout", "family": "pipe_elbow", "vague": true, "text": "Please model a small 90 degree pipe elbow."}
+{"id": "d600b26b2079e07ea0bd", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Please model a quarter bend 13 mm ID, 18 mm OD, bend radius 51 mm."}
+{"id": "21f4c6296bb7c65b66a9", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Generate a pipe bend 96 mm OD, 41 mm ID, bend radius 218 mm."}
+{"id": "e2bfd856c222b9b84286", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "I need a 90 degree pipe elbow 143 mm OD, 84 mm ID, bend radius 178 mm."}
+{"id": "5e0ed450df36be831e56", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "I need a 90 degree pipe elbow 81 mm OD, 12.5 mm ID, bend radius 154 mm."}
+{"id": "d5a68348c62988fee72c", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Generate an elbow fitting 36 mm OD, 25 mm ID, bend radius 106 mm."}
+{"id": "747359713cf2f7c1cda0", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "CAD model of a pipe bend 126 mm OD, 13.5 mm ID, bend radius 278 mm."}
+{"id": "b3de0f885542fe8f237a", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Design a pipe bend bend radius 239 mm, 39 mm ID, 89 mm OD."}
+{"id": "ce75dde24b998213934a", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "I need a 90 degree pipe elbow 74 mm OD, 22 mm ID, bend radius 107 mm."}
+{"id": "b0d90e7e2e63b2a9fffb", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Design a quarter bend 101 mm OD, 37 mm ID, bend radius 235 mm."}
+{"id": "568302b849e49e6a1af4", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Generate a quarter bend 96 mm OD, 65 mm ID, bend radius 180 mm."}
+{"id": "c4624a2ffd7afd8965c0", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Design an elbow fitting 32 mm OD, bend radius 41 mm, 19.5 mm ID."}
+{"id": "eed88e47e782a004beda", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Draw up a 90 degree pipe elbow 118 mm OD, 67 mm ID, bend radius 146 mm."}
+{"id": "54b8b388d64b5a4f25e7", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "A pipe bend bend radius 1.8 in, 0.35 in ID, 0.6 in OD."}
+{"id": "f5ef8bfb5a69d1308af3", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Model a 90 degree pipe elbow 4.4 in OD, 1.05 in ID, bend radius 11.2 in."}
+{"id": "47dbef56232b20a5666d", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "A quarter bend 23 mm ID, 57 mm OD, bend radius 59 mm."}
+{"id": "4b13e02a8576423ab27c", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "I need a quarter bend 87 mm OD, 67 mm ID, bend radius 149 mm."}
+{"id": "b949b3da9644ba2de0da", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "I need a 90 degree pipe elbow 1.7 in ID, bend radius 8.15 in, 3 in OD."}
+{"id": "d74262f887135262520c", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Design a quarter bend 40 mm ID, 124 mm OD, bend radius 227 mm."}
+{"id": "85279f4355074e4d7516", "set": "heldout", "family": "pipe_elbow", "vague": true, "text": "Make a little quarter bend."}
+{"id": "04ec46f3917bf916c91c", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Model a quarter bend bend radius 22.4 cm, 9.5 cm OD, 1.3 cm ID."}
+{"id": "63ce5e4c30b160647196", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Generate an elbow fitting 132 mm OD, 84 mm ID, bend radius 286 mm. All dimensions in mm."}
+{"id": "81fdfb19a92290fcc0d8", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Design a 90 degree pipe elbow 31 mm ID, bend radius 175 mm, 72 mm OD."}
+{"id": "76caeb3fdd869353ae8f", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "CAD model of an elbow fitting 99 mm OD, 16 mm ID, bend radius 268 mm."}
+{"id": "4d788558bbea5dd79a59", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Please model a 90 degree pipe elbow 8.7 cm OD, 3.8 cm ID, bend radius 21.5 cm."}
+{"id": "2318bef1886677511e4b", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "Model a quarter bend bend radius 256 mm, 113 mm OD, 79 mm ID."}
+{"id": "2dbc29c22c26d59de5b3", "set": "heldout", "family": "pipe_elbow", "vague": true, "text": "Generate a little pipe bend."}
+{"id": "2c59fc1a9b41e7d22f8d", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "I need a pipe bend 1.2 in OD, 1 in ID, bend radius 3.3 in."}
+{"id": "d7a7a5fb3d0bfee232c0", "set": "heldout", "family": "pipe_elbow", "vague": false, "text": "A quarter bend 33 mm OD, 22 mm ID, bend radius 76 mm. All dimensions in mm."}

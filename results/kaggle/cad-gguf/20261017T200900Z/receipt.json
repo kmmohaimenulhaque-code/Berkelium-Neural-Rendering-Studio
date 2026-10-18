@@ -1,0 +1,93 @@
+{
+  "local": {
+    "job": "cad-gguf",
+    "run_id": "20261017T200900Z",
+    "kernel": "kmmohaimenulhaque/berkelium-cad-gguf",
+    "accelerator": "NvidiaTeslaT4",
+    "spec": "configs/kaggle/cad_gguf.json",
+    "spec_sha256": "fe3f0a5963b1989d3659cdfd5f276d6bb07eaa1c8f8bd112df842ef1afd54a13",
+    "bundle_sha256": "4d512cfaf3738bfbab698cc6c61d790531550d657fcec05a5ab341fab1563343",
+    "bundle_bytes": 1795,
+    "bundle_files": 3,
+    "data": null,
+    "git": {
+      "commit": "fecc73abf0d55585b2202b0e3cfc77d6f74395da",
+      "branch": "Berkelium-Neural-Rendering-Studio-neural-v1",
+      "dirty_files": 8
+    },
+    "pushed_at": "2026-10-17T20:09:04Z",
+    "status": "pushed",
+    "push_response": "Kernel version 1 successfully pushed.  Please check progress at https://www.kaggle.com/code/kmmohaimenulhaque/berkelium-cad-gguf",
+    "verification": {
+      "files": 0,
+      "verified": 0,
+      "problems": [],
+      "bytes": 0
+    }
+  },
+  "remote": {
+    "job": "cad-gguf",
+    "run_id": "20261017T200900Z",
+    "started_at": "2026-10-17T20:09:19Z",
+    "bundle_sha256_expected": "4d512cfaf3738bfbab698cc6c61d790531550d657fcec05a5ab341fab1563343",
+    "steps": [
+      {
+        "name": "deps",
+        "seconds": 6.4,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "pip install -q transformers==5.16.1 peft==0.18.0 accelerate==1.14.0 safetensors==0.8.0 huggingface_hub==1.29.0",
+            "rc": 0,
+            "log": "logs/00_deps.log",
+            "tail": "   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 556.4/556.4 kB 16.9 MB/s eta 0:00:00\n"
+          }
+        ]
+      },
+      {
+        "name": "inputs",
+        "seconds": 3.1,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "python scripts/cad_fetch_inputs.py",
+            "rc": 0,
+            "log": "logs/01_inputs.log",
+            "tail": "{\n \"placed\": {\n  \"exports/qwen3-8b-cad-v1/adapter/README.md\": \"0e0823d2434cbad0\",\n  \"exports/qwen3-8b-cad-v1/adapter/adapter_config.json\": \"d8d0c7a25b7816fe\",\n  \"exports/qwen3-8b-cad-v1/adapter/adapter_model.safetensors\": \"c76b64ee3ab08fb5\",\n  \"exports/qwen3-8b-cad-v1/adapter/chat_template.jinja\": \"a55ee1b1660128b7\",\n  \"exports/qwen3-8b-cad-v1/adapter/tokenizer.json\": \"be75606093db2094\",\n  \"exports/qwen3-8b-cad-v1/adapter/tokenizer_config.json\": \"04b1682c59acbd05\",\n  \"exports/qwen3-8b-cad-v1/run_manifest.json\": \"1033e35caf859b89\"\n },\n \"bad\": []\n}\n"
+          }
+        ]
+      },
+      {
+        "name": "gguf",
+        "seconds": 369.0,
+        "ok": false,
+        "commands": [
+          {
+            "cmd": "bash scripts/cad_gguf.sh",
+            "rc": 1,
+            "log": "logs/02_gguf.log",
+            "tail": "uf.py\", line 312, in <module>\n    main()\n    ~~~~^^\n  File \"/tmp/gguf_work/llama.cpp/convert_hf_to_gguf.py\", line 306, in main\n    model_instance.write()\n    ~~~~~~~~~~~~~~~~~~~~^^\n  File \"/tmp/gguf_work/llama.cpp/conversion/base.py\", line 1401, in write\n    self.prepare_metadata(vocab_only=False)\n    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\n  File \"/tmp/gguf_work/llama.cpp/conversion/base.py\", line 1603, in prepare_metadata\n    self.set_vocab()\n    ~~~~~~~~~~~~~~^^\n  File \"/tmp/gguf_work/llama.cpp/conversion/qwen.py\", line 210, in set_vocab\n    super().set_vocab()\n    ~~~~~~~~~~~~~~~~~^^\n  File \"/tmp/gguf_work/llama.cpp/conversion/qwen.py\", line 65, in set_vocab\n    self._set_vocab_gpt2()\n    ~~~~~~~~~~~~~~~~~~~~^^\n  File \"/tmp/gguf_work/llama.cpp/conversion/base.py\", line 2153, in _set_vocab_gpt2\n    tokens, toktypes, tokpre = self.get_vocab_base()\n                               ~~~~~~~~~~~~~~~~~~~^^\n  File \"/tmp/gguf_work/llama.cpp/conversion/base.py\", line 1759, in get_vocab_base\n    tokenizer = AutoTokenizer.from_pretrained(self.dir_model)\n  File \"/usr/local/lib/python3.13/dist-packages/transformers/models/auto/tokenization_auto.py\", line 1156, in from_pretrained\n    return tokenizer_class.from_pretrained(pretrained_model_name_or_path, *inputs, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.13/dist-packages/transformers/tokenization_utils_base.py\", line 2113, in from_pretrained\n    return cls._from_pretrained(\n           ~~~~~~~~~~~~~~~~~~~~^\n        resolved_vocab_files,\n        ^^^^^^^^^^^^^^^^^^^^^\n    ...<9 lines>...\n        **kwargs,\n        ^^^^^^^^^\n    )\n    ^\n  File \"/usr/local/lib/python3.13/dist-packages/transformers/tokenization_utils_base.py\", line 2359, in _from_pretrained\n    tokenizer = cls(*init_inputs, **init_kwargs)\n  File \"/usr/local/lib/python3.13/dist-packages/transformers/models/qwen2/tokenization_qwen2_fast.py\", line 120, in __init__\n    super().__init__(\n    ~~~~~~~~~~~~~~~~^\n        vocab_file=vocab_file,\n        ^^^^^^^^^^^^^^^^^^^^^^\n    ...<6 lines>...\n        **kwargs,\n        ^^^^^^^^^\n    )\n    ^\n  File \"/usr/local/lib/python3.13/dist-packages/transformers/tokenization_utils_fast.py\", line 178, in __init__\n    super().__init__(**kwargs)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^\n  File \"/usr/local/lib/python3.13/dist-packages/transformers/tokenization_utils_base.py\", line 1472, in __init__\n    self._set_model_specific_special_tokens(special_tokens=self.extra_special_tokens)\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.13/dist-packages/transformers/tokenization_utils_base.py\", line 1210, in _set_model_specific_special_tokens\n    self.SPECIAL_TOKENS_ATTRIBUTES = self.SPECIAL_TOKENS_ATTRIBUTES + list(special_tokens.keys())\n                                                                           ^^^^^^^^^^^^^^^^^^^\nAttributeError: 'list' object has no attribute 'keys'\n"
+          }
+        ]
+      }
+    ],
+    "status": "failed",
+    "bundle_sha256": "4d512cfaf3738bfbab698cc6c61d790531550d657fcec05a5ab341fab1563343",
+    "environment": {
+      "python": "3.13.15",
+      "host": "2af776b87895",
+      "nvidia_smi": "",
+      "torch": "2.11.0+cpu None 0",
+      "disk_free_gb": {
+        "/kaggle/working": 20.9,
+        "/tmp": 1148.8
+      },
+      "mem_total_mib": 32099,
+      "cpu_count": 4
+    },
+    "failed_step": "gguf",
+    "finished_at": "2026-10-17T20:15:43Z",
+    "outputs": 0
+  },
+  "manifest": {}
+}

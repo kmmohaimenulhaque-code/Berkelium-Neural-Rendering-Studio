@@ -785,3 +785,34 @@ design compiler → Berkelium core) and **CadQuery** (Qwen3-32B → sandboxed Ca
 splat-rendered (AMD gsplat on ROCm, reference renderer on CPU). Models live on Hugging Face (`Mhaquehaque/berkelium-qwen3-8b-cad-v1[-GGUF]`,
 `Mhaquehaque/berkelium-qwen3-32b-cadquery-v1[-merged|-GGUF]`). Both are opt-in: the 8B is evaluated (strong on trained part families, weak on unseen ones) and
 the 32B is **not evaluated and non-commercial**. Setup, demo steps and evidence: `HANDOFF.md`, `NEURAL_RENDERING_DECISIONS.md`, `results/`.
+
+## Achievements (October 2026)
+
+**Text → engineering CAD → Gaussian splats, end to end in Studio.** Type a request in Scene → Generate. A fine-tuned LLM writes
+a parametric design, the deterministic Berkelium core builds and validates exact geometry (OCCT STEP / Manifold mesh), and
+Studio fits Gaussians and splat-renders the result in the viewport. The model only proposes; every measurement and verdict
+comes from deterministic code.
+
+| What | Result | Evidence |
+|---|---|---|
+| **BerkeliumGPT-8B** (Qwen3-8B + LoRA, trained on 2× Kaggle T4) | Held-out prompts for its 33 trained part families: **99.8 %** of designs build, **99.7 %** meet every stated size, IoU **0.94**. Base Qwen3-8B: **0 %**. Spur gears 14/14. Unseen object kinds: 49 % build, so it ships **opt-in** (pre-registered rule D-033) | `results/cad/E-C1/E-C1.report.md` |
+| **BerkeliumGPT-32B CadQuery** (Qwen3-32B + LoRA r=64, AMD MI300X, Unsloth/ROCm) | One full epoch (2,780 steps) on **121k sandbox-verified text→CadQuery rows**. Writes CadQuery Python that runs in a locked-down sandbox → STEP → core. **Not evaluated yet; non-commercial** (CAD-Recode CC-BY-NC data) | `1AMmi300x.md`, `results/cadquery/` |
+| Verified datasets | `berkelium-cad-v1`: 18,712 core-verified rows (33 part families from washers to rocket airframes + a feature grammar + gear/beam engineering models). `berkelium-cq-v1`: 121k sandbox-executed CadQuery rows | `results/cad/cad_v1_manifest.json` |
+| Open-world text → 3D | Shap-E and Z-Image-Turbo → TripoSR benchmarked on 52 real/semantic/procedural/compositional prompts (E-T3). The evidence picks the `auto` order | `results/text3d/` |
+| AMD renderer | gsplat forward + Berkelium deterministic HIP backward on MI300X: bit-identical gradients, backward 1.32–2.21× gsplat | `results/renderer/E-R1_analysis.md` |
+| Studio | Generate panel (native, Shap-E, Z-Image, **Engineering CAD**, **CadQuery**), durable jobs, provenance cards, splat "Render this view". Browser end-to-end test passes | `tests/e2e/`, `results/e2e/` |
+| Federated GPU | Hash-verified Kaggle runner: every result file is re-hashed before it enters the repo | `scripts/kaggle_gpu_runner.py`, `results/kaggle/` |
+
+**Models (Hugging Face, public):**
+[berkelium-qwen3-8b-cad-v1](https://huggingface.co/Mhaquehaque/berkelium-qwen3-8b-cad-v1) ·
+[8B GGUF](https://huggingface.co/Mhaquehaque/berkelium-qwen3-8b-cad-v1-GGUF) (`ollama run hf.co/Mhaquehaque/berkelium-qwen3-8b-cad-v1-GGUF`) ·
+[berkelium-qwen3-32b-cadquery-v1](https://huggingface.co/Mhaquehaque/berkelium-qwen3-32b-cadquery-v1) ·
+[32B merged](https://huggingface.co/Mhaquehaque/berkelium-qwen3-32b-cadquery-v1-merged) ·
+[32B GGUF](https://huggingface.co/Mhaquehaque/berkelium-qwen3-32b-cadquery-v1-GGUF) (`ollama run hf.co/Mhaquehaque/berkelium-qwen3-32b-cadquery-v1-GGUF:Q4_K_M`)
+
+**Run the CAD demo:** `pip install -r configs/environments/berkelium-core.txt cadquery`; start one model with Ollama; set
+`BERKELIUM_CAD_URL=http://localhost:11434/v1` and `BERKELIUM_CAD_MODEL=<the ollama model name>`; start the backend and pick
+**Engineering CAD** (8B) or **CadQuery** (32B) in Generate. Run one model at a time.
+
+Every promotion rule was pre-registered before training (`NEURAL_RENDERING_DECISIONS.md` D-029–D-034), and failed or
+not-promoted results stay on record.

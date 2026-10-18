@@ -1,0 +1,3 @@
+configs/environments/cad-train.txt
+scripts/cad_fetch_inputs.py
+scripts/cad_gguf.sh

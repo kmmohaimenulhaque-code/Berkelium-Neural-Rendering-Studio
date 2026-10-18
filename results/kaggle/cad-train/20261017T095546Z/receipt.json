@@ -1,0 +1,149 @@
+{
+  "local": {
+    "job": "cad-train",
+    "run_id": "20261017T095546Z",
+    "kernel": "kmmohaimenulhaque/berkelium-qwen3-8b-cad-train",
+    "accelerator": "NvidiaTeslaT4",
+    "spec": "configs/kaggle/cad_train.json",
+    "spec_sha256": "6cc434e2d45e0b4eb8ac78957ecb8fa83c452b80b990bd58cf95e856aa88af4f",
+    "bundle_sha256": "a61eb42599842c14cfec004896e47a49504e7445225d11fef7d9d48820b8c1a3",
+    "bundle_bytes": 24040,
+    "bundle_files": 10,
+    "data": null,
+    "git": {
+      "commit": "6c2f5f04337b10666959b9ad3fa88b06888ed1ce",
+      "branch": "Berkelium-Neural-Rendering-Studio-neural-v1",
+      "dirty_files": 0
+    },
+    "pushed_at": "2026-10-17T09:55:50Z",
+    "status": "pulled",
+    "push_response": "Kernel version 2 successfully pushed.  Please check progress at https://www.kaggle.com/code/kmmohaimenulhaque/berkelium-qwen3-8b-cad-train",
+    "verified_files": 7,
+    "admitted": 0,
+    "verification": {
+      "files": 7,
+      "verified": 7,
+      "problems": [],
+      "bytes": 186104893
+    }
+  },
+  "remote": {
+    "job": "cad-train",
+    "run_id": "20261017T095546Z",
+    "started_at": "2026-10-17T09:55:59Z",
+    "bundle_sha256_expected": "a61eb42599842c14cfec004896e47a49504e7445225d11fef7d9d48820b8c1a3",
+    "steps": [
+      {
+        "name": "deps",
+        "seconds": 54.7,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "pip install -q -r configs/environments/cad-train.txt -r configs/environments/berkelium-core.txt && python -c 'import torch,transformers,peft,bitsandbytes;print(torch.__version__,transformers.__version__,peft.__version__,bitsandbytes.__version__,torch.cuda.device_count())'",
+            "rc": 0,
+            "log": "logs/00_deps.log",
+            "tail": "   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 556.4/556.4 kB 17.4 MB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 43.1/43.1 MB 48.6 MB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 66.8/66.8 MB 30.0 MB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 1.4/1.4 MB 43.0 MB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 750.4/750.4 kB 26.8 MB/s eta 0:00:00\n2.11.0+cu128 5.16.1 0.18.0 0.50.2 2\n"
+          }
+        ]
+      },
+      {
+        "name": "data",
+        "seconds": 0.2,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "python scripts/cad_fetch_data.py",
+            "rc": 0,
+            "log": "logs/01_data.log",
+            "tail": "{\"source\": \"/kaggle/input/notebooks/kmmohaimenulhaque/berkelium-cad-dataset/out/files/data/cad_v1\", \"files\": 6, \"bad\": []}\n"
+          }
+        ]
+      },
+      {
+        "name": "fetch",
+        "seconds": 88.5,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "python -c \"from huggingface_hub import snapshot_download as s; s('Qwen/Qwen3-8B', revision='b968826d9c46dd6066d109eabc6255188de91218'); s('Qwen/Qwen3-0.6B', revision='c1899de289a04d12100db370d81485cdf75e47ca')\"",
+            "rc": 0,
+            "log": "logs/02_fetch.log",
+            "tail": "\nFetching 15 files:   0%|          | 0/15 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.\n\nFetching 15 files:   7%|\u258b         | 1/15 [00:00<00:03,  4.17it/s]\nFetching 15 files:  40%|\u2588\u2588\u2588\u2588      | 6/15 [00:00<00:00, 20.32it/s]\nFetching 15 files:  60%|\u2588\u2588\u2588\u2588\u2588\u2588    | 9/15 [00:00<00:00, 10.27it/s]\nFetching 15 files:  73%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258e  | 11/15 [00:19<00:11,  2.83s/it]\nFetching 15 files:  80%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588  | 12/15 [00:54<00:24,  8.33s/it]\nFetching 15 files:  87%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258b | 13/15 [01:11<00:19,  9.96s/it]\nFetching 15 files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 15/15 [01:11<00:00,  6.42s/it]\nFetching 15 files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 15/15 [01:11<00:00,  4.77s/it]\n\nFetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]\nFetching 10 files:  10%|\u2588         | 1/10 [00:00<00:02,  4.14it/s]\nFetching 10 files:  70%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588   | 7/10 [00:00<00:00, 16.25it/s]\nFetching 10 files:  90%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | 9/10 [00:02<00:00,  3.51it/s]\nFetching 10 files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 10/10 [00:09<00:00,  1.47s/it]\nFetching 10 files: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 10/10 [00:09<00:00,  1.10it/s]\n"
+          }
+        ]
+      },
+      {
+        "name": "smoke_0p6b",
+        "seconds": 136.1,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "torchrun --nproc_per_node 2 scripts/cad_train.py --model Qwen/Qwen3-0.6B --revision c1899de289a04d12100db370d81485cdf75e47ca --max-rows 96 --bsz 1 --grad-accum 8 --out /tmp/smoke --time-budget-h 0.2",
+            "rc": 0,
+            "log": "logs/03_smoke_0p6b.log",
+            "tail": "/60 [00:03<00:21,  2.36it/s]\n 17%|\u2588\u258b        | 10/60 [00:04<00:20,  2.42it/s]\n 18%|\u2588\u258a        | 11/60 [00:04<00:19,  2.46it/s]\n 20%|\u2588\u2588        | 12/60 [00:04<00:18,  2.56it/s]\n 22%|\u2588\u2588\u258f       | 13/60 [00:05<00:18,  2.57it/s]\n 23%|\u2588\u2588\u258e       | 14/60 [00:05<00:17,  2.57it/s]\n 25%|\u2588\u2588\u258c       | 15/60 [00:06<00:17,  2.57it/s]\n 27%|\u2588\u2588\u258b       | 16/60 [00:06<00:16,  2.64it/s]\n 28%|\u2588\u2588\u258a       | 17/60 [00:06<00:15,  2.74it/s]\n 30%|\u2588\u2588\u2588       | 18/60 [00:07<00:14,  2.80it/s]\n 32%|\u2588\u2588\u2588\u258f      | 19/60 [00:07<00:14,  2.85it/s]\n 33%|\u2588\u2588\u2588\u258e      | 20/60 [00:07<00:13,  2.89it/s]\n 35%|\u2588\u2588\u2588\u258c      | 21/60 [00:08<00:13,  2.90it/s]\n 37%|\u2588\u2588\u2588\u258b      | 22/60 [00:08<00:13,  2.90it/s]\n 38%|\u2588\u2588\u2588\u258a      | 23/60 [00:08<00:12,  2.90it/s]\n 40%|\u2588\u2588\u2588\u2588      | 24/60 [00:09<00:12,  2.90it/s]\n 42%|\u2588\u2588\u2588\u2588\u258f     | 25/60 [00:10<00:16,  2.10it/s]\n 43%|\u2588\u2588\u2588\u2588\u258e     | 26/60 [00:10<00:16,  2.00it/s]\n 45%|\u2588\u2588\u2588\u2588\u258c     | 27/60 [00:10<00:15,  2.07it/s]\n 47%|\u2588\u2588\u2588\u2588\u258b     | 28/60 [00:11<00:19,  1.68it/s]\n 48%|\u2588\u2588\u2588\u2588\u258a     | 29/60 [00:12<00:18,  1.64it/s]\n 50%|\u2588\u2588\u2588\u2588\u2588     | 30/60 [00:13<00:18,  1.59it/s]\n 52%|\u2588\u2588\u2588\u2588\u2588\u258f    | 31/60 [00:13<00:19,  1.47it/s]\n 53%|\u2588\u2588\u2588\u2588\u2588\u258e    | 32/60 [00:14<00:18,  1.50it/s]\n 55%|\u2588\u2588\u2588\u2588\u2588\u258c    | 33/60 [00:15<00:18,  1.48it/s]\n 57%|\u2588\u2588\u2588\u2588\u2588\u258b    | 34/60 [00:15<00:16,  1.57it/s]\n 58%|\u2588\u2588\u2588\u2588\u2588\u258a    | 35/60 [00:16<00:17,  1.39it/s]\n 60%|\u2588\u2588\u2588\u2588\u2588\u2588    | 36/60 [00:17<00:16,  1.44it/s]\n 62%|\u2588\u2588\u2588\u2588\u2588\u2588\u258f   | 37/60 [00:18<00:15,  1.45it/s]\n 63%|\u2588\u2588\u2588\u2588\u2588\u2588\u258e   | 38/60 [00:18<00:14,  1.56it/s]\n 65%|\u2588\u2588\u2588\u2588\u2588\u2588\u258c   | 39/60 [00:19<00:13,  1.60it/s]\n 67%|\u2588\u2588\u2588\u2588\u2588\u2588\u258b   | 40/60 [00:19<00:12,  1.63it/s]\n 68%|\u2588\u2588\u2588\u2588\u2588\u2588\u258a   | 41/60 [00:20<00:11,  1.60it/s]\n 70%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588   | 42/60 [00:20<00:10,  1.67it/s]\n 72%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258f  | 43/60 [00:21<00:11,  1.49it/s]\n 73%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258e  | 44/60 [00:22<00:11,  1.40it/s]\n 75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 45/60 [00:23<00:10,  1.49it/s]\n 77%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258b  | 46/60 [00:23<00:09,  1.50it/s]\n 78%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a  | 47/60 [00:24<00:08,  1.62it/s]\n 80%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588  | 48/60 [00:25<00:07,  1.51it/s]\n 82%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258f | 49/60 [00:25<00:06,  1.60it/s]\n 83%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258e | 50/60 [00:26<00:06,  1.51it/s]\n 85%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c | 51/60 [00:26<00:05,  1.58it/s]\n 87%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258b | 52/60 [00:27<00:05,  1.48it/s]\n 88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a | 53/60 [00:28<00:04,  1.45it/s]\n 90%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | 54/60 [00:29<00:03,  1.51it/s]\n 92%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258f| 55/60 [00:29<00:03,  1.65it/s]\n 93%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258e| 56/60 [00:29<00:02,  1.79it/s]\n 95%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c| 57/60 [00:30<00:01,  1.90it/s]\n 97%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258b| 58/60 [00:30<00:01,  1.98it/s]\n 98%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a| 59/60 [00:31<00:00,  2.10it/s]\n100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 60/60 [00:31<00:00,  2.11it/s]\n100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 60/60 [00:31<00:00,  1.88it/s]\n{\"status\": {\"stop_reason\": \"completed\"}, \"eval\": {\"eval_loss\": 0.7736475467681885, \"eval_runtime\": 32.339, \"eval_samples_per_second\": 3.711, \"eval_steps_per_second\": 1.855, \"epoch\": 1.0}, \"hours\": 0.032}\n[rank0]:[W1017 10:00:49.790535490 ProcessGroupNCCL.cpp:1575] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())\n"
+          }
+        ]
+      },
+      {
+        "name": "train",
+        "seconds": 36224.5,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "torchrun --nproc_per_node 2 scripts/cad_train.py --out exports/qwen3-8b-cad-v1 --bsz 1 --grad-accum 8 --max-rows 12000 --time-budget-h 10.0",
+            "rc": 0,
+            "log": "logs/04_train.log",
+            "tail": "0 [00:20<01:41,  2.02s/it]\n 18%|\u2588\u258a        | 11/60 [00:22<01:37,  2.00s/it]\n 20%|\u2588\u2588        | 12/60 [00:24<01:33,  1.95s/it]\n 22%|\u2588\u2588\u258f       | 13/60 [00:26<01:31,  1.94s/it]\n 23%|\u2588\u2588\u258e       | 14/60 [00:28<01:29,  1.94s/it]\n 25%|\u2588\u2588\u258c       | 15/60 [00:29<01:26,  1.93s/it]\n 27%|\u2588\u2588\u258b       | 16/60 [00:31<01:23,  1.90s/it]\n 28%|\u2588\u2588\u258a       | 17/60 [00:33<01:20,  1.88s/it]\n 30%|\u2588\u2588\u2588       | 18/60 [00:35<01:17,  1.86s/it]\n 32%|\u2588\u2588\u2588\u258f      | 19/60 [00:37<01:15,  1.83s/it]\n 33%|\u2588\u2588\u2588\u258e      | 20/60 [00:38<01:12,  1.82s/it]\n 35%|\u2588\u2588\u2588\u258c      | 21/60 [00:40<01:11,  1.82s/it]\n 37%|\u2588\u2588\u2588\u258b      | 22/60 [00:42<01:08,  1.81s/it]\n 38%|\u2588\u2588\u2588\u258a      | 23/60 [00:44<01:07,  1.82s/it]\n 40%|\u2588\u2588\u2588\u2588      | 24/60 [00:46<01:05,  1.82s/it]\n 42%|\u2588\u2588\u2588\u2588\u258f     | 25/60 [00:49<01:18,  2.25s/it]\n 43%|\u2588\u2588\u2588\u2588\u258e     | 26/60 [00:52<01:19,  2.33s/it]\n 45%|\u2588\u2588\u2588\u2588\u258c     | 27/60 [00:54<01:13,  2.24s/it]\n 47%|\u2588\u2588\u2588\u2588\u258b     | 28/60 [00:57<01:24,  2.63s/it]\n 48%|\u2588\u2588\u2588\u2588\u258a     | 29/60 [01:00<01:22,  2.66s/it]\n 50%|\u2588\u2588\u2588\u2588\u2588     | 30/60 [01:03<01:21,  2.72s/it]\n 52%|\u2588\u2588\u2588\u2588\u2588\u258f    | 31/60 [01:06<01:26,  2.99s/it]\n 53%|\u2588\u2588\u2588\u2588\u2588\u258e    | 32/60 [01:09<01:21,  2.92s/it]\n 55%|\u2588\u2588\u2588\u2588\u2588\u258c    | 33/60 [01:12<01:20,  2.98s/it]\n 57%|\u2588\u2588\u2588\u2588\u2588\u258b    | 34/60 [01:15<01:12,  2.78s/it]\n 58%|\u2588\u2588\u2588\u2588\u2588\u258a    | 35/60 [01:18<01:18,  3.15s/it]\n 60%|\u2588\u2588\u2588\u2588\u2588\u2588    | 36/60 [01:21<01:12,  3.02s/it]\n 62%|\u2588\u2588\u2588\u2588\u2588\u2588\u258f   | 37/60 [01:24<01:10,  3.05s/it]\n 63%|\u2588\u2588\u2588\u2588\u2588\u2588\u258e   | 38/60 [01:27<01:01,  2.80s/it]\n 65%|\u2588\u2588\u2588\u2588\u2588\u2588\u258c   | 39/60 [01:29<00:57,  2.75s/it]\n 67%|\u2588\u2588\u2588\u2588\u2588\u2588\u258b   | 40/60 [01:32<00:54,  2.71s/it]\n 68%|\u2588\u2588\u2588\u2588\u2588\u2588\u258a   | 41/60 [01:35<00:51,  2.73s/it]\n 70%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588   | 42/60 [01:37<00:47,  2.62s/it]\n 72%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258f  | 43/60 [01:41<00:50,  2.95s/it]\n 73%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258e  | 44/60 [01:44<00:49,  3.11s/it]\n 75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c  | 45/60 [01:47<00:43,  2.90s/it]\n 77%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258b  | 46/60 [01:50<00:40,  2.91s/it]\n 78%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a  | 47/60 [01:52<00:35,  2.71s/it]\n 80%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588  | 48/60 [01:55<00:35,  2.93s/it]\n 82%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258f | 49/60 [01:58<00:30,  2.77s/it]\n 83%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258e | 50/60 [02:01<00:28,  2.90s/it]\n 85%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c | 51/60 [02:03<00:24,  2.76s/it]\n 87%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258b | 52/60 [02:07<00:23,  2.94s/it]\n 88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a | 53/60 [02:10<00:21,  3.03s/it]\n 90%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 | 54/60 [02:13<00:17,  2.92s/it]\n 92%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258f| 55/60 [02:15<00:13,  2.70s/it]\n 93%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258e| 56/60 [02:17<00:10,  2.55s/it]\n 95%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c| 57/60 [02:19<00:07,  2.45s/it]\n 97%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258b| 58/60 [02:21<00:04,  2.38s/it]\n 98%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258a| 59/60 [02:23<00:02,  2.26s/it]\n100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 60/60 [02:25<00:00,  2.24s/it]\n100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 60/60 [02:26<00:00,  2.44s/it]\n{\"status\": {\"stop_reason\": \"time budget 10.0 h reached at step 601\"}, \"eval\": {\"eval_loss\": 0.0041894069872796535, \"eval_runtime\": 148.5084, \"eval_samples_per_second\": 0.808, \"eval_steps_per_second\": 0.404, \"epoch\": 0.8013333333333333}, \"hours\": 10.058}\n[rank0]:[W1017 20:04:34.649941320 ProcessGroupNCCL.cpp:1575] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())\n"
+          }
+        ]
+      }
+    ],
+    "status": "completed",
+    "bundle_sha256": "a61eb42599842c14cfec004896e47a49504e7445225d11fef7d9d48820b8c1a3",
+    "environment": {
+      "python": "3.13.15",
+      "host": "4c00bf670063",
+      "nvidia_smi": "Tesla T4, 15360 MiB, 580.178.04\nTesla T4, 15360 MiB, 580.178.04",
+      "torch": "2.11.0+cu128 12.8 2",
+      "disk_free_gb": {
+        "/kaggle/working": 20.9,
+        "/tmp": 1148.8
+      },
+      "mem_total_mib": 32099,
+      "cpu_count": 4
+    },
+    "finished_at": "2026-10-17T20:04:36Z",
+    "outputs": 7
+  },
+  "manifest": {
+    "exports/qwen3-8b-cad-v1/adapter/README.md": {
+      "sha256": "0e0823d2434cbad0d603d0e26cdddf75db51e56be47e36d8d3dc1fbd33ea8580",
+      "bytes": 5180
+    },
+    "exports/qwen3-8b-cad-v1/adapter/adapter_config.json": {
+      "sha256": "d8d0c7a25b7816fe4c08dca225bd05e35123cd49a0ae815da149aa6fe4dbb40f",
+      "bytes": 1044
+    },
+    "exports/qwen3-8b-cad-v1/adapter/adapter_model.safetensors": {
+      "sha256": "c76b64ee3ab08fb58f50429ff8c69d2b3ed93b07cd68260d0f3081fca7c2f12f",
+      "bytes": 174655536
+    },
+    "exports/qwen3-8b-cad-v1/adapter/chat_template.jinja": {
+      "sha256": "a55ee1b1660128b7098723e0abcd92caa0788061051c62d51cbe87d9cf1974d8",
+      "bytes": 4168
+    },
+    "exports/qwen3-8b-cad-v1/adapter/tokenizer.json": {
+      "sha256": "be75606093db2094d7cd20f3c2f385c212750648bd6ea4fb2bf507a6a4c55506",
+      "bytes": 11422650
+    },
+    "exports/qwen3-8b-cad-v1/adapter/tokenizer_config.json": {
+      "sha256": "04b1682c59acbd057f4c9072297faa73d56fc9de053094c659cdb4c464f58f86",
+      "bytes": 694
+    },
+    "exports/qwen3-8b-cad-v1/run_manifest.json": {
+      "sha256": "1033e35caf859b89bd4f56a378ba4e9fa88706ac916d1abe3412dc8827a7a9f6",
+      "bytes": 15621
+    }
+  }
+}

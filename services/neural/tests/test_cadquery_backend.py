@@ -5,7 +5,14 @@ import importlib.util
 import numpy as np
 import pytest
 
-pytestmark = pytest.mark.skipif(importlib.util.find_spec("cadquery") is None or
+def _real_cadquery() -> bool:          # the repo-root `cadquery/` folder can satisfy find_spec("cadquery") on its own
+    try:
+        return importlib.util.find_spec("cadquery.occ_impl") is not None
+    except ModuleNotFoundError:
+        return False
+
+
+pytestmark = pytest.mark.skipif(not _real_cadquery() or
                                 importlib.util.find_spec("berkelium") is None,
                                 reason="needs cadquery and the Berkelium core")
 
