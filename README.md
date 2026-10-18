@@ -14,8 +14,53 @@ Building an intelligent 3D workspace that brings AI-assisted modeling, different
 [![Platform](https://img.shields.io/badge/Platform-Desktop-171717?style=flat-square)](#-architecture)
 [![GPU](https://img.shields.io/badge/GPU-AMD%20ROCm%20%2F%20HIP-ED1C24?style=flat-square)](#-neural-rendering)
 [![AI](https://img.shields.io/badge/AI-3D%20Generation-7C3AED?style=flat-square)](#-natural-language-to-3d)
+[![Download](https://img.shields.io/badge/Download-v0.2.0-00D4AA?style=flat-square)](#install)
 
 </div>
+
+---
+
+## Install
+
+Berkelium Studio 0.2.0 is a desktop app. The AI backend ships inside it, so there is nothing else to set up. Chat works right away on a free built-in model, and you can add your own API key in Settings.
+
+Pick one of the three options below.
+
+### Option 1: Download the installer
+
+| Your computer | Installer |
+|---|---|
+| Mac with Apple Silicon (M1 or newer), macOS 12+ | [Berkelium-0.2.0-mac-arm64.dmg](https://github.com/kmmohaimenulhaque-code/Berkelium-Neural-Rendering-Studio/releases/download/v0.2.0/Berkelium-0.2.0-mac-arm64.dmg) |
+| Windows 10 or 11 (x64) | [Berkelium-0.2.0-win-x64.exe](https://github.com/kmmohaimenulhaque-code/Berkelium-Neural-Rendering-Studio/releases/download/v0.2.0/Berkelium-0.2.0-win-x64.exe) |
+| Linux (x64) | [Berkelium-0.2.0-linux-x86_64.AppImage](https://github.com/kmmohaimenulhaque-code/Berkelium-Neural-Rendering-Studio/releases/download/v0.2.0/Berkelium-0.2.0-linux-x86_64.AppImage) |
+
+All releases are on the [Releases page](https://github.com/kmmohaimenulhaque-code/Berkelium-Neural-Rendering-Studio/releases/latest). Intel Macs are not supported.
+
+### Option 2: Homebrew (Mac)
+
+```bash
+brew install --cask sudeep03042008/berkelium/berkelium
+```
+
+### Option 3: npm (Mac, Windows, Linux)
+
+Needs Node.js 18 or newer.
+
+```bash
+npx berkelium-studio
+```
+
+It picks the right installer for your computer, checks it against the release checksum, then installs and opens Berkelium.
+
+### First launch
+
+This hackathon build is not code-signed yet, so your system warns you once.
+
+- **Mac:** if macOS says Berkelium can't be opened, go to System Settings, then Privacy & Security, scroll down and click **Open Anyway**.
+- **Windows:** if SmartScreen says "Windows protected your PC", click **More info**, then **Run anyway**.
+- **Linux:** make the file runnable first with `chmod +x Berkelium-0.2.0-linux-x86_64.AppImage`, then open it.
+
+To check a download yourself, compare `shasum -a 256 <file>` with `SHA256SUMS.txt` on the release page.
 
 ---
 
@@ -671,7 +716,7 @@ For GPU development, the neural-rendering toolchain will additionally depend on 
 ### Installation
 
 ```bash
-git clone https://github.com/enigmahacker/Berkelium-Neural-Rendering-Studio.git
+git clone https://github.com/kmmohaimenulhaque-code/Berkelium-Neural-Rendering-Studio.git
 
 cd Berkelium-Neural-Rendering-Studio
 
