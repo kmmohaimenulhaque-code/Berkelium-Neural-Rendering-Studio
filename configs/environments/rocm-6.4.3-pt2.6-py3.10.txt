@@ -1,0 +1,15 @@
+# ROCm 6.4.3 + PyTorch 2.6 + Python 3.10 (AMD gsplat support matrix). NOT executed in this commit.
+# PyTorch: use the image rocm/pytorch:rocm6.4.3_ubuntu22.04_py3.10_pytorch_release_2.6.0 (do not pip-install a second torch).
+# gsplat: either the AMD wheel   pip install amd_gsplat --extra-index-url=https://pypi.amd.com/rocm-6.4.3/simple/
+#         or the pinned source   third_party/amd-gsplat @ ff8bc5489545bcc1b5a2b997d975834429a0d7af (tag v1.5.3b2)
+numpy<2.6
+scikit-image>=0.22
+trimesh>=4.0
+pillow>=10
+pydantic>=2.6
+fastapi>=0.110
+uvicorn>=0.29
+pytest>=8
+jaxtyping
+rich
+ninja

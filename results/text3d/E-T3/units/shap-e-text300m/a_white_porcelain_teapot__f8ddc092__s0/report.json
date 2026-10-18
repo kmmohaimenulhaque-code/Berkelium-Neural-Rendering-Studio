@@ -1,0 +1,97 @@
+{
+  "prompt": "a white porcelain teapot",
+  "seed": 0,
+  "generator": "shap-e-text300m",
+  "denoiser_calls": 31,
+  "sample_s": 917.4,
+  "decode_s": 40.8,
+  "peak_rss_mib": 2372.3,
+  "artifact_kind": "triangle_mesh",
+  "units": "normalized_object",
+  "frame": "shap-e z-up -> berkelium +Y-up (x, z, -y), centred, max extent 1.6",
+  "labels": "model-generated, normalized units, not measured geometry",
+  "raw_vertices": 56966,
+  "raw_faces": 113916,
+  "n_vertices": 56966,
+  "n_faces": 113916,
+  "finite": true,
+  "in_bounds": true,
+  "degenerate_faces": 0,
+  "components": 9,
+  "watertight": true,
+  "winding_consistent": true,
+  "edge_manifold": true,
+  "euler_number": 8,
+  "surface_area": 6.132400545053326,
+  "volume": 0.1510065782916842,
+  "bounds_min": [
+    -0.800000011920929,
+    -0.4799000024795532,
+    -0.5072000026702881
+  ],
+  "bounds_max": [
+    0.800000011920929,
+    0.4799000024795532,
+    0.5072000026702881
+  ],
+  "valid": true,
+  "degenerate_faces_removed": 0,
+  "seconds": 960.2,
+  "status": "ok",
+  "identity": {
+    "generator": "shap-e-text300m",
+    "model": "Shap-E text300M + vector decoder (STF mesh)",
+    "code": "openai/shap-e",
+    "shap_e_commit": "50131012ee11c9d2617f3886c10f000d3c7a3b43",
+    "clip_commit": "d05afc436d78f1c48dc0dbf8e5980a9d471f35f6",
+    "weights_sha256": {
+      "text_cond.pt": "e6b4fa599a7b3c3b16c222d5f5fe56f9db9289ff0b6575fbe5c11bc97106aad4",
+      "vector_decoder.pt": "d7e7ebbfe3780499ae89b2da5e7c1354012dba5a6abfe295bed42f25c3be1b98",
+      "ViT-L-14.pt": "b8cca3fd41ae0c99ba7e8951adf17d267cdb84cd88be6f7c2e0eca1737a03836"
+    },
+    "conditioning": "CLIP ViT-L/14 text embedding (text tower only)",
+    "license": "MIT (Shap-E code and weights); MIT (CLIP)",
+    "sampler": {
+      "karras_steps": 16,
+      "guidance_scale": 15.0,
+      "sigma_min": 0.001,
+      "sigma_max": 160,
+      "s_churn": 0,
+      "clip_denoised": true,
+      "use_fp16": false
+    },
+    "decoder": {
+      "rendering_mode": "stf",
+      "grid_size": "checkpoint default"
+    },
+    "clip_dtype": "float32",
+    "device": "cpu",
+    "labels": "model-generated, normalized units, not measured geometry"
+  },
+  "threads": 2,
+  "wall_s": 960.4,
+  "seconds_per_step": 57.34,
+  "memory_mib": {
+    "peak_VmRSS": 2360,
+    "peak_RssAnon": 1409,
+    "peak_RssFile": 1203
+  },
+  "rss_abort_mib": 3100,
+  "mem_available_mib_at_start": 2933,
+  "script_wall_s": 1001.0,
+  "environment": {
+    "git_commit": "887e5573a61f67b93324f7e4377a35e5bcd7f5cf+dirty",
+    "python": "3.14.2",
+    "platform": "Linux-6.8.0-1064-azure-x86_64-with-glibc2.39",
+    "numpy": "2.5.3",
+    "torch": "2.14.1+cpu",
+    "torch_hip": null,
+    "torch_cuda": null,
+    "gpu_visible": false
+  },
+  "outputs": {
+    "mesh.glb": "results/text3d/E-T3/units/shap-e-text300m/a_white_porcelain_teapot__f8ddc092__s0/mesh.glb",
+    "mesh.npz": "results/text3d/E-T3/units/shap-e-text300m/a_white_porcelain_teapot__f8ddc092__s0/mesh.npz",
+    "preview.png": "results/text3d/E-T3/units/shap-e-text300m/a_white_porcelain_teapot__f8ddc092__s0/preview.png"
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "n_vertices": 2062,
+  "n_faces": 4124,
+  "finite": true,
+  "in_bounds": true,
+  "degenerate_faces": 0,
+  "components": 1,
+  "watertight": true,
+  "winding_consistent": true,
+  "edge_manifold": true,
+  "euler_number": 0,
+  "surface_area": 2.586421290208472,
+  "volume": 0.20749654721561628,
+  "bounds_min": [
+    -0.6833000183105469,
+    -0.302700012922287,
+    -0.44350001215934753
+  ],
+  "bounds_max": [
+    0.8001000285148621,
+    0.27889999747276306,
+    0.45239999890327454
+  ],
+  "valid": true,
+  "prompt": "a teal plastic easter basket",
+  "tokens": 5,
+  "unknown_words": [
+    "teal",
+    "plastic",
+    "easter",
+    "basket"
+  ],
+  "resolution": 48,
+  "sdf_min": -0.01997566968202591,
+  "sdf_max": 5.0054402351379395,
+  "seconds": 1.773,
+  "artifact_kind": "triangle_mesh",
+  "units": "normalized_object",
+  "generator": "berkelium-textshape",
+  "seed": 0,
+  "adapter": null,
+  "base_checkpoint_sha256": "4989d90b206ae185a81aa33b22f7a5869470feb1f5e5c617cff56983a85e8504",
+  "train_version": "berkelium-textshape-train/1",
+  "adapter_routing": {
+    "requested": "auto",
+    "selected": null,
+    "reason": "no adapter concept in the prompt"
+  },
+  "identity": {
+    "generator": "berkelium-textshape",
+    "model": "BerkeliumTextShape (text->SDF->marching cubes)",
+    "checkpoint": "exports/textshape-base-v1/model.pt",
+    "license": "MIT (Berkelium-owned weights and data)",
+    "resolution": 48,
+    "adapter": "auto",
+    "device": "cpu"
+  },
+  "wall_s": 1.78
+}

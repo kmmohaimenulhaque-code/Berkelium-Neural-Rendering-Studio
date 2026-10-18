@@ -6,7 +6,7 @@
 // port with a private per-install key, and the Electron main process tells us
 // both. Running from source (npm run studio, or Vite in a plain browser) uses
 // the backend you start yourself on port 8000, which needs no key.
-const DEV_BACKEND = { managed: false, url: "http://127.0.0.1:8000", key: "", state: "external", error: null };
+const DEV_BACKEND = { managed: false, url: import.meta.env?.VITE_BERKELIUM_API ?? "http://127.0.0.1:8000", key: "", state: "external", error: null };
 
 // Asked fresh on every call (a local IPC round trip, well under a
 // millisecond), because a restarted backend comes back on a new port.

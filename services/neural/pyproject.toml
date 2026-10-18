@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "berkelium-neural"
+version = "0.1.0"
+description = "Berkelium Studio neural rendering + text-to-3D service (renderer adapters, HIP extension, text3d model, jobs, artifacts)"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+dependencies = [
+  "numpy>=1.24",
+  "pydantic>=2.6",
+  "fastapi>=0.110",
+  "scikit-image>=0.22",
+  "trimesh>=4.0",
+  "pillow>=10.0",
+]
+# torch is intentionally NOT a hard dependency: its build (CPU / CUDA / ROCm) is selected by the
+# environment setup scripts (scripts/setup_*.sh) and must never be mixed. See configs/environments/.
+
+[project.optional-dependencies]
+test = ["pytest>=8", "httpx>=0.27"]
+
+[tool.setuptools.packages.find]
+include = ["berkelium_neural*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+  "gpu: requires a real GPU device (ROCm or CUDA); skipped on CPU",
+  "hip: requires a ROCm/HIP device; a CUDA device does NOT satisfy this marker",
+  "slow: long-running CPU test",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"

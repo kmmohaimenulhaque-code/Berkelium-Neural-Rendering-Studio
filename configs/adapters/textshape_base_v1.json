@@ -1,0 +1,21 @@
+{
+  "name": "textshape-base-v1",
+  "model_identity": "BerkeliumTextShape v1 (text encoder: 2-layer transformer d=64; decoder: Fourier-feature SDF+RGB MLP 256)",
+  "license": "MIT (Berkelium-owned weights, trained only on berkelium-procedural-shapes-v1)",
+  "kind": "base",
+  "dataset": "data/procedural_shapes_v1",
+  "train_splits": ["train"],
+  "steps": 4000,
+  "batch_assets": 32,
+  "points_per_asset": 1024,
+  "lr": 0.001,
+  "weight_decay": 0.0,
+  "grad_clip": 1.0,
+  "seed": 1,
+  "threads": 2,
+  "checkpoint_every": 200,
+  "log_every": 50,
+  "paraphrase_augment": true,
+  "model": {"d": 64, "z_dim": 128, "hidden": 256},
+  "out_dir": "runs/textshape_base_v1"
+}

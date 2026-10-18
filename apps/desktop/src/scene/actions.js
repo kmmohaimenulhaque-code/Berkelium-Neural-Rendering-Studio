@@ -74,7 +74,8 @@ function undoIfStill(nodesAfter, label, onUndo) {
   };
 }
 
-export async function importIntoScene(files) {
+// extraMeta is shown in the Model panel (e.g. which text-to-3D artifact a generated model came from).
+export async function importIntoScene(files, extraMeta = {}) {
   let loaded;
   try {
     loaded = await loadModelFiles(files);
@@ -110,7 +111,7 @@ export async function importIntoScene(files) {
       type: "model",
       transformable: true,
       transform: place.transform,
-      meta: { fileName: loaded.fileName, bytes: loaded.bytes, ...loaded.stats },
+      meta: { fileName: loaded.fileName, bytes: loaded.bytes, ...loaded.stats, ...extraMeta },
       children: listParts(id, loaded.object),
     },
     "scene"

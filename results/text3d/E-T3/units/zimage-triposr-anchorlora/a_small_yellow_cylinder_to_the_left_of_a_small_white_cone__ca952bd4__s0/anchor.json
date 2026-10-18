@@ -1,0 +1,38 @@
+{
+  "status": "ok",
+  "anchor_prompt": {
+    "text": "a small yellow cylinder to the left of a small white cone. A single complete object, centered, fully visible with empty margin around it, three-quarter view from slightly above, isolated on a plain solid bright blue background, soft even studio lighting, no shadow, no text, no other objects",
+    "background": "bright blue",
+    "background_rgb": [
+      0,
+      71,
+      187
+    ],
+    "named_colours": [
+      "yellow",
+      "white"
+    ],
+    "colour_margin": 1.17,
+    "template": "{prompt}. A single complete object, centered, fully visible with empty margin around it, three-quarter view from slightly above, isolated on a plain solid {bg} background, soft even studio lighting, no shadow, no text, no other objects"
+  },
+  "sampler": {
+    "steps": 9,
+    "guidance_scale": 0.0,
+    "height": 768,
+    "width": 768,
+    "noise": "seeded CPU generator"
+  },
+  "dtype": "bfloat16",
+  "device": "cuda",
+  "gpu": "Tesla T4",
+  "load_s": 97.2,
+  "seconds": 147.72,
+  "finite": true,
+  "std": 0.3241313099861145,
+  "peak_gpu_mib": 13835.0,
+  "anchor_sha256": "0b4d633d321d74af685bf816f9c285532ac335a560ae940b01fd86ed75e64ab8",
+  "lora": {
+    "path": "exports/zimage-anchor-lora-v1/adapter.safetensors",
+    "sha256": "0bde1ac0f975884607baf82a274eae92fa00550a2d42bb066ced6f91cd63df45"
+  }
+}

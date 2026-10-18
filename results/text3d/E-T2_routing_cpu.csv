@@ -1,0 +1,73 @@
+comparison,metric,group,baseline,candidate,abs_diff,rel_change,status,reason
+routed_vs_always_adapter_on_base_prompts,success_rate,quality,1.0,1.0,0.0,0.0,equal,
+routed_vs_always_adapter_on_base_prompts,part_count_accuracy,quality,0.28125,0.46875,0.1875,0.6666666666666666,improved,
+routed_vs_always_adapter_on_base_prompts,color_accuracy,quality,0.9375,0.9375,0.0,0.0,equal,
+routed_vs_always_adapter_on_base_prompts,chamfer_l1,quality,0.13163439293834533,0.08985868891439584,-0.04177570402394949,-0.31736161873376295,improved,
+routed_vs_always_adapter_on_base_prompts,chamfer_l2,quality,0.029759928298191237,0.014115908977618738,-0.0156440193205725,-0.525673958748191,improved,
+routed_vs_always_adapter_on_base_prompts,normal_consistency,quality,0.7036755885928869,0.7234564274549484,0.0197808388620615,0.028110736229483936,improved,
+routed_vs_always_adapter_on_base_prompts,fscore@0.02,quality,0.1019340442164137,0.16515890281419165,0.06322485859777796,0.6202526259386589,improved,
+routed_vs_always_adapter_on_base_prompts,fscore@0.05,quality,0.2516780450238656,0.3958290188604936,0.144150973836628,0.5727594308949704,improved,
+routed_vs_always_adapter_on_base_prompts,view_psnr,quality,12.065640192319517,13.686747590384698,1.6211073980651811,0.1343573463343545,improved,
+routed_vs_always_adapter_on_base_prompts,view_ssim,quality,0.5878675829153508,0.6355230628978461,0.04765547998249531,0.0810649904289031,improved,
+routed_vs_always_adapter_on_base_prompts,color_mae,quality,0.04044625696260482,0.042204796432827915,0.001758539470223093,0.04347842303056563,regressed,
+routed_vs_always_adapter_on_base_prompts,seconds,performance,2.9432187499999998,2.1916874999999996,-0.7515312500000002,-0.25534332098149354,improved,
+routed_vs_always_adapter_on_base_prompts,lpips,quality,,,,,not_comparable,requires pretrained LPIPS network weights (download not approved)
+routed_vs_always_adapter_on_base_prompts,peak_rss,performance,899.71484375,899.71484375,0.0,0.0,info,
+routed_vs_always_adapter_on_base_prompts,paired_delta_chamfer_l1,quality,,-0.0417757040239495,-0.0417757040239495,,CI excludes 0,"95% CI [-0.05452, -0.02947], n=32"
+routed_vs_always_adapter_on_base_prompts,paired_delta_fscore@0.05,quality,,0.14415097383662803,0.14415097383662803,,CI excludes 0,"95% CI [0.08456, 0.2075], n=32"
+routed_vs_always_adapter_on_base_prompts,paired_delta_view_psnr,quality,,1.6211073980651822,1.6211073980651822,,CI excludes 0,"95% CI [1.057, 2.192], n=32"
+routed_vs_always_adapter_on_base_prompts,paired_delta_normal_consistency,quality,,0.0197808388620615,0.0197808388620615,,CI includes 0,"95% CI [-0.0049, 0.04438], n=32"
+routed_vs_base_on_base_prompts,success_rate,quality,1.0,1.0,0.0,0.0,equal,
+routed_vs_base_on_base_prompts,part_count_accuracy,quality,0.46875,0.46875,0.0,0.0,equal,
+routed_vs_base_on_base_prompts,color_accuracy,quality,0.9375,0.9375,0.0,0.0,equal,
+routed_vs_base_on_base_prompts,chamfer_l1,quality,0.08985868891439584,0.08985868891439584,0.0,0.0,equal,
+routed_vs_base_on_base_prompts,chamfer_l2,quality,0.014115908977618738,0.014115908977618738,0.0,0.0,equal,
+routed_vs_base_on_base_prompts,normal_consistency,quality,0.7234564274549484,0.7234564274549484,0.0,0.0,equal,
+routed_vs_base_on_base_prompts,fscore@0.02,quality,0.16515890281419165,0.16515890281419165,0.0,0.0,equal,
+routed_vs_base_on_base_prompts,fscore@0.05,quality,0.3958290188604936,0.3958290188604936,0.0,0.0,equal,
+routed_vs_base_on_base_prompts,view_psnr,quality,13.686747590384698,13.686747590384698,0.0,0.0,equal,
+routed_vs_base_on_base_prompts,view_ssim,quality,0.6355230628978461,0.6355230628978461,0.0,0.0,equal,
+routed_vs_base_on_base_prompts,color_mae,quality,0.042204796432827915,0.042204796432827915,0.0,0.0,equal,
+routed_vs_base_on_base_prompts,seconds,performance,1.9300937500000002,1.789375,-0.14071875000000023,-0.07290772792772383,improved,
+routed_vs_base_on_base_prompts,lpips,quality,,,,,not_comparable,requires pretrained LPIPS network weights (download not approved)
+routed_vs_base_on_base_prompts,peak_rss,performance,899.71484375,899.71484375,0.0,0.0,info,
+routed_vs_base_on_base_prompts,paired_delta_chamfer_l1,quality,,0.0,0.0,,CI includes 0,"95% CI [0, 0], n=32"
+routed_vs_base_on_base_prompts,paired_delta_fscore@0.05,quality,,0.0,0.0,,CI includes 0,"95% CI [0, 0], n=32"
+routed_vs_base_on_base_prompts,paired_delta_view_psnr,quality,,0.0,0.0,,CI includes 0,"95% CI [0, 0], n=32"
+routed_vs_base_on_base_prompts,paired_delta_normal_consistency,quality,,0.0,0.0,,CI includes 0,"95% CI [0, 0], n=32"
+routed_vs_base_on_capsule_prompts,success_rate,quality,1.0,1.0,0.0,0.0,equal,
+routed_vs_base_on_capsule_prompts,part_count_accuracy,quality,0.5333333333333333,0.26666666666666666,-0.26666666666666666,-0.5,regressed,
+routed_vs_base_on_capsule_prompts,color_accuracy,quality,0.95,0.9333333333333333,-0.016666666666666607,-0.017543859649122747,regressed,
+routed_vs_base_on_capsule_prompts,chamfer_l1,quality,0.13422430635431976,0.08110588288538217,-0.05311842346893758,-0.3957436988254405,improved,
+routed_vs_base_on_capsule_prompts,chamfer_l2,quality,0.029268345876520822,0.012500247377243373,-0.016768098499277448,-0.5729089908264642,improved,
+routed_vs_base_on_capsule_prompts,normal_consistency,quality,0.6673293968041738,0.7853724360466003,0.11804303924242654,0.1768887146403742,improved,
+routed_vs_base_on_capsule_prompts,fscore@0.02,quality,0.09430782382804752,0.16813706806829992,0.0738292442402524,0.7828538634807868,improved,
+routed_vs_base_on_capsule_prompts,fscore@0.05,quality,0.2484281475356677,0.4278661731996551,0.1794380256639874,0.7222934576615351,improved,
+routed_vs_base_on_capsule_prompts,view_psnr,quality,11.834687219710272,14.071093077019832,2.2364058573095598,0.18897042361921498,improved,
+routed_vs_base_on_capsule_prompts,view_ssim,quality,0.6059896518786748,0.7001350502173106,0.09414539833863578,0.15535809571461895,improved,
+routed_vs_base_on_capsule_prompts,color_mae,quality,0.04942739973300034,0.04803818060292139,-0.0013892191300789447,-0.028106255590690698,improved,
+routed_vs_base_on_capsule_prompts,seconds,performance,1.7531666666666663,2.832,1.0788333333333335,0.6153626770605574,regressed,
+routed_vs_base_on_capsule_prompts,lpips,quality,,,,,not_comparable,requires pretrained LPIPS network weights (download not approved)
+routed_vs_base_on_capsule_prompts,peak_rss,performance,899.71484375,1032.19921875,132.484375,0.1472515163224459,info,
+routed_vs_base_on_capsule_prompts,paired_delta_chamfer_l1,quality,,-0.053118423468937574,-0.053118423468937574,,CI excludes 0,"95% CI [-0.07114, -0.03571], n=30"
+routed_vs_base_on_capsule_prompts,paired_delta_fscore@0.05,quality,,0.1794380256639874,0.1794380256639874,,CI excludes 0,"95% CI [0.1058, 0.2599], n=30"
+routed_vs_base_on_capsule_prompts,paired_delta_view_psnr,quality,,2.2364058573095575,2.2364058573095575,,CI excludes 0,"95% CI [1.462, 3.02], n=30"
+routed_vs_base_on_capsule_prompts,paired_delta_normal_consistency,quality,,0.11804303924242655,0.11804303924242655,,CI excludes 0,"95% CI [0.09233, 0.1458], n=30"
+routed_vs_always_adapter_on_capsule_prompts,success_rate,quality,1.0,1.0,0.0,0.0,equal,
+routed_vs_always_adapter_on_capsule_prompts,part_count_accuracy,quality,0.26666666666666666,0.26666666666666666,0.0,0.0,equal,
+routed_vs_always_adapter_on_capsule_prompts,color_accuracy,quality,0.9333333333333333,0.9333333333333333,0.0,0.0,equal,
+routed_vs_always_adapter_on_capsule_prompts,chamfer_l1,quality,0.08110588288538217,0.08110588288538217,0.0,0.0,equal,
+routed_vs_always_adapter_on_capsule_prompts,chamfer_l2,quality,0.012500247377243373,0.012500247377243373,0.0,0.0,equal,
+routed_vs_always_adapter_on_capsule_prompts,normal_consistency,quality,0.7853724360466003,0.7853724360466003,0.0,0.0,equal,
+routed_vs_always_adapter_on_capsule_prompts,fscore@0.02,quality,0.16813706806829992,0.16813706806829992,0.0,0.0,equal,
+routed_vs_always_adapter_on_capsule_prompts,fscore@0.05,quality,0.4278661731996551,0.4278661731996551,0.0,0.0,equal,
+routed_vs_always_adapter_on_capsule_prompts,view_psnr,quality,14.071093077019832,14.071093077019832,0.0,0.0,equal,
+routed_vs_always_adapter_on_capsule_prompts,view_ssim,quality,0.7001350502173106,0.7001350502173106,0.0,0.0,equal,
+routed_vs_always_adapter_on_capsule_prompts,color_mae,quality,0.04803818060292139,0.04803818060292139,0.0,0.0,equal,
+routed_vs_always_adapter_on_capsule_prompts,seconds,performance,2.854233333333333,2.8474666666666666,-0.0067666666666665876,-0.0023707475445828726,improved,
+routed_vs_always_adapter_on_capsule_prompts,lpips,quality,,,,,not_comparable,requires pretrained LPIPS network weights (download not approved)
+routed_vs_always_adapter_on_capsule_prompts,peak_rss,performance,1147.87890625,1267.04296875,119.1640625,0.10381239854759287,info,
+routed_vs_always_adapter_on_capsule_prompts,paired_delta_chamfer_l1,quality,,0.0,0.0,,CI includes 0,"95% CI [0, 0], n=30"
+routed_vs_always_adapter_on_capsule_prompts,paired_delta_fscore@0.05,quality,,0.0,0.0,,CI includes 0,"95% CI [0, 0], n=30"
+routed_vs_always_adapter_on_capsule_prompts,paired_delta_view_psnr,quality,,0.0,0.0,,CI includes 0,"95% CI [0, 0], n=30"
+routed_vs_always_adapter_on_capsule_prompts,paired_delta_normal_consistency,quality,,0.0,0.0,,CI includes 0,"95% CI [0, 0], n=30"

@@ -4,6 +4,15 @@
 
 ## Purpose and status
 
+> **Update NR-0.4 (2026-10-15) — current state supersedes parts of this snapshot.** The sections below describe
+> the original archive. Since then: `services/backend/main.py` mounts the neural router at `/v1/neural` (jobs,
+> artifacts, capabilities) behind the existing API key; the Scene workspace is main's three.js scene editor
+> (`apps/desktop/src/ScenePanel.jsx`, `scene/*`) with the text-to-3D panel `scene/GeneratePanel.jsx`; job creation is
+> enabled for the allowlisted kinds `text_to_3d` and `render` under decision D-019 (the worker writes only write-once
+> artifacts and job records; it never mutates user projects, scenes or files — the user's scene changes only when the
+> user imports). Durable jobs: SQLite in `$BERKELIUM_NEURAL_HOME`. Evidence: `tests/e2e/test_studio_text_to_3d.py`,
+> `services/neural/tests/test_durable_jobs.py`; decisions D-017..D-022.
+
 This document maps the extracted repository as it exists today and defines the smallest secure integration shape for the neural-rendering architecture. Every statement is labelled implicitly by its section:
 
 - **Existing** means the referenced file currently implements or exposes it.

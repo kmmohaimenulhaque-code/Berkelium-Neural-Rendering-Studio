@@ -1,0 +1,24 @@
+{
+  "prompt": "a red cone on top of a blue box",
+  "job": "927aca73b21e42a991adb07eb0347a48",
+  "mesh_artifact": "1ba5a8f9cba56737f4011dc238f4e59b59fcea82c6cc1128dd450ef9afd6d730",
+  "faces": 6780,
+  "gaussian_artifact": "b06b8191b004cb4c5bd9e8dd0548503a2345a1ad2afc8112489456c165060d6b",
+  "gaussians": 4000,
+  "orbit_render_artifact": "8398e94ac1badb11dc0e81e24ca8b4ea84bb6917128b0133f51dc39368675c35",
+  "renderer": "reference_cpu",
+  "view_render": {
+    "artifact": "775658d31750e61957f07ab7d66a44280ccf092f0d0a6360f3f02e143495ecf1",
+    "width": 384,
+    "height": 357,
+    "renderer": "reference_cpu",
+    "n_visible": 4000,
+    "std": 43.01883316040039
+  },
+  "after_restart": {
+    "job_state": "completed",
+    "reopened_mesh": "1ba5a8f9cba56737f4011dc238f4e59b59fcea82c6cc1128dd450ef9afd6d730"
+  },
+  "console_errors_before_restart": [],
+  "console_errors_during_restart": 0
+}

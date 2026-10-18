@@ -1,0 +1,58 @@
+{
+  "n_vertices": 2240,
+  "n_faces": 4476,
+  "finite": true,
+  "in_bounds": true,
+  "degenerate_faces": 0,
+  "components": 1,
+  "watertight": true,
+  "winding_consistent": true,
+  "edge_manifold": true,
+  "euler_number": 2,
+  "surface_area": 2.777668695514688,
+  "volume": 0.27188759091971165,
+  "bounds_min": [
+    -0.6682999730110168,
+    -0.3431999981403351,
+    -0.4876999855041504
+  ],
+  "bounds_max": [
+    0.8047999739646912,
+    0.3084999918937683,
+    0.48989999294281006
+  ],
+  "valid": true,
+  "prompt": "a turboprop airplane with a pilot",
+  "tokens": 6,
+  "unknown_words": [
+    "turboprop",
+    "airplane",
+    "pilot"
+  ],
+  "resolution": 48,
+  "sdf_min": -0.021779201924800873,
+  "sdf_max": 5.177412986755371,
+  "seconds": 1.648,
+  "artifact_kind": "triangle_mesh",
+  "units": "normalized_object",
+  "generator": "berkelium-textshape",
+  "seed": 0,
+  "adapter": null,
+  "base_checkpoint_sha256": "4989d90b206ae185a81aa33b22f7a5869470feb1f5e5c617cff56983a85e8504",
+  "train_version": "berkelium-textshape-train/1",
+  "adapter_routing": {
+    "requested": "auto",
+    "selected": null,
+    "reason": "no adapter concept in the prompt"
+  },
+  "identity": {
+    "generator": "berkelium-textshape",
+    "model": "BerkeliumTextShape (text->SDF->marching cubes)",
+    "checkpoint": "exports/textshape-base-v1/model.pt",
+    "license": "MIT (Berkelium-owned weights and data)",
+    "resolution": 48,
+    "adapter": "auto",
+    "device": "cpu"
+  },
+  "wall_s": 1.66
+}

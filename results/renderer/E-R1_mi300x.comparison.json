@@ -1,0 +1,2105 @@
+{
+  "baseline": "gsplat",
+  "candidate": "berkelium_rocm",
+  "rows": [
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "forward_alpha_max_abs_err",
+      "group": "correctness",
+      "baseline": 5.3898647434103e-07,
+      "candidate": 5.3898647434103e-07,
+      "abs_diff": 0.0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "pass"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "forward_depth_max_abs_err_alpha>0.5",
+      "group": "correctness",
+      "baseline": 6.282392193135422e-07,
+      "candidate": 6.282392193135422e-07,
+      "abs_diff": 0.0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "pass"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "forward_rgb_max_abs_err",
+      "group": "correctness",
+      "baseline": 4.482984825027181e-07,
+      "candidate": 4.482984825027181e-07,
+      "abs_diff": 0.0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "pass"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "grad_color_logits_max_abs_err",
+      "group": "correctness",
+      "baseline": 3.5429154671140495e-07,
+      "candidate": 3.8409386909910026e-07,
+      "abs_diff": 2.9802322387695312e-08,
+      "rel_change": 0.08411807355926382,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "pass"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "grad_log_scales_max_abs_err",
+      "group": "correctness",
+      "baseline": 1.684704699744799e-06,
+      "candidate": 1.207867541541674e-06,
+      "abs_diff": -4.76837158203125e-07,
+      "rel_change": -0.2830390146566083,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "pass"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "grad_means_max_abs_err",
+      "group": "correctness",
+      "baseline": 2.3978698094673234e-05,
+      "candidate": 2.350186093647011e-05,
+      "abs_diff": -4.76837158203125e-07,
+      "rel_change": -0.01988586520921469,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "pass"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "grad_opacity_logits_max_abs_err",
+      "group": "correctness",
+      "baseline": 6.203102156376872e-07,
+      "candidate": 5.011009260869059e-07,
+      "abs_diff": -1.1920928955078125e-07,
+      "rel_change": -0.19217689237671592,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "pass"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "grad_quats_max_abs_err",
+      "group": "correctness",
+      "baseline": 1.404005471661307e-06,
+      "candidate": 1.0463776030089633e-06,
+      "abs_diff": -3.5762786865234375e-07,
+      "rel_change": -0.25471971147603584,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "pass"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "gradient_bitwise_repeatable",
+      "group": "correctness",
+      "baseline": 0.0,
+      "candidate": 1.0,
+      "abs_diff": 1.0,
+      "rel_change": null,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "pass"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "backward_latency",
+      "group": "performance",
+      "baseline": 0.4764350001096318,
+      "candidate": 0.6294740001067112,
+      "abs_diff": 0.15303899999707937,
+      "rel_change": 0.3212169550135145,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "forward_latency",
+      "group": "performance",
+      "baseline": 0.7266794996212411,
+      "candidate": 0.6883810006002022,
+      "abs_diff": -0.03829849902103888,
+      "rel_change": -0.05270342570693238,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "iteration_latency",
+      "group": "performance",
+      "baseline": 1.461895999909757,
+      "candidate": 1.5607809996254218,
+      "abs_diff": 0.09888499971566489,
+      "rel_change": 0.06764161043040619,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "peak_memory",
+      "group": "performance",
+      "baseline": 0.15185546875,
+      "candidate": 0.166015625,
+      "abs_diff": 0.01416015625,
+      "rel_change": 0.0932475884244373,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "max_pairs_per_tile",
+      "group": "workload",
+      "baseline": 9,
+      "candidate": 9,
+      "abs_diff": 0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "n_gaussians",
+      "group": "workload",
+      "baseline": 16,
+      "candidate": 16,
+      "abs_diff": 0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "n_pairs",
+      "group": "workload",
+      "baseline": 31,
+      "candidate": 31,
+      "abs_diff": 0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "n_visible",
+      "group": "workload",
+      "baseline": 16,
+      "candidate": 16,
+      "abs_diff": 0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "forward_rgb_max_abs_diff_vs_gsplat",
+      "group": "correctness",
+      "baseline": null,
+      "candidate": 0.0,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "missing",
+      "candidate_status": "measured",
+      "reason": "direct comparison, no oracle",
+      "status": "info: bitwise equal"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "forward_alpha_max_abs_diff_vs_gsplat",
+      "group": "correctness",
+      "baseline": null,
+      "candidate": 0.0,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "missing",
+      "candidate_status": "measured",
+      "reason": "direct comparison, no oracle",
+      "status": "info: bitwise equal"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "forward_depth_max_abs_diff_vs_gsplat",
+      "group": "correctness",
+      "baseline": null,
+      "candidate": 0.0,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "missing",
+      "candidate_status": "measured",
+      "reason": "direct comparison, no oracle",
+      "status": "info: bitwise equal"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "grad_means_max_abs_diff_vs_gsplat",
+      "group": "correctness",
+      "baseline": null,
+      "candidate": 3.814697265625e-06,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "missing",
+      "candidate_status": "measured",
+      "reason": "direct comparison, no oracle",
+      "status": "info: 40/48 entries differ"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "grad_log_scales_max_abs_diff_vs_gsplat",
+      "group": "correctness",
+      "baseline": null,
+      "candidate": 4.76837158203125e-07,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "missing",
+      "candidate_status": "measured",
+      "reason": "direct comparison, no oracle",
+      "status": "info: 35/48 entries differ"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "grad_quats_max_abs_diff_vs_gsplat",
+      "group": "correctness",
+      "baseline": null,
+      "candidate": 3.5762786865234375e-07,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "missing",
+      "candidate_status": "measured",
+      "reason": "direct comparison, no oracle",
+      "status": "info: 47/64 entries differ"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "grad_opacity_logits_max_abs_diff_vs_gsplat",
+      "group": "correctness",
+      "baseline": null,
+      "candidate": 1.1920928955078125e-07,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "missing",
+      "candidate_status": "measured",
+      "reason": "direct comparison, no oracle",
+      "status": "info: 11/16 entries differ"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "grad_color_logits_max_abs_diff_vs_gsplat",
+      "group": "correctness",
+      "baseline": null,
+      "candidate": 5.960464477539063e-08,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "missing",
+      "candidate_status": "measured",
+      "reason": "direct comparison, no oracle",
+      "status": "info: 39/48 entries differ"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 128,
+        "seed": 1
+      },
+      "metric": "forward_alpha_max_abs_err",
+      "group": "correctness",
+      "baseline": 1.8516784061617386e-06,
+      "candidate": 1.8516784061617386e-06,
+      "abs_diff": 0.0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "diagnostic: FP64 oracle not a gate for this case (within tol 0.0002)"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 128,
+        "seed": 1
+      },
+      "metric": "forward_depth_max_abs_err_alpha>0.5",
+      "group": "correctness",
+      "baseline": 2.029092192046278e-06,
+      "candidate": 2.029092192046278e-06,
+      "abs_diff": 0.0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "diagnostic: FP64 oracle not a gate for this case (within tol 1e-4+2e-4|ref| (spec valid-depth))"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 128,
+        "seed": 1
+      },
+      "metric": "forward_rgb_max_abs_err",
+      "group": "correctness",
+      "baseline": 1.8541083403045278e-06,
+      "candidate": 1.8541083403045278e-06,
+      "abs_diff": 0.0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "diagnostic: FP64 oracle not a gate for this case (within tol 0.0002)"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 128,
+        "seed": 1
+      },
+      "metric": "grad_color_logits_max_abs_err",
+      "group": "correctness",
+      "baseline": 4.793374634814995e-05,
+      "candidate": 4.769532776904839e-05,
+      "abs_diff": -2.384185791015625e-07,
+      "rel_change": -0.004973919154365544,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "diagnostic: FP64 oracle not a gate for this case (within tol 2e-05+0.002|ref|; 0/3000 entries beyond spec tol)"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 128,
+        "seed": 1
+      },
+      "metric": "grad_log_scales_max_abs_err",
+      "group": "correctness",
+      "baseline": 3.468838716624845e-05,
+      "candidate": 3.4569177876697665e-05,
+      "abs_diff": -1.1920928955078125e-07,
+      "rel_change": -0.0034365763095140682,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "diagnostic: FP64 oracle not a gate for this case (within tol 2e-05+0.002|ref|; 0/3000 entries beyond spec tol)"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 128,
+        "seed": 1
+      },
+      "metric": "grad_means_max_abs_err",
+      "group": "correctness",
+      "baseline": 0.0006746319449177918,
+      "candidate": 0.0006746319449177918,
+      "abs_diff": 0.0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "diagnostic: FP64 oracle not a gate for this case (beyond tol 2e-05+0.002|ref|; 1/3000 entries beyond spec tol)"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 128,
+        "seed": 1
+      },
+      "metric": "grad_opacity_logits_max_abs_err",
+      "group": "correctness",
+      "baseline": 4.574260039968969e-06,
+      "candidate": 4.484853072805883e-06,
+      "abs_diff": -8.940696716308594e-08,
+      "rel_change": -0.01954566779804072,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "diagnostic: FP64 oracle not a gate for this case (within tol 2e-05+0.002|ref|; 0/1000 entries beyond spec tol)"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 128,
+        "seed": 1
+      },
+      "metric": "grad_quats_max_abs_err",
+      "group": "correctness",
+      "baseline": 1.4928970294869615e-05,
+      "candidate": 1.4869365650094224e-05,
+      "abs_diff": -5.960464477539063e-08,
+      "rel_change": -0.0039925489567002445,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "diagnostic: FP64 oracle not a gate for this case (within tol 2e-05+0.002|ref|; 0/4000 entries beyond spec tol)"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 128,
+        "seed": 1
+      },
+      "metric": "gradient_bitwise_repeatable",
+      "group": "correctness",
+      "baseline": 0.0,
+      "candidate": 1.0,
+      "abs_diff": 1.0,
+      "rel_change": null,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "pass"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 128,
+        "seed": 1
+      },
+      "metric": "backward_latency",
+      "group": "performance",
+      "baseline": 0.5756519999522425,
+      "candidate": 1.0166669999307487,
+      "abs_diff": 0.44101499997850624,
+      "rel_change": 0.7661139021754357,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 128,
+        "seed": 1
+      },
+      "metric": "forward_latency",
+      "group": "performance",
+      "baseline": 0.7400029999189428,
+      "candidate": 0.7467444997928396,
+      "abs_diff": 0.006741499873896828,
+      "rel_change": 0.009110098032893471,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 128,
+        "seed": 1
+      },
+      "metric": "iteration_latency",
+      "group": "performance",
+      "baseline": 1.579591500103561,
+      "candidate": 2.031838999755564,
+      "abs_diff": 0.45224749965200317,
+      "rel_change": 0.28630661764282284,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 128,
+        "seed": 1
+      },
+      "metric": "peak_memory",
+      "group": "performance",
+      "baseline": 2.509765625,
+      "candidate": 2.69775390625,
+      "abs_diff": 0.18798828125,
+      "rel_change": 0.07490272373540856,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 128,
+        "seed": 1
+      },
+      "metric": "max_pairs_per_tile",
+      "group": "workload",
+      "baseline": 221,
+      "candidate": 221,
+      "abs_diff": 0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 128,
+        "seed": 1
+      },
+      "metric": "n_gaussians",
+      "group": "workload",
+      "baseline": 1000,
+      "candidate": 1000,
+      "abs_diff": 0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 128,
+        "seed": 1
+      },
+      "metric": "n_pairs",
+      "group": "workload",
+      "baseline": 2900,
+      "candidate": 2900,
+      "abs_diff": 0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 128,
+        "seed": 1
+      },
+      "metric": "n_visible",
+      "group": "workload",
+      "baseline": 1000,
+      "candidate": 1000,
+      "abs_diff": 0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 128,
+        "seed": 1
+      },
+      "metric": "forward_rgb_max_abs_diff_vs_gsplat",
+      "group": "correctness",
+      "baseline": null,
+      "candidate": 0.0,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "missing",
+      "candidate_status": "measured",
+      "reason": "direct comparison, no oracle",
+      "status": "info: bitwise equal"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 128,
+        "seed": 1
+      },
+      "metric": "forward_alpha_max_abs_diff_vs_gsplat",
+      "group": "correctness",
+      "baseline": null,
+      "candidate": 0.0,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "missing",
+      "candidate_status": "measured",
+      "reason": "direct comparison, no oracle",
+      "status": "info: bitwise equal"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 128,
+        "seed": 1
+      },
+      "metric": "forward_depth_max_abs_diff_vs_gsplat",
+      "group": "correctness",
+      "baseline": null,
+      "candidate": 0.0,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "missing",
+      "candidate_status": "measured",
+      "reason": "direct comparison, no oracle",
+      "status": "info: bitwise equal"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 128,
+        "seed": 1
+      },
+      "metric": "grad_means_max_abs_diff_vs_gsplat",
+      "group": "correctness",
+      "baseline": null,
+      "candidate": 2.288818359375e-05,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "missing",
+      "candidate_status": "measured",
+      "reason": "direct comparison, no oracle",
+      "status": "info: 2475/3000 entries differ"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 128,
+        "seed": 1
+      },
+      "metric": "grad_log_scales_max_abs_diff_vs_gsplat",
+      "group": "correctness",
+      "baseline": null,
+      "candidate": 1.1920928955078125e-06,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "missing",
+      "candidate_status": "measured",
+      "reason": "direct comparison, no oracle",
+      "status": "info: 2509/3000 entries differ"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 128,
+        "seed": 1
+      },
+      "metric": "grad_quats_max_abs_diff_vs_gsplat",
+      "group": "correctness",
+      "baseline": null,
+      "candidate": 1.8477439880371094e-06,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "missing",
+      "candidate_status": "measured",
+      "reason": "direct comparison, no oracle",
+      "status": "info: 3400/4000 entries differ"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 128,
+        "seed": 1
+      },
+      "metric": "grad_opacity_logits_max_abs_diff_vs_gsplat",
+      "group": "correctness",
+      "baseline": null,
+      "candidate": 3.8743019104003906e-07,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "missing",
+      "candidate_status": "measured",
+      "reason": "direct comparison, no oracle",
+      "status": "info: 782/1000 entries differ"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 128,
+        "seed": 1
+      },
+      "metric": "grad_color_logits_max_abs_diff_vs_gsplat",
+      "group": "correctness",
+      "baseline": null,
+      "candidate": 3.427267074584961e-07,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "missing",
+      "candidate_status": "measured",
+      "reason": "direct comparison, no oracle",
+      "status": "info: 2272/3000 entries differ"
+    },
+    {
+      "case": {
+        "n": 10000,
+        "res": 256,
+        "seed": 2
+      },
+      "metric": "forward_alpha_max_abs_err",
+      "group": "correctness",
+      "baseline": 4.929523799601654e-06,
+      "candidate": 4.929523799601654e-06,
+      "abs_diff": 0.0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "diagnostic: FP64 oracle not a gate for this case (within tol 0.0002)"
+    },
+    {
+      "case": {
+        "n": 10000,
+        "res": 256,
+        "seed": 2
+      },
+      "metric": "forward_depth_max_abs_err_alpha>0.5",
+      "group": "correctness",
+      "baseline": 2.671621717631467e-06,
+      "candidate": 2.671621717631467e-06,
+      "abs_diff": 0.0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "diagnostic: FP64 oracle not a gate for this case (within tol 1e-4+2e-4|ref| (spec valid-depth))"
+    },
+    {
+      "case": {
+        "n": 10000,
+        "res": 256,
+        "seed": 2
+      },
+      "metric": "forward_rgb_max_abs_err",
+      "group": "correctness",
+      "baseline": 3.135228937911627e-06,
+      "candidate": 3.135228937911627e-06,
+      "abs_diff": 0.0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "diagnostic: FP64 oracle not a gate for this case (within tol 0.0002)"
+    },
+    {
+      "case": {
+        "n": 10000,
+        "res": 256,
+        "seed": 2
+      },
+      "metric": "grad_color_logits_max_abs_err",
+      "group": "correctness",
+      "baseline": 0.00024656348659485294,
+      "candidate": 0.00024665289356201603,
+      "abs_diff": 8.940696716308594e-08,
+      "rel_change": 0.00036261235756289114,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "diagnostic: FP64 oracle not a gate for this case (beyond tol 2e-05+0.002|ref|; 21/30000 entries beyond spec tol)"
+    },
+    {
+      "case": {
+        "n": 10000,
+        "res": 256,
+        "seed": 2
+      },
+      "metric": "grad_log_scales_max_abs_err",
+      "group": "correctness",
+      "baseline": 0.0003022301325315002,
+      "candidate": 0.00030211092324194944,
+      "abs_diff": -1.1920928955078125e-07,
+      "rel_change": -0.00039443217839424583,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "diagnostic: FP64 oracle not a gate for this case (beyond tol 2e-05+0.002|ref|; 15/30000 entries beyond spec tol)"
+    },
+    {
+      "case": {
+        "n": 10000,
+        "res": 256,
+        "seed": 2
+      },
+      "metric": "grad_means_max_abs_err",
+      "group": "correctness",
+      "baseline": 0.016263414928161524,
+      "candidate": 0.016286303111755274,
+      "abs_diff": 2.288818359375e-05,
+      "rel_change": 0.001407341797208722,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "diagnostic: FP64 oracle not a gate for this case (beyond tol 2e-05+0.002|ref|; 125/30000 entries beyond spec tol)"
+    },
+    {
+      "case": {
+        "n": 10000,
+        "res": 256,
+        "seed": 2
+      },
+      "metric": "grad_opacity_logits_max_abs_err",
+      "group": "correctness",
+      "baseline": 0.00011176366831278095,
+      "candidate": 0.00011165190960382709,
+      "abs_diff": -1.1175870895385742e-07,
+      "rel_change": -0.0009999556263766357,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "diagnostic: FP64 oracle not a gate for this case (beyond tol 2e-05+0.002|ref|; 3/10000 entries beyond spec tol)"
+    },
+    {
+      "case": {
+        "n": 10000,
+        "res": 256,
+        "seed": 2
+      },
+      "metric": "grad_quats_max_abs_err",
+      "group": "correctness",
+      "baseline": 0.00026219551633033245,
+      "candidate": 0.00026188259194526164,
+      "abs_diff": -3.129243850708008e-07,
+      "rel_change": -0.001193477254876306,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "diagnostic: FP64 oracle not a gate for this case (beyond tol 2e-05+0.002|ref|; 7/40000 entries beyond spec tol)"
+    },
+    {
+      "case": {
+        "n": 10000,
+        "res": 256,
+        "seed": 2
+      },
+      "metric": "gradient_bitwise_repeatable",
+      "group": "correctness",
+      "baseline": 0.0,
+      "candidate": 1.0,
+      "abs_diff": 1.0,
+      "rel_change": null,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "pass"
+    },
+    {
+      "case": {
+        "n": 10000,
+        "res": 256,
+        "seed": 2
+      },
+      "metric": "backward_latency",
+      "group": "performance",
+      "baseline": 0.7796309996592754,
+      "candidate": 1.5169789999163186,
+      "abs_diff": 0.7373480002570432,
+      "rel_change": 0.9457653692314553,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 10000,
+        "res": 256,
+        "seed": 2
+      },
+      "metric": "forward_latency",
+      "group": "performance",
+      "baseline": 0.8227134999287955,
+      "candidate": 0.8361175000572985,
+      "abs_diff": 0.013404000128502958,
+      "rel_change": 0.01629242759437283,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 10000,
+        "res": 256,
+        "seed": 2
+      },
+      "metric": "iteration_latency",
+      "group": "performance",
+      "baseline": 1.8767674996524875,
+      "candidate": 2.6205689996459114,
+      "abs_diff": 0.7438014999934239,
+      "rel_change": 0.39632053524538885,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 10000,
+        "res": 256,
+        "seed": 2
+      },
+      "metric": "peak_memory",
+      "group": "performance",
+      "baseline": 13.66943359375,
+      "candidate": 14.5908203125,
+      "abs_diff": 0.92138671875,
+      "rel_change": 0.0674048937310234,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 10000,
+        "res": 256,
+        "seed": 2
+      },
+      "metric": "max_pairs_per_tile",
+      "group": "workload",
+      "baseline": 488,
+      "candidate": 488,
+      "abs_diff": 0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 10000,
+        "res": 256,
+        "seed": 2
+      },
+      "metric": "n_gaussians",
+      "group": "workload",
+      "baseline": 10000,
+      "candidate": 10000,
+      "abs_diff": 0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 10000,
+        "res": 256,
+        "seed": 2
+      },
+      "metric": "n_pairs",
+      "group": "workload",
+      "baseline": 27907,
+      "candidate": 27907,
+      "abs_diff": 0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 10000,
+        "res": 256,
+        "seed": 2
+      },
+      "metric": "n_visible",
+      "group": "workload",
+      "baseline": 10000,
+      "candidate": 10000,
+      "abs_diff": 0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 10000,
+        "res": 256,
+        "seed": 2
+      },
+      "metric": "forward_rgb_max_abs_diff_vs_gsplat",
+      "group": "correctness",
+      "baseline": null,
+      "candidate": 0.0,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "missing",
+      "candidate_status": "measured",
+      "reason": "direct comparison, no oracle",
+      "status": "info: bitwise equal"
+    },
+    {
+      "case": {
+        "n": 10000,
+        "res": 256,
+        "seed": 2
+      },
+      "metric": "forward_alpha_max_abs_diff_vs_gsplat",
+      "group": "correctness",
+      "baseline": null,
+      "candidate": 0.0,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "missing",
+      "candidate_status": "measured",
+      "reason": "direct comparison, no oracle",
+      "status": "info: bitwise equal"
+    },
+    {
+      "case": {
+        "n": 10000,
+        "res": 256,
+        "seed": 2
+      },
+      "metric": "forward_depth_max_abs_diff_vs_gsplat",
+      "group": "correctness",
+      "baseline": null,
+      "candidate": 0.0,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "missing",
+      "candidate_status": "measured",
+      "reason": "direct comparison, no oracle",
+      "status": "info: bitwise equal"
+    },
+    {
+      "case": {
+        "n": 10000,
+        "res": 256,
+        "seed": 2
+      },
+      "metric": "grad_means_max_abs_diff_vs_gsplat",
+      "group": "correctness",
+      "baseline": null,
+      "candidate": 7.62939453125e-05,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "missing",
+      "candidate_status": "measured",
+      "reason": "direct comparison, no oracle",
+      "status": "info: 25316/30000 entries differ"
+    },
+    {
+      "case": {
+        "n": 10000,
+        "res": 256,
+        "seed": 2
+      },
+      "metric": "grad_log_scales_max_abs_diff_vs_gsplat",
+      "group": "correctness",
+      "baseline": null,
+      "candidate": 1.430511474609375e-06,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "missing",
+      "candidate_status": "measured",
+      "reason": "direct comparison, no oracle",
+      "status": "info: 25225/30000 entries differ"
+    },
+    {
+      "case": {
+        "n": 10000,
+        "res": 256,
+        "seed": 2
+      },
+      "metric": "grad_quats_max_abs_diff_vs_gsplat",
+      "group": "correctness",
+      "baseline": null,
+      "candidate": 1.6689300537109375e-06,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "missing",
+      "candidate_status": "measured",
+      "reason": "direct comparison, no oracle",
+      "status": "info: 34539/40000 entries differ"
+    },
+    {
+      "case": {
+        "n": 10000,
+        "res": 256,
+        "seed": 2
+      },
+      "metric": "grad_opacity_logits_max_abs_diff_vs_gsplat",
+      "group": "correctness",
+      "baseline": null,
+      "candidate": 3.5762786865234375e-07,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "missing",
+      "candidate_status": "measured",
+      "reason": "direct comparison, no oracle",
+      "status": "info: 8059/10000 entries differ"
+    },
+    {
+      "case": {
+        "n": 10000,
+        "res": 256,
+        "seed": 2
+      },
+      "metric": "grad_color_logits_max_abs_diff_vs_gsplat",
+      "group": "correctness",
+      "baseline": null,
+      "candidate": 6.183981895446777e-07,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "missing",
+      "candidate_status": "measured",
+      "reason": "direct comparison, no oracle",
+      "status": "info: 22902/30000 entries differ"
+    },
+    {
+      "case": {
+        "n": 100000,
+        "res": 512,
+        "seed": 3
+      },
+      "metric": "forward_alpha_max_abs_err",
+      "group": "correctness",
+      "baseline": 3.1839362198748944e-05,
+      "candidate": 3.1839362198748944e-05,
+      "abs_diff": 0.0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "diagnostic: FP64 oracle not a gate for this case (within tol 0.0002)"
+    },
+    {
+      "case": {
+        "n": 100000,
+        "res": 512,
+        "seed": 3
+      },
+      "metric": "forward_depth_max_abs_err_alpha>0.5",
+      "group": "correctness",
+      "baseline": 0.000634407112652724,
+      "candidate": 0.000634407112652724,
+      "abs_diff": 0.0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "diagnostic: FP64 oracle not a gate for this case (within tol 1e-4+2e-4|ref| (spec valid-depth))"
+    },
+    {
+      "case": {
+        "n": 100000,
+        "res": 512,
+        "seed": 3
+      },
+      "metric": "forward_rgb_max_abs_err",
+      "group": "correctness",
+      "baseline": 0.0010456162494575927,
+      "candidate": 0.0010456162494575927,
+      "abs_diff": 0.0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "diagnostic: FP64 oracle not a gate for this case (beyond tol 0.0002)"
+    },
+    {
+      "case": {
+        "n": 100000,
+        "res": 512,
+        "seed": 3
+      },
+      "metric": "grad_color_logits_max_abs_err",
+      "group": "correctness",
+      "baseline": 0.0010346553932514269,
+      "candidate": 0.0010346553932514269,
+      "abs_diff": 0.0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "diagnostic: FP64 oracle not a gate for this case (beyond tol 2e-05+0.002|ref|; 316/300000 entries beyond spec tol)"
+    },
+    {
+      "case": {
+        "n": 100000,
+        "res": 512,
+        "seed": 3
+      },
+      "metric": "grad_log_scales_max_abs_err",
+      "group": "correctness",
+      "baseline": 0.004314452591688944,
+      "candidate": 0.004314601603300883,
+      "abs_diff": 1.4901161193847656e-07,
+      "rel_change": 3.453777942201103e-05,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "diagnostic: FP64 oracle not a gate for this case (beyond tol 2e-05+0.002|ref|; 291/300000 entries beyond spec tol)"
+    },
+    {
+      "case": {
+        "n": 100000,
+        "res": 512,
+        "seed": 3
+      },
+      "metric": "grad_means_max_abs_err",
+      "group": "correctness",
+      "baseline": 0.2449297807341324,
+      "candidate": 0.2449450395231949,
+      "abs_diff": 1.52587890625e-05,
+      "rel_change": 6.229862704635002e-05,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "diagnostic: FP64 oracle not a gate for this case (beyond tol 2e-05+0.002|ref|; 2868/300000 entries beyond spec tol)"
+    },
+    {
+      "case": {
+        "n": 100000,
+        "res": 512,
+        "seed": 3
+      },
+      "metric": "grad_opacity_logits_max_abs_err",
+      "group": "correctness",
+      "baseline": 0.00014794553024755075,
+      "candidate": 0.00014794553024755075,
+      "abs_diff": 0.0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "diagnostic: FP64 oracle not a gate for this case (beyond tol 2e-05+0.002|ref|; 36/100000 entries beyond spec tol)"
+    },
+    {
+      "case": {
+        "n": 100000,
+        "res": 512,
+        "seed": 3
+      },
+      "metric": "grad_quats_max_abs_err",
+      "group": "correctness",
+      "baseline": 0.0042184858841998185,
+      "candidate": 0.00421872430277892,
+      "abs_diff": 2.384185791015625e-07,
+      "rel_change": 5.6517571860214206e-05,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "diagnostic: FP64 oracle not a gate for this case (beyond tol 2e-05+0.002|ref|; 214/400000 entries beyond spec tol)"
+    },
+    {
+      "case": {
+        "n": 100000,
+        "res": 512,
+        "seed": 3
+      },
+      "metric": "gradient_bitwise_repeatable",
+      "group": "correctness",
+      "baseline": 0.0,
+      "candidate": 1.0,
+      "abs_diff": 1.0,
+      "rel_change": null,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "pass"
+    },
+    {
+      "case": {
+        "n": 100000,
+        "res": 512,
+        "seed": 3
+      },
+      "metric": "backward_latency",
+      "group": "performance",
+      "baseline": 1.257690999409533,
+      "candidate": 2.7806815000985807,
+      "abs_diff": 1.5229905006890476,
+      "rel_change": 1.210941718915114,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 100000,
+        "res": 512,
+        "seed": 3
+      },
+      "metric": "forward_latency",
+      "group": "performance",
+      "baseline": 1.1027219998140936,
+      "candidate": 1.1120369999844115,
+      "abs_diff": 0.009315000170317944,
+      "rel_change": 0.00844727879908839,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 100000,
+        "res": 512,
+        "seed": 3
+      },
+      "metric": "iteration_latency",
+      "group": "performance",
+      "baseline": 2.64062099995499,
+      "candidate": 4.177325999535242,
+      "abs_diff": 1.5367049995802518,
+      "rel_change": 0.5819483370034719,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 100000,
+        "res": 512,
+        "seed": 3
+      },
+      "metric": "peak_memory",
+      "group": "performance",
+      "baseline": 99.654296875,
+      "candidate": 110.84130859375,
+      "abs_diff": 11.18701171875,
+      "rel_change": 0.112258197283578,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 100000,
+        "res": 512,
+        "seed": 3
+      },
+      "metric": "max_pairs_per_tile",
+      "group": "workload",
+      "baseline": 1236,
+      "candidate": 1236,
+      "abs_diff": 0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 100000,
+        "res": 512,
+        "seed": 3
+      },
+      "metric": "n_gaussians",
+      "group": "workload",
+      "baseline": 100000,
+      "candidate": 100000,
+      "abs_diff": 0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 100000,
+        "res": 512,
+        "seed": 3
+      },
+      "metric": "n_pairs",
+      "group": "workload",
+      "baseline": 265653,
+      "candidate": 265653,
+      "abs_diff": 0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 100000,
+        "res": 512,
+        "seed": 3
+      },
+      "metric": "n_visible",
+      "group": "workload",
+      "baseline": 100000,
+      "candidate": 100000,
+      "abs_diff": 0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 100000,
+        "res": 512,
+        "seed": 3
+      },
+      "metric": "forward_rgb_max_abs_diff_vs_gsplat",
+      "group": "correctness",
+      "baseline": null,
+      "candidate": 0.0,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "missing",
+      "candidate_status": "measured",
+      "reason": "direct comparison, no oracle",
+      "status": "info: bitwise equal"
+    },
+    {
+      "case": {
+        "n": 100000,
+        "res": 512,
+        "seed": 3
+      },
+      "metric": "forward_alpha_max_abs_diff_vs_gsplat",
+      "group": "correctness",
+      "baseline": null,
+      "candidate": 0.0,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "missing",
+      "candidate_status": "measured",
+      "reason": "direct comparison, no oracle",
+      "status": "info: bitwise equal"
+    },
+    {
+      "case": {
+        "n": 100000,
+        "res": 512,
+        "seed": 3
+      },
+      "metric": "forward_depth_max_abs_diff_vs_gsplat",
+      "group": "correctness",
+      "baseline": null,
+      "candidate": 0.0,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "missing",
+      "candidate_status": "measured",
+      "reason": "direct comparison, no oracle",
+      "status": "info: bitwise equal"
+    },
+    {
+      "case": {
+        "n": 100000,
+        "res": 512,
+        "seed": 3
+      },
+      "metric": "grad_means_max_abs_diff_vs_gsplat",
+      "group": "correctness",
+      "baseline": null,
+      "candidate": 0.0001220703125,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "missing",
+      "candidate_status": "measured",
+      "reason": "direct comparison, no oracle",
+      "status": "info: 203365/300000 entries differ"
+    },
+    {
+      "case": {
+        "n": 100000,
+        "res": 512,
+        "seed": 3
+      },
+      "metric": "grad_log_scales_max_abs_diff_vs_gsplat",
+      "group": "correctness",
+      "baseline": null,
+      "candidate": 2.384185791015625e-06,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "missing",
+      "candidate_status": "measured",
+      "reason": "direct comparison, no oracle",
+      "status": "info: 200831/300000 entries differ"
+    },
+    {
+      "case": {
+        "n": 100000,
+        "res": 512,
+        "seed": 3
+      },
+      "metric": "grad_quats_max_abs_diff_vs_gsplat",
+      "group": "correctness",
+      "baseline": null,
+      "candidate": 2.995133399963379e-06,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "missing",
+      "candidate_status": "measured",
+      "reason": "direct comparison, no oracle",
+      "status": "info: 274074/400000 entries differ"
+    },
+    {
+      "case": {
+        "n": 100000,
+        "res": 512,
+        "seed": 3
+      },
+      "metric": "grad_opacity_logits_max_abs_diff_vs_gsplat",
+      "group": "correctness",
+      "baseline": null,
+      "candidate": 3.2782554626464844e-07,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "missing",
+      "candidate_status": "measured",
+      "reason": "direct comparison, no oracle",
+      "status": "info: 64090/100000 entries differ"
+    },
+    {
+      "case": {
+        "n": 100000,
+        "res": 512,
+        "seed": 3
+      },
+      "metric": "grad_color_logits_max_abs_diff_vs_gsplat",
+      "group": "correctness",
+      "baseline": null,
+      "candidate": 6.351619958877563e-07,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "missing",
+      "candidate_status": "measured",
+      "reason": "direct comparison, no oracle",
+      "status": "info: 179609/300000 entries differ"
+    },
+    {
+      "case": "fit",
+      "metric": "heldout_view_psnr_after_fit",
+      "group": "quality",
+      "baseline": 22.9139770419046,
+      "candidate": 22.967783462609784,
+      "abs_diff": 0.05380642070518249,
+      "rel_change": 0.002348192136475586,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "improved"
+    }
+  ],
+  "classification": "oracle-role-v1",
+  "case_notes": [
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "oracle_role": "acceptance_gate",
+      "forward_oracle_errors_bitwise_identical": {
+        "forward_rgb_max_abs_err": true,
+        "forward_alpha_max_abs_err": true,
+        "forward_depth_max_abs_err_alpha>0.5": true
+      }
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 128,
+        "seed": 1
+      },
+      "oracle_role": "diagnostic",
+      "forward_oracle_errors_bitwise_identical": {
+        "forward_rgb_max_abs_err": true,
+        "forward_alpha_max_abs_err": true,
+        "forward_depth_max_abs_err_alpha>0.5": true
+      }
+    },
+    {
+      "case": {
+        "n": 10000,
+        "res": 256,
+        "seed": 2
+      },
+      "oracle_role": "diagnostic",
+      "forward_oracle_errors_bitwise_identical": {
+        "forward_rgb_max_abs_err": true,
+        "forward_alpha_max_abs_err": true,
+        "forward_depth_max_abs_err_alpha>0.5": true
+      }
+    },
+    {
+      "case": {
+        "n": 100000,
+        "res": 512,
+        "seed": 3
+      },
+      "oracle_role": "diagnostic",
+      "forward_oracle_errors_bitwise_identical": {
+        "forward_rgb_max_abs_err": true,
+        "forward_alpha_max_abs_err": true,
+        "forward_depth_max_abs_err_alpha>0.5": true
+      }
+    }
+  ],
+  "gate_summary": {
+    "acceptance_gates": {
+      "pass": 16,
+      "fail": 0,
+      "rows": []
+    },
+    "diagnostic_beyond_tolerance": [
+      {
+        "case": {
+          "n": 1000,
+          "res": 128,
+          "seed": 1
+        },
+        "backend": "gsplat",
+        "metric": "grad_means_max_abs_err",
+        "value": 0.0006746319449177918,
+        "tolerance": "2e-05+0.002|ref|"
+      },
+      {
+        "case": {
+          "n": 1000,
+          "res": 128,
+          "seed": 1
+        },
+        "backend": "berkelium_rocm",
+        "metric": "grad_means_max_abs_err",
+        "value": 0.0006746319449177918,
+        "tolerance": "2e-05+0.002|ref|"
+      },
+      {
+        "case": {
+          "n": 10000,
+          "res": 256,
+          "seed": 2
+        },
+        "backend": "gsplat",
+        "metric": "grad_means_max_abs_err",
+        "value": 0.016263414928161524,
+        "tolerance": "2e-05+0.002|ref|"
+      },
+      {
+        "case": {
+          "n": 10000,
+          "res": 256,
+          "seed": 2
+        },
+        "backend": "gsplat",
+        "metric": "grad_log_scales_max_abs_err",
+        "value": 0.0003022301325315002,
+        "tolerance": "2e-05+0.002|ref|"
+      },
+      {
+        "case": {
+          "n": 10000,
+          "res": 256,
+          "seed": 2
+        },
+        "backend": "gsplat",
+        "metric": "grad_quats_max_abs_err",
+        "value": 0.00026219551633033245,
+        "tolerance": "2e-05+0.002|ref|"
+      },
+      {
+        "case": {
+          "n": 10000,
+          "res": 256,
+          "seed": 2
+        },
+        "backend": "gsplat",
+        "metric": "grad_opacity_logits_max_abs_err",
+        "value": 0.00011176366831278095,
+        "tolerance": "2e-05+0.002|ref|"
+      },
+      {
+        "case": {
+          "n": 10000,
+          "res": 256,
+          "seed": 2
+        },
+        "backend": "gsplat",
+        "metric": "grad_color_logits_max_abs_err",
+        "value": 0.00024656348659485294,
+        "tolerance": "2e-05+0.002|ref|"
+      },
+      {
+        "case": {
+          "n": 10000,
+          "res": 256,
+          "seed": 2
+        },
+        "backend": "berkelium_rocm",
+        "metric": "grad_means_max_abs_err",
+        "value": 0.016286303111755274,
+        "tolerance": "2e-05+0.002|ref|"
+      },
+      {
+        "case": {
+          "n": 10000,
+          "res": 256,
+          "seed": 2
+        },
+        "backend": "berkelium_rocm",
+        "metric": "grad_log_scales_max_abs_err",
+        "value": 0.00030211092324194944,
+        "tolerance": "2e-05+0.002|ref|"
+      },
+      {
+        "case": {
+          "n": 10000,
+          "res": 256,
+          "seed": 2
+        },
+        "backend": "berkelium_rocm",
+        "metric": "grad_quats_max_abs_err",
+        "value": 0.00026188259194526164,
+        "tolerance": "2e-05+0.002|ref|"
+      },
+      {
+        "case": {
+          "n": 10000,
+          "res": 256,
+          "seed": 2
+        },
+        "backend": "berkelium_rocm",
+        "metric": "grad_opacity_logits_max_abs_err",
+        "value": 0.00011165190960382709,
+        "tolerance": "2e-05+0.002|ref|"
+      },
+      {
+        "case": {
+          "n": 10000,
+          "res": 256,
+          "seed": 2
+        },
+        "backend": "berkelium_rocm",
+        "metric": "grad_color_logits_max_abs_err",
+        "value": 0.00024665289356201603,
+        "tolerance": "2e-05+0.002|ref|"
+      },
+      {
+        "case": {
+          "n": 100000,
+          "res": 512,
+          "seed": 3
+        },
+        "backend": "gsplat",
+        "metric": "forward_rgb_max_abs_err",
+        "value": 0.0010456162494575927,
+        "tolerance": 0.0002
+      },
+      {
+        "case": {
+          "n": 100000,
+          "res": 512,
+          "seed": 3
+        },
+        "backend": "gsplat",
+        "metric": "grad_means_max_abs_err",
+        "value": 0.2449297807341324,
+        "tolerance": "2e-05+0.002|ref|"
+      },
+      {
+        "case": {
+          "n": 100000,
+          "res": 512,
+          "seed": 3
+        },
+        "backend": "gsplat",
+        "metric": "grad_log_scales_max_abs_err",
+        "value": 0.004314452591688944,
+        "tolerance": "2e-05+0.002|ref|"
+      },
+      {
+        "case": {
+          "n": 100000,
+          "res": 512,
+          "seed": 3
+        },
+        "backend": "gsplat",
+        "metric": "grad_quats_max_abs_err",
+        "value": 0.0042184858841998185,
+        "tolerance": "2e-05+0.002|ref|"
+      },
+      {
+        "case": {
+          "n": 100000,
+          "res": 512,
+          "seed": 3
+        },
+        "backend": "gsplat",
+        "metric": "grad_opacity_logits_max_abs_err",
+        "value": 0.00014794553024755075,
+        "tolerance": "2e-05+0.002|ref|"
+      },
+      {
+        "case": {
+          "n": 100000,
+          "res": 512,
+          "seed": 3
+        },
+        "backend": "gsplat",
+        "metric": "grad_color_logits_max_abs_err",
+        "value": 0.0010346553932514269,
+        "tolerance": "2e-05+0.002|ref|"
+      },
+      {
+        "case": {
+          "n": 100000,
+          "res": 512,
+          "seed": 3
+        },
+        "backend": "berkelium_rocm",
+        "metric": "forward_rgb_max_abs_err",
+        "value": 0.0010456162494575927,
+        "tolerance": 0.0002
+      },
+      {
+        "case": {
+          "n": 100000,
+          "res": 512,
+          "seed": 3
+        },
+        "backend": "berkelium_rocm",
+        "metric": "grad_means_max_abs_err",
+        "value": 0.2449450395231949,
+        "tolerance": "2e-05+0.002|ref|"
+      },
+      {
+        "case": {
+          "n": 100000,
+          "res": 512,
+          "seed": 3
+        },
+        "backend": "berkelium_rocm",
+        "metric": "grad_log_scales_max_abs_err",
+        "value": 0.004314601603300883,
+        "tolerance": "2e-05+0.002|ref|"
+      },
+      {
+        "case": {
+          "n": 100000,
+          "res": 512,
+          "seed": 3
+        },
+        "backend": "berkelium_rocm",
+        "metric": "grad_quats_max_abs_err",
+        "value": 0.00421872430277892,
+        "tolerance": "2e-05+0.002|ref|"
+      },
+      {
+        "case": {
+          "n": 100000,
+          "res": 512,
+          "seed": 3
+        },
+        "backend": "berkelium_rocm",
+        "metric": "grad_opacity_logits_max_abs_err",
+        "value": 0.00014794553024755075,
+        "tolerance": "2e-05+0.002|ref|"
+      },
+      {
+        "case": {
+          "n": 100000,
+          "res": 512,
+          "seed": 3
+        },
+        "backend": "berkelium_rocm",
+        "metric": "grad_color_logits_max_abs_err",
+        "value": 0.0010346553932514269,
+        "tolerance": "2e-05+0.002|ref|"
+      }
+    ]
+  },
+  "authorization": {
+    "static_config_approved": false,
+    "cli_i_approve_gpu_cost": true,
+    "authorized_by": "cli_flag",
+    "recorded_at": "2026-10-15T16:07:52Z",
+    "note": "per-run authorization asserted by the operator at invocation (--i-approve-gpu-cost); the experiment config was not modified"
+  },
+  "global_correctness": [
+    {
+      "name": "oracle_fd_gradcheck_fp64",
+      "value": 1.0,
+      "unit": "",
+      "status": "measured",
+      "reason": "",
+      "group": "correctness",
+      "passed": true,
+      "method": "torch.autograd.gradcheck central differences eps=1e-6 atol=1e-6 rtol=1e-4, 5 families"
+    }
+  ],
+  "source": "results/renderer/E-R1_mi300x.json",
+  "config_hash": "e542f7946faf6405bccb9768f97fcb83080485d7579ec4ae31cb3b4f43336b87",
+  "environment": {
+    "git_commit": "5a17478a71ae035929ac40694ef54292f8551b3d+dirty",
+    "python": "3.12.3",
+    "platform": "Linux-6.8.0-146-generic-x86_64-with-glibc2.39",
+    "numpy": "2.5.4",
+    "torch": "2.8.0+rocm7.0.2.git245bf6ed",
+    "torch_hip": "7.0.51831-7c9236b16",
+    "torch_cuda": null,
+    "gpu_visible": true,
+    "gpu_name": "AMD Instinct MI300X VF"
+  }
+}

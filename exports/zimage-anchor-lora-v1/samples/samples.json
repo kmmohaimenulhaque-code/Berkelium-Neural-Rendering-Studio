@@ -1,0 +1,112 @@
+[
+  {
+    "variant": "base",
+    "prompt": "a red fire hydrant",
+    "file": "exports/zimage-anchor-lora-v1/samples/base_0.png",
+    "keying": {
+      "ok": true,
+      "foreground_fraction": 0.233,
+      "border_spread_p95": 0.0204
+    },
+    "seconds": 142.64,
+    "finite": true,
+    "std": 0.2726362347602844,
+    "peak_gpu_mib": 13799.4
+  },
+  {
+    "variant": "base",
+    "prompt": "a wooden rocking horse",
+    "file": "exports/zimage-anchor-lora-v1/samples/base_1.png",
+    "keying": {
+      "ok": false,
+      "reason": "background not uniform (border colour spread p95 0.165 > 0.12)"
+    },
+    "seconds": 141.06,
+    "finite": true,
+    "std": 0.16705767810344696,
+    "peak_gpu_mib": 13799.4
+  },
+  {
+    "variant": "base",
+    "prompt": "a toy sailboat",
+    "file": "exports/zimage-anchor-lora-v1/samples/base_2.png",
+    "keying": {
+      "ok": true,
+      "foreground_fraction": 0.0868,
+      "border_spread_p95": 0.0929
+    },
+    "seconds": 141.33,
+    "finite": true,
+    "std": 0.1516304463148117,
+    "peak_gpu_mib": 13799.4
+  },
+  {
+    "variant": "base",
+    "prompt": "an old typewriter",
+    "file": "exports/zimage-anchor-lora-v1/samples/base_3.png",
+    "keying": {
+      "ok": false,
+      "reason": "background not uniform (border colour spread p95 0.193 > 0.12)"
+    },
+    "seconds": 141.11,
+    "finite": true,
+    "std": 0.20836199820041656,
+    "peak_gpu_mib": 13799.4
+  },
+  {
+    "variant": "lora",
+    "prompt": "a red fire hydrant",
+    "file": "exports/zimage-anchor-lora-v1/samples/lora_0.png",
+    "keying": {
+      "ok": true,
+      "foreground_fraction": 0.2067,
+      "border_spread_p95": 0.0301
+    },
+    "seconds": 142.85,
+    "finite": true,
+    "std": 0.25299060344696045,
+    "peak_gpu_mib": 13831.2
+  },
+  {
+    "variant": "lora",
+    "prompt": "a wooden rocking horse",
+    "file": "exports/zimage-anchor-lora-v1/samples/lora_1.png",
+    "keying": {
+      "ok": true,
+      "foreground_fraction": 0.1459,
+      "border_spread_p95": 0.02
+    },
+    "seconds": 142.43,
+    "finite": true,
+    "std": 0.27715376019477844,
+    "peak_gpu_mib": 13831.2
+  },
+  {
+    "variant": "lora",
+    "prompt": "a toy sailboat",
+    "file": "exports/zimage-anchor-lora-v1/samples/lora_2.png",
+    "keying": {
+      "ok": true,
+      "foreground_fraction": 0.0836,
+      "border_spread_p95": 0.0204
+    },
+    "seconds": 142.32,
+    "finite": true,
+    "std": 0.2998722493648529,
+    "peak_gpu_mib": 13831.2
+  },
+  {
+    "variant": "lora",
+    "prompt": "an old typewriter",
+    "file": "exports/zimage-anchor-lora-v1/samples/lora_3.png",
+    "keying": {
+      "ok": true,
+      "foreground_fraction": 0.1732,
+      "border_spread_p95": 0.044
+    },
+    "seconds": 142.75,
+    "finite": true,
+    "std": 0.24850872159004211,
+    "peak_gpu_mib": 13831.2
+  }
+]

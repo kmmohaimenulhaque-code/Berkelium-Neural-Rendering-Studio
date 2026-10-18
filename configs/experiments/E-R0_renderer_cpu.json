@@ -1,0 +1,3 @@
+{"id": "E-R0", "title": "Renderer correctness on CPU (reference + Berkelium HIP kernel under HIP-CPU)", "benchmark": "renderer",
+ "protocol": "benchmarks/configs/renderer_cpu_v1.json", "requires": ["cpu"], "approved": true,
+ "output": "results/renderer/E-R0_cpu.json"}

@@ -71,8 +71,10 @@ try:
     with open(CONFIG_PATH, "r") as f:
         config = json.load(f)
 except FileNotFoundError:
-    log.error("config.json not found at %s. Create it in the project root.", CONFIG_PATH)
-    sys.exit(1)
+    # The neural service needs no credentials; chat/OCR keys stay unset and /chat reports that clearly.
+    log.warning("config.json not found at %s; starting with defaults (chat disabled, no backend API key).",
+                CONFIG_PATH)
+    config = {}
 except json.JSONDecodeError as e:
     log.error("config.json is not valid JSON: %s", e)
     sys.exit(1)
@@ -99,7 +101,7 @@ FIREWORKS_API_KEY = config.get("fireworks_api_key", "")
 MODEL_ID = config.get("model_id", "")
 BASE_URL = config.get("base_url", "https://api.fireworks.ai/inference/v1")
 BACKEND_API_KEY = config.get("backend_api_key", "")
-ALLOWED_ORIGINS = config.get("allowed_origins", ["http://localhost:5173"])
+ALLOWED_ORIGINS = config.get("allowed_origins", ["http://localhost:5173", "http://127.0.0.1:5173"])
 
 if not FIREWORKS_API_KEY or not MODEL_ID:
     log.warning("fireworks_api_key or model_id is empty; /chat will fail until you set them.")
@@ -144,6 +146,7 @@ async def lifespan(app: FastAPI):
     else:
         log.info("Skipping Fireworks startup ping (key or model_id empty).")
     yield
+    NEURAL.close()
 
 
 limiter = Limiter(key_func=get_remote_address)
@@ -185,6 +188,15 @@ def require_api_key(x_api_key: Optional[str] = Header(default=None)) -> None:
         return
     if x_api_key != BACKEND_API_KEY:
         raise HTTPException(status_code=401, detail="invalid or missing api key")
+
+
+# Neural service (text-to-3D, Gaussian scenes, rendering, durable jobs) under /v1/neural, behind the same API key.
+# Jobs and artifacts persist under BERKELIUM_NEURAL_HOME (default ~/.berkelium/neural) and survive restarts.
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "neural"))
+from berkelium_neural.service.api import NeuralService, create_router  # noqa: E402
+
+NEURAL = NeuralService()
+app.include_router(create_router(NEURAL), dependencies=[Depends(require_api_key)])
 
 
 MAX_HISTORY_MESSAGES = 20
@@ -239,6 +251,16 @@ async def health(deep: int = 0):
         components["tesseract"] = {"status": "ok", "version": version}
     except Exception as e:
         components["tesseract"] = {"status": "error", "detail": str(e)}
+
+    try:
+        from berkelium_neural.service.executors import model_registry
+        reg = model_registry()
+        components["neural"] = {
+            "status": "ok", "jobs_root": str(NEURAL.root),
+            "models": {k: os.path.exists(v["checkpoint"]) for k, v in reg.items()},
+        }
+    except Exception as e:
+        components["neural"] = {"status": "error", "detail": str(e)}
 
     components["config"] = {
         "status": "ok" if (FIREWORKS_API_KEY and MODEL_ID and BACKEND_API_KEY) else "warn",

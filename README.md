@@ -777,3 +777,11 @@ Berkelium Studio brings together AI, geometry, rendering, and engineering in pur
 **Proudly Indian. Built for the World.**
 
 </div>
+
+## Neural rendering + text-to-CAD (merged from `universal-cadquery`)
+
+Studio → Scene → **Generate** now offers native text-to-3D, Shap-E, Z-Image → TripoSR, **Engineering CAD** (Qwen3-8B
+design compiler → Berkelium core) and **CadQuery** (Qwen3-32B → sandboxed CadQuery → STEP). Generated meshes are fitted with Gaussians and
+splat-rendered (AMD gsplat on ROCm, reference renderer on CPU). Models live on Hugging Face (`Mhaquehaque/berkelium-qwen3-8b-cad-v1[-GGUF]`,
+`Mhaquehaque/berkelium-qwen3-32b-cadquery-v1[-merged|-GGUF]`). Both are opt-in: the 8B is evaluated (strong on trained part families, weak on unseen ones) and
+the 32B is **not evaluated and non-commercial**. Setup, demo steps and evidence: `HANDOFF.md`, `NEURAL_RENDERING_DECISIONS.md`, `results/`.

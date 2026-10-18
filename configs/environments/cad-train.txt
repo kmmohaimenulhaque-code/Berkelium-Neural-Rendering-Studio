@@ -1,0 +1,7 @@
+# E-C1 compiler training/eval on Kaggle CUDA (T4). Same transformers/peft/accelerate pins that ran on Kaggle for M5.
+transformers==5.16.1
+peft==0.18.0
+accelerate==1.14.0
+bitsandbytes==0.50.2
+huggingface_hub==1.29.0
+safetensors==0.8.0

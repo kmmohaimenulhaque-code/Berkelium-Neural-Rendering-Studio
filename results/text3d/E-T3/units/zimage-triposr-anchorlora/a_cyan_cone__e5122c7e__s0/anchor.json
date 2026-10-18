@@ -1,0 +1,37 @@
+{
+  "status": "ok",
+  "anchor_prompt": {
+    "text": "a cyan cone. A single complete object, centered, fully visible with empty margin around it, three-quarter view from slightly above, isolated on a plain solid bright magenta background, soft even studio lighting, no shadow, no text, no other objects",
+    "background": "bright magenta",
+    "background_rgb": [
+      255,
+      0,
+      255
+    ],
+    "named_colours": [
+      "cyan"
+    ],
+    "colour_margin": 1.278,
+    "template": "{prompt}. A single complete object, centered, fully visible with empty margin around it, three-quarter view from slightly above, isolated on a plain solid {bg} background, soft even studio lighting, no shadow, no text, no other objects"
+  },
+  "sampler": {
+    "steps": 9,
+    "guidance_scale": 0.0,
+    "height": 768,
+    "width": 768,
+    "noise": "seeded CPU generator"
+  },
+  "dtype": "bfloat16",
+  "device": "cuda",
+  "gpu": "Tesla T4",
+  "load_s": 97.2,
+  "seconds": 145.06,
+  "finite": true,
+  "std": 0.3759635388851166,
+  "peak_gpu_mib": 13831.2,
+  "anchor_sha256": "1aae935512e24073fec415c56a35e03c5e1e5eb0ff7ae6ce448e50b522ed306d",
+  "lora": {
+    "path": "exports/zimage-anchor-lora-v1/adapter.safetensors",
+    "sha256": "0bde1ac0f975884607baf82a274eae92fa00550a2d42bb066ced6f91cd63df45"
+  }
+}

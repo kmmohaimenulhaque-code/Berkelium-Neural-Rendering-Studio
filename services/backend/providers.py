@@ -115,6 +115,11 @@ PROVIDERS: dict[str, Provider] = {p.id: p for p in [
     Provider("xai", "xAI (Grok)", "cloud", ("api_key",), "xai",
              check_url="https://api.x.ai/v1/models", models_shape="openai",
              docs_url="https://console.x.ai"),
+    Provider("nvidia_nim", "NVIDIA NIM", "cloud", ("api_key",), "nvidia_nim",
+             default_base_url="https://integrate.api.nvidia.com/v1",
+             check_url="{base_url}/models", models_shape="openai",
+             default_model="meta/llama-3.1-8b-instruct",
+             docs_url="https://build.nvidia.com/settings/api-keys"),
     Provider("huggingface", "Hugging Face", "cloud", ("api_key",), "huggingface",
              check_url="https://huggingface.co/api/whoami-v2",
              docs_url="https://huggingface.co/settings/tokens"),
@@ -412,7 +417,7 @@ def _litellm_kwargs(p: Provider, data: dict, model: str) -> dict:
     kwargs: dict[str, Any] = {"model": f"{p.litellm_prefix}/{model}"}
     if data.get("api_key"):
         kwargs["api_key"] = data["api_key"]
-    if p.kind in ("local", "custom"):
+    if p.kind in ("local", "custom") or p.id == "nvidia_nim":
         kwargs["api_base"] = _base_url(p, data)
         if p.id == "lm_studio" and "api_key" not in kwargs:
             kwargs["api_key"] = "lm-studio"  # LM Studio ignores it, LiteLLM wants one

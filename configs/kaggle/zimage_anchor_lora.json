@@ -1,0 +1,103 @@
+{
+  "name": "zimage-anchor-lora",
+  "title": "berkelium-anchorlora",
+  "slug": "berkelium-anchorlora",
+  "description": "Phase II.2: render the 36-object GSO anchor set (pinned zips), prepare latents/embeddings, train the canonical 3D-anchor LoRA on the frozen fp16 Z-Image-Turbo transformer (T4 0), sample base vs LoRA on held-out prompts, then every E-T3 unit for zimage-triposr-anchorlora (two shards) and TripoSR reconstruction",
+  "accelerator": "t4x2",
+  "include": [
+    "services/neural",
+    "scripts",
+    "benchmarks",
+    "configs"
+  ],
+  "include_files": [
+    "results/text3d/E-T3/units.jsonl",
+    "results/m5/E-A1_receipt.json"
+  ],
+  "steps": [
+    {
+      "name": "deps_stage_a",
+      "cmd": "pip install -q -r configs/environments/zimage-cuda.txt",
+      "env": {
+        "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"
+      }
+    },
+    {
+      "name": "venv_stage_b",
+      "cmd": "python -m venv --system-site-packages --without-pip .venv-triposr-cuda && .venv-triposr-cuda/bin/python -m pip install -q -r configs/environments/triposr-cuda.txt",
+      "env": {
+        "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"
+      }
+    },
+    {
+      "name": "fetch",
+      "cmd": "python scripts/zimage_triposr_batch.py fetch",
+      "env": {
+        "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"
+      }
+    },
+    {
+      "name": "lora_data",
+      "cmd": "python scripts/anchor_lora.py data",
+      "env": {
+        "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"
+      }
+    },
+    {
+      "name": "lora_prepare",
+      "cmd": "python scripts/anchor_lora.py prepare --te-dtype from-m5 --device cuda:0",
+      "env": {
+        "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"
+      }
+    },
+    {
+      "name": "lora_train",
+      "cmd": "python scripts/anchor_lora.py train --device cuda:0 --steps 400 --dtype from-m5 --rank 16 --lr 1e-4",
+      "env": {
+        "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"
+      }
+    },
+    {
+      "name": "lora_sample",
+      "cmd": "python scripts/anchor_lora.py sample --te-dtype from-m5 --dtype from-m5 --device cuda:0",
+      "env": {
+        "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"
+      }
+    },
+    {
+      "name": "embed",
+      "cmd": "python scripts/zimage_triposr_batch.py embed --te-dtype from-m5 --gen zimage-triposr-anchorlora",
+      "env": {
+        "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"
+      }
+    },
+    {
+      "name": "anchors",
+      "parallel": [
+        "CUDA_VISIBLE_DEVICES=0 python scripts/zimage_triposr_batch.py anchors --gen zimage-triposr-anchorlora --lora exports/zimage-anchor-lora-v1/adapter.safetensors --dtype from-m5 --shard 0/2",
+        "CUDA_VISIBLE_DEVICES=1 python scripts/zimage_triposr_batch.py anchors --gen zimage-triposr-anchorlora --lora exports/zimage-anchor-lora-v1/adapter.safetensors --dtype from-m5 --shard 1/2"
+      ],
+      "env": {
+        "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"
+      }
+    },
+    {
+      "name": "reconstruct",
+      "parallel": [
+        "CUDA_VISIBLE_DEVICES=0 .venv-triposr-cuda/bin/python scripts/zimage_triposr_batch.py reconstruct --gen zimage-triposr-anchorlora --shard 0/2",
+        "CUDA_VISIBLE_DEVICES=1 .venv-triposr-cuda/bin/python scripts/zimage_triposr_batch.py reconstruct --gen zimage-triposr-anchorlora --shard 1/2"
+      ],
+      "env": {
+        "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"
+      }
+    }
+  ],
+  "outputs": [
+    "exports/zimage-anchor-lora-v1/**",
+    "data/anchor_lora_gso_v1/manifest.json",
+    "results/text3d/E-T3/units_zimage-triposr-anchorlora_*.jsonl",
+    "results/text3d/E-T3/units/zimage-triposr-anchorlora/**"
+  ],
+  "env_note": "PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True on every GPU step (fragmentation next to a 12.3 GB resident transformer)",
+  "precision_note": "from the M5 receipt (precision study chose bfloat16: float16 anchors were non-finite on T4)"
+}

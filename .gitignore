@@ -58,3 +58,26 @@ __pycache__/
 *.pyc
 .pytest_cache/
 config.json.tmp
+
+# Local Python environments and pinned third-party checkouts (fetched by scripts/setup_*.sh)
+.venv*/
+third_party/
+
+# Regenerated datasets (scripts/prepare_dataset.py) and downloaded evaluation assets
+/data/
+# Pretrained weights (data/models/ is covered by /data/); Shap-E's default cache lands in the CWD
+/shap_e_model_cache/
+/results/demo/
+
+# Training runs (released weights live in exports/) and Kaggle runner staging: the kernel source embeds the code
+# bundle and remote/ holds the raw download; receipts and state stay tracked
+/runs/
+/results/kaggle/*/*/kernel/
+/results/kaggle/*/*/remote/
+# GPU-run E-T3 units: mesh.glb is a re-encoding of mesh.npz (the scoring input); its sha256 stays in the Kaggle
+# runner receipt manifest (results/kaggle/<job>/<run>/receipt.json). Already-tracked CPU-run GLBs are unaffected.
+/results/text3d/E-T3/units/**/mesh.glb
+/results/kaggle/*/*/dataset/
+
+# Trained weights live on Hugging Face, never in git (CLAUDE.md rule 7)
+/exports/qwen3-8b-cad-v1/

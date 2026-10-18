@@ -1,0 +1,56 @@
+{
+  "name": "textshape-lora-capsule-v2-replay",
+  "kind": "lora",
+  "train_version": "berkelium-textshape-train/1",
+  "config_hash": "da87f49694c84315b1fbc0fbb42ffae1fae7b952ee4124357dbd54693ea19374",
+  "weights": "adapter.pt",
+  "license": "MIT (Berkelium-owned weights; trained only on Berkelium-owned procedural data)",
+  "identity": "LoRA (r=8, alpha=16) on 10 nn.Linear layers + token-embedding delta for 'capsule', base frozen; trained with experience replay of the base training families and a signed-distance separation margin",
+  "dataset": {
+    "manifest_sha256": "ac440a0ad7b76acba1a1dfe7aaba46a123f9e0ae81d4992a34ab054f35150108",
+    "split_hashes": {
+      "adapter_test": "1bd7cd22fc73c99c6bc9a5689b5955959e9eaa507c3435ee7cc416bffa7abc64",
+      "adapter_train": "a0b1640d71efe320a6c20c48885dcfa52a3a6607226ebcd4004975274b5be2d2",
+      "test": "5c35fa4df28ba00561cc8166f2bfffe71d40d634cf19a1c3ad18f62d38f97fbe",
+      "train": "cc046bcb45ba7c87ebd6711a6e52c62eac13cfb1b804a58e271c16b51d9d6ea3",
+      "val": "cee3fc8fff11c6a28e9a724698d6a57a46fe15d545801cb609c7a4b80b70360d"
+    }
+  },
+  "export_provenance": {
+    "git_commit": "86a195a7b085b960d196da88786975c547d020e5+dirty",
+    "python": "3.13.16",
+    "platform": "Linux-6.18.44-fc-v139-x86_64-with-glibc2.39",
+    "numpy": "2.5.3",
+    "torch": "2.14.1+cpu",
+    "torch_hip": null,
+    "torch_cuda": null,
+    "gpu_visible": false
+  },
+  "base_checkpoint_sha256": "4989d90b206ae185a81aa33b22f7a5869470feb1f5e5c617cff56983a85e8504",
+  "adapter_config": {
+    "type": "lora+token_embedding_delta",
+    "r": 8,
+    "alpha": 16,
+    "targets": [
+      "encoder.proj",
+      "decoder.l0",
+      "decoder.l1",
+      "decoder.l2",
+      "decoder.l3",
+      "decoder.out",
+      "encoder.tf.layers.0.linear1",
+      "encoder.tf.layers.0.linear2",
+      "encoder.tf.layers.1.linear1",
+      "encoder.tf.layers.1.linear2"
+    ],
+    "new_tokens": [
+      "capsule"
+    ]
+  },
+  "files": {
+    "adapter.pt": "6a286f27dee86d39d6238927022fbbc4c39f66ce4a605d1fa00ee47c71a3f6fa",
+    "receipt.json": "2cf0e0e014190e77551473321dd0c45ad7178815363e6e6d25367811358b0d71",
+    "train_config.json": "ad348cf280f236fe8f02a9a8c22ceb385f4a486ae4ca03812a98b5eafe123c77"
+  },
+  "status": "NOT PROMOTED (E-T4, results/text3d/E-T4_capsule_replay.json): part-count accuracy on adapter_test 0.40 (v1 0.27, base 0.53; rule needs >= 0.53) and Chamfer +0.018 vs v1 (95% CI [+0.007, +0.031]; rule allows <= +0.010). Kept for reproducibility; adapter routing still uses capsule-v1 (D-031)."
+}

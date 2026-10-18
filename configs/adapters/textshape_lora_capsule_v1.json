@@ -1,0 +1,23 @@
+{
+  "name": "textshape-lora-capsule-v1",
+  "model_identity": "LoRA (r=8, alpha=16) on 10 nn.Linear layers + token-embedding delta for 'capsule', base frozen",
+  "fine_tuning_mechanism": "lora+token_embedding_delta (implemented in berkelium_neural.text3d.model.apply_adapter)",
+  "kind": "lora",
+  "dataset": "data/procedural_shapes_v1",
+  "train_splits": ["adapter_train"],
+  "base_checkpoint": "runs/textshape_base_v1/model.pt",
+  "lora_r": 8,
+  "lora_alpha": 16,
+  "new_tokens": ["capsule"],
+  "steps": 1500,
+  "batch_assets": 32,
+  "points_per_asset": 1024,
+  "lr": 0.002,
+  "grad_clip": 1.0,
+  "seed": 2,
+  "threads": 2,
+  "checkpoint_every": 100,
+  "log_every": 50,
+  "paraphrase_augment": true,
+  "out_dir": "runs/textshape_lora_capsule_v1"
+}

@@ -1,0 +1,1216 @@
+{
+  "baseline": "reference_cpu",
+  "candidate": "berkelium_hipcpu",
+  "rows": [
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "forward_alpha_max_abs_err",
+      "group": "correctness",
+      "baseline": 5.985911191164206e-07,
+      "candidate": 5.985911191164206e-07,
+      "abs_diff": 0.0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "pass"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "forward_depth_max_abs_err_alpha>0.5",
+      "group": "correctness",
+      "baseline": 5.669220572990241e-07,
+      "candidate": 5.669220572990241e-07,
+      "abs_diff": 0.0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "pass"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "forward_rgb_max_abs_err",
+      "group": "correctness",
+      "baseline": 3.8869383772732746e-07,
+      "candidate": 3.8869383772732746e-07,
+      "abs_diff": 0.0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "pass"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "grad_color_logits_max_abs_err",
+      "group": "correctness",
+      "baseline": 3.8409386909910026e-07,
+      "candidate": 3.8409386909910026e-07,
+      "abs_diff": 0.0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "pass"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "grad_log_scales_max_abs_err",
+      "group": "correctness",
+      "baseline": 1.207867541541674e-06,
+      "candidate": 1.207867541541674e-06,
+      "abs_diff": 0.0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "pass"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "grad_means_max_abs_err",
+      "group": "correctness",
+      "baseline": 2.4932372411079484e-05,
+      "candidate": 2.4932372411079484e-05,
+      "abs_diff": 0.0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "pass"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "grad_opacity_logits_max_abs_err",
+      "group": "correctness",
+      "baseline": 5.011009260869059e-07,
+      "candidate": 6.203102156376872e-07,
+      "abs_diff": 1.1920928955078125e-07,
+      "rel_change": 0.23789476998513226,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "pass"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "grad_quats_max_abs_err",
+      "group": "correctness",
+      "baseline": 9.836717128619554e-07,
+      "candidate": 8.528992440637317e-07,
+      "abs_diff": -1.3077246879822368e-07,
+      "rel_change": -0.13294320359965028,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "pass"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "gradient_bitwise_repeatable",
+      "group": "correctness",
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "abs_diff": 0.0,
+      "rel_change": null,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "pass"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "backward_latency",
+      "group": "performance",
+      "baseline": 2.5045000011232332,
+      "candidate": null,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "measured",
+      "candidate_status": "not_applicable",
+      "reason": "HIP-CPU emulation: timing is not GPU performance",
+      "status": "not_comparable"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "forward_latency",
+      "group": "performance",
+      "baseline": 3.569998999410018,
+      "candidate": null,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "measured",
+      "candidate_status": "not_applicable",
+      "reason": "HIP-CPU emulation: timing is not GPU performance",
+      "status": "not_comparable"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "iteration_latency",
+      "group": "performance",
+      "baseline": 6.391892500687391,
+      "candidate": null,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "measured",
+      "candidate_status": "not_applicable",
+      "reason": "HIP-CPU emulation: timing is not GPU performance",
+      "status": "not_comparable"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "peak_memory",
+      "group": "performance",
+      "baseline": 656.96484375,
+      "candidate": 662.25390625,
+      "abs_diff": 5.2890625,
+      "rel_change": 0.008050754237943193,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "max_pairs_per_tile",
+      "group": "workload",
+      "baseline": 9,
+      "candidate": 9,
+      "abs_diff": 0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "n_gaussians",
+      "group": "workload",
+      "baseline": 16,
+      "candidate": 16,
+      "abs_diff": 0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "n_pairs",
+      "group": "workload",
+      "baseline": 31,
+      "candidate": 31,
+      "abs_diff": 0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 16,
+        "res": 32,
+        "seed": 5,
+        "gate": true
+      },
+      "metric": "n_visible",
+      "group": "workload",
+      "baseline": 16,
+      "candidate": 16,
+      "abs_diff": 0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 200,
+        "res": 64,
+        "seed": 1
+      },
+      "metric": "forward_alpha_max_abs_err",
+      "group": "correctness",
+      "baseline": 8.747681148335573e-07,
+      "candidate": 8.747681148335573e-07,
+      "abs_diff": 0.0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "pass"
+    },
+    {
+      "case": {
+        "n": 200,
+        "res": 64,
+        "seed": 1
+      },
+      "metric": "forward_depth_max_abs_err_alpha>0.5",
+      "group": "correctness",
+      "baseline": 1.196212142673403e-06,
+      "candidate": 1.196212142673403e-06,
+      "abs_diff": 0.0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "pass"
+    },
+    {
+      "case": {
+        "n": 200,
+        "res": 64,
+        "seed": 1
+      },
+      "metric": "forward_rgb_max_abs_err",
+      "group": "correctness",
+      "baseline": 7.531117962034095e-07,
+      "candidate": 7.531117962034095e-07,
+      "abs_diff": 0.0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "pass"
+    },
+    {
+      "case": {
+        "n": 200,
+        "res": 64,
+        "seed": 1
+      },
+      "metric": "grad_color_logits_max_abs_err",
+      "group": "correctness",
+      "baseline": 1.2738893255814787e-06,
+      "candidate": 2.0337215438592793e-05,
+      "abs_diff": 1.9063326113011314e-05,
+      "rel_change": 14.9646643002599,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info: not a gate (agreement_only; 0/600 entries beyond spec tol)"
+    },
+    {
+      "case": {
+        "n": 200,
+        "res": 64,
+        "seed": 1
+      },
+      "metric": "grad_log_scales_max_abs_err",
+      "group": "correctness",
+      "baseline": 4.260329231620119e-06,
+      "candidate": 1.4607736993688114e-05,
+      "abs_diff": 1.0347407762067995e-05,
+      "rel_change": 2.4287812512867886,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info: not a gate (agreement_only; 0/600 entries beyond spec tol)"
+    },
+    {
+      "case": {
+        "n": 200,
+        "res": 64,
+        "seed": 1
+      },
+      "metric": "grad_means_max_abs_err",
+      "group": "correctness",
+      "baseline": 7.033756482854869e-05,
+      "candidate": 0.00024884280763437516,
+      "abs_diff": 0.00017850524280582647,
+      "rel_change": 2.5378365492314363,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info: not a gate (agreement_only; 0/600 entries beyond spec tol)"
+    },
+    {
+      "case": {
+        "n": 200,
+        "res": 64,
+        "seed": 1
+      },
+      "metric": "grad_opacity_logits_max_abs_err",
+      "group": "correctness",
+      "baseline": 1.5394809257385234e-06,
+      "candidate": 1.4947774421569804e-06,
+      "abs_diff": -4.470348358154297e-08,
+      "rel_change": -0.029038023683273444,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info: not a gate (agreement_only; 0/200 entries beyond spec tol)"
+    },
+    {
+      "case": {
+        "n": 200,
+        "res": 64,
+        "seed": 1
+      },
+      "metric": "grad_quats_max_abs_err",
+      "group": "correctness",
+      "baseline": 1.1415416445670346e-05,
+      "candidate": 1.1653835024771908e-05,
+      "abs_diff": 2.384185791015625e-07,
+      "rel_change": 0.02088566634745859,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info: not a gate (agreement_only; 0/800 entries beyond spec tol)"
+    },
+    {
+      "case": {
+        "n": 200,
+        "res": 64,
+        "seed": 1
+      },
+      "metric": "gradient_bitwise_repeatable",
+      "group": "correctness",
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "abs_diff": 0.0,
+      "rel_change": null,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "pass"
+    },
+    {
+      "case": {
+        "n": 200,
+        "res": 64,
+        "seed": 1
+      },
+      "metric": "backward_latency",
+      "group": "performance",
+      "baseline": 11.672248000650143,
+      "candidate": null,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "measured",
+      "candidate_status": "not_applicable",
+      "reason": "HIP-CPU emulation: timing is not GPU performance",
+      "status": "not_comparable"
+    },
+    {
+      "case": {
+        "n": 200,
+        "res": 64,
+        "seed": 1
+      },
+      "metric": "forward_latency",
+      "group": "performance",
+      "baseline": 48.37150749972352,
+      "candidate": null,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "measured",
+      "candidate_status": "not_applicable",
+      "reason": "HIP-CPU emulation: timing is not GPU performance",
+      "status": "not_comparable"
+    },
+    {
+      "case": {
+        "n": 200,
+        "res": 64,
+        "seed": 1
+      },
+      "metric": "iteration_latency",
+      "group": "performance",
+      "baseline": 62.973598999633396,
+      "candidate": null,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "measured",
+      "candidate_status": "not_applicable",
+      "reason": "HIP-CPU emulation: timing is not GPU performance",
+      "status": "not_comparable"
+    },
+    {
+      "case": {
+        "n": 200,
+        "res": 64,
+        "seed": 1
+      },
+      "metric": "peak_memory",
+      "group": "performance",
+      "baseline": 676.03125,
+      "candidate": 676.03125,
+      "abs_diff": 0.0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 200,
+        "res": 64,
+        "seed": 1
+      },
+      "metric": "max_pairs_per_tile",
+      "group": "workload",
+      "baseline": 95,
+      "candidate": 95,
+      "abs_diff": 0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 200,
+        "res": 64,
+        "seed": 1
+      },
+      "metric": "n_gaussians",
+      "group": "workload",
+      "baseline": 200,
+      "candidate": 200,
+      "abs_diff": 0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 200,
+        "res": 64,
+        "seed": 1
+      },
+      "metric": "n_pairs",
+      "group": "workload",
+      "baseline": 509,
+      "candidate": 509,
+      "abs_diff": 0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 200,
+        "res": 64,
+        "seed": 1
+      },
+      "metric": "n_visible",
+      "group": "workload",
+      "baseline": 200,
+      "candidate": 200,
+      "abs_diff": 0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 96,
+        "seed": 2
+      },
+      "metric": "forward_alpha_max_abs_err",
+      "group": "correctness",
+      "baseline": 1.7512393851726316e-06,
+      "candidate": 1.7512393851726316e-06,
+      "abs_diff": 0.0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "pass"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 96,
+        "seed": 2
+      },
+      "metric": "forward_depth_max_abs_err_alpha>0.5",
+      "group": "correctness",
+      "baseline": 1.777201418029506e-06,
+      "candidate": 1.777201418029506e-06,
+      "abs_diff": 0.0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "pass"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 96,
+        "seed": 2
+      },
+      "metric": "forward_rgb_max_abs_err",
+      "group": "correctness",
+      "baseline": 1.6080504944837593e-06,
+      "candidate": 1.6080504944837593e-06,
+      "abs_diff": 0.0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "pass"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 96,
+        "seed": 2
+      },
+      "metric": "grad_color_logits_max_abs_err",
+      "group": "correctness",
+      "baseline": 3.24972144694069e-06,
+      "candidate": 5.116912846392374e-05,
+      "abs_diff": 4.791940701698305e-05,
+      "rel_change": 14.745696761823913,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info: not a gate (agreement_only; 0/3000 entries beyond spec tol)"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 96,
+        "seed": 2
+      },
+      "metric": "grad_log_scales_max_abs_err",
+      "group": "correctness",
+      "baseline": 1.2560573111386475e-05,
+      "candidate": 4.85357958041055e-05,
+      "abs_diff": 3.597522269271902e-05,
+      "rel_change": 2.8641386323452536,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info: not a gate (agreement_only; 0/3000 entries beyond spec tol)"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 96,
+        "seed": 2
+      },
+      "metric": "grad_means_max_abs_err",
+      "group": "correctness",
+      "baseline": 0.0004871012835252486,
+      "candidate": 0.0007538066461005855,
+      "abs_diff": 0.00026670536257533684,
+      "rel_change": 0.5475357417355529,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info: not a gate (agreement_only; 0/3000 entries beyond spec tol)"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 96,
+        "seed": 2
+      },
+      "metric": "grad_opacity_logits_max_abs_err",
+      "group": "correctness",
+      "baseline": 3.116505107092493e-06,
+      "candidate": 1.067154746373089e-05,
+      "abs_diff": 7.555042356638397e-06,
+      "rel_change": 2.4242034256400706,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info: not a gate (agreement_only; 0/1000 entries beyond spec tol)"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 96,
+        "seed": 2
+      },
+      "metric": "grad_quats_max_abs_err",
+      "group": "correctness",
+      "baseline": 2.765905165064142e-05,
+      "candidate": 2.753984236109064e-05,
+      "abs_diff": -1.1920928955078125e-07,
+      "rel_change": -0.0043099557807151625,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info: not a gate (agreement_only; 0/4000 entries beyond spec tol)"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 96,
+        "seed": 2
+      },
+      "metric": "gradient_bitwise_repeatable",
+      "group": "correctness",
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "abs_diff": 0.0,
+      "rel_change": null,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "pass"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 96,
+        "seed": 2
+      },
+      "metric": "backward_latency",
+      "group": "performance",
+      "baseline": 132.52330049999728,
+      "candidate": null,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "measured",
+      "candidate_status": "not_applicable",
+      "reason": "HIP-CPU emulation: timing is not GPU performance",
+      "status": "not_comparable"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 96,
+        "seed": 2
+      },
+      "metric": "forward_latency",
+      "group": "performance",
+      "baseline": 116.89776349976455,
+      "candidate": null,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "measured",
+      "candidate_status": "not_applicable",
+      "reason": "HIP-CPU emulation: timing is not GPU performance",
+      "status": "not_comparable"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 96,
+        "seed": 2
+      },
+      "metric": "iteration_latency",
+      "group": "performance",
+      "baseline": 255.82364949968905,
+      "candidate": null,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "measured",
+      "candidate_status": "not_applicable",
+      "reason": "HIP-CPU emulation: timing is not GPU performance",
+      "status": "not_comparable"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 96,
+        "seed": 2
+      },
+      "metric": "peak_memory",
+      "group": "performance",
+      "baseline": 738.9765625,
+      "candidate": 738.9765625,
+      "abs_diff": 0.0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 96,
+        "seed": 2
+      },
+      "metric": "max_pairs_per_tile",
+      "group": "workload",
+      "baseline": 299,
+      "candidate": 299,
+      "abs_diff": 0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 96,
+        "seed": 2
+      },
+      "metric": "n_gaussians",
+      "group": "workload",
+      "baseline": 1000,
+      "candidate": 1000,
+      "abs_diff": 0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 96,
+        "seed": 2
+      },
+      "metric": "n_pairs",
+      "group": "workload",
+      "baseline": 2515,
+      "candidate": 2515,
+      "abs_diff": 0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 1000,
+        "res": 96,
+        "seed": 2
+      },
+      "metric": "n_visible",
+      "group": "workload",
+      "baseline": 1000,
+      "candidate": 1000,
+      "abs_diff": 0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 3000,
+        "res": 128,
+        "seed": 3
+      },
+      "metric": "forward_alpha_max_abs_err",
+      "group": "correctness",
+      "baseline": 3.829741059613312e-06,
+      "candidate": 3.829741059613312e-06,
+      "abs_diff": 0.0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "pass"
+    },
+    {
+      "case": {
+        "n": 3000,
+        "res": 128,
+        "seed": 3
+      },
+      "metric": "forward_depth_max_abs_err_alpha>0.5",
+      "group": "correctness",
+      "baseline": 2.6395655212674285e-06,
+      "candidate": 2.6395655212674285e-06,
+      "abs_diff": 0.0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "pass"
+    },
+    {
+      "case": {
+        "n": 3000,
+        "res": 128,
+        "seed": 3
+      },
+      "metric": "forward_rgb_max_abs_err",
+      "group": "correctness",
+      "baseline": 3.366272305571627e-06,
+      "candidate": 3.366272305571627e-06,
+      "abs_diff": 0.0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "pass"
+    },
+    {
+      "case": {
+        "n": 3000,
+        "res": 128,
+        "seed": 3
+      },
+      "metric": "grad_color_logits_max_abs_err",
+      "group": "correctness",
+      "baseline": 3.276686464936951e-06,
+      "candidate": 0.00013371611384344062,
+      "abs_diff": 0.00013043942737850367,
+      "rel_change": 39.80833344120813,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info: not a gate (agreement_only; 0/9000 entries beyond spec tol)"
+    },
+    {
+      "case": {
+        "n": 3000,
+        "res": 128,
+        "seed": 3
+      },
+      "metric": "grad_log_scales_max_abs_err",
+      "group": "correctness",
+      "baseline": 1.1578822789071186e-05,
+      "candidate": 8.95997260252912e-05,
+      "abs_diff": 7.802090323622002e-05,
+      "rel_change": 6.738241413441529,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info: not a gate (agreement_only; 0/9000 entries beyond spec tol)"
+    },
+    {
+      "case": {
+        "n": 3000,
+        "res": 128,
+        "seed": 3
+      },
+      "metric": "grad_means_max_abs_err",
+      "group": "correctness",
+      "baseline": 0.0003903488535641486,
+      "candidate": 0.009769236085636734,
+      "abs_diff": 0.009378887232072586,
+      "rel_change": 24.026936793683426,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info: not a gate (agreement_only; 19/9000 entries beyond spec tol)"
+    },
+    {
+      "case": {
+        "n": 3000,
+        "res": 128,
+        "seed": 3
+      },
+      "metric": "grad_opacity_logits_max_abs_err",
+      "group": "correctness",
+      "baseline": 2.2538034856744993e-06,
+      "candidate": 5.7866252501120874e-05,
+      "abs_diff": 5.5612449015446375e-05,
+      "rel_change": 24.674932561302324,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info: not a gate (agreement_only; 0/3000 entries beyond spec tol)"
+    },
+    {
+      "case": {
+        "n": 3000,
+        "res": 128,
+        "seed": 3
+      },
+      "metric": "grad_quats_max_abs_err",
+      "group": "correctness",
+      "baseline": 1.991322452332689e-05,
+      "candidate": 7.051507462585427e-05,
+      "abs_diff": 5.060185010252738e-05,
+      "rel_change": 2.5411178407219284,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info: not a gate (agreement_only; 0/12000 entries beyond spec tol)"
+    },
+    {
+      "case": {
+        "n": 3000,
+        "res": 128,
+        "seed": 3
+      },
+      "metric": "gradient_bitwise_repeatable",
+      "group": "correctness",
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "abs_diff": 0.0,
+      "rel_change": null,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "pass"
+    },
+    {
+      "case": {
+        "n": 3000,
+        "res": 128,
+        "seed": 3
+      },
+      "metric": "backward_latency",
+      "group": "performance",
+      "baseline": 159.8179844995684,
+      "candidate": null,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "measured",
+      "candidate_status": "not_applicable",
+      "reason": "HIP-CPU emulation: timing is not GPU performance",
+      "status": "not_comparable"
+    },
+    {
+      "case": {
+        "n": 3000,
+        "res": 128,
+        "seed": 3
+      },
+      "metric": "forward_latency",
+      "group": "performance",
+      "baseline": 409.5200884994483,
+      "candidate": null,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "measured",
+      "candidate_status": "not_applicable",
+      "reason": "HIP-CPU emulation: timing is not GPU performance",
+      "status": "not_comparable"
+    },
+    {
+      "case": {
+        "n": 3000,
+        "res": 128,
+        "seed": 3
+      },
+      "metric": "iteration_latency",
+      "group": "performance",
+      "baseline": 586.8134995007495,
+      "candidate": null,
+      "abs_diff": null,
+      "rel_change": null,
+      "baseline_status": "measured",
+      "candidate_status": "not_applicable",
+      "reason": "HIP-CPU emulation: timing is not GPU performance",
+      "status": "not_comparable"
+    },
+    {
+      "case": {
+        "n": 3000,
+        "res": 128,
+        "seed": 3
+      },
+      "metric": "peak_memory",
+      "group": "performance",
+      "baseline": 843.265625,
+      "candidate": 843.265625,
+      "abs_diff": 0.0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 3000,
+        "res": 128,
+        "seed": 3
+      },
+      "metric": "max_pairs_per_tile",
+      "group": "workload",
+      "baseline": 470,
+      "candidate": 470,
+      "abs_diff": 0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 3000,
+        "res": 128,
+        "seed": 3
+      },
+      "metric": "n_gaussians",
+      "group": "workload",
+      "baseline": 3000,
+      "candidate": 3000,
+      "abs_diff": 0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 3000,
+        "res": 128,
+        "seed": 3
+      },
+      "metric": "n_pairs",
+      "group": "workload",
+      "baseline": 6984,
+      "candidate": 6984,
+      "abs_diff": 0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": {
+        "n": 3000,
+        "res": 128,
+        "seed": 3
+      },
+      "metric": "n_visible",
+      "group": "workload",
+      "baseline": 3000,
+      "candidate": 3000,
+      "abs_diff": 0,
+      "rel_change": 0.0,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "info"
+    },
+    {
+      "case": "fit",
+      "metric": "heldout_view_psnr_after_fit",
+      "group": "quality",
+      "baseline": 21.65410417813955,
+      "candidate": 21.639825049792915,
+      "abs_diff": -0.014279128346636583,
+      "rel_change": -0.0006594190287978654,
+      "baseline_status": "measured",
+      "candidate_status": "measured",
+      "reason": "",
+      "status": "regressed"
+    }
+  ],
+  "global_correctness": [
+    {
+      "name": "oracle_fd_gradcheck_fp64",
+      "value": 1.0,
+      "unit": "",
+      "status": "measured",
+      "reason": "",
+      "group": "correctness",
+      "passed": true,
+      "method": "torch.autograd.gradcheck central differences eps=1e-6 atol=1e-6 rtol=1e-4, 5 families"
+    }
+  ],
+  "source": "results/renderer/E-R0_cpu.json",
+  "config_hash": "b1031174ff3f9eb3efa2316a7e21e14ec96de4559983851e33d6288d483cd7ba",
+  "environment": {
+    "git_commit": "d525d20dc33935f60663769d9599b9ed6c4d975d+dirty",
+    "python": "3.13.16",
+    "platform": "Linux-6.18.44-fc-v114-x86_64-with-glibc2.39",
+    "numpy": "2.5.3",
+    "torch": "2.14.1+cu130",
+    "torch_hip": null,
+    "torch_cuda": "13.0",
+    "gpu_visible": false
+  }
+}

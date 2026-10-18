@@ -1,0 +1,13 @@
+# zimage-triposr stage A (Z-Image-Turbo anchors) on a CUDA GPU: Kaggle 2x T4, Python 3.13, the image's own torch
+# 2.11.0+cu128 (never reinstalled). These pins equal the Kaggle image's versions (probed 2026-10-16), recorded so a
+# rerun elsewhere installs the same stack. diffusers 0.41 needs huggingface_hub >= 1.32 and cannot share an
+# environment with TripoSR's transformers < 5, so TripoSR (stage B) runs in the overlay venv of triposr-cuda.txt.
+diffusers==0.40.0
+transformers==5.16.1
+huggingface_hub==1.29.0
+accelerate==1.14.0
+safetensors==0.8.0
+peft==0.18.0
+trimesh==5.1.1
+scikit-image==0.26.0
+pydantic==2.13.5

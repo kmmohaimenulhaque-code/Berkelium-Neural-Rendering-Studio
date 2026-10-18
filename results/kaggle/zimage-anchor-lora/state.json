@@ -1,0 +1,23 @@
+{
+  "job": "zimage-anchor-lora",
+  "run_id": "20261016T182530Z",
+  "kernel": "kmmohaimenulhaque/berkelium-anchorlora-bf16",
+  "accelerator": "NvidiaTeslaT4",
+  "spec": "configs/kaggle/zimage_anchor_lora.json",
+  "spec_sha256": "1a6595156dab40fdf0d0d5d5d0686ac61df5f9aa562760083bac787323244558",
+  "bundle_sha256": "ab2a6b417cf585135e5f9879da2a4c5eb39c787dbfa7b0b7f562b91b1d10fddc",
+  "bundle_bytes": 228181,
+  "bundle_files": 118,
+  "data": null,
+  "git": {
+    "commit": "4dedba4950df1346ae0b68d00df22715b86a2c71",
+    "branch": "neural-v1",
+    "dirty_files": 11
+  },
+  "pushed_at": "2026-10-16T18:25:34Z",
+  "status": "pulled_partial (failed at reconstruct)",
+  "push_response": "Kernel version 1 successfully pushed.  Please check progress at https://www.kaggle.com/code/kmmohaimenulhaque/berkelium-anchorlora-bf16",
+  "kernel_final_status": "complete",
+  "verified_files": 415,
+  "admitted": 414
+}

@@ -69,7 +69,9 @@ The first experiment answers the highest-risk question: whether the custom HIP p
 |---|---|---:|---:|---|
 | E-A0 HIP feasibility (research E0) | 1× MI300X | 1.5 | Not run | CPU G1 + explicit authorization + provider inventory |
 | E-T0 optional CUDA control/metrics | Kaggle or Colab T4 | 0 MI300X | Not run | CPU fixtures available; verify notebook quota |
-| E-A1 learned image smoke (research E1) | 1× MI300X | 1.0 | Not run | E0 pass; separate download/run permission and license/operator inventory |
+| E-R1 renderer benchmark (covers E-A0's HIP feasibility question), 2026-10-13 | 1× MI300X VF | — | not recorded from a provider receipt | completed: `results/renderer/E-R1_mi300x.20261013T200512Z.json` |
+| E-R1 rerun incl. one failed attempt, 2026-10-15 | 1× MI300X VF | — | not recorded from a provider receipt | completed: `E-R1_mi300x.20261015T160753Z.json` (failed attempt kept) |
+| E-A1 learned image smoke (research E1) | 1× MI300X | 1.0 | Not run (preflight blocked on the CPU dev host: `results/m5/E-A1_preflight.json`) | E0 pass; separate download/run permission and license/operator inventory |
 | E-A2 HIP renderer scale test | 1× MI300X | 2.0 | Not run | E0 pass; target one bottleneck only |
 | E-A3 small end-to-end scene optimization | 1× MI300X | 3.0 | Not run | E-A2 pass and quality baseline recorded |
 | E-A4 integration/debug reserve | 1× MI300X | 4.0 | Not run | Only for a named blocker with reproducible failure |

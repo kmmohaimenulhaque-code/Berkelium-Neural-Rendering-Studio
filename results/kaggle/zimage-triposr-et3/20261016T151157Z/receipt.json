@@ -1,0 +1,1900 @@
+{
+  "local": {
+    "job": "zimage-triposr-et3",
+    "run_id": "20261016T151157Z",
+    "kernel": "kmmohaimenulhaque/berkelium-zimage",
+    "accelerator": "NvidiaTeslaT4",
+    "spec": "configs/kaggle/zimage_triposr_et3.json",
+    "spec_sha256": "442ce298d4e210a97c129f296fe9b755dc6947b856026fe07c4d74c4b4628142",
+    "bundle_sha256": "b852f2b8e0eb7a9c0de3eb791074c5a5cd06a1169c7ca00facfc31169d86e616",
+    "bundle_bytes": 244362,
+    "bundle_files": 119,
+    "git": {
+      "commit": "1c64333aa7a924b96b3be154f6b3380cc19458f4",
+      "branch": "neural-v1",
+      "dirty_files": 23
+    },
+    "pushed_at": "2026-10-16T15:11:58Z",
+    "status": "pushed",
+    "push_response": "Kernel version 3 successfully pushed.  Please check progress at https://www.kaggle.com/code/kmmohaimenulhaque/berkelium-zimage",
+    "verification": {
+      "files": 436,
+      "verified": 436,
+      "problems": [],
+      "bytes": 176441535
+    }
+  },
+  "remote": {
+    "job": "zimage-triposr-et3",
+    "run_id": "20261016T151157Z",
+    "started_at": "2026-10-16T15:12:04Z",
+    "bundle_sha256_expected": "b852f2b8e0eb7a9c0de3eb791074c5a5cd06a1169c7ca00facfc31169d86e616",
+    "steps": [
+      {
+        "name": "deps_stage_a",
+        "seconds": 8.3,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "pip install -q -r configs/environments/zimage-cuda.txt",
+            "rc": 0,
+            "log": "logs/00_deps_stage_a.log",
+            "tail": "   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 556.4/556.4 kB 12.0 MB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 750.4/750.4 kB 22.1 MB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 13.7/13.7 MB 104.5 MB/s eta 0:00:00\nERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.\ncucim-cu12 26.2.1 requires scikit-image<0.26.0,>=0.19.0, but you have scikit-image 0.26.0 which is incompatible.\n"
+          }
+        ]
+      },
+      {
+        "name": "venv_stage_b",
+        "seconds": 20.9,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "python -m venv --system-site-packages --without-pip .venv-triposr-cuda && .venv-triposr-cuda/bin/python -m pip install -q -r configs/environments/triposr-cuda.txt && .venv-triposr-cuda/bin/python -c \"import transformers, huggingface_hub; assert transformers.__version__ == '4.57.6', transformers.__version__; print(transformers.__version__, huggingface_hub.__version__)\"",
+            "rc": 0,
+            "log": "logs/01_venv_stage_b.log",
+            "tail": "     \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 44.0/44.0 kB 1.5 MB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 12.0/12.0 MB 98.2 MB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 3.3/3.3 MB 92.3 MB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 566.4/566.4 kB 28.1 MB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 79.5/79.5 kB 3.1 MB/s eta 0:00:00\nERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.\ngradio 6.26.0 requires huggingface-hub<2.0,>=1.16.0, but you have huggingface-hub 0.36.2 which is incompatible.\ndiffusers 0.40.0 requires huggingface-hub<2.0,>=1.23.0, but you have huggingface-hub 0.36.2 which is incompatible.\n4.57.6 0.36.2\n"
+          }
+        ]
+      },
+      {
+        "name": "fetch",
+        "seconds": 248.2,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "python scripts/zimage_triposr_batch.py fetch",
+            "rc": 0,
+            "log": "logs/02_fetch.log",
+            "tail": "Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.\nverified model_index.json (0.00 GiB, 1s)\nverified scheduler/scheduler_config.json (0.00 GiB, 0s)\nverified text_encoder/config.json (0.00 GiB, 0s)\nverified text_encoder/generation_config.json (0.00 GiB, 0s)\nverified text_encoder/model-00001-of-00003.safetensors (3.69 GiB, 35s)\nverified text_encoder/model-00002-of-00003.safetensors (3.71 GiB, 23s)\nverified text_encoder/model-00003-of-00003.safetensors (0.09 GiB, 2s)\nverified text_encoder/model.safetensors.index.json (0.00 GiB, 0s)\nverified tokenizer/merges.txt (0.00 GiB, 0s)\nverified tokenizer/tokenizer.json (0.01 GiB, 1s)\nverified tokenizer/tokenizer_config.json (0.00 GiB, 0s)\nverified tokenizer/vocab.json (0.00 GiB, 0s)\nverified transformer/config.json (0.00 GiB, 0s)\nverified transformer/diffusion_pytorch_model-00001-of-00003.safetensors (9.29 GiB, 68s)\nverified transformer/diffusion_pytorch_model-00002-of-00003.safetensors (9.29 GiB, 69s)\nverified transformer/diffusion_pytorch_model-00003-of-00003.safetensors (4.35 GiB, 32s)\nverified transformer/diffusion_pytorch_model.safetensors.index.json (0.00 GiB, 0s)\nverified vae/config.json (0.00 GiB, 0s)\nverified vae/diffusion_pytorch_model.safetensors (0.16 GiB, 2s)\nverified model.ckpt (1.56 GiB, 11s)\nverified config.yaml (0.00 GiB, 0s)\n{\"zimage\": 19, \"triposr\": 2}\n"
+          }
+        ]
+      },
+      {
+        "name": "m5_smoke",
+        "seconds": 1003.4,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "python scripts/m5_image_prior_smoke.py --i-approve-gpu-cost",
+            "rc": 0,
+            "log": "logs/03_m5_smoke.log",
+            "tail": "\nLoading weights:   0%|          | 0/398 [00:00<?, ?it/s]\nLoading weights:   9%|\u2589         | 35/398 [00:00<00:01, 302.44it/s]\nLoading weights:  18%|\u2588\u258a        | 71/398 [00:00<00:01, 319.64it/s]\nLoading weights:  26%|\u2588\u2588\u258c       | 104/398 [00:00<00:01, 271.20it/s]\nLoading weights:  36%|\u2588\u2588\u2588\u258c      | 143/398 [00:00<00:00, 299.65it/s]\nLoading weights:  49%|\u2588\u2588\u2588\u2588\u2589     | 197/398 [00:00<00:00, 371.06it/s]\nLoading weights:  60%|\u2588\u2588\u2588\u2588\u2588\u2588    | 240/398 [00:00<00:00, 388.68it/s]\nLoading weights:  73%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258e  | 292/398 [00:00<00:00, 426.67it/s]\nLoading weights:  84%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258d | 336/398 [00:00<00:00, 424.93it/s]\nLoading weights:  97%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258b| 388/398 [00:00<00:00, 448.13it/s]\nLoading weights: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 398/398 [00:00<00:00, 398.73it/s]\n\nLoading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]\nLoading checkpoint shards:  33%|\u2588\u2588\u2588\u258e      | 1/3 [00:39<01:18, 39.33s/it]\nLoading checkpoint shards:  67%|\u2588\u2588\u2588\u2588\u2588\u2588\u258b   | 2/3 [01:19<00:39, 39.70s/it]\nLoading checkpoint shards: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 3/3 [01:37<00:00, 30.05s/it]\nLoading checkpoint shards: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 3/3 [01:37<00:00, 32.62s/it]\n\nLoading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]\nLoading checkpoint shards:  33%|\u2588\u2588\u2588\u258e      | 1/3 [00:31<01:03, 31.99s/it]\nLoading checkpoint shards:  67%|\u2588\u2588\u2588\u2588\u2588\u2588\u258b   | 2/3 [01:06<00:33, 33.40s/it]\nLoading checkpoint shards: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 3/3 [01:24<00:00, 26.22s/it]\nLoading checkpoint shards: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 3/3 [01:24<00:00, 28.02s/it]\nanchor 0: 122.05s, peak 13799.2 MiB, std 0.175\nanchor 1: 122.49s, peak 13799.2 MiB, std 0.152\nanchor 2: 123.1s, peak 13799.2 MiB, std 0.225\nanchor 3: 122.84s, peak 13799.2 MiB, std 0.218\ncompleted: /tmp/berkelium/results/m5/E-A1_receipt.json\n"
+          }
+        ]
+      },
+      {
+        "name": "embed",
+        "seconds": 145.4,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "python scripts/zimage_triposr_batch.py embed --te-dtype from-m5",
+            "rc": 0,
+            "log": "logs/04_embed.log",
+            "tail": "\nLoading weights:   0%|          | 0/398 [00:00<?, ?it/s]\nLoading weights:  21%|\u2588\u2588\u258f       | 85/398 [00:00<00:00, 840.43it/s]\nLoading weights:  43%|\u2588\u2588\u2588\u2588\u258e     | 170/398 [00:00<00:00, 831.91it/s]\nLoading weights:  64%|\u2588\u2588\u2588\u2588\u2588\u2588\u258d   | 254/398 [00:00<00:00, 779.09it/s]\nLoading weights:  86%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c | 341/398 [00:00<00:00, 793.33it/s]\nLoading weights: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 398/398 [00:00<00:00, 811.15it/s]\nembedded 56 of 56 anchor prompts in 140s (bfloat16, cuda:0)\n"
+          }
+        ]
+      },
+      {
+        "name": "anchors",
+        "seconds": 5319.3,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "CUDA_VISIBLE_DEVICES=0 python scripts/zimage_triposr_batch.py anchors --dtype from-m5 --shard 0/2",
+            "rc": 0,
+            "log": "logs/05_anchors_0.log",
+            "tail": "\nLoading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]\nLoading checkpoint shards:  33%|\u2588\u2588\u2588\u258e      | 1/3 [00:32<01:04, 32.30s/it]\nLoading checkpoint shards:  67%|\u2588\u2588\u2588\u2588\u2588\u2588\u258b   | 2/3 [01:09<00:35, 35.38s/it]\nLoading checkpoint shards: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 3/3 [01:28<00:00, 27.84s/it]\nLoading checkpoint shards: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 3/3 [01:28<00:00, 29.57s/it]\n40 anchors on cuda (bfloat16); load 93.9s\n[B1] 'a blue coffee mug' s0: ok 128.52s\n[B1] 'a white porcelain pitcher' s0: ok 132.58s\n[B1] 'a teal plastic easter basket' s0: ok 131.78s\n[B1] 'a boat shoe' s0: ok 130.69s\n[B1] 'a turboprop airplane with a pilot' s0: ok 129.17s\n[B1] 'a C-clamp' s0: ok 129.89s\n[B2] 'a bicycle' s0: ok 129.44s\n[B2] 'a hammer' s0: ok 130.08s\n[B2] 'a flower vase' s0: ok 129.18s\n[B2] 'a glass wine bottle' s0: ok 129.04s\n[B3_all] 'a blue box next to a small yellow box' s0: ok 129.1s\n[B3_all] 'a large green sphere next to a purple cone' s0: ok 129.35s\n[B3_all] 'a small cyan sphere with a green cylinder on top' s0: ok 133.08s\n[B3_all] 'a large white sphere stacked on a large cyan torus' s0: ok 132.69s\n[B3_all] 'a large yellow box next to a small orange box' s0: ok 129.2s\n[B3_all] 'a yellow sphere with a white cylinder on top' s0: ok 129.76s\n[B4_single] 'a large green box to the left of a purple box' s0: ok 132.92s\n[B4_single] 'a blue sphere next to a small yellow cone' s0: ok 129.05s\n[B4_single] 'a large orange cylinder on top of a small yellow sphere' s0: ok 132.13s\n[B4_single] 'a large green sphere on top of a large yellow torus' s0: ok 132.48s\n[B4_planner] 'a large green box' s0: ok 129.13s\n[B4_planner] 'a small green cylinder' s0: ok 129.11s\n[B4_planner] 'a blue sphere' s0: ok 129.17s\n[B4_planner] 'a large white torus' s0: ok 129.19s\n[B4_planner] 'a large orange cylinder' s0: ok 129.13s\n[B4_planner] 'a large red sphere' s0: ok 129.14s\n[B4_planner] 'a large green sphere' s0: ok 129.22s\n[B4_planner] 'a white torus' s0: ok 129.14s\n[B1_seed1] 'a blue coffee mug' s1: ok 129.1s\n[B1_seed1] 'a white porcelain pitcher' s1: ok 129.59s\n[B1_seed1] 'a teal plastic easter basket' s1: ok 129.78s\n[B1_seed1] 'a boat shoe' s1: ok 129.3s\n[B1_seed1] 'a turboprop airplane with a pilot' s1: ok 129.2s\n[B1_seed1] 'a C-clamp' s1: ok 129.2s\n[B1_seed2] 'a blue coffee mug' s2: ok 129.13s\n[B1_seed2] 'a white porcelain pitcher' s2: ok 129.17s\n[B1_seed2] 'a teal plastic easter basket' s2: ok 129.99s\n[B1_seed2] 'a boat shoe' s2: ok 129.76s\n[B1_seed2] 'a turboprop airplane with a pilot' s2: ok 131.95s\n[B1_seed2] 'a C-clamp' s2: ok 131.91s\n"
+          },
+          {
+            "cmd": "CUDA_VISIBLE_DEVICES=1 python scripts/zimage_triposr_batch.py anchors --dtype from-m5 --shard 1/2",
+            "rc": 0,
+            "log": "logs/05_anchors_1.log",
+            "tail": "\nLoading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]\nLoading checkpoint shards:  33%|\u2588\u2588\u2588\u258e      | 1/3 [00:32<01:04, 32.31s/it]\nLoading checkpoint shards:  67%|\u2588\u2588\u2588\u2588\u2588\u2588\u258b   | 2/3 [01:09<00:35, 35.37s/it]\nLoading checkpoint shards: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 3/3 [01:28<00:00, 27.83s/it]\nLoading checkpoint shards: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 3/3 [01:28<00:00, 29.56s/it]\n40 anchors on cuda (bfloat16); load 93.9s\n[B1] 'a white porcelain teapot' s0: ok 112.8s\n[B1] 'a deep bowl' s0: ok 118.58s\n[B1] \"a men's boot\" s0: ok 122.63s\n[B1] 'a school bus' s0: ok 123.27s\n[B1] 'a beige teddy bear' s0: ok 122.77s\n[B1] 'an elephant' s0: ok 123.02s\n[B2] 'a ladder' s0: ok 123.17s\n[B2] 'a watering can' s0: ok 123.19s\n[B2] 'an open cardboard box' s0: ok 123.3s\n[B2] 'a shiny metal trophy' s0: ok 122.45s\n[B3_all] 'a small yellow cylinder to the left of a small white cone' s0: ok 124.97s\n[B3_all] 'a small cyan torus next to a purple torus' s0: ok 125.1s\n[B3_all] 'a small green sphere with a large red sphere on top' s0: ok 125.81s\n[B3_all] 'a small purple sphere with a cyan torus on top' s0: ok 125.76s\n[B3_all] 'a blue sphere beside a large purple cone' s0: ok 122.83s\n[B3_all] 'a cyan torus with a small red sphere on top' s0: ok 125.49s\n[B4_single] 'a small green cylinder beside a cyan cone' s0: ok 123.2s\n[B4_single] 'a large white torus next to a large cyan torus' s0: ok 125.74s\n[B4_single] 'a large red sphere on top of a large cyan sphere' s0: ok 124.94s\n[B4_single] 'a small purple sphere with a white torus on top' s0: ok 125.09s\n[B4_planner] 'a purple box' s0: ok 122.73s\n[B4_planner] 'a cyan cone' s0: ok 122.67s\n[B4_planner] 'a small yellow cone' s0: ok 122.61s\n[B4_planner] 'a large cyan torus' s0: ok 122.86s\n[B4_planner] 'a small yellow sphere' s0: ok 122.58s\n[B4_planner] 'a large cyan sphere' s0: ok 122.51s\n[B4_planner] 'a large yellow torus' s0: ok 122.72s\n[B4_planner] 'a small purple sphere' s0: ok 122.53s\n[B1_seed1] 'a white porcelain teapot' s1: ok 122.74s\n[B1_seed1] 'a deep bowl' s1: ok 122.71s\n[B1_seed1] \"a men's boot\" s1: ok 122.8s\n[B1_seed1] 'a school bus' s1: ok 123.23s\n[B1_seed1] 'a beige teddy bear' s1: ok 123.21s\n[B1_seed1] 'an elephant' s1: ok 122.94s\n[B1_seed2] 'a white porcelain teapot' s2: ok 122.68s\n[B1_seed2] 'a deep bowl' s2: ok 122.67s\n[B1_seed2] \"a men's boot\" s2: ok 122.8s\n[B1_seed2] 'a school bus' s2: ok 122.8s\n[B1_seed2] 'a beige teddy bear' s2: ok 123.24s\n[B1_seed2] 'an elephant' s2: ok 123.16s\n"
+          }
+        ]
+      },
+      {
+        "name": "reconstruct",
+        "seconds": 1072.6,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "CUDA_VISIBLE_DEVICES=0 .venv-triposr-cuda/bin/python scripts/zimage_triposr_batch.py reconstruct --shard 0/2",
+            "rc": 0,
+            "log": "logs/06_reconstruct_0.log",
+            "tail": "40 units; TripoSR load 41.4s -> units_zimage-triposr_cuda_5167f5282fb6_shard0of2.jsonl\n[B1] 'a blue coffee mug' s0: ok (56.29s)\n[B1] 'a white porcelain pitcher' s0: anchor_rejected (0.05s)\n[B1] 'a teal plastic easter basket' s0: anchor_rejected (0.05s)\n[B1] 'a boat shoe' s0: ok (28.03s)\n[B1] 'a turboprop airplane with a pilot' s0: ok (22.37s)\n[B1] 'a C-clamp' s0: ok (39.22s)\n[B2] 'a bicycle' s0: anchor_rejected (0.05s)\n[B2] 'a hammer' s0: anchor_rejected (0.05s)\n[B2] 'a flower vase' s0: anchor_rejected (0.04s)\n[B2] 'a glass wine bottle' s0: anchor_rejected (0.05s)\n[B3_all] 'a blue box next to a small yellow box' s0: anchor_rejected (0.06s)\n[B3_all] 'a large green sphere next to a purple cone' s0: ok (55.19s)\n[B3_all] 'a small cyan sphere with a green cylinder on top' s0: ok (50.36s)\n[B3_all] 'a large white sphere stacked on a large cyan torus' s0: anchor_rejected (0.06s)\n[B3_all] 'a large yellow box next to a small orange box' s0: ok (55.5s)\n[B3_all] 'a yellow sphere with a white cylinder on top' s0: ok (52.34s)\n[B4_single] 'a large green box to the left of a purple box' s0: anchor_rejected (0.05s)\n[B4_single] 'a blue sphere next to a small yellow cone' s0: ok (56.4s)\n[B4_single] 'a large orange cylinder on top of a small yellow sphere' s0: anchor_rejected (0.06s)\n[B4_single] 'a large green sphere on top of a large yellow torus' s0: anchor_rejected (0.05s)\n[B4_planner] 'a large green box' s0: ok (70.31s)\n[B4_planner] 'a small green cylinder' s0: ok (59.13s)\n[B4_planner] 'a blue sphere' s0: ok (56.78s)\n[B4_planner] 'a large white torus' s0: anchor_rejected (0.06s)\n[B4_planner] 'a large orange cylinder' s0: anchor_rejected (0.05s)\n[B4_planner] 'a large red sphere' s0: anchor_rejected (0.06s)\n[B4_planner] 'a large green sphere' s0: anchor_rejected (0.06s)\n[B4_planner] 'a white torus' s0: anchor_rejected (0.06s)\n[B1_seed1] 'a blue coffee mug' s1: anchor_rejected (0.05s)\n[B1_seed1] 'a white porcelain pitcher' s1: anchor_rejected (0.05s)\n[B1_seed1] 'a teal plastic easter basket' s1: anchor_rejected (0.05s)\n[B1_seed1] 'a boat shoe' s1: anchor_rejected (0.05s)\n[B1_seed1] 'a turboprop airplane with a pilot' s1: ok (28.59s)\n[B1_seed1] 'a C-clamp' s1: anchor_rejected (0.05s)\n[B1_seed2] 'a blue coffee mug' s2: anchor_rejected (0.05s)\n[B1_seed2] 'a white porcelain pitcher' s2: anchor_rejected (0.05s)\n[B1_seed2] 'a teal plastic easter basket' s2: anchor_rejected (0.05s)\n[B1_seed2] 'a boat shoe' s2: anchor_rejected (0.05s)\n[B1_seed2] 'a turboprop airplane with a pilot' s2: ok (16.23s)\n[B1_seed2] 'a C-clamp' s2: ok (35.52s)\n"
+          },
+          {
+            "cmd": "CUDA_VISIBLE_DEVICES=1 .venv-triposr-cuda/bin/python scripts/zimage_triposr_batch.py reconstruct --shard 1/2",
+            "rc": 0,
+            "log": "logs/06_reconstruct_1.log",
+            "tail": "40 units; TripoSR load 41.4s -> units_zimage-triposr_cuda_5167f5282fb6_shard1of2.jsonl\n[B1] 'a white porcelain teapot' s0: anchor_rejected (0.05s)\n[B1] 'a deep bowl' s0: anchor_rejected (0.05s)\n[B1] \"a men's boot\" s0: anchor_rejected (0.05s)\n[B1] 'a school bus' s0: ok (47.8s)\n[B1] 'a beige teddy bear' s0: anchor_rejected (0.05s)\n[B1] 'an elephant' s0: ok (40.11s)\n[B2] 'a ladder' s0: anchor_rejected (0.05s)\n[B2] 'a watering can' s0: anchor_rejected (0.05s)\n[B2] 'an open cardboard box' s0: anchor_rejected (0.05s)\n[B2] 'a shiny metal trophy' s0: ok (32.29s)\n[B3_all] 'a small yellow cylinder to the left of a small white cone' s0: ok (41.84s)\n[B3_all] 'a small cyan torus next to a purple torus' s0: ok (38.87s)\n[B3_all] 'a small green sphere with a large red sphere on top' s0: ok (52.1s)\n[B3_all] 'a small purple sphere with a cyan torus on top' s0: ok (47.11s)\n[B3_all] 'a blue sphere beside a large purple cone' s0: ok (50.51s)\n[B3_all] 'a cyan torus with a small red sphere on top' s0: ok (38.09s)\n[B4_single] 'a small green cylinder beside a cyan cone' s0: ok (44.04s)\n[B4_single] 'a large white torus next to a large cyan torus' s0: anchor_rejected (0.06s)\n[B4_single] 'a large red sphere on top of a large cyan sphere' s0: ok (54.14s)\n[B4_single] 'a small purple sphere with a white torus on top' s0: ok (46.47s)\n[B4_planner] 'a purple box' s0: anchor_rejected (0.06s)\n[B4_planner] 'a cyan cone' s0: ok (38.53s)\n[B4_planner] 'a small yellow cone' s0: ok (36.21s)\n[B4_planner] 'a large cyan torus' s0: ok (47.82s)\n[B4_planner] 'a small yellow sphere' s0: ok (52.17s)\n[B4_planner] 'a large cyan sphere' s0: anchor_rejected (0.06s)\n[B4_planner] 'a large yellow torus' s0: anchor_rejected (0.05s)\n[B4_planner] 'a small purple sphere' s0: ok (47.53s)\n[B1_seed1] 'a white porcelain teapot' s1: anchor_rejected (0.05s)\n[B1_seed1] 'a deep bowl' s1: anchor_rejected (0.05s)\n[B1_seed1] \"a men's boot\" s1: anchor_rejected (0.05s)\n[B1_seed1] 'a school bus' s1: ok (52.79s)\n[B1_seed1] 'a beige teddy bear' s1: ok (75.91s)\n[B1_seed1] 'an elephant' s1: ok (39.48s)\n[B1_seed2] 'a white porcelain teapot' s2: anchor_rejected (0.05s)\n[B1_seed2] 'a deep bowl' s2: anchor_rejected (0.05s)\n[B1_seed2] \"a men's boot\" s2: anchor_rejected (0.06s)\n[B1_seed2] 'a school bus' s2: ok (50.74s)\n[B1_seed2] 'a beige teddy bear' s2: anchor_rejected (0.05s)\n[B1_seed2] 'an elephant' s2: ok (40.34s)\n"
+          }
+        ]
+      }
+    ],
+    "status": "completed",
+    "bundle_sha256": "b852f2b8e0eb7a9c0de3eb791074c5a5cd06a1169c7ca00facfc31169d86e616",
+    "environment": {
+      "python": "3.13.15",
+      "host": "5167f5282fb6",
+      "nvidia_smi": "Tesla T4, 15360 MiB, 580.178.04\nTesla T4, 15360 MiB, 580.178.04",
+      "torch": "2.11.0+cu128 12.8 2",
+      "disk_free_gb": {
+        "/kaggle/working": 20.9,
+        "/tmp": 1148.8
+      },
+      "mem_total_mib": 32099,
+      "cpu_count": 4
+    },
+    "finished_at": "2026-10-16T17:22:36Z",
+    "outputs": 436
+  },
+  "manifest": {
+    "data/models/triposr/5b521936/verified.json": {
+      "sha256": "6ef8499fb678b0a857b59beeaec5404b7d83a3b7a6d80cd303fc806209f239be",
+      "bytes": 278
+    },
+    "data/models/zimage_turbo/f332072a/verified.json": {
+      "sha256": "fe5760280ed8dc2c12deb8b9ea57d50e802df56468d90676b4126b33d619362c",
+      "bytes": 3092
+    },
+    "results/m5/E-A1_receipt.json": {
+      "sha256": "c9d9d26eebff3cfc6fc50457c8240f6f03c1e28fd03205680f81f9f53b12bb8b",
+      "bytes": 8406
+    },
+    "results/m5/anchor_0.png": {
+      "sha256": "f248557bc416d82224940abf7e783366677934aa77a2e2bcf022ff42677f079f",
+      "bytes": 461129
+    },
+    "results/m5/anchor_1.png": {
+      "sha256": "c93f403dcfbd5799d4b8baa3f573bfca38e99169c3af0debef6a1e0cb46236a8",
+      "bytes": 421785
+    },
+    "results/m5/anchor_2.png": {
+      "sha256": "9e116067da4715c8d09f44a8cc0655d4a9d3bfb5d060f14ca7bac876b484525f",
+      "bytes": 559224
+    },
+    "results/m5/anchor_3.png": {
+      "sha256": "47c2feeece52f2ee4c526472b7224e947144dd35bf645be22a76386af5a6dcf5",
+      "bytes": 560715
+    },
+    "results/m5/precision_bfloat16.png": {
+      "sha256": "f248557bc416d82224940abf7e783366677934aa77a2e2bcf022ff42677f079f",
+      "bytes": 461129
+    },
+    "results/m5/precision_float16.png": {
+      "sha256": "38eda27bf30d0ecaacee3fe54ae4a8acac7c06ba7439843d7b5590dba545051b",
+      "bytes": 1795
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_beige_teddy_bear__fd99299a__s0/anchor.json": {
+      "sha256": "cc9c3f96b2f2b2186ee4e6d31a992d4a1741545f008b9869c5d1dfcd2669d42a",
+      "bytes": 1134
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_beige_teddy_bear__fd99299a__s0/anchor.png": {
+      "sha256": "037888720ebbb1ac47dec842b79692bbeed4917de13a69c04be466b3bf4c83ae",
+      "bytes": 701381
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_beige_teddy_bear__fd99299a__s0/report.json": {
+      "sha256": "1b8c303eba9875ede55c3361756830b775100f9275c97faddef203e1da478b49",
+      "bytes": 5010
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_beige_teddy_bear__fd99299a__s1/anchor.json": {
+      "sha256": "a359db339a85c979ea66a46133c93fe82098eb5c98a42b2f2c61b6a212954a9c",
+      "bytes": 1134
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_beige_teddy_bear__fd99299a__s1/anchor.png": {
+      "sha256": "df64365a24dda5c0258dcaaeec2ec3ca9cca4a1f9e5e68089b321a2e3467ea5b",
+      "bytes": 748943
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_beige_teddy_bear__fd99299a__s1/anchor_rgba.png": {
+      "sha256": "6567292cb0b58215daa48b80453d2505caa9fca360a8243cd2b1d7e282d1ddd4",
+      "bytes": 531834
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_beige_teddy_bear__fd99299a__s1/mesh.glb": {
+      "sha256": "4b288c18451ae3336f0e1e0ecb6f3f505785eacaa91e0be6c83121746664ea5e",
+      "bytes": 3799344
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_beige_teddy_bear__fd99299a__s1/mesh.npz": {
+      "sha256": "29f4524d7ad800599808c7e15920a477f92cf4fa517112b003e278ef1384d4d3",
+      "bytes": 1730819
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_beige_teddy_bear__fd99299a__s1/preview.png": {
+      "sha256": "44e4405b82bc3beac21567ca0e9c145200a1e27ba8edbaf368109227209b82db",
+      "bytes": 104438
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_beige_teddy_bear__fd99299a__s1/report.json": {
+      "sha256": "8264700c4610d26ac39b58e8f552db5e316152c27c2e2d16149c99de4efe512f",
+      "bytes": 6041
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_beige_teddy_bear__fd99299a__s1/triposr_input.png": {
+      "sha256": "de1c0467becccd54188f0cf4e3973969cf506cbbe5d732bcd42bedf6c0820544",
+      "bytes": 211165
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_beige_teddy_bear__fd99299a__s2/anchor.json": {
+      "sha256": "eb5f58f61582da272afec922dac24bb35aae7473242d507f628667dc0e4465e3",
+      "bytes": 1134
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_beige_teddy_bear__fd99299a__s2/anchor.png": {
+      "sha256": "7b65f05b5ef5621c8629100652e805aefb70ae2bbeea1163d0c7e82c8af2671a",
+      "bytes": 729142
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_beige_teddy_bear__fd99299a__s2/report.json": {
+      "sha256": "1a0205a23dac57a9d6cd8e85da6dafdf6558934d6db82caaddf93b120838722e",
+      "bytes": 5010
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_bicycle__99511b74__s0/anchor.json": {
+      "sha256": "a0b7809e971f26ee4d01b371d843d36b8630fc3687a2627ac9cc7b80ae7293d3",
+      "bytes": 1111
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_bicycle__99511b74__s0/anchor.png": {
+      "sha256": "ee4a53cbb425f50751f61e4e41cd53328efc1d53796f91c5432453e3e25a8aa4",
+      "bytes": 556473
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_bicycle__99511b74__s0/report.json": {
+      "sha256": "f7ace6c1fc5a4899e5ad41720b5a8999433993d6f30941e655994929816ce433",
+      "bytes": 4974
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_box_next_to_a_small_yellow_box__74e11b94__s0/anchor.json": {
+      "sha256": "8811bc28f0aac87f02ffc9111211f335c017a06fbc2920ff07c9c3b030eaf655",
+      "bytes": 1174
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_box_next_to_a_small_yellow_box__74e11b94__s0/anchor.png": {
+      "sha256": "47974ceedcbfc0cb8da588b381ac441e4fe7bda936506d087d6a6376b651bb73",
+      "bytes": 442513
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_box_next_to_a_small_yellow_box__74e11b94__s0/report.json": {
+      "sha256": "4f9727f370f320c57f44aa76ebc234fb0e1af93eff793fc237a9a9c9100496dd",
+      "bytes": 5069
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_coffee_mug__e1ffbc5b__s0/anchor.json": {
+      "sha256": "9e269593cf47c35d544e7ffb341422b4bbfba8acbbbafb2632d38cfabe1588a9",
+      "bytes": 1139
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_coffee_mug__e1ffbc5b__s0/anchor.png": {
+      "sha256": "f56e95971233aa168ac02c452cd0ebed23859650488e9795f6239c81618ef6d5",
+      "bytes": 462605
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_coffee_mug__e1ffbc5b__s0/anchor_rgba.png": {
+      "sha256": "7099fc11de35777af79ef9053abffaaf7615e38c46d5a8a59020e93ea655d0d1",
+      "bytes": 208519
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_coffee_mug__e1ffbc5b__s0/mesh.glb": {
+      "sha256": "ea4688816c80dc58b4cb780559e1fae707936a19274802cf6970b47a417d2275",
+      "bytes": 2851724
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_coffee_mug__e1ffbc5b__s0/mesh.npz": {
+      "sha256": "1e9a9445339bab037a37305f26b6309c9a7b499b5eb7550a154235ca6c98e3e7",
+      "bytes": 1237012
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_coffee_mug__e1ffbc5b__s0/preview.png": {
+      "sha256": "a8b1a2119ab9490e20e041e31ad0024d9b110a3fb16be2b8c8cdf41797cbd5f6",
+      "bytes": 55276
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_coffee_mug__e1ffbc5b__s0/report.json": {
+      "sha256": "db1821a418a88573e84927249156829d77297f5787d9bebde785921b985d012c",
+      "bytes": 6043
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_coffee_mug__e1ffbc5b__s0/triposr_input.png": {
+      "sha256": "6eecda49a2b905827cf474c1e873451cf2a22aa078f07e6ef349f93974fb7dd9",
+      "bytes": 114411
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_coffee_mug__e1ffbc5b__s1/anchor.json": {
+      "sha256": "394a1759f52bbe9777fcdb037facbf8cb5be8b03abaea174b80123e3d38567db",
+      "bytes": 1138
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_coffee_mug__e1ffbc5b__s1/anchor.png": {
+      "sha256": "162029b42e745ab6250962a01c4778e06e035167ce7562bbde9255200ec0e732",
+      "bytes": 527022
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_coffee_mug__e1ffbc5b__s1/report.json": {
+      "sha256": "6605e598efd2c380513001107a31c97002b67a098e7a4f9e25b7c0d6224f4973",
+      "bytes": 5013
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_coffee_mug__e1ffbc5b__s2/anchor.json": {
+      "sha256": "b397f76b976df3d7ed2f1e5a79c2c91e5b220a4b382c19c6e40358731a5efcad",
+      "bytes": 1139
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_coffee_mug__e1ffbc5b__s2/anchor.png": {
+      "sha256": "0ad174a29b45d4b203092a35ef9fc8b6b8151f781b2895272f94b134fa735e19",
+      "bytes": 564534
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_coffee_mug__e1ffbc5b__s2/report.json": {
+      "sha256": "a5f1b0ceba50c18ad3a5171be6b970b116a9b14d10ce0c1e40d0091047eae310",
+      "bytes": 5014
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_sphere__488d4f76__s0/anchor.json": {
+      "sha256": "649ee955d66b4a0895f15448f141a6025883f5ed30d21a33a579308524fc32e0",
+      "bytes": 1134
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_sphere__488d4f76__s0/anchor.png": {
+      "sha256": "dd8839cad89604ef206dad8eedb809d2298fc8fe6e09dd882356fd9ede75bdfe",
+      "bytes": 414372
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_sphere__488d4f76__s0/anchor_rgba.png": {
+      "sha256": "e58c94c33b574990598f2f32ac1d8c97922a15e22ea76aa1364d81d2f49d416c",
+      "bytes": 205527
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_sphere__488d4f76__s0/mesh.glb": {
+      "sha256": "6614160ac4f7009151928411edddae9b01b844b0623d5ad25209eb5d5304b537",
+      "bytes": 2811316
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_sphere__488d4f76__s0/mesh.npz": {
+      "sha256": "5ecdd6b389ca777f945744ed3854ea4dc9bebc3b16be92c8f7b84ba75636c908",
+      "bytes": 1220574
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_sphere__488d4f76__s0/preview.png": {
+      "sha256": "553e7f562e69465988cf06075edf02060fd0c1bdea64b7f9dda06be1aac9ced9",
+      "bytes": 65092
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_sphere__488d4f76__s0/report.json": {
+      "sha256": "bc97ac0e00f3ba3c0b98cd5864d59073a2a0a23b005af9a7c93956a74f428791",
+      "bytes": 6037
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_sphere__488d4f76__s0/triposr_input.png": {
+      "sha256": "be1f504cae93ad2ca80e85f6070869b0a19273c940a915c4b260f7344f741ddc",
+      "bytes": 107680
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_sphere_beside_a_large_purple_cone__d8a253fa__s0/anchor.json": {
+      "sha256": "97b833b94c59229fa40be13bf20e509ad2709b42360629ed9670b99ee62ca26f",
+      "bytes": 1173
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_sphere_beside_a_large_purple_cone__d8a253fa__s0/anchor.png": {
+      "sha256": "4d5e4ab52a0d8e17fb0d40c8450538825c89a93f355b57e0b97abb685798a149",
+      "bytes": 410369
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_sphere_beside_a_large_purple_cone__d8a253fa__s0/anchor_rgba.png": {
+      "sha256": "28298117fc621e40699d602118352a304254049f8caeed9ce23c73f9cdcb71a0",
+      "bytes": 112328
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_sphere_beside_a_large_purple_cone__d8a253fa__s0/mesh.glb": {
+      "sha256": "2e96a7774cbbce5f9e9088953183740b24fdcf9731c561cc34b026c8a2b301e3",
+      "bytes": 2446004
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_sphere_beside_a_large_purple_cone__d8a253fa__s0/mesh.npz": {
+      "sha256": "db0a3efc265ea2bcd1c9389b870b8a270916385d0794660276f75a403387927b",
+      "bytes": 1048160
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_sphere_beside_a_large_purple_cone__d8a253fa__s0/preview.png": {
+      "sha256": "62da01661b662453010fe82aa1a4b918c818502dd034c161bac69ac2ee8d7bbd",
+      "bytes": 51040
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_sphere_beside_a_large_purple_cone__d8a253fa__s0/report.json": {
+      "sha256": "8bc81fa29c9af368e231c9b418ae15d1bdc14109c53e2c2456339bc9ece1de01",
+      "bytes": 6100
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_sphere_beside_a_large_purple_cone__d8a253fa__s0/triposr_input.png": {
+      "sha256": "986fa2a0a7f3d2ddeab1106083a9aaf47aa8c8619f88f546909e3749c4f7936f",
+      "bytes": 76867
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_sphere_next_to_a_small_yellow_cone__649fb770__s0/anchor.json": {
+      "sha256": "ea0db04da00f8b0534cc756cecb38223817f926bac4a00a448e599e66b23e9dc",
+      "bytes": 1179
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_sphere_next_to_a_small_yellow_cone__649fb770__s0/anchor.png": {
+      "sha256": "af9abc79cc7fe0402c263e81c2537340c2b9b3637872357223a0fec320a2bd7a",
+      "bytes": 488604
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_sphere_next_to_a_small_yellow_cone__649fb770__s0/anchor_rgba.png": {
+      "sha256": "a69e941628e3c4aec714eff0d1f0a6f3d749bbd4166b7b4e2d53f5bb07690b51",
+      "bytes": 131664
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_sphere_next_to_a_small_yellow_cone__649fb770__s0/mesh.glb": {
+      "sha256": "85980057c2cde290284d55cfb4998ca06584a4103e6eb2f8865198ca0156abc5",
+      "bytes": 2864780
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_sphere_next_to_a_small_yellow_cone__649fb770__s0/mesh.npz": {
+      "sha256": "3c7e281c152408c0c4873e7edf3916be440754027b76e7f3c8c7015c81e3c1f6",
+      "bytes": 1269477
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_sphere_next_to_a_small_yellow_cone__649fb770__s0/preview.png": {
+      "sha256": "cc8b01f817f707ce3b20b4e89ed188a676ae794c4cc39fe949c6dd723fd01aee",
+      "bytes": 62892
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_sphere_next_to_a_small_yellow_cone__649fb770__s0/report.json": {
+      "sha256": "bc0ed78519ef2a8bd6385574ca5899748fe9c99fdc0ea1a27014498f6087f914",
+      "bytes": 6106
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_blue_sphere_next_to_a_small_yellow_cone__649fb770__s0/triposr_input.png": {
+      "sha256": "c847001b6b7e9245a87d3dd1300be56a4e30db17ea53acaf4d016cf7c0e275e7",
+      "bytes": 107174
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_boat_shoe__bed3af68__s0/anchor.json": {
+      "sha256": "7aa7db961cdf1392c3672bb06690c9ec99d0ceaadc059274659d1dce1169546a",
+      "bytes": 1113
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_boat_shoe__bed3af68__s0/anchor.png": {
+      "sha256": "62b27b8f039d9ff7f92eeed264401264c446f3bd03fa83467c1bf57a4542cc08",
+      "bytes": 587533
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_boat_shoe__bed3af68__s0/anchor_rgba.png": {
+      "sha256": "ad9289ad1bf9c3d4f67885e5b517e9b9090c76fcdcf3b2fc6d95125ed39c8e1f",
+      "bytes": 204879
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_boat_shoe__bed3af68__s0/mesh.glb": {
+      "sha256": "f40b58a7f5310eab9dd7f7958547796b05c1a51ecf7e7cabc48d08ea5e377879",
+      "bytes": 1330964
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_boat_shoe__bed3af68__s0/mesh.npz": {
+      "sha256": "17dc441a7582814abd56ff41eb7be8bc5a82c76330033db873611da594e22bcd",
+      "bytes": 598531
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_boat_shoe__bed3af68__s0/preview.png": {
+      "sha256": "c112787fa90bf2b38816087a0878a3cd6f2310cb3e21d505de8339ab05e6360f",
+      "bytes": 39018
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_boat_shoe__bed3af68__s0/report.json": {
+      "sha256": "d033db687e1a886a62300aa3b5bd3515af6e6633312d660591be0b8d19ab2ab6",
+      "bytes": 6006
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_boat_shoe__bed3af68__s0/triposr_input.png": {
+      "sha256": "3921913fbeb6daaf8d261be6b95f7834d555385ddcd96a10225d3fd7059666fa",
+      "bytes": 107434
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_boat_shoe__bed3af68__s1/anchor.json": {
+      "sha256": "9bd5fd5973c0c6abe64a5a123c77219e2a807214ea7964e80d4ff9927b6d28dd",
+      "bytes": 1111
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_boat_shoe__bed3af68__s1/anchor.png": {
+      "sha256": "56777a256591dd0ee8dd2e71d6818d0fece6dbb5076e3237a6afdcd1d91688a0",
+      "bytes": 637212
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_boat_shoe__bed3af68__s1/report.json": {
+      "sha256": "1439bb530a71acda838d0534af94a62de0c6ce046f25f38bf21b7e7da6f13323",
+      "bytes": 4976
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_boat_shoe__bed3af68__s2/anchor.json": {
+      "sha256": "1287359f051da6a113a000d37f1beb7ee1eefb3a38a926fda08f7f462551675a",
+      "bytes": 1112
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_boat_shoe__bed3af68__s2/anchor.png": {
+      "sha256": "f143c06751248c1386f91bce249513fa36859439c34cd9d341860ed6ddeb9a13",
+      "bytes": 618797
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_boat_shoe__bed3af68__s2/report.json": {
+      "sha256": "3968b1e63be877d94e4e61405af605cf8d2e3ce135792e6f732d3894fd512b47",
+      "bytes": 4977
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_c_clamp__2b12cc4c__s0/anchor.json": {
+      "sha256": "9877728bac5a6f3d82a81778c0718ff1aaed514892611afd8b35e5d0c35b0c22",
+      "bytes": 1111
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_c_clamp__2b12cc4c__s0/anchor.png": {
+      "sha256": "d9087570e9c41187d1ed7a9177dd8dea702a9d2abcc13c939409a6aef0091f66",
+      "bytes": 531810
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_c_clamp__2b12cc4c__s0/anchor_rgba.png": {
+      "sha256": "8ad721c7e8b7526f99392db05d191a2748d4828867b6fc925dcae628bf29b0bf",
+      "bytes": 155859
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_c_clamp__2b12cc4c__s0/mesh.glb": {
+      "sha256": "c198e1114b1aa22170502d6bd91592b2b40cee1223f5ee1d521d4fffa7b00a8c",
+      "bytes": 1929952
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_c_clamp__2b12cc4c__s0/mesh.npz": {
+      "sha256": "e01b0c7f1808139396a2ce5099fa0e5d4abca1371f9beed11cb8053f39c3ae48",
+      "bytes": 832039
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_c_clamp__2b12cc4c__s0/preview.png": {
+      "sha256": "8a4d597a34149f4d7619dbc33c566a4629f564cd13104cb4e0cd550900f3059a",
+      "bytes": 48124
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_c_clamp__2b12cc4c__s0/report.json": {
+      "sha256": "18a11e74841f5d192920a0cc2afd9266214b9aad5caf729399f0b92ecd4c94bd",
+      "bytes": 5997
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_c_clamp__2b12cc4c__s0/triposr_input.png": {
+      "sha256": "2d1a05213d069308d33b3b6722dbb50ca6db4eb9c6f54b985211a91dab3535a0",
+      "bytes": 191822
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_c_clamp__2b12cc4c__s1/anchor.json": {
+      "sha256": "c91b81f31467c92cf993b22c54822b44746d05cf4baf8f10836b96c5ebb4ad82",
+      "bytes": 1109
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_c_clamp__2b12cc4c__s1/anchor.png": {
+      "sha256": "04064846b9255b74aec7e1f533ae7e9c56c9cecd3b3adf5cea80fb2e0ebc7751",
+      "bytes": 920594
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_c_clamp__2b12cc4c__s1/report.json": {
+      "sha256": "1cfccc9d8b96d9aabb4d0f67ff58b03335d980008e925e7ecd0538f681da5318",
+      "bytes": 4972
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_c_clamp__2b12cc4c__s2/anchor.json": {
+      "sha256": "14b4de3cf3a80f075d6eac3f4801d072481a383585dfa98898ee36b9a7232a0b",
+      "bytes": 1110
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_c_clamp__2b12cc4c__s2/anchor.png": {
+      "sha256": "8f3d4717d40e0ff43390f0995243861e8c9569d852dbd1086520c6e017c61dce",
+      "bytes": 596516
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_c_clamp__2b12cc4c__s2/anchor_rgba.png": {
+      "sha256": "c00a631e4b3ae56242d05a3ac79a20726c59f1f7ca5a5f316c05ef9b5bd88eb6",
+      "bytes": 197861
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_c_clamp__2b12cc4c__s2/mesh.glb": {
+      "sha256": "bee7044993db5c360b3427920dbd739960e748956885cb80f341e17396faa887",
+      "bytes": 1662932
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_c_clamp__2b12cc4c__s2/mesh.npz": {
+      "sha256": "094600e8f09cb6b67c0f482827bafec407cf067ae05301300e253e97adf35bec",
+      "bytes": 712342
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_c_clamp__2b12cc4c__s2/preview.png": {
+      "sha256": "c876308ceb7895d3602429894c2f07635f629aa245b40b147b7248dbbeabdc27",
+      "bytes": 42940
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_c_clamp__2b12cc4c__s2/report.json": {
+      "sha256": "1edcae8f87a53fd7edcf68efe90a6faff6ab3eac7737da2e8208bdbb1a6c0b76",
+      "bytes": 6014
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_c_clamp__2b12cc4c__s2/triposr_input.png": {
+      "sha256": "5a5fd594b08ad0948b3c767815c0e0f85ea31a753115809249d660fe61b0e3c2",
+      "bytes": 164546
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_cyan_cone__e5122c7e__s0/anchor.json": {
+      "sha256": "fb1cfc56740684a18973b0f1ece4620c7aadc522739d3cbf8b7007b14e86d0b1",
+      "bytes": 1133
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_cyan_cone__e5122c7e__s0/anchor.png": {
+      "sha256": "d580ed92d516f895ced01bf8bb9423fcda8af9f2d0b42e5914c0a0b2281edc2a",
+      "bytes": 437147
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_cyan_cone__e5122c7e__s0/anchor_rgba.png": {
+      "sha256": "ac2c79873f09220a0c022b5976897c927e20c7ec6e6f72df5118dc42be50bf87",
+      "bytes": 156643
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_cyan_cone__e5122c7e__s0/mesh.glb": {
+      "sha256": "77c856018bcd4b6435a2640d3b476aa8fc3ad8f5e543f542205d5b99b3210ee0",
+      "bytes": 1778456
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_cyan_cone__e5122c7e__s0/mesh.npz": {
+      "sha256": "c1916771e7b62b1bb5ea0427d824f4394e60eb23c63ccd6c31971f155098a663",
+      "bytes": 763789
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_cyan_cone__e5122c7e__s0/preview.png": {
+      "sha256": "3520c52acd903ccf32ec773c1c34eb3f6ec7ed5d3162db3dac1c4efa1c853b3f",
+      "bytes": 46992
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_cyan_cone__e5122c7e__s0/report.json": {
+      "sha256": "24f19908dddd482e6cdc39fc56442627fd31dd99c7ef1c2f2957b7eca7f4702b",
+      "bytes": 6039
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_cyan_cone__e5122c7e__s0/triposr_input.png": {
+      "sha256": "f2a3c6294e743135f705b676f53c92039db36740f451f86bd6ab3d24189eee2b",
+      "bytes": 74277
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_cyan_torus_with_a_small_red_sphere_on_top__987705ec__s0/anchor.json": {
+      "sha256": "fad88f8a3b22106b7b82d1382fe5c1df95f0fa1829a5dc2367cfaf128409fd2c",
+      "bytes": 1178
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_cyan_torus_with_a_small_red_sphere_on_top__987705ec__s0/anchor.png": {
+      "sha256": "cb881e22c1e8d2de573d65a21028910e177ed3722d2676f449914bffcc37fa3e",
+      "bytes": 446361
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_cyan_torus_with_a_small_red_sphere_on_top__987705ec__s0/anchor_rgba.png": {
+      "sha256": "30765c444f9b568368141d850128acb4f1afaf3d653bbe0dba15b0ee1883fd7f",
+      "bytes": 187534
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_cyan_torus_with_a_small_red_sphere_on_top__987705ec__s0/mesh.glb": {
+      "sha256": "7026a460c489650acf5624ec0165b0d05ae0ac86c81e19a6f6abff5a2792c5aa",
+      "bytes": 1809764
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_cyan_torus_with_a_small_red_sphere_on_top__987705ec__s0/mesh.npz": {
+      "sha256": "167220fc29e4047bd35dee42617bb9617d62a9f48789e3a801b420290bd32bf8",
+      "bytes": 799136
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_cyan_torus_with_a_small_red_sphere_on_top__987705ec__s0/preview.png": {
+      "sha256": "659449ebb8dac0b3b31d016605af4902e75982e540da1a59eccb7c2c6bb5f7d4",
+      "bytes": 42599
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_cyan_torus_with_a_small_red_sphere_on_top__987705ec__s0/report.json": {
+      "sha256": "a7fee9a982c5be3634c0acc4bb6627f83932730f329c9fc158a56beb16a3437c",
+      "bytes": 6109
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_cyan_torus_with_a_small_red_sphere_on_top__987705ec__s0/triposr_input.png": {
+      "sha256": "2e82db30045adb79346681eac0bae7a06d3b29111652081d4a1bff2dbbecbd4d",
+      "bytes": 115649
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_deep_bowl__06b038de__s0/anchor.json": {
+      "sha256": "bed7815e823633045e24b5270931da7e5a36fcf4ae2fdd81fd448f42b9b2375c",
+      "bytes": 1113
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_deep_bowl__06b038de__s0/anchor.png": {
+      "sha256": "6c450635bd4565c37b0268f03d32748a1b32477179c7a1901477b530f9a7abcc",
+      "bytes": 510213
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_deep_bowl__06b038de__s0/report.json": {
+      "sha256": "e576ec3b8bed5ff155170dbffe9458babde7c93b05c619dd1e54b0ff857db4f7",
+      "bytes": 4978
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_deep_bowl__06b038de__s1/anchor.json": {
+      "sha256": "2957c0aa66dc52718999508e3d45cece4cc2aa2b3f8585b20ff5903fb47853f4",
+      "bytes": 1113
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_deep_bowl__06b038de__s1/anchor.png": {
+      "sha256": "2ba73a12668bb005151bf2df83aff0163e393f4c2c764c628516b5e73340ebdf",
+      "bytes": 636450
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_deep_bowl__06b038de__s1/report.json": {
+      "sha256": "69c1579fc2b41e8154b654520b365980de98493afe14d702e7331774dfc05658",
+      "bytes": 4978
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_deep_bowl__06b038de__s2/anchor.json": {
+      "sha256": "29c7e673ddd8a66cf129aa576e4c06a3ea84cfb11f1d2719dc506d90830088d3",
+      "bytes": 1113
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_deep_bowl__06b038de__s2/anchor.png": {
+      "sha256": "cbbafa1a285de42ad6717d8b101f183a47fa6dd6f4a76d718a4b7ee36733bc8c",
+      "bytes": 570896
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_deep_bowl__06b038de__s2/report.json": {
+      "sha256": "a47e53f3b132f5f3b82010160d3c7b533d16ec3a1da47770340e456c5fc4d791",
+      "bytes": 4978
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_flower_vase__45964fc0__s0/anchor.json": {
+      "sha256": "0f714c325fee6ffd80773a5958dd33be7dbb549bed08ffe50408b1d7db4d5ea7",
+      "bytes": 1115
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_flower_vase__45964fc0__s0/anchor.png": {
+      "sha256": "2ae77685b23ab72be7d1f0ce350ef1e0826f66e8f7e025820ddaf82c8e5620ca",
+      "bytes": 453796
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_flower_vase__45964fc0__s0/report.json": {
+      "sha256": "651bf1087e889bda7841a24da19d1c0b502c93c16b2bfc031e5b751f921e5524",
+      "bytes": 4982
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_glass_wine_bottle__d36ed32a__s0/anchor.json": {
+      "sha256": "b21079b7ed244667767aabd24585c74283197b5f4435d607a6efdb89e1399a6a",
+      "bytes": 1121
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_glass_wine_bottle__d36ed32a__s0/anchor.png": {
+      "sha256": "f75f8e9aa43ca6263f73f3d64f80ea3835c644c3d965d2fbbd1d238e6bce2c57",
+      "bytes": 526654
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_glass_wine_bottle__d36ed32a__s0/report.json": {
+      "sha256": "756cb8074fa0fdcae7943cb0a495614897df13073ce01a3556b847f8887f55e9",
+      "bytes": 4994
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_hammer__9f722179__s0/anchor.json": {
+      "sha256": "a7ceac032d0108029ce9eb8f78ae9c1bc3332d72efac6878a2a5bd61846591d5",
+      "bytes": 1109
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_hammer__9f722179__s0/anchor.png": {
+      "sha256": "61542341c026f20b01348c03300270684fa5f92be944ad86ebd788aeeafe7ef6",
+      "bytes": 684903
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_hammer__9f722179__s0/report.json": {
+      "sha256": "9a9895c6ba0411ce002b25cb8905e86a8700792e17d500fbeaae3d0ee204a777",
+      "bytes": 4971
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_ladder__4ce1f5d5__s0/anchor.json": {
+      "sha256": "8de2c91d1b0d32ad56c25afc83faa27ebcb70ac04b3dfc53d015a9623366ff61",
+      "bytes": 1110
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_ladder__4ce1f5d5__s0/anchor.png": {
+      "sha256": "d40feb1147b0dc0fe06d424a95c62a2e70d832047e4afc6509bb6dc56fcd84d6",
+      "bytes": 520871
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_ladder__4ce1f5d5__s0/report.json": {
+      "sha256": "ec2788552636fe589047fb80b158c26ff017a75b7d004cd86d40061d3ac58e4c",
+      "bytes": 4972
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_cyan_sphere__649d14ab__s0/anchor.json": {
+      "sha256": "6f6f9caa68648757258edbb000d04d51fbe2626581975a4b21478cb0e951fea5",
+      "bytes": 1141
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_cyan_sphere__649d14ab__s0/anchor.png": {
+      "sha256": "a0bbc411041c7e3e73da895a0e08b2a3f86c7eb4d7e3f4c0d4a789cdb3351e02",
+      "bytes": 430322
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_cyan_sphere__649d14ab__s0/report.json": {
+      "sha256": "e1f52e916ebde4395344db35f2b3a44a29a61ddc17c19fcd3761bf27b039f151",
+      "bytes": 5016
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_cyan_torus__95bfe3e7__s0/anchor.json": {
+      "sha256": "b55f2e0acb352f65ff3872868a7c76447f65cf3f373fcd788cf35a450d877536",
+      "bytes": 1139
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_cyan_torus__95bfe3e7__s0/anchor.png": {
+      "sha256": "4e98777278401f615edcc30e50d084adad409db963a1ea6e3c6097d28a78d049",
+      "bytes": 474256
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_cyan_torus__95bfe3e7__s0/anchor_rgba.png": {
+      "sha256": "8a7aa3e41fc0292c94d973bc553c6df993ded1418f9750e353ded6c796efc72d",
+      "bytes": 253563
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_cyan_torus__95bfe3e7__s0/mesh.glb": {
+      "sha256": "33d9cb87f05a0a1c7392ad7863bbba06493a4db0c2017815d429a17ecca26be2",
+      "bytes": 2291744
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_cyan_torus__95bfe3e7__s0/mesh.npz": {
+      "sha256": "539368cb93a4848e48becd7394d15014057c716ed74d77e8cd5c33f8fec713dd",
+      "bytes": 1006568
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_cyan_torus__95bfe3e7__s0/preview.png": {
+      "sha256": "19440da479abb17cc1f64e4219cea0b4336afbf8066987518a67e2c891ae7071",
+      "bytes": 49145
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_cyan_torus__95bfe3e7__s0/report.json": {
+      "sha256": "528215aef7d7a06fbb096f1ee48f6b33c0a7da7f323409c50f3ce2766a83686c",
+      "bytes": 6049
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_cyan_torus__95bfe3e7__s0/triposr_input.png": {
+      "sha256": "e8557aed4ae67d58fc87235571ab568f3b896ddf297ab6b659c3f01ee3d47896",
+      "bytes": 109577
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_green_box__72c55aa1__s0/anchor.json": {
+      "sha256": "5ee787173aa2db5e9ee0941a0c2386442035b3b8aa285f15a42ee2641bda5357",
+      "bytes": 1140
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_green_box__72c55aa1__s0/anchor.png": {
+      "sha256": "1f2518363badcf8fcf48e7364d42f8bb7b6cc9b4418aabc1654e0094a22a86ed",
+      "bytes": 448952
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_green_box__72c55aa1__s0/anchor_rgba.png": {
+      "sha256": "6cf4f4266b7ac8c2e08a085a1ec020d0af47d57742fffe68f4b7c301751d2e93",
+      "bytes": 310313
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_green_box__72c55aa1__s0/mesh.glb": {
+      "sha256": "b7b62f83395e30db72d04b50b651e19f4d0c32b977121dbac39b098507f1593e",
+      "bytes": 3620408
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_green_box__72c55aa1__s0/mesh.npz": {
+      "sha256": "0b153d6fc7216c6b8a9e2b1b6aab2031e665435a0fa70bfee300eeea2c6ac546",
+      "bytes": 1551982
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_green_box__72c55aa1__s0/preview.png": {
+      "sha256": "d737606392fddaad2367dbe28880c42773fd94e645f6323b65d5a97ac3908cf9",
+      "bytes": 78916
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_green_box__72c55aa1__s0/report.json": {
+      "sha256": "730aeac78e6955c838d3de4102e39b97ec78e0b866e93946a4ffd0fa058388fd",
+      "bytes": 6045
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_green_box__72c55aa1__s0/triposr_input.png": {
+      "sha256": "d1e25b67d48c227e8728fa59228781823f97931a3e065a2ccef4c8d21941f6fe",
+      "bytes": 145733
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_green_box_to_the_left_of_a_purple_box__eea8e8b2__s0/anchor.json": {
+      "sha256": "585fbb0e82b4fc586c020c09445d167461979227e7d163638225b0c347a3fe08",
+      "bytes": 1184
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_green_box_to_the_left_of_a_purple_box__eea8e8b2__s0/anchor.png": {
+      "sha256": "14600f517a4b7567744b2a64c688fc2de224cc46b5d1bc51a8a7d2bd32bb8f97",
+      "bytes": 439135
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_green_box_to_the_left_of_a_purple_box__eea8e8b2__s0/report.json": {
+      "sha256": "c3db034ca926754a14589dc51be99cfd747e6e110a0d12b004dc7c792ace1c6e",
+      "bytes": 5089
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_green_sphere__f2592e49__s0/anchor.json": {
+      "sha256": "82701a4c548a7c13551c70210ae3e944d44c4a7825ef24cddb9e9ba919874d20",
+      "bytes": 1143
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_green_sphere__f2592e49__s0/anchor.png": {
+      "sha256": "c9fdd35510684590aa0212cdaf48a8022c0e495e280227fb4f21db8635d34b83",
+      "bytes": 448589
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_green_sphere__f2592e49__s0/report.json": {
+      "sha256": "2c5317dceb731d37bb94384e4b37c4a6156b4eb084d3257a40b33ff2e58c7bcc",
+      "bytes": 5019
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_green_sphere_next_to_a_purple_cone__ed082c4d__s0/anchor.json": {
+      "sha256": "93b7b42c7ea5731b6641337287b9e207ea217b228dfda5dc3f646fc46b29fa87",
+      "bytes": 1181
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_green_sphere_next_to_a_purple_cone__ed082c4d__s0/anchor.png": {
+      "sha256": "bd0cd64a3b0504a02ae56943ef6d2277fa9cefc39ceb1c08706c5e08d7560946",
+      "bytes": 432823
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_green_sphere_next_to_a_purple_cone__ed082c4d__s0/anchor_rgba.png": {
+      "sha256": "f3f13885621626e800d13a76e4214b2646b36a6fc3f7cd313265b1dd22ff4a9c",
+      "bytes": 203808
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_green_sphere_next_to_a_purple_cone__ed082c4d__s0/mesh.glb": {
+      "sha256": "5555c7d975dc785e7ffe45f063c27ab744916459e432a9b293774d6146d5b0ba",
+      "bytes": 2745272
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_green_sphere_next_to_a_purple_cone__ed082c4d__s0/mesh.npz": {
+      "sha256": "3b52d29ceed20f3c77c22787db45165537abbd89fd267b16795a3cf0f646889a",
+      "bytes": 1203902
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_green_sphere_next_to_a_purple_cone__ed082c4d__s0/preview.png": {
+      "sha256": "23acc4f719f22ed4e496c19d57ebde2393774d005f19db408c1c6ee305cddcdf",
+      "bytes": 55446
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_green_sphere_next_to_a_purple_cone__ed082c4d__s0/report.json": {
+      "sha256": "01957163b1b4b82bc1b5c2b0066abaef83b349aa172c93cfaa06138a863180c1",
+      "bytes": 6116
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_green_sphere_next_to_a_purple_cone__ed082c4d__s0/triposr_input.png": {
+      "sha256": "2a3cb0d9d786c2710ffdfa2f744e846531dcfd47fb43625c5b0979e5866a63a8",
+      "bytes": 91607
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_green_sphere_on_top_of_a_large_yellow_torus__c8653455__s0/anchor.json": {
+      "sha256": "7114e5af12905a865eb298033e2bfb461fe14bc72b5ad18bbcc97a672000f3c8",
+      "bytes": 1190
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_green_sphere_on_top_of_a_large_yellow_torus__c8653455__s0/anchor.png": {
+      "sha256": "9591be056c639912bee0c9b159eb63d5ac4fc13b5e7a84f2badafa826ac25fed",
+      "bytes": 457252
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_green_sphere_on_top_of_a_large_yellow_torus__c8653455__s0/report.json": {
+      "sha256": "ab0fad5307abba98752732f3dc0d331f96ef1833d7514ce6d1e6bc278d5f8164",
+      "bytes": 5101
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_orange_cylinder__cc205499__s0/anchor.json": {
+      "sha256": "c0f4dd64582628eb318c2fd769e20bd5965c14d6e700a4f8085cf81e5cfc8fa7",
+      "bytes": 1139
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_orange_cylinder__cc205499__s0/anchor.png": {
+      "sha256": "eaa9395258de89a3d027d124a84bd8af177122be336d31a9778cfe8507c30c64",
+      "bytes": 455888
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_orange_cylinder__cc205499__s0/report.json": {
+      "sha256": "c43799df12d1aa09447a800a40eaa7614286ea0eac3acd66db0f623c2d83c427",
+      "bytes": 5020
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_orange_cylinder_on_top_of_a_small_yellow_sphere__c702bca6__s0/anchor.json": {
+      "sha256": "db7c4ff9a41011262e5661720d726697cff1030ccfc52bfb8433130bd6db3987",
+      "bytes": 1187
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_orange_cylinder_on_top_of_a_small_yellow_sphere__c702bca6__s0/anchor.png": {
+      "sha256": "29ee60807847a5c04ff2676fd5f064916203514d5c046a7c89d5b4bf70516f87",
+      "bytes": 430854
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_orange_cylinder_on_top_of_a_small_yellow_sphere__c702bca6__s0/report.json": {
+      "sha256": "43221eae046086a50fc84c2119868512442cbdaf810af4bc31041b04d9553fb7",
+      "bytes": 5100
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_red_sphere__207690be__s0/anchor.json": {
+      "sha256": "56a197830c8f732b6ee508ba5156b1bad310343b355d4a37ec169f1fc17483a2",
+      "bytes": 1131
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_red_sphere__207690be__s0/anchor.png": {
+      "sha256": "405844762659ef4cd2466e1b6eee082500da671718cdc313445895d968589838",
+      "bytes": 464213
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_red_sphere__207690be__s0/report.json": {
+      "sha256": "a138a0249c3dc5057a146f01309516830d3977da6a8110a197d73e86b9fa4cd0",
+      "bytes": 5004
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_red_sphere_on_top_of_a_large_cyan_sphere__bd706091__s0/anchor.json": {
+      "sha256": "5c4122abc538094fc8b0ff8ec03ad3b4a6705a5be8c6e4b6b2c1085a777cdf31",
+      "bytes": 1183
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_red_sphere_on_top_of_a_large_cyan_sphere__bd706091__s0/anchor.png": {
+      "sha256": "ae814c1e7db88f7173b645fd61fdb22fce43bc07c10848a3b4d6fbfe73dc73b9",
+      "bytes": 443461
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_red_sphere_on_top_of_a_large_cyan_sphere__bd706091__s0/anchor_rgba.png": {
+      "sha256": "5766b7076312af1496094dac5e61db1ccbc577cd8d0338855b7e6ae651774307",
+      "bytes": 239376
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_red_sphere_on_top_of_a_large_cyan_sphere__bd706091__s0/mesh.glb": {
+      "sha256": "decb222743f70c75a9fe9821b9f814927098ec1957b41edb01ea5db609b16ae4",
+      "bytes": 2534644
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_red_sphere_on_top_of_a_large_cyan_sphere__bd706091__s0/mesh.npz": {
+      "sha256": "513646eb4ee5dabe699df01eae4489122910b4f107ce2b48926a99d0ad171287",
+      "bytes": 1122172
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_red_sphere_on_top_of_a_large_cyan_sphere__bd706091__s0/preview.png": {
+      "sha256": "f5f98a6caa766e0b852120988356bdf2eb969d0315596531a6ec85bb3100415c",
+      "bytes": 56501
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_red_sphere_on_top_of_a_large_cyan_sphere__bd706091__s0/report.json": {
+      "sha256": "51a84cf712b14322fa40fb74b57601e16e1d8b16c121632f3508e15a1cf249f4",
+      "bytes": 6120
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_red_sphere_on_top_of_a_large_cyan_sphere__bd706091__s0/triposr_input.png": {
+      "sha256": "1b3237cc98950e19161ef8023dda685015268e7ade8bafb72e4cbef6f9208d1e",
+      "bytes": 102836
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_white_sphere_stacked_on_a_large_cyan_torus__551412ad__s0/anchor.json": {
+      "sha256": "094aafd9c1159f2c222b6c8d6a506ae7695d57b40ec49280541c8390241351c2",
+      "bytes": 1187
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_white_sphere_stacked_on_a_large_cyan_torus__551412ad__s0/anchor.png": {
+      "sha256": "59076694157500a71fdd1148aeb562d9aa387411aca5fdbcc6baac825d834a36",
+      "bytes": 431395
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_white_sphere_stacked_on_a_large_cyan_torus__551412ad__s0/report.json": {
+      "sha256": "6bad3eb853e2a0fc7b6be11b6fe7e39214ff735ada0e4e9e10316ee9186555cd",
+      "bytes": 5095
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_white_torus__0746758e__s0/anchor.json": {
+      "sha256": "fc13d071fb5620c2cf2d399affa68935e73a9e8b13a80af8599c16166ee248e4",
+      "bytes": 1137
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_white_torus__0746758e__s0/anchor.png": {
+      "sha256": "ffabcb53cbf54e0572c89137a26f4584ea234f4207bececa3d1fadf030c1bea1",
+      "bytes": 358758
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_white_torus__0746758e__s0/report.json": {
+      "sha256": "c4bd1caa4918768ee255c8ecfe5fe2113515697e89f10ed0350e3f7692a5097e",
+      "bytes": 5012
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_white_torus_next_to_a_large_cyan_torus__958d73ca__s0/anchor.json": {
+      "sha256": "613ba59019d9d1d66e83e223aa7b5cba6677eafdc67bc0b756320665cbb64e2f",
+      "bytes": 1183
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_white_torus_next_to_a_large_cyan_torus__958d73ca__s0/anchor.png": {
+      "sha256": "5b7f37370bd2131dafa10da827fc94ac37a6a4b3b291c71ce03dbb70df74ecab",
+      "bytes": 456577
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_white_torus_next_to_a_large_cyan_torus__958d73ca__s0/report.json": {
+      "sha256": "582594a86ce16a04c3070794202313b4668c86558ec81192f6fd6b88b45d4fd0",
+      "bytes": 5086
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_yellow_box_next_to_a_small_orange_box__0523f62f__s0/anchor.json": {
+      "sha256": "d39abb7bb8854d268ae832295ba85a8de665dd199f013ea94514ee0d72c7faac",
+      "bytes": 1176
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_yellow_box_next_to_a_small_orange_box__0523f62f__s0/anchor.png": {
+      "sha256": "6e1d909ffbf25bb55a243147e48e11ac8a0b002e4c16170717a1c2970e2cc7bc",
+      "bytes": 460299
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_yellow_box_next_to_a_small_orange_box__0523f62f__s0/anchor_rgba.png": {
+      "sha256": "67463a29471fcb61850370d08544d49676ca3353c832666d55159bbf12478f38",
+      "bytes": 212894
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_yellow_box_next_to_a_small_orange_box__0523f62f__s0/mesh.glb": {
+      "sha256": "97d820924696959f06f2557388f71c3dba292dc0fdbb5543c02748e764fdd592",
+      "bytes": 2882880
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_yellow_box_next_to_a_small_orange_box__0523f62f__s0/mesh.npz": {
+      "sha256": "fedb33e1a4f2cef4e683e5269cbcb27510155e0ceae34fe78ae772dbd89a5476",
+      "bytes": 1274092
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_yellow_box_next_to_a_small_orange_box__0523f62f__s0/preview.png": {
+      "sha256": "9e6f118160fd30b27fbcc22e2177332951cefcdb6c0a4aec5be23df9be3e3358",
+      "bytes": 53793
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_yellow_box_next_to_a_small_orange_box__0523f62f__s0/report.json": {
+      "sha256": "2ca0041d3f36eebbdb73a1aa88d318f562ad9bf25d715774d3c77d109296759a",
+      "bytes": 6111
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_yellow_box_next_to_a_small_orange_box__0523f62f__s0/triposr_input.png": {
+      "sha256": "a4cbe04498c8cb6328f932a193ebc75908fc0c6c0016d9d4d7adbf7984bb59f5",
+      "bytes": 90087
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_yellow_torus__7e43639f__s0/anchor.json": {
+      "sha256": "153ab7dee4da38283e322ce74543c63ba11294e40e5267f1fa871f17c58e21c7",
+      "bytes": 1137
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_yellow_torus__7e43639f__s0/anchor.png": {
+      "sha256": "510aee7eac6c1758c9401a8e09a3c3976e1f30e15903e0e39fd363d539f28fb1",
+      "bytes": 498007
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_large_yellow_torus__7e43639f__s0/report.json": {
+      "sha256": "c6329f2c2a4d8715d7146df6072d43a494628028c100d1a562fdaaa2e6348fe4",
+      "bytes": 5015
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_men_s_boot__03bc0a78__s0/anchor.json": {
+      "sha256": "856cf0a4e7f7ed591490e451d695bd0ec3d9057dabdb034b1f8076cc537a91f2",
+      "bytes": 1113
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_men_s_boot__03bc0a78__s0/anchor.png": {
+      "sha256": "e4b80edbfb521dc860a60731ad27862ab297535ec22961f45f249cf7cb16f0e4",
+      "bytes": 556541
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_men_s_boot__03bc0a78__s0/report.json": {
+      "sha256": "46b2d0c2725e2a56e38ca4bc057cc7768d59dc842cb385f41afea9e721aea5a2",
+      "bytes": 4979
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_men_s_boot__03bc0a78__s1/anchor.json": {
+      "sha256": "e332b365e5e74d566c522ebd6597601a9e469ff8ade05cb88c94a5c932c95b8e",
+      "bytes": 1113
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_men_s_boot__03bc0a78__s1/anchor.png": {
+      "sha256": "30dbf3dcfe214444481a8138c954fabd28f72e121413c369fb297810f02a59d3",
+      "bytes": 588638
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_men_s_boot__03bc0a78__s1/report.json": {
+      "sha256": "6899cb6e43c0b0b2f0a556482f997ae9f056e8eaf921125b7f927dc6de23bcae",
+      "bytes": 4979
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_men_s_boot__03bc0a78__s2/anchor.json": {
+      "sha256": "55718bb4a75895184af47f85f2cf70346bda9273a566dd227d9b846e83ec8d25",
+      "bytes": 1113
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_men_s_boot__03bc0a78__s2/anchor.png": {
+      "sha256": "cf96e6b8db08df2dc899d018a72706d3fb05919d814534b141457f0aff6f6f68",
+      "bytes": 571896
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_men_s_boot__03bc0a78__s2/report.json": {
+      "sha256": "82fc8d6ea23a2db48965e6ac6150f73e1c0b448fe3ef43e801be01b02a88d867",
+      "bytes": 4979
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_purple_box__13d1f18f__s0/anchor.json": {
+      "sha256": "52e3b7a3d4ca653c16fc2aa8863b56ae1e284b33197d29b05cf825ea3ca70ef5",
+      "bytes": 1131
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_purple_box__13d1f18f__s0/anchor.png": {
+      "sha256": "056055965411ba62aef49b1fd6f19d1c81e63a0091e5436c228f57f3d13767b6",
+      "bytes": 447215
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_purple_box__13d1f18f__s0/report.json": {
+      "sha256": "0ff91f22141a97fdf50f51b32413b3eac10229df80063aa5e89867a415eeb2f1",
+      "bytes": 4999
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_school_bus__d0912e5e__s0/anchor.json": {
+      "sha256": "06d4694db003c0117afa7dde182d1f15c82941f8acd24608bc0d4850d22145db",
+      "bytes": 1114
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_school_bus__d0912e5e__s0/anchor.png": {
+      "sha256": "2e90eb9e413d9ef556696e7a82b9f4c89b2d325d99d8d4dce4674bbf0da96975",
+      "bytes": 554069
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_school_bus__d0912e5e__s0/anchor_rgba.png": {
+      "sha256": "0f7c23683be2bc356fb106a5f344913172cf206d4a3e2744f8e19a7af5402148",
+      "bytes": 269333
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_school_bus__d0912e5e__s0/mesh.glb": {
+      "sha256": "3e17316e09f175372548f5f685e8b3e872775bac9968ea04b4617c0d70554e27",
+      "bytes": 2261988
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_school_bus__d0912e5e__s0/mesh.npz": {
+      "sha256": "6d6957872746bf1027b94db194ab27d761fd73080db2812883ace8252da4c7c9",
+      "bytes": 1034496
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_school_bus__d0912e5e__s0/preview.png": {
+      "sha256": "95109cc9f63dffc75f282924e4a5fe88f298e827f1699019a50b99f5a9d8eece",
+      "bytes": 69035
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_school_bus__d0912e5e__s0/report.json": {
+      "sha256": "b496a517e0d9cbc5cdfe456621837b620a7df9065192ce45870946f374c93628",
+      "bytes": 6008
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_school_bus__d0912e5e__s0/triposr_input.png": {
+      "sha256": "15069b905d2de44ad41153e50bdb65197ea336236eee0db448215eb48467a472",
+      "bytes": 155002
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_school_bus__d0912e5e__s1/anchor.json": {
+      "sha256": "9144c4decd67e8f5171c24a5f31b5a922a956a0a56318f172c453037b50009da",
+      "bytes": 1114
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_school_bus__d0912e5e__s1/anchor.png": {
+      "sha256": "0be86ce4bc741f1ff28ef464c6009c17ab2d94269a338487c231dd142ee0396d",
+      "bytes": 594625
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_school_bus__d0912e5e__s1/anchor_rgba.png": {
+      "sha256": "c1e7365ffd6d8f5861a8ba18bff094943c3dd9eb78ae3c971ecbaac0e6286cd4",
+      "bytes": 352690
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_school_bus__d0912e5e__s1/mesh.glb": {
+      "sha256": "feb4e983037c3f3e7ef6455d48f87eda7cb4764d9193f1e739c9a28e8b4f7f98",
+      "bytes": 2566596
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_school_bus__d0912e5e__s1/mesh.npz": {
+      "sha256": "1e09967c8352946f0b22f2d20ee0cb2661654a60c28e23c6669f8f880e6bc15c",
+      "bytes": 1164310
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_school_bus__d0912e5e__s1/preview.png": {
+      "sha256": "487024c347204dae3908650e26e17793b9360e736a107f6718ed09210944fb3a",
+      "bytes": 74299
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_school_bus__d0912e5e__s1/report.json": {
+      "sha256": "33221c6c82d67b8ed63457bfad8c5ac6c348beec046795aabe1015fbac609fb5",
+      "bytes": 6010
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_school_bus__d0912e5e__s1/triposr_input.png": {
+      "sha256": "fa3d0742f9cf1e8a228f4b07594dbe3d96c7199863d1ffec9fbbd4d3fb05a517",
+      "bytes": 151007
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_school_bus__d0912e5e__s2/anchor.json": {
+      "sha256": "45fd1b2c8341c8fa7ddf745013fafac454eafc28368f7c7377ad1f1d893dc2be",
+      "bytes": 1113
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_school_bus__d0912e5e__s2/anchor.png": {
+      "sha256": "b4ef2a31f8a6b41e2e9dfd3cd59fb5429201ad24a1507d1c399c243492873bfd",
+      "bytes": 603558
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_school_bus__d0912e5e__s2/anchor_rgba.png": {
+      "sha256": "d61beb7911b1a9d60d581e782d0d13351d0e4dff046bbdf7880f43fa6c455852",
+      "bytes": 329196
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_school_bus__d0912e5e__s2/mesh.glb": {
+      "sha256": "5663baf007971336ce99e74985de1ed10153b0b0fb0aa4c6de6ac25a89b1d4b3",
+      "bytes": 2496868
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_school_bus__d0912e5e__s2/mesh.npz": {
+      "sha256": "ed9615ce7e84c8f1dbb483e7dbb86a8b4b87dc26932c29bdb5fa32dd710b3007",
+      "bytes": 1144086
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_school_bus__d0912e5e__s2/preview.png": {
+      "sha256": "8079c5378981dbc336974cf7ac6d865c5e2f3a9399d0f19be1ff60cd044e91c4",
+      "bytes": 82801
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_school_bus__d0912e5e__s2/report.json": {
+      "sha256": "d66de046c14927ad2ae677e7331fda82422b231c82f7c85727f84cfbc1435af0",
+      "bytes": 6020
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_school_bus__d0912e5e__s2/triposr_input.png": {
+      "sha256": "d45f806e2fce62eb9c8a9f4f5c3adcb06946bc622f5f1dc00e0109acdd0db742",
+      "bytes": 170505
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_shiny_metal_trophy__8a02ea4a__s0/anchor.json": {
+      "sha256": "04d5ce0b777d452b069239272732fb39d3feceb21818766a49d0982d0a406a79",
+      "bytes": 1122
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_shiny_metal_trophy__8a02ea4a__s0/anchor.png": {
+      "sha256": "a174e13a6123aeb7d7e855dfe445af1e3b8ba89d5e1b7f6d180e648c3ce456ed",
+      "bytes": 589591
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_shiny_metal_trophy__8a02ea4a__s0/anchor_rgba.png": {
+      "sha256": "27da997aab1b2ab747e68cb637bd97d74d0f611ff3e8f4cb1bb89aac48707ba3",
+      "bytes": 176103
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_shiny_metal_trophy__8a02ea4a__s0/mesh.glb": {
+      "sha256": "77fde7dc2920a51f1799af50284d26f9c291b4c3f5d83ace03b7c7cd48f8db7a",
+      "bytes": 1504592
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_shiny_metal_trophy__8a02ea4a__s0/mesh.npz": {
+      "sha256": "45cb2e025d4423cac341f2442e4523a2d2dfaae3afdb7ffc14799b8fda6d46ed",
+      "bytes": 680388
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_shiny_metal_trophy__8a02ea4a__s0/preview.png": {
+      "sha256": "2b97ebe642c2576ba564c75233bc28f4b60968b898237b923d592b9027f98931",
+      "bytes": 52649
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_shiny_metal_trophy__8a02ea4a__s0/report.json": {
+      "sha256": "384d4b2abf1567a3a6f9711ad62686bda6d6a708b03760a84e11a681ca4141a2",
+      "bytes": 6023
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_shiny_metal_trophy__8a02ea4a__s0/triposr_input.png": {
+      "sha256": "e2935568be2305b0d904c960ad76a8125e9b0cc634e0422c8686df47285bd568",
+      "bytes": 109108
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_cyan_sphere_with_a_green_cylinder_on_top__a4008e7d__s0/anchor.json": {
+      "sha256": "6c769359729b7197dd767f89df14a25fd9fad40e992dfc7c996759f3a85eb3e8",
+      "bytes": 1184
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_cyan_sphere_with_a_green_cylinder_on_top__a4008e7d__s0/anchor.png": {
+      "sha256": "8b016f7ee3566372f0f930c5afb4c4744081705aea61eb8b98c75d34e057f211",
+      "bytes": 402886
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_cyan_sphere_with_a_green_cylinder_on_top__a4008e7d__s0/anchor_rgba.png": {
+      "sha256": "30ffd5920e7dc5f7d582f0fe4f0e17045c0b896738003f87578474fc7cd18166",
+      "bytes": 113657
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_cyan_sphere_with_a_green_cylinder_on_top__a4008e7d__s0/mesh.glb": {
+      "sha256": "5d27d8120a7611d6209fda324a6336ff31dcf044793edb3471a1816e5f363e73",
+      "bytes": 2507676
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_cyan_sphere_with_a_green_cylinder_on_top__a4008e7d__s0/mesh.npz": {
+      "sha256": "0a2e3a3a6e50662426eddd38b77bb5327f97abb2e4e7f6b3c08670aff287686a",
+      "bytes": 1107402
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_cyan_sphere_with_a_green_cylinder_on_top__a4008e7d__s0/preview.png": {
+      "sha256": "ef615cc139266bddaca215fa9db67846fddaab42cbf6bb32b7c57f0056252c00",
+      "bytes": 67742
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_cyan_sphere_with_a_green_cylinder_on_top__a4008e7d__s0/report.json": {
+      "sha256": "55ebf321f05695b00333081ff0343cb2d2095c26436c90da5480643857b1c490",
+      "bytes": 6121
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_cyan_sphere_with_a_green_cylinder_on_top__a4008e7d__s0/triposr_input.png": {
+      "sha256": "c32f8cc71eabfee13407ba31f937696cd0058565efd2bd572d4de83e8ade76ee",
+      "bytes": 110215
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_cyan_torus_next_to_a_purple_torus__be2d524d__s0/anchor.json": {
+      "sha256": "e7abaedd6125f57e4b6878fd3b996a1898cc64ceb9adbe01b60d008c8bf611e9",
+      "bytes": 1173
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_cyan_torus_next_to_a_purple_torus__be2d524d__s0/anchor.png": {
+      "sha256": "c510423af49508500c7ece7db301a443d3bd22e00070e169efb5478156814925",
+      "bytes": 391108
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_cyan_torus_next_to_a_purple_torus__be2d524d__s0/anchor_rgba.png": {
+      "sha256": "6315d4ff067d2f91c78c82f55a14875e475027d99ab57a6fa2a831c3c65489e4",
+      "bytes": 77818
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_cyan_torus_next_to_a_purple_torus__be2d524d__s0/mesh.glb": {
+      "sha256": "c3d4db6601df7ef0cec4026cb3d589efde9aa61f2469253d9c517d3ce3a37dfe",
+      "bytes": 1811144
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_cyan_torus_next_to_a_purple_torus__be2d524d__s0/mesh.npz": {
+      "sha256": "85ae4ddcc4e32f40ae9e71854a9885da5880bbadbd3725c9f3dd166a8c44092a",
+      "bytes": 802961
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_cyan_torus_next_to_a_purple_torus__be2d524d__s0/preview.png": {
+      "sha256": "bc83be3e8b2368d962d9f9e3effe68c38b1cdc940214c5cb71e12ff6d3807412",
+      "bytes": 40587
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_cyan_torus_next_to_a_purple_torus__be2d524d__s0/report.json": {
+      "sha256": "81ab93b6c7a09c46e94709ce4610a6a7c6c27a61b94bcecbe959729518181427",
+      "bytes": 6115
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_cyan_torus_next_to_a_purple_torus__be2d524d__s0/triposr_input.png": {
+      "sha256": "085c8867faac75833531e036bc8494b68b9ac04b60538cf921c77c2b2e452071",
+      "bytes": 88317
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_green_cylinder__7eeacc61__s0/anchor.json": {
+      "sha256": "798347d084365eb1716f7cd58dd89c1eba02782a7d80a471daf354a1faea16c2",
+      "bytes": 1144
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_green_cylinder__7eeacc61__s0/anchor.png": {
+      "sha256": "15964be8e44e8dee790da1d56d04a638c6d172cafa7a30dcf6aab7de38466fbe",
+      "bytes": 401584
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_green_cylinder__7eeacc61__s0/anchor_rgba.png": {
+      "sha256": "fb8f7aac2fd366c7d6874883257a496b2bf8ab3b5a342ff9681dd5861b0fe1a0",
+      "bytes": 126068
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_green_cylinder__7eeacc61__s0/mesh.glb": {
+      "sha256": "1733605cd5dcf058b7392485707beafc17f1acdd270f0004d5348d3da8965ea7",
+      "bytes": 2945232
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_green_cylinder__7eeacc61__s0/mesh.npz": {
+      "sha256": "c7ca9a43a1867041e5c3c34497e81ac1f47b98dc737ab02f898c487a446e85e2",
+      "bytes": 1227435
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_green_cylinder__7eeacc61__s0/preview.png": {
+      "sha256": "a6b6e336d4c90af263b80e7205ea0c86b783b3aa619cf5e7eaaedc682f70a2b6",
+      "bytes": 62998
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_green_cylinder__7eeacc61__s0/report.json": {
+      "sha256": "478261084e19cc190934dca6af8ca0962d96162c9f2653b7a4a2440f80610285",
+      "bytes": 6053
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_green_cylinder__7eeacc61__s0/triposr_input.png": {
+      "sha256": "dfe7b6662ab249566ba2890120be462e81fdf004ce7b06123bd40fc10e9e4651",
+      "bytes": 104620
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_green_cylinder_beside_a_cyan_cone__101081b4__s0/anchor.json": {
+      "sha256": "951f5bf3b017005243db5cb85f9eecf20e4cfe1ae5b34318d10d07f2b4eeaa87",
+      "bytes": 1177
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_green_cylinder_beside_a_cyan_cone__101081b4__s0/anchor.png": {
+      "sha256": "38a215bd59cbc4569968cd27b9dc7a0ad52bd880217ee605e58260f35626774b",
+      "bytes": 484557
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_green_cylinder_beside_a_cyan_cone__101081b4__s0/anchor_rgba.png": {
+      "sha256": "ab48f548fa01de5e84a37b152688e05f70f1f48acb80021c768122ea08976d62",
+      "bytes": 125586
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_green_cylinder_beside_a_cyan_cone__101081b4__s0/mesh.glb": {
+      "sha256": "f7b23ab4e471d3259b98bf323d56ecd5315667abd99df31826be0efc76a30c31",
+      "bytes": 2028876
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_green_cylinder_beside_a_cyan_cone__101081b4__s0/mesh.npz": {
+      "sha256": "9a4f2c134100898f0611266efb1119b62504c914d850bfacbd8c428c64ee0d72",
+      "bytes": 872251
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_green_cylinder_beside_a_cyan_cone__101081b4__s0/preview.png": {
+      "sha256": "9b400d767087b7a768a95035e8dfdcd331e86425054f064d37d3d68a015185bb",
+      "bytes": 62241
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_green_cylinder_beside_a_cyan_cone__101081b4__s0/report.json": {
+      "sha256": "9567c9cf6fe987d15ca1b6bcdcd88b0f07f70d7e017aaf18d5156ba17ac29daa",
+      "bytes": 6105
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_green_cylinder_beside_a_cyan_cone__101081b4__s0/triposr_input.png": {
+      "sha256": "087cbeb57488f96cdb38a8e6d14dd7977900bf8b942fff107f189f89e2421408",
+      "bytes": 98701
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_green_sphere_with_a_large_red_sphere_on_top__7188bb2b__s0/anchor.json": {
+      "sha256": "058566426969f6cd7b5894010f4f1a9558c4d9001cc6d446f8bb1431b3d4cfd1",
+      "bytes": 1187
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_green_sphere_with_a_large_red_sphere_on_top__7188bb2b__s0/anchor.png": {
+      "sha256": "96e2dd86db59d72f2cd3033c7c19f43a6fc35e282a5860e5629023cd4f2771b2",
+      "bytes": 419284
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_green_sphere_with_a_large_red_sphere_on_top__7188bb2b__s0/anchor_rgba.png": {
+      "sha256": "245495951e3bdbdd757f112ba560bc7aae074abcf753bdf50d9a7a3c235485c7",
+      "bytes": 147241
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_green_sphere_with_a_large_red_sphere_on_top__7188bb2b__s0/mesh.glb": {
+      "sha256": "6c43f5b5eafe7f48a6e1406666aab1fc3c1eebb32deb439154896d25c820e1df",
+      "bytes": 2569248
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_green_sphere_with_a_large_red_sphere_on_top__7188bb2b__s0/mesh.npz": {
+      "sha256": "95018d4bf9e8ed57ffeb05945e5c39196fbb2cb606574898411f1501f6ce64d0",
+      "bytes": 1133793
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_green_sphere_with_a_large_red_sphere_on_top__7188bb2b__s0/preview.png": {
+      "sha256": "28322782c154e3b3dedf37bc93997d948a589b9551e6234bf9daee2af4df3d45",
+      "bytes": 59713
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_green_sphere_with_a_large_red_sphere_on_top__7188bb2b__s0/report.json": {
+      "sha256": "7fd2f82e2ae9bb870988468c3aacf0d4f219a29c3b64244f9a8422b524a74430",
+      "bytes": 6127
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_green_sphere_with_a_large_red_sphere_on_top__7188bb2b__s0/triposr_input.png": {
+      "sha256": "4bf45bd9ce7f705907bf5bb4c499a599720f283b17cdebba5dbe27127772308e",
+      "bytes": 107393
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_purple_sphere__8fc9c2c2__s0/anchor.json": {
+      "sha256": "86f7a38d1f59a747affafa23b5ac7ea6ab30686db285d4592154359274d95f48",
+      "bytes": 1139
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_purple_sphere__8fc9c2c2__s0/anchor.png": {
+      "sha256": "e107db2999beb3e9d8b2d41eeeebe5708384a061a116377aa07301d27b5add1b",
+      "bytes": 392480
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_purple_sphere__8fc9c2c2__s0/anchor_rgba.png": {
+      "sha256": "179f7030268bd71dd82a2fd7dd95501ec82d37ef577c9836862cc822a74bd0a5",
+      "bytes": 69204
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_purple_sphere__8fc9c2c2__s0/mesh.glb": {
+      "sha256": "28b133272d1ddfd07b24b4d36b6f0f73c2eea8c1134652d320c39d6accf72f81",
+      "bytes": 2272944
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_purple_sphere__8fc9c2c2__s0/mesh.npz": {
+      "sha256": "9e5a51f56e66ad763e8690a79751411a7278f8db243fbfd4c6b0e8816f7050cc",
+      "bytes": 978633
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_purple_sphere__8fc9c2c2__s0/preview.png": {
+      "sha256": "ce843388f3ef209f0a29bc2ad5dfd1db75dd05ac170b0f027a5d4609c85ee6fb",
+      "bytes": 68534
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_purple_sphere__8fc9c2c2__s0/report.json": {
+      "sha256": "d9511293d5db694cfae5ab91cbe2d2fabea3f4a9c58ae4e6c454fa73d896707a",
+      "bytes": 6045
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_purple_sphere__8fc9c2c2__s0/triposr_input.png": {
+      "sha256": "8ef89cfc298173a0b92202764492f7bd957cd3cb1a42fa425a106ebb21f80b04",
+      "bytes": 80187
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_purple_sphere_with_a_cyan_torus_on_top__ce327f66__s0/anchor.json": {
+      "sha256": "6fafbe9623f287edda8608b4182de685ada743fd81e37c2bf0d6e6ac8ed092b0",
+      "bytes": 1179
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_purple_sphere_with_a_cyan_torus_on_top__ce327f66__s0/anchor.png": {
+      "sha256": "810494045b53ec1f575f39dec590fc8be0a87952c991cfcf9f83064cf9f5d16d",
+      "bytes": 397579
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_purple_sphere_with_a_cyan_torus_on_top__ce327f66__s0/anchor_rgba.png": {
+      "sha256": "35b32d528b456de4bb1d920dedafdaf6d0d9750a2a0c2f473b814d6f85f4f585",
+      "bytes": 85496
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_purple_sphere_with_a_cyan_torus_on_top__ce327f66__s0/mesh.glb": {
+      "sha256": "b4bf5383a2ee8ae0ee15d7486d71b5bd370489907711cf428613f3d4c7c2ff54",
+      "bytes": 2271448
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_purple_sphere_with_a_cyan_torus_on_top__ce327f66__s0/mesh.npz": {
+      "sha256": "a08a1d1a143d3f59dd09565ac5b35e44e7bc45e16ca7e9251fd24e19c58fdee7",
+      "bytes": 1003267
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_purple_sphere_with_a_cyan_torus_on_top__ce327f66__s0/preview.png": {
+      "sha256": "9f5d980b1497033df033f7241f920a345f6c4805c30b464d89774cdcef4d0aed",
+      "bytes": 67844
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_purple_sphere_with_a_cyan_torus_on_top__ce327f66__s0/report.json": {
+      "sha256": "ba569a0628467530d054ccfcf570c53d593da96314ca18170d8ba04202ef6677",
+      "bytes": 6112
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_purple_sphere_with_a_cyan_torus_on_top__ce327f66__s0/triposr_input.png": {
+      "sha256": "bd95e1e130844bec55d54a04c353dda18157f662b9ef8bcac4e2102041548bf3",
+      "bytes": 100863
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_purple_sphere_with_a_white_torus_on_top__d31d3ceb__s0/anchor.json": {
+      "sha256": "3aa44d33f4687df14294a9d04339deddfd2ecc717d84962b5389c83ea6922ee3",
+      "bytes": 1180
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_purple_sphere_with_a_white_torus_on_top__d31d3ceb__s0/anchor.png": {
+      "sha256": "c1b18f67adc52f26c7f2195f1407185507ecadd8e643fcc526fc2c33ba7ca8a5",
+      "bytes": 405013
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_purple_sphere_with_a_white_torus_on_top__d31d3ceb__s0/anchor_rgba.png": {
+      "sha256": "25ea24fc8b9e41a812173217adb0cf6da2467afbc6d21554775bd413d5fd3547",
+      "bytes": 83687
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_purple_sphere_with_a_white_torus_on_top__d31d3ceb__s0/mesh.glb": {
+      "sha256": "a11df732b7a6cbb31699f0abd137c8f8c6ca2f901ec8096453eccd4c5acb2c89",
+      "bytes": 2192292
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_purple_sphere_with_a_white_torus_on_top__d31d3ceb__s0/mesh.npz": {
+      "sha256": "0ebeb0cacd1c690c04ab15d1cbd401ad40024cd9a3a5b369b3d160a2db381dd8",
+      "bytes": 961036
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_purple_sphere_with_a_white_torus_on_top__d31d3ceb__s0/preview.png": {
+      "sha256": "1800584b34ce0b3e4f9f4224f1e65e7b63b448768f85348d63cec3619b343da5",
+      "bytes": 53446
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_purple_sphere_with_a_white_torus_on_top__d31d3ceb__s0/report.json": {
+      "sha256": "5e5319a59eb6d10dff93833b25ef20262033562002f5be4f5bbed8e3a8fc9901",
+      "bytes": 6115
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_purple_sphere_with_a_white_torus_on_top__d31d3ceb__s0/triposr_input.png": {
+      "sha256": "757949f844812e932cd1cad62e9edb99aedf474cf579efa5126ba8307641400f",
+      "bytes": 90706
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_yellow_cone__88f4d8f5__s0/anchor.json": {
+      "sha256": "bc84c7e7a675c3da4fdfc86e64231c1ae6574657ce3de013f1603457bc19469a",
+      "bytes": 1135
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_yellow_cone__88f4d8f5__s0/anchor.png": {
+      "sha256": "92058baa194b901619b1689191f52ed624199b6c669c51a533d2c9b1be2148d2",
+      "bytes": 436570
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_yellow_cone__88f4d8f5__s0/anchor_rgba.png": {
+      "sha256": "2b114d5f6793edf1f44decc05f1390151ccbfe765d1bc29f1b837ef2273fee41",
+      "bytes": 134782
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_yellow_cone__88f4d8f5__s0/mesh.glb": {
+      "sha256": "65b739233c047fab2a37602a3b41533720d82fa5c80db2f5a2d6a9b87df3afe4",
+      "bytes": 1682336
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_yellow_cone__88f4d8f5__s0/mesh.npz": {
+      "sha256": "dde512b2d13838c7626d674cc790268381cece7c037669a4aab6a79d12cd0f27",
+      "bytes": 728394
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_yellow_cone__88f4d8f5__s0/preview.png": {
+      "sha256": "00bdec5360468ef8f7133a098a1af209fdf37dadf413a7b50d67ed34a81ce689",
+      "bytes": 41299
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_yellow_cone__88f4d8f5__s0/report.json": {
+      "sha256": "892add0561533b8c4b06b313f3a4ad1704345e8c01259faada4ec0611189ed2a",
+      "bytes": 6050
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_yellow_cone__88f4d8f5__s0/triposr_input.png": {
+      "sha256": "f30e39d10878bf661e69ca0973152b460450c7bd3b03700fd3cfbf7349f3bee1",
+      "bytes": 69457
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_yellow_cylinder_to_the_left_of_a_small_white_cone__ca952bd4__s0/anchor.json": {
+      "sha256": "462978256fb7e48a901e57135a2d1c42fbb03a9dad575d8fe705cb5154ada368",
+      "bytes": 1188
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_yellow_cylinder_to_the_left_of_a_small_white_cone__ca952bd4__s0/anchor.png": {
+      "sha256": "b73a8b2c1ee5dd18c41ad1ecdec871713e9c2fdca14a59188e9a49bae3486097",
+      "bytes": 441957
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_yellow_cylinder_to_the_left_of_a_small_white_cone__ca952bd4__s0/anchor_rgba.png": {
+      "sha256": "aa397e39b36c05ca3d2a7ce8984834bdd6fe1ab803075fd0ab501bdb1e2137e9",
+      "bytes": 85252
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_yellow_cylinder_to_the_left_of_a_small_white_cone__ca952bd4__s0/mesh.glb": {
+      "sha256": "a8809bee47347d309bbe1948d1d47ea72d56bb92a2e2e760a63cd77eef1098bf",
+      "bytes": 2065928
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_yellow_cylinder_to_the_left_of_a_small_white_cone__ca952bd4__s0/mesh.npz": {
+      "sha256": "a4d28d72887cd086dd8a041b696e2ab9359a86c6e17846af5d4d7218e99578e4",
+      "bytes": 891888
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_yellow_cylinder_to_the_left_of_a_small_white_cone__ca952bd4__s0/preview.png": {
+      "sha256": "1c703de481e7ed816171305a0f1f75cef69351ccd89bfa248c072f95b8b42f3c",
+      "bytes": 46217
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_yellow_cylinder_to_the_left_of_a_small_white_cone__ca952bd4__s0/report.json": {
+      "sha256": "ae10b5eb1cf3825e9430b7987384fe1d5553f43a1dd08187a2635a615acf7434",
+      "bytes": 6146
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_yellow_cylinder_to_the_left_of_a_small_white_cone__ca952bd4__s0/triposr_input.png": {
+      "sha256": "eb396ae5b7c78ead1fdb8c7917feca0eea503b10e17001f4afafe6595f1bef5e",
+      "bytes": 86637
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_yellow_sphere__fb6ff07f__s0/anchor.json": {
+      "sha256": "227bbbe10822d03800058eaa1e9c52033f128111741d8102f8e81a0c01e9e12f",
+      "bytes": 1136
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_yellow_sphere__fb6ff07f__s0/anchor.png": {
+      "sha256": "76ae69ba9d7079fff1a17c3cb27af10c8484bf6bb9b8f8a8fd2ff5680733a858",
+      "bytes": 409206
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_yellow_sphere__fb6ff07f__s0/anchor_rgba.png": {
+      "sha256": "6bd59992dee1f6770e5c0ac6d875fb8111278d7a5c8354687159a3d7607fe51e",
+      "bytes": 123700
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_yellow_sphere__fb6ff07f__s0/mesh.glb": {
+      "sha256": "a4f50de7bf5ff0cae4087bce8870522735edeef77d47ef340ecca7064b34f92a",
+      "bytes": 2537000
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_yellow_sphere__fb6ff07f__s0/mesh.npz": {
+      "sha256": "ed31625cf95f782f8f9a2f3d9882f413205d690e758264b7e5acd51485b3112f",
+      "bytes": 1100460
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_yellow_sphere__fb6ff07f__s0/preview.png": {
+      "sha256": "979f43a1e85b7df664c63b0d79da6fb92710911ee86ecf4f8a9a321a61f8b746",
+      "bytes": 59106
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_yellow_sphere__fb6ff07f__s0/report.json": {
+      "sha256": "b8c6d4fd5665e0589ce147cc01f819722f1034e80890c278cdfec954c92bddad",
+      "bytes": 6042
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_small_yellow_sphere__fb6ff07f__s0/triposr_input.png": {
+      "sha256": "c010520483935d03884736ec51f7495150e892506113f22179284c5679ab049a",
+      "bytes": 90066
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_teal_plastic_easter_basket__dd7d37c5__s0/anchor.json": {
+      "sha256": "0bb1a24401fc785e27ee87912e79dd9ce04f533545e98e4a64d5d68165b7c6c9",
+      "bytes": 1149
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_teal_plastic_easter_basket__dd7d37c5__s0/anchor.png": {
+      "sha256": "f5d34995d4fab820b5fea36a68dbf73b0c0cda726a8a637eb09ff4fcf7509a6b",
+      "bytes": 529588
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_teal_plastic_easter_basket__dd7d37c5__s0/report.json": {
+      "sha256": "0d6b69d36107214280de605043676b9b48e72c3ca3b062e8a80674e23fcad649",
+      "bytes": 5035
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_teal_plastic_easter_basket__dd7d37c5__s1/anchor.json": {
+      "sha256": "13b7eed0a99e26025b7d7307bf4bbe067cc82d00fd06bcbf11ff0c1f8c902ec7",
+      "bytes": 1150
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_teal_plastic_easter_basket__dd7d37c5__s1/anchor.png": {
+      "sha256": "2a5007cb30420df1327f24dcabf51998b0427668c007263ff50e1bf83b31098e",
+      "bytes": 591296
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_teal_plastic_easter_basket__dd7d37c5__s1/report.json": {
+      "sha256": "7c2455a1059ab0cf79d402e85d1df45e67298ba5936aa478baea01e689ce5769",
+      "bytes": 5036
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_teal_plastic_easter_basket__dd7d37c5__s2/anchor.json": {
+      "sha256": "7a5d9bd50b0e28625d0dfc4a1e556528cad8a336632eaddc4202b56fdc4a5cea",
+      "bytes": 1150
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_teal_plastic_easter_basket__dd7d37c5__s2/anchor.png": {
+      "sha256": "4c9f2ec9fba35cc547c7f229531227eab8bd28da76e88d053f5850edcd5aa62f",
+      "bytes": 616746
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_teal_plastic_easter_basket__dd7d37c5__s2/report.json": {
+      "sha256": "03ab39655928390aad64e21448381ae19b050c595b70a0a4016809c1b8272785",
+      "bytes": 5036
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_turboprop_airplane_with_a_pilot__112109e4__s0/anchor.json": {
+      "sha256": "09e3fe003b6600b33b4a6dead56eee3d82ee0eabbe63fff45cf99249f56e0c2b",
+      "bytes": 1134
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_turboprop_airplane_with_a_pilot__112109e4__s0/anchor.png": {
+      "sha256": "d961db24c99fcece2b134095fdd99fc64c4576528e9c524aa7b1f0c01a8ef4bd",
+      "bytes": 458032
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_turboprop_airplane_with_a_pilot__112109e4__s0/anchor_rgba.png": {
+      "sha256": "8442a106fb37e868f22310d5d2b0aaf8e500e1284ff56c4b9c915726192964b1",
+      "bytes": 165558
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_turboprop_airplane_with_a_pilot__112109e4__s0/mesh.glb": {
+      "sha256": "d9608dc7fc8316b7feebc3aa2a0112567853f78b83fb74fcda78f0ff56026608",
+      "bytes": 997276
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_turboprop_airplane_with_a_pilot__112109e4__s0/mesh.npz": {
+      "sha256": "b8c8a8ba318b289f74b1e4f97d38c08436e1c4478416081a716803fdddb3caf2",
+      "bytes": 450673
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_turboprop_airplane_with_a_pilot__112109e4__s0/preview.png": {
+      "sha256": "5b320ce377a87026add9ff8eaa4e9f32cde07a31375f41612f6ad0bb4428422d",
+      "bytes": 35102
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_turboprop_airplane_with_a_pilot__112109e4__s0/report.json": {
+      "sha256": "00bb906c4132d50080e1b274900244c3b11ccea8da7ba422e755f498ba0a1127",
+      "bytes": 6046
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_turboprop_airplane_with_a_pilot__112109e4__s0/triposr_input.png": {
+      "sha256": "dff772c89ed85cc3593bc1e876abac2afae9e61b7f35a0957ed6e7243ed7db56",
+      "bytes": 64750
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_turboprop_airplane_with_a_pilot__112109e4__s1/anchor.json": {
+      "sha256": "420caf6f5ac2ff8887669936e8bb310199d76e45b50879de7eb9678ed4285b20",
+      "bytes": 1133
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_turboprop_airplane_with_a_pilot__112109e4__s1/anchor.png": {
+      "sha256": "9190a801446e1f6a20e91654c92a99e3c0ac3570d2132cb47afdac52ecbf23f6",
+      "bytes": 515275
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_turboprop_airplane_with_a_pilot__112109e4__s1/anchor_rgba.png": {
+      "sha256": "db963fcb6fd5b38690d670c378bf68e3edcbf6ff5f9c79d4c687b56cf3adb57d",
+      "bytes": 228921
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_turboprop_airplane_with_a_pilot__112109e4__s1/mesh.glb": {
+      "sha256": "3c2733e336d5b9780ee67c564f30a67aeba0a41f055590da8ae9e26cdfdc1030",
+      "bytes": 1313564
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_turboprop_airplane_with_a_pilot__112109e4__s1/mesh.npz": {
+      "sha256": "aad5234111f892b235aea98117fd1c99dc8c73d5d1ff3aba0952c442294544f4",
+      "bytes": 591540
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_turboprop_airplane_with_a_pilot__112109e4__s1/preview.png": {
+      "sha256": "b6d77bdb8f4c4f754810ab144e9459860bed3f571da542ca5da8970a0bf00d60",
+      "bytes": 41076
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_turboprop_airplane_with_a_pilot__112109e4__s1/report.json": {
+      "sha256": "30304e462c176452c970c9ca3adaeecbfec499d2648a30662c0a61b0ba499f77",
+      "bytes": 6066
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_turboprop_airplane_with_a_pilot__112109e4__s1/triposr_input.png": {
+      "sha256": "741137fd1311d025d8dcffd9d9fe34bd5b20863e2eb51fc9f9759132d713669e",
+      "bytes": 81158
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_turboprop_airplane_with_a_pilot__112109e4__s2/anchor.json": {
+      "sha256": "b364d6f4353d9b2f02ac20ed6f61954b592ee427a5d1d86498af7b8e4d6fdde2",
+      "bytes": 1134
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_turboprop_airplane_with_a_pilot__112109e4__s2/anchor.png": {
+      "sha256": "b8f888873d4ce1c6a0441c99bf48729e62dc93b046544a5acd5e717c1a8446fe",
+      "bytes": 468728
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_turboprop_airplane_with_a_pilot__112109e4__s2/anchor_rgba.png": {
+      "sha256": "ef1c409ae7a8e68a706481fb65bf365a3249f8dea667d333218f020ccaf74a64",
+      "bytes": 135553
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_turboprop_airplane_with_a_pilot__112109e4__s2/mesh.glb": {
+      "sha256": "3f6841f1e5459807a9586367db12877b2b53b7fb4e17cce03e90383789475e31",
+      "bytes": 663128
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_turboprop_airplane_with_a_pilot__112109e4__s2/mesh.npz": {
+      "sha256": "654d9c1b5da8e76b3858fc0ea92682fb6c6c8e2f6510f601cad37ad736ced613",
+      "bytes": 296833
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_turboprop_airplane_with_a_pilot__112109e4__s2/preview.png": {
+      "sha256": "e16463d1f828bf985fd8918cf6596cb3cb058cd720ebc8525ba06de732aec283",
+      "bytes": 28583
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_turboprop_airplane_with_a_pilot__112109e4__s2/report.json": {
+      "sha256": "d9308705d99d9a378a76cd294f92bd5ec0614a1c242d4bd224ab45f1433d4758",
+      "bytes": 6066
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_turboprop_airplane_with_a_pilot__112109e4__s2/triposr_input.png": {
+      "sha256": "a04a01f6e237d9886530b9b319d401fa14cb6a463e79f7ecb6c583982a7dc14c",
+      "bytes": 57819
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_watering_can__fbae5455__s0/anchor.json": {
+      "sha256": "6d9ec2be3b20590a07e322858f9731b7e47926d843dfaa7a43c3a612548fd04e",
+      "bytes": 1116
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_watering_can__fbae5455__s0/anchor.png": {
+      "sha256": "a06c464807904f46f4fff405d2ea59d83258e246287a17d8f3d69e5896f73360",
+      "bytes": 604692
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_watering_can__fbae5455__s0/report.json": {
+      "sha256": "4a196abe770dc13dd017163e05a794ff65a00f7a98c6096d9a4ac4095b096f02",
+      "bytes": 4984
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_white_porcelain_pitcher__f2946541__s0/anchor.json": {
+      "sha256": "07b0c0ec0cf80531f58b4a9c848b7a9656f214aad2ac109ae4512616ef1136e4",
+      "bytes": 1143
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_white_porcelain_pitcher__f2946541__s0/anchor.png": {
+      "sha256": "fcea34901dff5e2d74b3fdedd7d17ebcbaf10af4698709bafdf3281f4119a62d",
+      "bytes": 552596
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_white_porcelain_pitcher__f2946541__s0/report.json": {
+      "sha256": "866b746f3a61a2c0a9a7b63b2e94b53fcf47e28290aaa33b29e1ce371f75bb77",
+      "bytes": 5026
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_white_porcelain_pitcher__f2946541__s1/anchor.json": {
+      "sha256": "36f80be528b9221a772d1501b6d10d734014146e3107fb0b0ccab7bb6bc65779",
+      "bytes": 1143
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_white_porcelain_pitcher__f2946541__s1/anchor.png": {
+      "sha256": "db9f6f9aa9dcfde1a84c8a1902525ad3f8c5e4c3601af9f04dcbae6aa425dac1",
+      "bytes": 580422
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_white_porcelain_pitcher__f2946541__s1/report.json": {
+      "sha256": "c6c9c991d5bee9cd8838a97ed309d563dec24aa49e8c6939d768a2b598d8d346",
+      "bytes": 5026
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_white_porcelain_pitcher__f2946541__s2/anchor.json": {
+      "sha256": "0b60869fda1408ae6ceb5e4864a4a43872b628b1b9e0bfe986f1106bee85fd21",
+      "bytes": 1143
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_white_porcelain_pitcher__f2946541__s2/anchor.png": {
+      "sha256": "d359d2a5dc3ade354f034ad29d61b6ffbffa2c66ce6b4f1844ed1a1db84190c4",
+      "bytes": 587323
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_white_porcelain_pitcher__f2946541__s2/report.json": {
+      "sha256": "6ed552a138aca2023da468a0a0865c7df33ad85d2aafe914ee0df4702337dac0",
+      "bytes": 5026
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_white_porcelain_teapot__f8ddc092__s0/anchor.json": {
+      "sha256": "ab3e9e951c3f89da5c2a4fdba6ed2fb8baae556312cc8065d5c1850c73b1db45",
+      "bytes": 1140
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_white_porcelain_teapot__f8ddc092__s0/anchor.png": {
+      "sha256": "11f6bd439831042fea66db8e033125398291e31b0261298cd3d83e61426809b9",
+      "bytes": 517368
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_white_porcelain_teapot__f8ddc092__s0/report.json": {
+      "sha256": "1c714485fe94c9a60bea2fed874200fc4e3bfd14fc3ee2e082b4f6c4bc733156",
+      "bytes": 5022
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_white_porcelain_teapot__f8ddc092__s1/anchor.json": {
+      "sha256": "f4fbd6d74a24dbbda5e06c56e89ee6a638ed23f28e88ab5bfa158c740691a0ba",
+      "bytes": 1142
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_white_porcelain_teapot__f8ddc092__s1/anchor.png": {
+      "sha256": "4921996aee616cd25da03d3e56b66e7585bd9054cd7df7a603638e8645a6bf5f",
+      "bytes": 553292
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_white_porcelain_teapot__f8ddc092__s1/report.json": {
+      "sha256": "53b1e362228690838e9722a756717f386887c3f20e36b6bb6969e0a677131e2e",
+      "bytes": 5024
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_white_porcelain_teapot__f8ddc092__s2/anchor.json": {
+      "sha256": "4feb4566420e73199c24ad7ce9ced43328f3de9352920e22d9226a2aa2cd4b08",
+      "bytes": 1142
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_white_porcelain_teapot__f8ddc092__s2/anchor.png": {
+      "sha256": "c89d686a44a608ab3c52823e453ad4aaa97f5774de13f1aeb5bae46c0285178c",
+      "bytes": 562210
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_white_porcelain_teapot__f8ddc092__s2/report.json": {
+      "sha256": "e3f963e287e9f5be056bd587367c24bb1b1896ef0165fe46bb3780c90a01a331",
+      "bytes": 5024
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_white_torus__ff46260d__s0/anchor.json": {
+      "sha256": "b3f4b0f82ffb9dd30a91fa39b2907d16878670ceaef47fcaa0c291915ebcbdeb",
+      "bytes": 1131
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_white_torus__ff46260d__s0/anchor.png": {
+      "sha256": "0232069ae763ad2ffba52f35f542d3d2a37a0ed0e3157b69efe61c1db81a3dab",
+      "bytes": 405565
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_white_torus__ff46260d__s0/report.json": {
+      "sha256": "f5a7b6a3f6e28fa6e2bf6a4a35b31cdc6847dbb4325e7e1bccc7fb0124eed243",
+      "bytes": 4999
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_yellow_sphere_with_a_white_cylinder_on_top__6a4abd46__s0/anchor.json": {
+      "sha256": "578f1d19447b7437be68c0d405a06d77a119db04950f83c0c7409c5dd2e9eb9f",
+      "bytes": 1175
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_yellow_sphere_with_a_white_cylinder_on_top__6a4abd46__s0/anchor.png": {
+      "sha256": "37070d4afc3784dd0577d79e2c454457f683f4f300ccf495a60804e23566fa72",
+      "bytes": 430198
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_yellow_sphere_with_a_white_cylinder_on_top__6a4abd46__s0/anchor_rgba.png": {
+      "sha256": "cfb807770b571d95c579dd89dba08359079288f3c608be9b458b4249adc354ed",
+      "bytes": 208833
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_yellow_sphere_with_a_white_cylinder_on_top__6a4abd46__s0/mesh.glb": {
+      "sha256": "6403a9bc10a8e712eed8eb286445ab7fa9387252af1f63e1e97c3861a25f9e9d",
+      "bytes": 2552872
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_yellow_sphere_with_a_white_cylinder_on_top__6a4abd46__s0/mesh.npz": {
+      "sha256": "a82306bdae0d544407175526a3d941724636a5289e9eeaaae96b58bb3eb94db6",
+      "bytes": 1110017
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_yellow_sphere_with_a_white_cylinder_on_top__6a4abd46__s0/preview.png": {
+      "sha256": "d53d4fc580ed50a4458d9b3d8fb8edd711d71db05e87e1641ee982347498bc12",
+      "bytes": 65867
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_yellow_sphere_with_a_white_cylinder_on_top__6a4abd46__s0/report.json": {
+      "sha256": "db92066f7215fae04a51b5fed2749f7fe2b4f8b859eaa2f89717b04bcd3bed62",
+      "bytes": 6108
+    },
+    "results/text3d/E-T3/units/zimage-triposr/a_yellow_sphere_with_a_white_cylinder_on_top__6a4abd46__s0/triposr_input.png": {
+      "sha256": "42e26fd913d515db89da19c073752f3569d75e4e632d7b803ba3a33cbf746676",
+      "bytes": 111930
+    },
+    "results/text3d/E-T3/units/zimage-triposr/an_elephant__8b94b960__s0/anchor.json": {
+      "sha256": "5f2a76b85a08f4a5a7efbb724c28606b3113de5aa949a55e3f776cf0b52c5fdd",
+      "bytes": 1113
+    },
+    "results/text3d/E-T3/units/zimage-triposr/an_elephant__8b94b960__s0/anchor.png": {
+      "sha256": "69082fd020711ee8e3d934d8a68b4ca17fd91c23a8c11fd00da0e94390534747",
+      "bytes": 418812
+    },
+    "results/text3d/E-T3/units/zimage-triposr/an_elephant__8b94b960__s0/anchor_rgba.png": {
+      "sha256": "08d065fee89e3d43778b315f7c1efff58b4d9d53501f25df9254fae0de5391fe",
+      "bytes": 259147
+    },
+    "results/text3d/E-T3/units/zimage-triposr/an_elephant__8b94b960__s0/mesh.glb": {
+      "sha256": "f8f97c09b98452fa83a6ff05a9d69ac22e419cdf92060af74279e409a13243b9",
+      "bytes": 1888696
+    },
+    "results/text3d/E-T3/units/zimage-triposr/an_elephant__8b94b960__s0/mesh.npz": {
+      "sha256": "8eb496fcfba4a0a37b9bd4f47328b9dca5cec7f1926fe4bc820a4447ca6fcbb5",
+      "bytes": 835256
+    },
+    "results/text3d/E-T3/units/zimage-triposr/an_elephant__8b94b960__s0/preview.png": {
+      "sha256": "b407d40ea59c7b888754454abce84a4b1f42b7de7ee14e855d1388667570c58a",
+      "bytes": 63339
+    },
+    "results/text3d/E-T3/units/zimage-triposr/an_elephant__8b94b960__s0/report.json": {
+      "sha256": "08f8bc4e44d3926dc69054e358750826c4930127c61d88f23841dbc541dc9890",
+      "bytes": 6001
+    },
+    "results/text3d/E-T3/units/zimage-triposr/an_elephant__8b94b960__s0/triposr_input.png": {
+      "sha256": "74db3846be15a8a4756b87548dd0d9c03925ff97b1c618686298ffe5136ad8d7",
+      "bytes": 210533
+    },
+    "results/text3d/E-T3/units/zimage-triposr/an_elephant__8b94b960__s1/anchor.json": {
+      "sha256": "3b76881fe9f21b1dfd0e3bf61dd4d4e4a4651e022fb4b327ca2b9e634ac3f47f",
+      "bytes": 1113
+    },
+    "results/text3d/E-T3/units/zimage-triposr/an_elephant__8b94b960__s1/anchor.png": {
+      "sha256": "33c149b8af2dc2a0e3d863353c125ab4e8660c49e414c5875a32f59aa517afd9",
+      "bytes": 578187
+    },
+    "results/text3d/E-T3/units/zimage-triposr/an_elephant__8b94b960__s1/anchor_rgba.png": {
+      "sha256": "29c9c06802d340e8b97433b7e4c718002a32d7dc0860509eac145483eb8b7502",
+      "bytes": 378858
+    },
+    "results/text3d/E-T3/units/zimage-triposr/an_elephant__8b94b960__s1/mesh.glb": {
+      "sha256": "04f1be81c00768f2c086e9e75d2407addc97594538af6255285fad2660f6cd4d",
+      "bytes": 1880492
+    },
+    "results/text3d/E-T3/units/zimage-triposr/an_elephant__8b94b960__s1/mesh.npz": {
+      "sha256": "2f2f940770a7f47260cf1425c2b37ee0f315efdfe4287df1c5a1fb5a255bd95b",
+      "bytes": 834537
+    },
+    "results/text3d/E-T3/units/zimage-triposr/an_elephant__8b94b960__s1/preview.png": {
+      "sha256": "254fb1cff207a51e7266adae906c3272384a97e6b062915fb7ae1b37204ea97c",
+      "bytes": 69289
+    },
+    "results/text3d/E-T3/units/zimage-triposr/an_elephant__8b94b960__s1/report.json": {
+      "sha256": "fc16cb81e701bbdb66d9202df1958335355618e5ac0ffe9a953ee79b154daf09",
+      "bytes": 6006
+    },
+    "results/text3d/E-T3/units/zimage-triposr/an_elephant__8b94b960__s1/triposr_input.png": {
+      "sha256": "ae618d3c04cf5549f984e889555813374983a2d9ef47b56b606f9e7a36a2adc4",
+      "bytes": 225956
+    },
+    "results/text3d/E-T3/units/zimage-triposr/an_elephant__8b94b960__s2/anchor.json": {
+      "sha256": "2fbc87e43d0bd9cec166b2b74a2171e0d41db55ba4ed3d677114e9e48d1c68c4",
+      "bytes": 1112
+    },
+    "results/text3d/E-T3/units/zimage-triposr/an_elephant__8b94b960__s2/anchor.png": {
+      "sha256": "4c3ee880d08adda2bd114181693ea06f6c61da1a80a1b86cee5108430ff750cb",
+      "bytes": 509878
+    },
+    "results/text3d/E-T3/units/zimage-triposr/an_elephant__8b94b960__s2/anchor_rgba.png": {
+      "sha256": "6d850237a3a64124b6473f2b86d15c24683b19c488412e757926ed252b499305",
+      "bytes": 385808
+    },
+    "results/text3d/E-T3/units/zimage-triposr/an_elephant__8b94b960__s2/mesh.glb": {
+      "sha256": "551330a79870e96d4a4f2d11621e2b0ca79a1d6ecee35d90065794f39d895ee6",
+      "bytes": 1916556
+    },
+    "results/text3d/E-T3/units/zimage-triposr/an_elephant__8b94b960__s2/mesh.npz": {
+      "sha256": "e1ba7e341cb28bd93a58105d99d3a9a86cad255a5925b05102e1f4a21413c587",
+      "bytes": 845804
+    },
+    "results/text3d/E-T3/units/zimage-triposr/an_elephant__8b94b960__s2/preview.png": {
+      "sha256": "ce20f6cd22975a71ec978d4d24a8e47692b4f57410b8ba1593ab090553ce4119",
+      "bytes": 69135
+    },
+    "results/text3d/E-T3/units/zimage-triposr/an_elephant__8b94b960__s2/report.json": {
+      "sha256": "5abd553979aa6c4fe519d96eea2d1aa8e7675eaeba5371680c62975ea0263ff3",
+      "bytes": 5977
+    },
+    "results/text3d/E-T3/units/zimage-triposr/an_elephant__8b94b960__s2/triposr_input.png": {
+      "sha256": "da2caab1803e3a856acdec7d89097eb9a9947eb6bb4cb3888d174a66f0372b94",
+      "bytes": 235955
+    },
+    "results/text3d/E-T3/units/zimage-triposr/an_open_cardboard_box__8a55a27d__s0/anchor.json": {
+      "sha256": "e2ed1f4cfb726b5306bd34bcdabc632fab54a56f55ac4eca67d4eb691331c27a",
+      "bytes": 1121
+    },
+    "results/text3d/E-T3/units/zimage-triposr/an_open_cardboard_box__8a55a27d__s0/anchor.png": {
+      "sha256": "71253ed5ee53a0acfcef28693f93340a50abacd473ba399be239e174f5a3d863",
+      "bytes": 588932
+    },
+    "results/text3d/E-T3/units/zimage-triposr/an_open_cardboard_box__8a55a27d__s0/report.json": {
+      "sha256": "765a2f5a6f3d9fbd922ff215b6ab703bf972eff9f66b68677058f4e934065344",
+      "bytes": 4996
+    },
+    "results/text3d/E-T3/units_zimage-triposr_cuda_5167f5282fb6_shard0of2.jsonl": {
+      "sha256": "936bdf9c8998e701eec3865849dec108dc12d56d7dfc735b239699ba29ad983e",
+      "bytes": 23124
+    },
+    "results/text3d/E-T3/units_zimage-triposr_cuda_5167f5282fb6_shard1of2.jsonl": {
+      "sha256": "7171daa5c89d252cd65051316f6c9b55bd1f743db1ee6bb49ae142e558d9cff4",
+      "bytes": 22754
+    }
+  }
+}

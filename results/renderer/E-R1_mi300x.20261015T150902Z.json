@@ -1,0 +1,25 @@
+{
+  "experiment": {
+    "id": "E-R1",
+    "title": "AMD gsplat vs Berkelium deterministic backward on one MI300X",
+    "benchmark": "renderer",
+    "protocol": "benchmarks/configs/renderer_mi300x_v1.json",
+    "requires": [
+      "rocm",
+      "gsplat"
+    ],
+    "approved": false,
+    "approval_note": "Consumes MI300X credit. Set approved=true only after the owner approves the cost estimate.",
+    "output": "results/renderer/E-R1_mi300x.json"
+  },
+  "authorization": {
+    "static_config_approved": false,
+    "cli_i_approve_gpu_cost": true,
+    "authorized_by": "cli_flag",
+    "recorded_at": "2026-10-15T15:09:01Z",
+    "note": "per-run authorization asserted by the operator at invocation (--i-approve-gpu-cost); the experiment config was not modified"
+  },
+  "status": "failed",
+  "error": "ImportError: /root/.cache/berkelium/rocm_src_cead1939f3d25ba8/build/berkelium_det_bwd.so: cannot open shared object file: No such file or directory",
+  "traceback": "Traceback (most recent call last):\n  File \"/root/Berkelium-Neural-Rendering-Studio/scripts/run_benchmarks.py\", line 80, in main\n    res = {\"experiment\": exp, \"authorization\": auth, \"status\": \"completed\", **run(proto)}\n                                                                              ^^^^^^^^^^\n  File \"/root/Berkelium-Neural-Rendering-Studio/benchmarks/renderer/bench_renderer.py\", line 318, in run\n    out[\"quality\"] = {b: fit_quality(b, cfg[\"protocol\"]) for b in cfg[\"backends\"]}\n                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/Berkelium-Neural-Rendering-Studio/benchmarks/renderer/bench_renderer.py\", line 303, in fit_quality\n    (r.render(g, c, cfg).rgb - targets[it % len(train_c)]).abs().mean().backward()\n  File \"/root/Berkelium-Neural-Rendering-Studio/.venv-rocm/lib/python3.12/site-packages/torch/_tensor.py\", line 647, in backward\n    torch.autograd.backward(\n  File \"/root/Berkelium-Neural-Rendering-Studio/.venv-rocm/lib/python3.12/site-packages/torch/autograd/__init__.py\", line 354, in backward\n    _engine_run_backward(\n  File \"/root/Berkelium-Neural-Rendering-Studio/.venv-rocm/lib/python3.12/site-packages/torch/autograd/graph.py\", line 829, in _engine_run_backward\n    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/Berkelium-Neural-Rendering-Studio/.venv-rocm/lib/python3.12/site-packages/torch/autograd/function.py\", line 311, in apply\n    return user_fn(self, *args)\n           ^^^^^^^^^^^^^^^^^^^^\n  File \"/root/Berkelium-Neural-Rendering-Studio/services/neural/berkelium_neural/render/berkelium_ext.py\", line 194, in backward\n    vm, vc, vcol, vo, _ = load_rocm_extension().rasterize_bwd(\n                          ^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/Berkelium-Neural-Rendering-Studio/services/neural/berkelium_neural/render/berkelium_ext.py\", line 159, in load_rocm_extension\n    _ROCM_EXT = load(name=\"berkelium_det_bwd\", sources=[str(src / \"torch_bindings.cpp\"), str(src / \"bk_det_bwd.hip\")],\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/Berkelium-Neural-Rendering-Studio/.venv-rocm/lib/python3.12/site-packages/torch/utils/cpp_extension.py\", line 1681, in load\n    return _jit_compile(\n           ^^^^^^^^^^^^^\n  File \"/root/Berkelium-Neural-Rendering-Studio/.venv-rocm/lib/python3.12/site-packages/torch/utils/cpp_extension.py\", line 2164, in _jit_compile\n    return _import_module_from_library(name, build_directory, is_python_module)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/Berkelium-Neural-Rendering-Studio/.venv-rocm/lib/python3.12/site-packages/torch/utils/cpp_extension.py\", line 2632, in _import_module_from_library\n    module = importlib.util.module_from_spec(spec)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen importlib._bootstrap>\", line 813, in module_from_spec\n  File \"<frozen importlib._bootstrap_external>\", line 1289, in create_module\n  File \"<frozen importlib._bootstrap>\", line 488, in _call_with_frames_removed\nImportError: /root/.cache/berkelium/rocm_src_cead1939f3d25ba8/build/berkelium_det_bwd.so: cannot open shared object file: No such file or directory\n"
+}

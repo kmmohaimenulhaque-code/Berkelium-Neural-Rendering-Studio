@@ -1,0 +1,18 @@
+{
+  "protocol_id": "renderer-mi300x-v1",
+  "description": "Matched AMD gsplat (atomic backward) vs Berkelium (same gsplat forward + deterministic HIP backward) on one MI300X. Same scenes, cameras, resolution, parameterization, precision (fp32), profile gsplat_v1, iteration budget. FP64 CPU reference is the oracle for correctness on the small cases only.",
+  "backends": ["gsplat", "berkelium_rocm"],
+  "baseline_backend": "gsplat",
+  "candidate_backend": "berkelium_rocm",
+  "cases": [
+    {"n": 16, "res": 32, "seed": 5, "gate": true},
+    {"n": 1000, "res": 128, "seed": 1},
+    {"n": 10000, "res": 256, "seed": 2},
+    {"n": 100000, "res": 512, "seed": 3}
+  ],
+  "protocol": {
+    "warmup": 10, "repeats": 50, "repeat_determinism": 10,
+    "fit": {"n": 2000, "res": 128, "views": 8, "iters": 500, "lr": 0.01}
+  },
+  "estimated_cost": {"gpu_count": 1, "wall_minutes_estimate": 25, "note": "estimate only; the FP64 CPU oracle dominates for the 100k case. Billing unit/rate must be checked on the provider before approval."}
+}

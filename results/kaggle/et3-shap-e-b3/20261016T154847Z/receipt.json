@@ -1,0 +1,355 @@
+{
+  "local": {
+    "job": "et3-shap-e-b3",
+    "run_id": "20261016T154847Z",
+    "kernel": "kmmohaimenulhaque/berkelium-final",
+    "accelerator": "NvidiaTeslaT4",
+    "spec": "configs/kaggle/et3_shap_e_b3.json",
+    "spec_sha256": "5dd008b54336553163519d280f12c8388414d605e8368136a0388eb4f022ce7f",
+    "bundle_sha256": "78fe4367de811945b10c8ae0e10805e10b94a01ca53bde392fa4dd3daf8251f2",
+    "bundle_bytes": 225576,
+    "bundle_files": 119,
+    "git": {
+      "commit": "31af182edf9b829d6ffff8bb60622180c631dc4f",
+      "branch": "neural-v1",
+      "dirty_files": 0
+    },
+    "pushed_at": "2026-10-16T15:48:48Z",
+    "status": "pushed",
+    "push_response": "Kernel version 3 successfully pushed.  Please check progress at https://www.kaggle.com/code/kmmohaimenulhaque/berkelium-final",
+    "kernel_final_status": "complete",
+    "verification": {
+      "files": 64,
+      "verified": 64,
+      "problems": [],
+      "bytes": 69947848
+    }
+  },
+  "remote": {
+    "job": "et3-shap-e-b3",
+    "run_id": "20261016T154847Z",
+    "started_at": "2026-10-16T15:48:55Z",
+    "bundle_sha256_expected": "78fe4367de811945b10c8ae0e10805e10b94a01ca53bde392fa4dd3daf8251f2",
+    "steps": [
+      {
+        "name": "deps",
+        "seconds": 7.9,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "pip install -q trimesh==5.1.1 scikit-image==0.26.0 pydantic==2.13.5",
+            "rc": 0,
+            "log": "logs/00_deps.log",
+            "tail": "   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 750.4/750.4 kB 10.8 MB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 13.7/13.7 MB 77.8 MB/s eta 0:00:00\nERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.\ncucim-cu12 26.2.1 requires scikit-image<0.26.0,>=0.19.0, but you have scikit-image 0.26.0 which is incompatible.\n"
+          }
+        ]
+      },
+      {
+        "name": "setup_openworld",
+        "seconds": 94.2,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "PYTHON=python bash scripts/setup_openworld.sh",
+            "rc": 0,
+            "log": "logs/01_setup_openworld.log",
+            "tail": "     \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 40.6/40.6 kB 805.1 kB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 44.8/44.8 kB 1.8 MB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 807.9/807.9 kB 12.7 MB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 98.9/98.9 kB 4.1 MB/s eta 0:00:00\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 115.9/115.9 kB 6.3 MB/s eta 0:00:00\ntext_cond.pt: OK\nvector_decoder.pt: OK\nViT-L-14.pt: OK\ntext_cond_config.yaml: OK\nvector_decoder_config.yaml: OK\ndiffusion_config.yaml: OK\n{\n  \"file\": \"/tmp/berkelium/data/models/shap_e/clip_vit_l14_text.pt\",\n  \"sha256\": \"594bf8e64597a3a5e0879a25a86aea54f6306ba18ac9f1c6d0208aae0b4ddccd\",\n  \"tensors\": 150,\n  \"visual_tensors_dropped\": 296,\n  \"ignored_attributes\": [],\n  \"dtypes\": [\n    \"torch.float16\",\n    \"torch.float32\"\n  ],\n  \"params\": 123650305,\n  \"check\": {\n    \"probes\": [\n      \"a red mug\",\n      \"a red coffee cup\",\n      \"a yellow school bus\",\n      \"a wooden chair with four legs\",\n      \"a chair\"\n    ],\n    \"cos_mug_cup\": 0.9292,\n    \"cos_mug_bus\": 0.5822,\n    \"cos_chair4_chair\": 0.7796,\n    \"cos_chair4_bus\": 0.4956\n  },\n  \"peak_rss_mib\": 1786.0\n}\nnext: python scripts/openworld_generate.py 'a wooden chair with four legs' --steps 16   [--device cuda on a GPU]\n"
+          }
+        ]
+      },
+      {
+        "name": "generate",
+        "seconds": 763.1,
+        "ok": true,
+        "commands": [
+          {
+            "cmd": "CUDA_VISIBLE_DEVICES=0 python scripts/run_openworld_benchmark.py generate --device cuda --groups B3_all --shard 0/2 --wall-hours 1",
+            "rc": 0,
+            "log": "logs/02_generate_0.log",
+            "tail": "6 pending Shap-E units for groups ['B3_all'] (shard 0/2) -> units_cuda_1b6d4018bed0_shard0of2.jsonl\n[B3_all] shap-e-text300m 'a blue box next to a small yellow box': ok (92s)\n[B3_all] shap-e-text300m 'a large green sphere next to a purple cone': ok (195s)\n[B3_all] shap-e-text300m 'a small cyan sphere with a green cylinder on top': ok (86s)\n[B3_all] shap-e-text300m 'a large white sphere stacked on a large cyan torus': ok (116s)\n[B3_all] shap-e-text300m 'a large yellow box next to a small orange box': ok (103s)\n[B3_all] shap-e-text300m 'a yellow sphere with a white cylinder on top': ok (169s)\n"
+          },
+          {
+            "cmd": "CUDA_VISIBLE_DEVICES=1 python scripts/run_openworld_benchmark.py generate --device cuda --groups B3_all --shard 1/2 --wall-hours 1",
+            "rc": 0,
+            "log": "logs/02_generate_1.log",
+            "tail": "6 pending Shap-E units for groups ['B3_all'] (shard 1/2) -> units_cuda_1b6d4018bed0_shard1of2.jsonl\n[B3_all] shap-e-text300m 'a small yellow cylinder to the left of a small white cone': ok (75s)\n[B3_all] shap-e-text300m 'a small cyan torus next to a purple torus': ok (71s)\n[B3_all] shap-e-text300m 'a small green sphere with a large red sphere on top': ok (172s)\n[B3_all] shap-e-text300m 'a small purple sphere with a cyan torus on top': ok (92s)\n[B3_all] shap-e-text300m 'a blue sphere beside a large purple cone': ok (170s)\n[B3_all] shap-e-text300m 'a cyan torus with a small red sphere on top': ok (79s)\n"
+          }
+        ]
+      }
+    ],
+    "status": "completed",
+    "bundle_sha256": "78fe4367de811945b10c8ae0e10805e10b94a01ca53bde392fa4dd3daf8251f2",
+    "environment": {
+      "python": "3.13.15",
+      "host": "1b6d4018bed0",
+      "nvidia_smi": "Tesla T4, 15360 MiB, 580.178.04\nTesla T4, 15360 MiB, 580.178.04",
+      "torch": "2.11.0+cu128 12.8 2",
+      "disk_free_gb": {
+        "/kaggle/working": 20.9,
+        "/tmp": 1148.8
+      },
+      "mem_total_mib": 32099,
+      "cpu_count": 4
+    },
+    "finished_at": "2026-10-16T16:03:33Z",
+    "outputs": 64
+  },
+  "manifest": {
+    "results/text3d/E-T3/units/shap-e-text300m/a_blue_box_next_to_a_small_yellow_box__74e11b94__s0.log": {
+      "sha256": "639363c71a2a2d1889ce0777e81c3379651ca3e71381b50e9990f6f88ee41566",
+      "bytes": 5516
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_blue_box_next_to_a_small_yellow_box__74e11b94__s0/mesh.glb": {
+      "sha256": "cceade6c49315ad1b01f23f0058498d8bfb4ee60c605b8bcccdc60827b6857d6",
+      "bytes": 2315968
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_blue_box_next_to_a_small_yellow_box__74e11b94__s0/mesh.npz": {
+      "sha256": "9e229e2482365ed357f0dbc9ea6a591ceb97203814dc90cd2aed331b534673b0",
+      "bytes": 1372074
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_blue_box_next_to_a_small_yellow_box__74e11b94__s0/preview.png": {
+      "sha256": "413c3c7771be4f2aff5ec9cbdb0844e36be7aa2f51211862a8471d25e53b77f1",
+      "bytes": 53756
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_blue_box_next_to_a_small_yellow_box__74e11b94__s0/report.json": {
+      "sha256": "72e7016b4801c845c222bbfbf5dd3a87083b760a35d41dc636916bfe553198af",
+      "bytes": 3555
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_blue_sphere_beside_a_large_purple_cone__d8a253fa__s0.log": {
+      "sha256": "772ef49b96eef39861ac987f883bbd922465869fdc318dded0eceb7247bb804a",
+      "bytes": 5510
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_blue_sphere_beside_a_large_purple_cone__d8a253fa__s0/mesh.glb": {
+      "sha256": "c415bb0e8dc9df3f65517b97c40bd292f9a888bfe7a7eed26f7dcc2af6967976",
+      "bytes": 5921376
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_blue_sphere_beside_a_large_purple_cone__d8a253fa__s0/mesh.npz": {
+      "sha256": "f148ea4d878a35a844294d48555c371b1d4eec73d992a7a503e2676d806f7bb2",
+      "bytes": 3759064
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_blue_sphere_beside_a_large_purple_cone__d8a253fa__s0/preview.png": {
+      "sha256": "696ec33e890b937601e5516adad7f2c56dafc8e4d1f046e27111ec1b15dc7746",
+      "bytes": 57531
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_blue_sphere_beside_a_large_purple_cone__d8a253fa__s0/report.json": {
+      "sha256": "fc28e6a2444626a8829bae2e66cd759521f78352b7902b5ddaae2831d54d3ce9",
+      "bytes": 3559
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_cyan_torus_with_a_small_red_sphere_on_top__987705ec__s0.log": {
+      "sha256": "12192d9bf94aeffd231bd716d80fedf4eeff3a9962a37ef3c656d5b8bc6352b4",
+      "bytes": 5509
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_cyan_torus_with_a_small_red_sphere_on_top__987705ec__s0/mesh.glb": {
+      "sha256": "ed7be5ae47ca2607365a231a62ab89075f2d9cea1fe5c25d0c45590ce62b6f06",
+      "bytes": 1935816
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_cyan_torus_with_a_small_red_sphere_on_top__987705ec__s0/mesh.npz": {
+      "sha256": "96b50ab8575fed5a8622c5d369ccee8525dde27f7c6ab156414671560d26b8ea",
+      "bytes": 1220925
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_cyan_torus_with_a_small_red_sphere_on_top__987705ec__s0/preview.png": {
+      "sha256": "a38700659788944c1f567ea8eaa22b557d0e3c9a81ad52f71633f01755f6e90a",
+      "bytes": 32174
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_cyan_torus_with_a_small_red_sphere_on_top__987705ec__s0/report.json": {
+      "sha256": "3f3f5245c9215b6095bb253f6f178e5026c9ac36df863c0d0e48ae1cfd2ac91e",
+      "bytes": 3567
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_green_sphere_next_to_a_purple_cone__ed082c4d__s0.log": {
+      "sha256": "42b1cb55e209a66fcb14af00802f08e7383ef0c45cb1afa632911475c02f62df",
+      "bytes": 5513
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_green_sphere_next_to_a_purple_cone__ed082c4d__s0/mesh.glb": {
+      "sha256": "6b4412bd6944db931cc645608dbd516492b111edd965cdafea5ec1c7c2e44f4b",
+      "bytes": 6911180
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_green_sphere_next_to_a_purple_cone__ed082c4d__s0/mesh.npz": {
+      "sha256": "26c7b365f8f8ab5a0b718b7a00f1bae55ebfc9ce8dd7359f2b5378199b9aa637",
+      "bytes": 4394666
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_green_sphere_next_to_a_purple_cone__ed082c4d__s0/preview.png": {
+      "sha256": "2145cbcf273f20a9a4603a3848a89c6b273960d6f406c366a029c2f329b716b8",
+      "bytes": 75820
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_green_sphere_next_to_a_purple_cone__ed082c4d__s0/report.json": {
+      "sha256": "c64e4198d7e10a5046e1aa15b28ff2c27a64e6df12c4c16bffef0acc58d4b33f",
+      "bytes": 3567
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_white_sphere_stacked_on_a_large_cyan_torus__551412ad__s0.log": {
+      "sha256": "42c3f32d69db6261dfb79ab37b3766a84cfc8acef6da54d7257fd3887c38bab7",
+      "bytes": 5775
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_white_sphere_stacked_on_a_large_cyan_torus__551412ad__s0/mesh.glb": {
+      "sha256": "52354cfc574b612d5592b2ad730f83d9ff5ef09a602a95126537c565383c3f27",
+      "bytes": 3292740
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_white_sphere_stacked_on_a_large_cyan_torus__551412ad__s0/mesh.npz": {
+      "sha256": "c4781adf6813ba9ffbadd1f562d8a4f75009ac24b8727e7d94a3c42afd9e52d3",
+      "bytes": 2075910
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_white_sphere_stacked_on_a_large_cyan_torus__551412ad__s0/preview.png": {
+      "sha256": "f0a58f3e2cb31772c19b4781fe13d7f572be43154a8a796996ecc4dd8e9ceeeb",
+      "bytes": 82319
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_white_sphere_stacked_on_a_large_cyan_torus__551412ad__s0/report.json": {
+      "sha256": "7bf6e798a9e9f5f327a3a45a5b27511d7120d96d0be50386f5b886b60ac63771",
+      "bytes": 3599
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_yellow_box_next_to_a_small_orange_box__0523f62f__s0.log": {
+      "sha256": "a36cd92ac47ff5908eff357121a9d0cb4ba92e19cadf9112d2c0f0a51987fdbc",
+      "bytes": 5769
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_yellow_box_next_to_a_small_orange_box__0523f62f__s0/mesh.glb": {
+      "sha256": "7b389d4d91c416d9aa491f8e707f0ed341f8d94f82b1d6bcab9aeb21dae50a7a",
+      "bytes": 2672904
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_yellow_box_next_to_a_small_orange_box__0523f62f__s0/mesh.npz": {
+      "sha256": "334a82de001ebedb67f0d9e798d3b7178186ca9773fe305e098c9d646df4293a",
+      "bytes": 1611044
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_yellow_box_next_to_a_small_orange_box__0523f62f__s0/preview.png": {
+      "sha256": "75bc141abdf1a0999a274e261f4f59cc16ba1078714027d07d6441d4c2505646",
+      "bytes": 33661
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_large_yellow_box_next_to_a_small_orange_box__0523f62f__s0/report.json": {
+      "sha256": "56fe836eb2ee2d2fdcd91c2f1d8cbcdf1b0c5079e734a0bcc7b2f09ae57f08af",
+      "bytes": 3577
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_cyan_sphere_with_a_green_cylinder_on_top__a4008e7d__s0.log": {
+      "sha256": "544a4a6e438100fc3957c08ebe9dfecfbe8d5d86989152d7018037edab95c9cf",
+      "bytes": 5782
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_cyan_sphere_with_a_green_cylinder_on_top__a4008e7d__s0/mesh.glb": {
+      "sha256": "936eadf6f1497da22a352879d552cef588dbee0ec76b177c7e6034a3a3d28529",
+      "bytes": 1901276
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_cyan_sphere_with_a_green_cylinder_on_top__a4008e7d__s0/mesh.npz": {
+      "sha256": "e8648666c5ca45dbadbb0d06cf430c21a673bd6dc5c30efc267b7fc7b456ce8a",
+      "bytes": 1137437
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_cyan_sphere_with_a_green_cylinder_on_top__a4008e7d__s0/preview.png": {
+      "sha256": "31d1eb793bcef443e505f08169a67debd96dbe38f57e2cc4af70ee956cf57b96",
+      "bytes": 15612
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_cyan_sphere_with_a_green_cylinder_on_top__a4008e7d__s0/report.json": {
+      "sha256": "967a2982eca43552350aee3d7820c238ea3301b659e442979925dbf3734e262c",
+      "bytes": 3600
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_cyan_torus_next_to_a_purple_torus__be2d524d__s0.log": {
+      "sha256": "fcb02d5a66b651876c6713b3c860d5ed463f1699c4d1da5b2dd38594fc166226",
+      "bytes": 5506
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_cyan_torus_next_to_a_purple_torus__be2d524d__s0/mesh.glb": {
+      "sha256": "7e2cb68735a4e0bfd56aa839b50c2f71d2d4b467a3bd5fd30cfe31ab45e93d1e",
+      "bytes": 1613028
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_cyan_torus_next_to_a_purple_torus__be2d524d__s0/mesh.npz": {
+      "sha256": "1795b8d84049f8676d9e260670a6f97a27cc98ed21817781964a0f3a956c4ae1",
+      "bytes": 1013742
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_cyan_torus_next_to_a_purple_torus__be2d524d__s0/preview.png": {
+      "sha256": "487276d8f5d22d0d48d0493cbd17b9694bd8f56bbf1278780239ef69e1b36a1e",
+      "bytes": 33073
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_cyan_torus_next_to_a_purple_torus__be2d524d__s0/report.json": {
+      "sha256": "41ff98f79ca0b779163e814feae7b279effa01d8db8cd83a48dfc4e2b383f615",
+      "bytes": 3558
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_green_sphere_with_a_large_red_sphere_on_top__7188bb2b__s0.log": {
+      "sha256": "f5b2245c9574fc8b16a37270d66c5788dd5dc05d9d889fc969bd7ddcb89601b5",
+      "bytes": 5522
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_green_sphere_with_a_large_red_sphere_on_top__7188bb2b__s0/mesh.glb": {
+      "sha256": "611aa00289c25e3c8f835afe9ab55b0d2e686ee517814b1cdd3ff34ff6e5f5d5",
+      "bytes": 6027112
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_green_sphere_with_a_large_red_sphere_on_top__7188bb2b__s0/mesh.npz": {
+      "sha256": "b32b65257a9e95b19e82c4d0f3f5db4519de67aeae057b0df56d93a4f4f0c2d2",
+      "bytes": 3871059
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_green_sphere_with_a_large_red_sphere_on_top__7188bb2b__s0/preview.png": {
+      "sha256": "bd251d516757df6b3192333df3f61f0129d73b9e3952c1675dc2c7fac6364f5e",
+      "bytes": 50268
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_green_sphere_with_a_large_red_sphere_on_top__7188bb2b__s0/report.json": {
+      "sha256": "18ac1fa877017d41874ba2b02536aeb7670eb4e1fae74c11f1ac7b12eacf292c",
+      "bytes": 3604
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_purple_sphere_with_a_cyan_torus_on_top__ce327f66__s0.log": {
+      "sha256": "91a55ba01d1d3b07261cdfcce475dc1f8bc57762b8fd077c6c8b242bc8579d71",
+      "bytes": 5524
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_purple_sphere_with_a_cyan_torus_on_top__ce327f66__s0/mesh.glb": {
+      "sha256": "f8fd4cfbdfc0b3846154cded66dbce8aa7a3c818e2f5123d7956ef9e3061d6f5",
+      "bytes": 2355936
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_purple_sphere_with_a_cyan_torus_on_top__ce327f66__s0/mesh.npz": {
+      "sha256": "e2fd387ce289118100ddf821ade21c6ec4bae45495c8611e692d6f273f6f0acf",
+      "bytes": 1483454
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_purple_sphere_with_a_cyan_torus_on_top__ce327f66__s0/preview.png": {
+      "sha256": "8c74b7e4bd3d8c821d1ab63ea48005c3c157c0c3a2558203baaeab6b5159fe2f",
+      "bytes": 51809
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_purple_sphere_with_a_cyan_torus_on_top__ce327f66__s0/report.json": {
+      "sha256": "96265f2ed1dec63e3d8f52718fbe80402e12d14e8afcfe3946d10e1279e2f15c",
+      "bytes": 3591
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_yellow_cylinder_to_the_left_of_a_small_white_cone__ca952bd4__s0.log": {
+      "sha256": "f9cf907430dbf7647a8063a7d246ef0c918324200bfaaf5922f82fcddd4b8cd1",
+      "bytes": 5399
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_yellow_cylinder_to_the_left_of_a_small_white_cone__ca952bd4__s0/mesh.glb": {
+      "sha256": "b305fc9cef9fd2f90bc053283cfcfe5aa35766c8de8c708dd68515ee9d7a0de3",
+      "bytes": 1589440
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_yellow_cylinder_to_the_left_of_a_small_white_cone__ca952bd4__s0/mesh.npz": {
+      "sha256": "8f0ff1dbf17417c9ceaa5357d25a7210c26b3da62bb5b14bfd2cac0d4331cce9",
+      "bytes": 984089
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_yellow_cylinder_to_the_left_of_a_small_white_cone__ca952bd4__s0/preview.png": {
+      "sha256": "1b7dd70af9f640831aadef627a422846dc45fb8ecdc54378b248c596bc321ad0",
+      "bytes": 32865
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_small_yellow_cylinder_to_the_left_of_a_small_white_cone__ca952bd4__s0/report.json": {
+      "sha256": "e949b9bb2db6f27efd008fa8a3bb8014bb21b9d849a4bff90fb30e0e846e6e7d",
+      "bytes": 3626
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_yellow_sphere_with_a_white_cylinder_on_top__6a4abd46__s0.log": {
+      "sha256": "bab8dd32775c99eeb8692a75f32969943c9fa00dc1fc5b6c70d3748f3baa9fb3",
+      "bytes": 5896
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_yellow_sphere_with_a_white_cylinder_on_top__6a4abd46__s0/mesh.glb": {
+      "sha256": "485a192304166e71e585e7688b24806cf61bc11c933d0ffa26a57d170f29a1bd",
+      "bytes": 5982940
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_yellow_sphere_with_a_white_cylinder_on_top__6a4abd46__s0/mesh.npz": {
+      "sha256": "6a217f79005caa9cc7a6dbb5645668bcebdb03c553ab847f599528751766ce66",
+      "bytes": 3724286
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_yellow_sphere_with_a_white_cylinder_on_top__6a4abd46__s0/preview.png": {
+      "sha256": "ec48b20c56e0755d2f9f93d37ab51539b63d3a6074da2b66b51a2f5761a92db1",
+      "bytes": 97963
+    },
+    "results/text3d/E-T3/units/shap-e-text300m/a_yellow_sphere_with_a_white_cylinder_on_top__6a4abd46__s0/report.json": {
+      "sha256": "a84164d93a3fd7e09922564eff6f860cbd04bb81567a04769806815241155ed5",
+      "bytes": 3574
+    },
+    "results/text3d/E-T3/units_cuda_1b6d4018bed0_shard0of2.jsonl": {
+      "sha256": "093ccd0b53aec124850e052afc00376a323eae9bb76bd038ff389843256a701b",
+      "bytes": 5316
+    },
+    "results/text3d/E-T3/units_cuda_1b6d4018bed0_shard1of2.jsonl": {
+      "sha256": "3fc85592158482a7c24756de65e11707de9a65e7eaf486d68e82e3f4cae8cf50",
+      "bytes": 5362
+    },
+    "results/text3d/E-T3/units_cuda_f425e2a4ddd1_shard0of2.jsonl": {
+      "sha256": "54dcc02908e2dbc1c15a593e8ff52c0c35adca4afd0c4c3caadf9c1a4de13be3",
+      "bytes": 21399
+    },
+    "results/text3d/E-T3/units_cuda_f425e2a4ddd1_shard1of2.jsonl": {
+      "sha256": "bb7d26e75f212e1d78f631d25aac245a0d10b3910bfda16f3387da1de5d9adf0",
+      "bytes": 21256
+    }
+  }
+}
