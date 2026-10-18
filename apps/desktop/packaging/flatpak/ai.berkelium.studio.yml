@@ -1,0 +1,41 @@
+# Flatpak for Berkelium Studio. Wraps the electron-builder output (release/linux-unpacked, the same files as the
+# AppImage). Build: see README.md in this folder.
+app-id: ai.berkelium.studio
+runtime: org.freedesktop.Platform
+runtime-version: '24.08'
+sdk: org.freedesktop.Sdk
+base: org.electronjs.Electron2.BaseApp
+base-version: '24.08'
+command: berkelium-studio
+separate-locales: false
+finish-args:
+  - --share=ipc
+  - --share=network
+  - --socket=x11
+  - --socket=wayland
+  - --socket=pulseaudio
+  - --device=dri
+  - --filesystem=home
+  - --env=ELECTRON_TRUST_OS_CERTS=1
+modules:
+  - name: berkelium
+    buildsystem: simple
+    build-commands:
+      - mkdir -p /app/berkelium && cp -a linux-unpacked/. /app/berkelium/
+      - rm -f /app/berkelium/chrome-sandbox
+      - install -Dm755 berkelium-studio.sh /app/bin/berkelium-studio
+      - install -Dm644 icon.png /app/share/icons/hicolor/512x512/apps/ai.berkelium.studio.png
+      - install -Dm644 ai.berkelium.studio.desktop /app/share/applications/ai.berkelium.studio.desktop
+      - install -Dm644 ai.berkelium.studio.metainfo.xml /app/share/metainfo/ai.berkelium.studio.metainfo.xml
+    sources:
+      - type: dir
+        path: ../../release/linux-unpacked
+        dest: linux-unpacked
+      - type: file
+        path: icon.png
+      - type: file
+        path: berkelium-studio.sh
+      - type: file
+        path: ai.berkelium.studio.desktop
+      - type: file
+        path: ai.berkelium.studio.metainfo.xml
