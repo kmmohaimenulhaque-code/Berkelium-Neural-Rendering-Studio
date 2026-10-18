@@ -148,6 +148,18 @@ Status: ☐ todo · ◐ in progress · ☑ done (with evidence file)
 K1 build ≈ 1–2 h (CPU-heavy, run inside a Kaggle session) · K2 train ≈ 6–10 h (two sessions) · K3 eval ≈ 2–3 h.
 Total ≈ 10–15 h of the weekly ~30 h.
 
+### Studio readiness (2026-10-18)
+- ☑ `cad` (8B) runs end to end through the real service: job → stub compiler → core geometry → mesh → Gaussians → splat
+  render, with `design_proposal.json` + `core_validation.json` on the mesh artifact
+  (`services/neural/tests/test_openworld_service.py::test_cad_job_runs_core_geometry_through_gaussians_and_render`).
+  Neural suite: 140 passed, 12 skipped (GPU / real-CadQuery), `test_durable_jobs.py` not re-run.
+- To use it with the real model: install the core (`pip install -r configs/environments/berkelium-core.txt`), then either
+  `ollama run hf.co/Mhaquehaque/berkelium-qwen3-8b-cad-v1-GGUF` + `BERKELIUM_CAD_URL=http://localhost:11434/v1`
+  `BERKELIUM_CAD_MODEL=hf.co/Mhaquehaque/berkelium-qwen3-8b-cad-v1-GGUF`, or `BERKELIUM_CAD_ADAPTER=Mhaquehaque/berkelium-qwen3-8b-cad-v1`
+  on a CUDA host. Pick **Engineering CAD** in Generate. Not yet run with the real model in Studio (no GPU in agent sessions).
+- Known clash: the repo-root `cadquery/` folder (E-C2) has the same name as the CadQuery library. Never put the repo root
+  first on `sys.path` (fixed in `test_benchmark_reporting.py`).
+
 ## 4. Risks
 - **fp16 overflow** in Qwen3 on the T4. Mitigation: NF4 + fp16 compute with fp32 LoRA; NaN guard aborts and
   records the run.
