@@ -165,7 +165,7 @@ def test_available_reasons(tmp_path):
     with pytest.raises(G.GeneratorUnavailable):
         z.generate("a teapot")
     st = G.generator_status()
-    assert set(st) == {G.NATIVE, G.SHAP_E, G.ZIMAGE_TRIPOSR, G.AUTO} and st[G.NATIVE]["available"]
+    assert set(st) == {G.NATIVE, G.SHAP_E, G.ZIMAGE_TRIPOSR, G.CAD, G.CADQUERY, G.AUTO} and st[G.NATIVE]["available"]
     assert st[G.ZIMAGE_TRIPOSR]["available"] is False
 
 

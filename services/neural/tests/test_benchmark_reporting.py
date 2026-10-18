@@ -14,7 +14,7 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT))
+sys.path.append(str(ROOT))   # append: the repo-root `cadquery/` folder must not shadow the CadQuery library
 
 from benchmarks.renderer.classify import (
     classify_case,

@@ -40,7 +40,7 @@ def _mesh(c, j):
 
 def test_capabilities_list_generators_with_reasons(client):
     g = client.get("/v1/neural/capabilities").json()["generators"]
-    assert set(g) == {"berkelium-textshape", "shap-e-text300m", "zimage-triposr", "auto"}
+    assert set(g) == {"berkelium-textshape", "shap-e-text300m", "zimage-triposr", "cad", "cadquery", "auto"}
     assert g["berkelium-textshape"]["available"] and g["auto"]["available"]
     assert g["zimage-triposr"]["available"] is False and g["zimage-triposr"]["reason"].startswith("GPU-gated")
 
@@ -114,3 +114,24 @@ def test_shap_e_worker_is_not_started_without_enough_free_memory(tmp_path, monke
     with pytest.raises(RuntimeError, match="RESOURCE_LIMIT: 900 MiB"):
         X.SubprocessShapE(16, tmp_path).generate("a teapot")
     assert started == []
+
+
+def test_cad_job_runs_core_geometry_through_gaussians_and_render(client, monkeypatch):
+    """Studio path for the E-C1 compiler: text -> (stub) compiler -> DesignProposal -> Berkelium core -> mesh ->
+    Gaussians -> splat render, with the proposal and the core's validation stored next to the mesh."""
+    pytest.importorskip("berkelium", reason="Berkelium core not installed (configs/environments/berkelium-core.txt)")
+    from berkelium_neural.cad import families as FAM
+    from berkelium_neural.cad.generator import CadGenerator
+    from berkelium_neural.text3d import generators as G
+    text, prop = FAM.sample("l_bracket", 4, False)
+    real = G.get_generator
+    monkeypatch.setattr(G, "get_generator", lambda n, **kw: CadGenerator(compiler=lambda t: json.dumps(prop))
+                        if n == "cad" else real(n, **kw))
+    j = _run(client, prompt=text, generator="cad")
+    assert j["state"] == "completed", j.get("error")
+    mesh, recs = _mesh(client, j)
+    assert {r["kind"] for r in recs} == {"triangle_mesh", "gaussian_scene", "image"}
+    names = {f["name"] for f in mesh["files"]}
+    assert {"mesh.glb", "design_proposal.json", "core_validation.json"} <= names
+    assert mesh["producer"]["generator"] == "cad" and "Berkelium core" in mesh["producer"]["pipeline"]
+    assert mesh["labels"]["provenance"].startswith("design proposed by the E-C1 compiler")
