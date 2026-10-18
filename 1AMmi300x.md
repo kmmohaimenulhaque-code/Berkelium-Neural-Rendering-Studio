@@ -146,3 +146,16 @@ ls ~/berkelium_run/train/qwen3-32b/ | grep checkpoint
 The E-C2 eval stage is skipped (marker `eval.done` written by hand with `skipped by owner`). **D-034 is not applied**:
 the model is published as **opt-in, not evaluated**, and the model cards say so. No E-C2 number exists. Publish and
 GGUF run without `E-C2.json`.
+
+## 9. GGUF path tested on the droplet (22:00Z, CPU, while training ran)
+Smoke Qwen3-0.6B + its 20-step LoRA, merged on CPU → `convert_hf_to_gguf.py` (llama.cpp `620d222`) → BF16 GGUF
+1.2 GB (1137.00 MiB, 16.00 BPW) → `llama-quantize` Q4_K_M 379 MB (372.65 MiB, 5.24 BPW) in 3.1 s. The convert +
+quantize path works for the Qwen3 architecture. Not tested yet: text generation from the GGUF (the `llama-cli` line
+printed nothing) and Ollama reading the repo's `system`/`params`. `cq_gguf.sh` reuses this llama.cpp build.
+
+## 10. Finished (2026-10-18)
+- Training: Qwen3-32B, all 2,780 / 2,780 steps (one full epoch).
+- Publish: the first attempt failed only at the final `git commit` (exit 128, no git identity on the droplet). The uploads
+  had already finished. Fixed by hand (git identity set, `publish.done` written).
+- GGUF: Q4_K_M 18,840.96 MiB (4.82 BPW) from the 62,490.08 MiB BF16; quantize 128 s; uploaded 08:24Z.
+- Public repos and sizes: `results/cadquery/HANDOFF_TEAMMATE.md`. **Not evaluated** (D-034 not applied; opt-in).
