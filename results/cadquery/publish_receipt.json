@@ -1,0 +1,27 @@
+{
+ "published_utc": "2026-10-18T07:48:53Z",
+ "base": "Qwen/Qwen3-32B",
+ "base_revision": "9216db5781bf21249d130ec9da846c4624c16137",
+ "d034": "NOT EVALUATED",
+ "adapter_repo": "Mhaquehaque/berkelium-qwen3-32b-cadquery-v1",
+ "adapter_files": {
+  "adapter_config.json": "212d7bdf2c7790a5cc2f2715fcc15b3b3a5fdb6a12be87fdcc2577ab7a0b4559",
+  "adapter_model.safetensors": "f1377ee59d682730619d077fdd266f611c841e4bcbffa2ba8a89a22ff961caf8",
+  "README.md": "d499968be49f4e09ecb5dedaef1fdd3b99056327fbb25f9ad49f0df6198bf25b",
+  "tokenizer.json": "476870a1f2fb6f6a2759a6ede2383bf9d5d738f17844563b65c91965b722ae09",
+  "run_manifest.json": "167df725609128c7e9fc8208d06d7623b3d0572e590608cdb706a1ee66fec37b",
+  "chat_template.jinja": "a55ee1b1660128b7098723e0abcd92caa0788061051c62d51cbe87d9cf1974d8",
+  "tokenizer_config.json": "9b62a531141b7dbfad88b7e91064f9b23d9573dccdc9abaf3bd4f1d111fc4c70",
+  "status.json": "e51f54bab3023a8def12542ee14124c13b2227af7b634c42882ef17d0fa177c6"
+ },
+ "adapter_commit": "dc4e10f99d70582de96cbaf0fbc7028eef85b929",
+ "merged_repo": "Mhaquehaque/berkelium-qwen3-32b-cadquery-v1-merged",
+ "merged_commit": "5474b8b1669ad16d22eeb4c95f65a27937b2edf0",
+ "merged_files": {
+  "model.safetensors.index.json": "0696f1140c1174e9eabcef2e1891a40267297a9bdff5ad3903398234f688bb87",
+  "config.json": "829e2f62366afb9bdfbb2edf33d2c4f7bc477d49c54d2790e236810298154b4b",
+  "tokenizer.json": "476870a1f2fb6f6a2759a6ede2383bf9d5d738f17844563b65c91965b722ae09",
+  "tokenizer_config.json": "e39a9b4e9f0204148a3d0727a9d26c8b7bd8672a55722f389433c19984f03d84",
+  "generation_config.json": "68ffa9373772ab6d2a5fbd62583e7a3e7bb49a9740f2a2ee32202ce06839dd4f"
+ }
+}
