@@ -1,0 +1,352 @@
+{
+ "experiment": "E-C2",
+ "decision": "D-034",
+ "finished_utc": "2026-10-18T11:18:17Z",
+ "seconds": 9984.7,
+ "generation_backend": "transformers",
+ "vllm_fallback_reason": null,
+ "host": {
+  "device": "AMD Radeon Graphics",
+  "hip": "7.2.26015",
+  "platform": "Linux-6.8.0-142-generic-x86_64-with-glibc2.39",
+  "evidence": "ROCm/AMD"
+ },
+ "data": {
+  "dir": "/root/berkelium_run/data/cq_v1",
+  "manifest_sha256": "cd56deba5d3b1b39c6e6db200e2f11b84094c8fd7c3a126425c69afb44ba7823",
+  "n_items": 400,
+  "n_refs": 400,
+  "per_source_cap": 100
+ },
+ "base": {
+  "model": "Qwen/Qwen3-32B",
+  "revision": "9216db5781bf21249d130ec9da846c4624c16137",
+  "metrics": {
+   "all_heldout": {
+    "first": {
+     "n": 400,
+     "execute_valid": 0.0,
+     "execute": 0.0,
+     "iou_mean": 0.0,
+     "iou_raw_mean": 0.0,
+     "format_ok": 0.0
+    },
+    "with_repair": {
+     "n": 400,
+     "execute_valid": 0.0,
+     "execute": 0.0,
+     "iou_mean": 0.0,
+     "iou_raw_mean": 0.0,
+     "format_ok": 0.0
+    }
+   },
+   "test": {
+    "first": {
+     "n": 300,
+     "execute_valid": 0.0,
+     "execute": 0.0,
+     "iou_mean": 0.0,
+     "iou_raw_mean": 0.0,
+     "format_ok": 0.0
+    },
+    "with_repair": {
+     "n": 300,
+     "execute_valid": 0.0,
+     "execute": 0.0,
+     "iou_mean": 0.0,
+     "iou_raw_mean": 0.0,
+     "format_ok": 0.0
+    }
+   },
+   "heldout_families": {
+    "first": {
+     "n": 100,
+     "execute_valid": 0.0,
+     "execute": 0.0,
+     "iou_mean": 0.0,
+     "iou_raw_mean": 0.0,
+     "format_ok": 0.0
+    },
+    "with_repair": {
+     "n": 100,
+     "execute_valid": 0.0,
+     "execute": 0.0,
+     "iou_mean": 0.0,
+     "iou_raw_mean": 0.0,
+     "format_ok": 0.0
+    }
+   },
+   "test:cad_recode": {
+    "first": {
+     "n": 100,
+     "execute_valid": 0.0,
+     "execute": 0.0,
+     "iou_mean": 0.0,
+     "iou_raw_mean": 0.0,
+     "format_ok": 0.0
+    },
+    "with_repair": {
+     "n": 100,
+     "execute_valid": 0.0,
+     "execute": 0.0,
+     "iou_mean": 0.0,
+     "iou_raw_mean": 0.0,
+     "format_ok": 0.0
+    }
+   },
+   "test:families": {
+    "first": {
+     "n": 100,
+     "execute_valid": 0.0,
+     "execute": 0.0,
+     "iou_mean": 0.0,
+     "iou_raw_mean": 0.0,
+     "format_ok": 0.0
+    },
+    "with_repair": {
+     "n": 100,
+     "execute_valid": 0.0,
+     "execute": 0.0,
+     "iou_mean": 0.0,
+     "iou_raw_mean": 0.0,
+     "format_ok": 0.0
+    }
+   },
+   "test:text2cadquery": {
+    "first": {
+     "n": 100,
+     "execute_valid": 0.0,
+     "execute": 0.0,
+     "iou_mean": 0.0,
+     "iou_raw_mean": 0.0,
+     "format_ok": 0.0
+    },
+    "with_repair": {
+     "n": 100,
+     "execute_valid": 0.0,
+     "execute": 0.0,
+     "iou_mean": 0.0,
+     "iou_raw_mean": 0.0,
+     "format_ok": 0.0
+    }
+   }
+  },
+  "seconds": 4486.1
+ },
+ "tuned": {
+  "model": "Qwen/Qwen3-32B + LoRA",
+  "adapter": "/root/berkelium_run/train/qwen3-32b/adapter",
+  "adapter_sha256": {
+   "adapter_config.json": "212d7bdf2c7790a5cc2f2715fcc15b3b3a5fdb6a12be87fdcc2577ab7a0b4559",
+   "adapter_model.safetensors": "f1377ee59d682730619d077fdd266f611c841e4bcbffa2ba8a89a22ff961caf8",
+   "README.md": "d499968be49f4e09ecb5dedaef1fdd3b99056327fbb25f9ad49f0df6198bf25b",
+   "tokenizer.json": "476870a1f2fb6f6a2759a6ede2383bf9d5d738f17844563b65c91965b722ae09",
+   "run_manifest.json": "167df725609128c7e9fc8208d06d7623b3d0572e590608cdb706a1ee66fec37b",
+   "chat_template.jinja": "a55ee1b1660128b7098723e0abcd92caa0788061051c62d51cbe87d9cf1974d8",
+   "tokenizer_config.json": "9b62a531141b7dbfad88b7e91064f9b23d9573dccdc9abaf3bd4f1d111fc4c70",
+   "status.json": "e51f54bab3023a8def12542ee14124c13b2227af7b634c42882ef17d0fa177c6"
+  },
+  "metrics": {
+   "all_heldout": {
+    "first": {
+     "n": 400,
+     "execute_valid": 0.8625,
+     "execute": 0.87,
+     "iou_mean": 0.44199172235195133,
+     "iou_raw_mean": 0.4250832719323997,
+     "format_ok": 0.9825
+    },
+    "with_repair": {
+     "n": 400,
+     "execute_valid": 0.89,
+     "execute": 0.8975,
+     "iou_mean": 0.4487598763944738,
+     "iou_raw_mean": 0.4312815422448412,
+     "format_ok": 0.9825
+    }
+   },
+   "test": {
+    "first": {
+     "n": 300,
+     "execute_valid": 0.8866666666666667,
+     "execute": 0.8933333333333333,
+     "iou_mean": 0.5490661885376383,
+     "iou_raw_mean": 0.524410777661688,
+     "format_ok": 0.9766666666666667
+    },
+    "with_repair": {
+     "n": 300,
+     "execute_valid": 0.8933333333333333,
+     "execute": 0.9,
+     "iou_mean": 0.5514705807256334,
+     "iou_raw_mean": 0.5269037056342588,
+     "format_ok": 0.9766666666666667
+    }
+   },
+   "heldout_families": {
+    "first": {
+     "n": 100,
+     "execute_valid": 0.79,
+     "execute": 0.8,
+     "iou_mean": 0.12076832379489043,
+     "iou_raw_mean": 0.12710075474453483,
+     "format_ok": 1.0
+    },
+    "with_repair": {
+     "n": 100,
+     "execute_valid": 0.88,
+     "execute": 0.89,
+     "iou_mean": 0.14062776340099498,
+     "iou_raw_mean": 0.14441505207658847,
+     "format_ok": 1.0
+    }
+   },
+   "test:cad_recode": {
+    "first": {
+     "n": 100,
+     "execute_valid": 0.76,
+     "execute": 0.76,
+     "iou_mean": 0.3400854376269502,
+     "iou_raw_mean": 0.3468370691716414,
+     "format_ok": 0.95
+    },
+    "with_repair": {
+     "n": 100,
+     "execute_valid": 0.77,
+     "execute": 0.77,
+     "iou_mean": 0.3469649903785138,
+     "iou_raw_mean": 0.35414490881746913,
+     "format_ok": 0.95
+    }
+   },
+   "test:families": {
+    "first": {
+     "n": 100,
+     "execute_valid": 0.92,
+     "execute": 0.94,
+     "iou_mean": 0.6397167669259862,
+     "iou_raw_mean": 0.6381143378645447,
+     "format_ok": 0.98
+    },
+    "with_repair": {
+     "n": 100,
+     "execute_valid": 0.93,
+     "execute": 0.95,
+     "iou_mean": 0.6400503907384077,
+     "iou_raw_mean": 0.6382852821364294,
+     "format_ok": 0.98
+    }
+   },
+   "test:text2cadquery": {
+    "first": {
+     "n": 100,
+     "execute_valid": 0.98,
+     "execute": 0.98,
+     "iou_mean": 0.6673963610599785,
+     "iou_raw_mean": 0.5882809259488777,
+     "format_ok": 1.0
+    },
+    "with_repair": {
+     "n": 100,
+     "execute_valid": 0.98,
+     "execute": 0.98,
+     "iou_mean": 0.6673963610599785,
+     "iou_raw_mean": 0.5882809259488777,
+     "format_ok": 1.0
+    }
+   }
+  },
+  "seconds": 5404.8
+ },
+ "iou_paired": {
+  "mean_diff": 0.44199172235195133,
+  "ci95": [
+   0.40048660265215963,
+   0.48479825387039477
+  ],
+  "n": 400,
+  "bootstrap": 10000,
+  "seed": 0
+ },
+ "sandbox": {
+  "rejected_fraction": 1.0,
+  "n_unsafe": 42,
+  "net_isolation": "netns",
+  "per_script": {
+   "import_os": "rejected",
+   "import_sys": "rejected",
+   "import_subprocess": "rejected",
+   "from_os": "rejected",
+   "import_socket": "rejected",
+   "import_urllib": "rejected",
+   "import_shutil": "rejected",
+   "import_ctypes": "rejected",
+   "import_math_submodule_trick": "rejected",
+   "open_write": "rejected",
+   "open_read_secrets": "rejected",
+   "exec": "rejected",
+   "eval": "rejected",
+   "compile": "rejected",
+   "dunder_import": "rejected",
+   "builtins_dunder": "rejected",
+   "class_mro_escape": "rejected",
+   "getattr_escape": "rejected",
+   "globals": "rejected",
+   "vars": "rejected",
+   "func_globals": "rejected",
+   "string_dunder": "rejected",
+   "lambda_dunder": "rejected",
+   "cq_exporters": "rejected",
+   "cq_export_method": "rejected",
+   "cq_importers": "rejected",
+   "cq_save": "rejected",
+   "cq_occ_impl": "rejected",
+   "cq_wrapped": "rejected",
+   "from_cq_import_exporters": "rejected",
+   "star_import": "rejected",
+   "ocp_import": "rejected",
+   "breakpoint": "rejected",
+   "input": "rejected",
+   "type_metaclass": "rejected",
+   "class_def": "rejected",
+   "global_stmt": "rejected",
+   "no_result": "rejected",
+   "relative_import": "rejected",
+   "infinite_loop": "timeout",
+   "memory_bomb": "memory",
+   "cpu_bomb": "timeout"
+  }
+ },
+ "d034": {
+  "criteria": [
+   {
+    "name": "execute+valid (held-out, first attempt)",
+    "value": 0.8625,
+    "threshold": ">= 0.85",
+    "pass": true
+   },
+   {
+    "name": "IoU tuned \u2212 base, paired 95 % CI",
+    "value": "0.4420 [0.4005, 0.4848]",
+    "threshold": "CI lower > 0",
+    "pass": true
+   },
+   {
+    "name": "held-out-family execute",
+    "value": 0.8,
+    "threshold": ">= 0.6",
+    "pass": true
+   },
+   {
+    "name": "sandbox rejects injected unsafe scripts",
+    "value": "1.0000 (42 scripts)",
+    "threshold": "1.0",
+    "pass": true
+   }
+  ],
+  "verdict": "PASS",
+  "action": "promote to Studio's default for engineering prompts"
+ },
+ "items_file": "/root/berkelium_run/eval/E-C2_items.jsonl.gz",
+ "items_sha256": "7511d9e0af2c7232248a436937d0600f6ca4b6361e1a97c966a35cfd748a7e18"
+}
