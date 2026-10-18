@@ -180,6 +180,26 @@ Total ≈ 10–15 h of the weekly ~30 h.
 - Known clash: the repo-root `cadquery/` folder (E-C2) has the same name as the CadQuery library. Never put the repo root
   first on `sys.path` (fixed in `test_benchmark_reporting.py`).
 
+### 32B CadQuery model (E-C2): published 2026-10-18, NOT evaluated
+- Trained 2,780 / 2,780 steps (1 full epoch, 121k rows, train loss 0.113) on the MI300X; base `Qwen/Qwen3-32B` @ `9216db57`.
+- HF (public): adapter [berkelium-qwen3-32b-cadquery-v1](https://huggingface.co/Mhaquehaque/berkelium-qwen3-32b-cadquery-v1) (LoRA r=64, 2.15 GB) ·
+  [-merged](https://huggingface.co/Mhaquehaque/berkelium-qwen3-32b-cadquery-v1-merged) (bf16 full weights, 65.5 GB) ·
+  [-GGUF](https://huggingface.co/Mhaquehaque/berkelium-qwen3-32b-cadquery-v1-GGUF) (Q4_K_M, 19.8 GB, sha256 `e432ceb3…`). Hand-off: `results/cadquery/HANDOFF_TEAMMATE.md`.
+- **Notice (must ship with any demo):** (1) **not evaluated**: E-C2 was skipped, D-034 not applied, so it is opt-in only and no quality
+  claim can be made; (2) **non-commercial**: training data includes CAD-Recode (CC-BY-NC-4.0); (3) its output is Python, so it
+  **must run in the sandbox** (`cadquery/sandbox.py`), never as plain Python; (4) the Q4_K_M GGUF was not evaluated separately.
+- **Demo (Studio):** needs a GPU with ≥ 24 GB (or ~32 GB RAM on CPU, slow) plus the CadQuery library + core:
+  ```bash
+  pip install -r configs/environments/berkelium-core.txt cadquery
+  ollama run hf.co/Mhaquehaque/berkelium-qwen3-32b-cadquery-v1-GGUF:Q4_K_M      # pulls 19.8 GB once
+  export BERKELIUM_CAD_URL=http://localhost:11434/v1
+  export BERKELIUM_CAD_MODEL=hf.co/Mhaquehaque/berkelium-qwen3-32b-cadquery-v1-GGUF:Q4_K_M
+  # start the Studio backend, choose "CadQuery" in Generate, e.g. "a 40 x 20 x 5 mm plate with a 6 mm centre hole"
+  ```
+  MI300X/vLLM alternative: `vllm serve Mhaquehaque/berkelium-qwen3-32b-cadquery-v1-merged` and point `BERKELIUM_CAD_URL` at it.
+- `cad` (8B) and `cadquery` (32B) read the same `BERKELIUM_CAD_URL` / `BERKELIUM_CAD_MODEL`, so demo **one at a time** (switch the
+  two env vars and restart the backend).
+
 ## 4. Risks
 - **fp16 overflow** in Qwen3 on the T4. Mitigation: NF4 + fp16 compute with fp32 LoRA; NaN guard aborts and
   records the run.
