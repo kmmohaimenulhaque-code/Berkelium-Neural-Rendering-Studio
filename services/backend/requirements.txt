@@ -3,7 +3,7 @@ starlette==1.8.0
 uvicorn==0.39.0
 httpx==0.28.1
 pytesseract==0.3.13
-pillow==12.3.0
+pillow==13.0.0
 pypdf==6.19.0
 python-multipart==0.0.32
 slowapi==0.1.10
