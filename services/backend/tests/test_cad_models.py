@@ -14,11 +14,20 @@ M32 = "hf.co/Mhaquehaque/berkelium-qwen3-32b-cadquery-v1-GGUF:Q4_K_M"
 M8 = "hf.co/Mhaquehaque/berkelium-qwen3-8b-cad-v1-GGUF:latest"
 
 
-def capture_ollama(monkeypatch, reply="ok"):
+def ndjson(*chunks):
+    # How Ollama streams: one JSON object per line, the last one has done=true.
+    lines = [{"response": c, "done": False} for c in chunks] + [{"response": "", "done": True}]
+    return "\n".join(json.dumps(x) for x in lines).encode()
+
+
+def capture_ollama(monkeypatch, reply="ok", chunks=None):
     seen = {}
 
     def handler(request):
+        seen["path"] = request.url.path
         seen["body"] = json.loads(request.content)
+        if request.url.path == "/api/generate":
+            return httpx.Response(200, content=ndjson(*(chunks or [reply])))
         return httpx.Response(200, json={"message": {"content": reply}})
     real = httpx.AsyncClient
 
@@ -49,23 +58,72 @@ def test_prompts_are_the_trained_ones():
 
 @pytest.mark.parametrize("model,prompt_attr", [(M32, "QWEN3_32B_CADQUERY_PROMPT"),
                                                 (M8, "CAD_01_PROMPT")])
-def test_cad_model_gets_trained_prompt_single_turn(app_ctx, monkeypatch, model, prompt_attr):
+def test_cad_model_gets_exact_training_format_raw(app_ctx, monkeypatch, model, prompt_attr):
     main, client, _ = app_ctx
-    seen = capture_ollama(monkeypatch, reply='{"summary":"flange"}')
+    seen = capture_ollama(monkeypatch, chunks=['{"summary":', '"flange"}'])
     r = client.post("/chat", json={
         "message": "Make a flange", "provider": "ollama", "model": model,
         "history": [{"role": "user", "content": "hi"}, {"role": "assistant", "content": "hey"}],
     })
     assert r.status_code == 200, r.text
+    assert r.json()["response"] == '{"summary":"flange"}'   # streamed pieces joined
+    assert seen["path"] == "/api/generate"
     body = seen["body"]
-    assert body["messages"] == [
-        {"role": "system", "content": getattr(main.cad_models, prompt_attr)},
-        {"role": "user", "content": "Make a flange"},
-    ]
-    assert body["think"] is False
-    assert body["options"] == {"temperature": 0, "num_ctx": 4096, "num_predict": 2048}
+    system = getattr(main.cad_models, prompt_attr)
+    # Qwen3 chat format with thinking off, single turn: history is not sent.
+    assert body["prompt"] == (
+        f"<|im_start|>system\n{system}<|im_end|>\n"
+        "<|im_start|>user\nMake a flange<|im_end|>\n"
+        "<|im_start|>assistant\n<think>\n\n</think>\n\n")
+    assert "hey" not in body["prompt"]
+    assert body["raw"] is True and body["stream"] is True and body["model"] == model
+    assert body["options"] == {"temperature": 0, "num_ctx": 4096, "num_predict": 2048,
+                               "stop": ["<|im_end|>", "<|endoftext|>"]}
     assert body["keep_alive"] == "30m"
-    assert body["stream"] is False and body["model"] == model
+    assert "think" not in body
+
+
+@pytest.mark.parametrize("raw,clean", [
+    ('{"a":1}', '{"a":1}'),
+    ('reasoning here\n</think>\n\n{"a":1}', '{"a":1}'),            # what the Mac showed
+    ('{"a":1}\n</think>\n\n{"a":2}', '{"a":2}'),                   # what the sandbox showed
+    ('<think>\nplan\n</think>\n{"a":1}', '{"a":1}'),
+    ('  {"a":1}  ', '{"a":1}'),
+])
+def test_clean_output_drops_reasoning(raw, clean):
+    import cad_models
+    assert cad_models.clean_output(raw) == clean
+
+
+def test_cad_answer_is_cleaned_on_every_route(app_ctx, monkeypatch):
+    main, client, _ = app_ctx
+    capture_ollama(monkeypatch, chunks=["thinking...\n</think>\n\n", '{"ok":true}'])
+    r = client.post("/chat", json={"message": "x", "provider": "ollama", "model": M8})
+    assert r.json()["response"] == '{"ok":true}'
+
+
+def test_ollama_error_line_is_reported(app_ctx, monkeypatch):
+    _, client, _ = app_ctx
+
+    def handler(request):
+        return httpx.Response(200, content=b'{"error":"model requires more system memory"}\n')
+    real = httpx.AsyncClient
+    monkeypatch.setattr(httpx, "AsyncClient",
+                        lambda *a, **k: real(*a, **{**k, "transport": httpx.MockTransport(handler)}))
+    r = client.post("/chat", json={"message": "x", "provider": "ollama", "model": M32})
+    assert r.status_code == 502 and "more system memory" in r.json().get("detail", r.text)
+
+
+def test_missing_cad_model_is_model_not_found(app_ctx, monkeypatch):
+    _, client, _ = app_ctx
+
+    def handler(request):
+        return httpx.Response(404, json={"error": "model not found"})
+    real = httpx.AsyncClient
+    monkeypatch.setattr(httpx, "AsyncClient",
+                        lambda *a, **k: real(*a, **{**k, "transport": httpx.MockTransport(handler)}))
+    r = client.post("/chat", json={"message": "x", "provider": "ollama", "model": M8})
+    assert r.status_code == 400 and r.json()["code"] == "model_not_found"
 
 
 def test_normal_ollama_model_unchanged(app_ctx, monkeypatch):

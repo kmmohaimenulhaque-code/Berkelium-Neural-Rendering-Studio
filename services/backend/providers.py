@@ -417,6 +417,45 @@ async def call_ollama(p: Provider, data: dict, model: str, messages: list[dict],
         raise ProviderError("bad_response", "Ollama sent an unexpected response", 502)
 
 
+async def call_ollama_raw(p: Provider, data: dict, model: str, prompt: str, options: dict,
+                          keep_alive: str, timeout: float) -> str:
+    """Send a fully formatted prompt to Ollama with no template applied.
+
+    Streams the answer and joins it. A long answer from a slow machine then keeps
+    the connection busy instead of sitting idle until something cuts it off.
+    """
+    url = f"{_base_url(p, data)}/api/generate"
+    body = {"model": model, "prompt": prompt, "raw": True, "stream": True,
+            "options": options, "keep_alive": keep_alive}
+    parts: list[str] = []
+    try:
+        async with httpx.AsyncClient(timeout=timeout) as client:
+            async with client.stream("POST", url, json=body) as r:
+                if r.status_code == 404:
+                    raise ProviderError("model_not_found", f"Ollama has no model '{model}'", 400)
+                if r.status_code != 200:
+                    raise ProviderError("upstream_error", f"Ollama returned {r.status_code}", 502)
+                async for line in r.aiter_lines():
+                    if not line.strip():
+                        continue
+                    try:
+                        chunk = json.loads(line)
+                    except ValueError:
+                        raise ProviderError("bad_response", "Ollama sent an unexpected response", 502)
+                    if chunk.get("error"):
+                        raise ProviderError("upstream_error", f"Ollama error: {chunk['error']}", 502)
+                    parts.append(chunk.get("response", ""))
+                    if chunk.get("done"):
+                        break
+    except httpx.ConnectError:
+        raise ProviderError("not_running", "Ollama is not running", 503)
+    except httpx.TimeoutException:
+        raise ProviderError("timeout", "The model took too long to answer", 504)
+    except httpx.RequestError as e:
+        raise ProviderError("unreachable", f"Ollama request failed: {e}", 502)
+    return "".join(parts)
+
+
 def _litellm_kwargs(p: Provider, data: dict, model: str) -> dict:
     kwargs: dict[str, Any] = {"model": f"{p.litellm_prefix}/{model}"}
     if data.get("api_key"):
@@ -468,12 +507,15 @@ async def call_litellm(p: Provider, data: dict, model: str, messages: list[dict]
 
 
 async def chat(p: Provider, data: dict, model: str, messages: list[dict],
-               timeout: float = 60.0, ollama_extra: Optional[dict] = None) -> str:
+               timeout: float = 60.0, ollama_extra: Optional[dict] = None,
+               ollama_raw: Optional[dict] = None) -> str:
     if not is_configured(p, data):
         raise ProviderError("not_configured", f"{p.label} is not set up yet", 400)
     if not model:
         raise ProviderError("no_model", f"Pick a model for {p.label}", 400)
     if p.id == "ollama":
+        if ollama_raw:
+            return await call_ollama_raw(p, data, model, timeout=timeout, **ollama_raw)
         return await call_ollama(p, data, model, messages, timeout, ollama_extra)
     # Providers retire models. For the shipped key, a vanished model falls back
     # to the backups the release build tested, so users never see the error.

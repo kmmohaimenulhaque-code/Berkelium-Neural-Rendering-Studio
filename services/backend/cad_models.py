@@ -54,6 +54,10 @@ CAD_MODELS: tuple[CadModel, ...] = (
 # full answer, and a cap so a runaway reply cannot hold the machine forever.
 OLLAMA_OPTIONS = {"temperature": 0, "num_ctx": 4096, "num_predict": 2048}
 
+# Qwen3 ends every turn with this token. In raw mode Ollama applies no template,
+# so it must be told where the answer stops.
+QWEN3_STOP = ["<|im_end|>", "<|endoftext|>"]
+
 # Loading a 20 GB model takes a while. Keep it in memory between questions.
 OLLAMA_KEEP_ALIVE = "30m"
 
@@ -69,3 +73,25 @@ def find(model: Optional[str]) -> Optional[CadModel]:
 def build_messages(cad: CadModel, message: str) -> list[dict]:
     # Single turn on purpose: the models were trained on one request each.
     return [{"role": "system", "content": cad.system}, {"role": "user", "content": message}]
+
+
+def raw_prompt(cad: CadModel, message: str) -> str:
+    """The exact text the models saw in training: Qwen3 chat format with thinking off.
+
+    Ollama's think=false does not reliably do this. On Ollama 0.40.6 the 8B then
+    writes a stray </think>, repeats its design, or reasons in prose and gets the
+    geometry wrong. Writing the empty think block ourselves and sending the prompt
+    raw removes the guesswork: one clean design, the same as the evaluation setup.
+    """
+    return (
+        f"<|im_start|>system\n{cad.system}<|im_end|>\n"
+        f"<|im_start|>user\n{message}<|im_end|>\n"
+        "<|im_start|>assistant\n<think>\n\n</think>\n\n"
+    )
+
+
+def clean_output(text: str) -> str:
+    """Drop any reasoning a server still let through. Safety net for every route."""
+    if "</think>" in text:
+        text = text.rsplit("</think>", 1)[1]
+    return text.replace("<think>", "").strip()

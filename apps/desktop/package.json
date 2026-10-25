@@ -2,7 +2,7 @@
   "name": "berkelium-studio",
   "productName": "Berkelium",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Berkelium Neural Rendering Studio",
   "author": "Team Berkelium",
   "main": "electron/main.cjs",

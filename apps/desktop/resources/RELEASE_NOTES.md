@@ -1,8 +1,9 @@
 ## What's new
 
-- **AI chat works right after install.** The app now carries its own backend and starts it by itself. No Python, no terminal.
-- **Free AI out of the box.** Chat uses a free built-in Groq key. You can paste your own key for any provider in Settings.
-- PDF text reading works in the installed app.
+- **Team Berkelium's own CAD models work in chat.** Pick BerkeliumGPT 8B (or the 32B CadQuery model) under Ollama in Settings and describe a part. You get one clean design in the exact format the model was trained on.
+- **Fixed: CAD answers with stray reasoning text or wrong shapes.** Ollama did not really turn the model's "thinking" off, which made it write reasoning or repeat itself. Studio now sends the trained prompt format directly, so a flange comes out as a round 290 mm disc, not a box.
+- **Slow computers no longer time out on big models.** Local models get up to 10 minutes, and answers stream in so a long reply is not cut off.
+- Earlier: AI chat works right after install with a free built-in key, and PDF text reading works in the installed app.
 
 ## Download
 

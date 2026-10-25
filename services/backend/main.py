@@ -461,10 +461,12 @@ def _get_provider(provider_id: str) -> prov.Provider:
     return p
 
 
-def cad_ollama_extra(cad) -> Optional[dict]:
+def cad_ollama_raw(cad, message: str) -> Optional[dict]:
+    # Our CAD models on Ollama get their exact training format, sent raw.
     if not cad:
         return None
-    return {"think": False, "options": dict(cad_models.OLLAMA_OPTIONS),
+    return {"prompt": cad_models.raw_prompt(cad, message),
+            "options": {**cad_models.OLLAMA_OPTIONS, "stop": cad_models.QWEN3_STOP},
             "keep_alive": cad_models.OLLAMA_KEEP_ALIVE}
 
 
@@ -484,7 +486,9 @@ async def _chat_via_provider(payload: ChatRequest) -> dict:
     log.info("chat via %s model=%s history=%s cad=%s", p.id, model, len(payload.history),
              cad.label if cad else "no")
     text = await prov.chat(p, data, model, messages, timeout=timeout,
-                           ollama_extra=cad_ollama_extra(cad))
+                           ollama_raw=cad_ollama_raw(cad, payload.message))
+    if cad:
+        text = cad_models.clean_output(text)
     return {"response": text, "provider": p.id, "model": model}
 
 
